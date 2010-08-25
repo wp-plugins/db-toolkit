@@ -1,0 +1,100 @@
+/* TAbles */
+.reportTotalsBox{
+	border-right:1px solid #ccc;
+}
+.reportTotalsTitle{
+	font-size:12px;
+	padding:3px;
+	font-weight:bold;
+	color:#666;
+}
+.reportTotalsValue{
+	font-size:20px;
+	padding:3px;
+	font-weight:500;
+	color:#aa0e0a;
+}
+.reportTotalsCaption{
+	font-size:10px;
+	padding:3px;
+	color:#999;
+}
+
+.highlight td, .highlight td a:link, .highlight td a:visited{
+	color:#fff;
+}
+table.data_report_Table {
+	border-spacing:0;
+	border-collapse:separate;
+	border-right:solid 1px #e1e1e1 !important;
+	border-bottom:solid 1px #e1e1e1 !important;
+}
+
+table.data_report_Table tr th {
+	padding:10px;
+	vertical-align:center;
+	color:#fff;text-transform:uppercase;text-align:left;
+	background:url(images/tablehead.gif) repeat-x top left;
+	border-left:solid 1px #838383;border-right:solid 1px #aeaeae;
+}
+
+table.data_report_Table tr th.sorting_ASC,
+table.data_report_Table tr th.sorting_DESC{
+	background-color:#9e9e9e;background-image:none
+}
+
+table.data_report_Table tr th span {
+	display:block;margin:0 10px }
+
+table.data_report_Table tr th.sorting_ASC span,
+table.data_report_Table tr th.sorting_DESC span,
+table.data_report_Table tr th.report_header span {
+	background:url(images/bg-sort.gif) no-repeat;
+	padding-right:10px;
+	}
+
+table.data_report_Table tr th.report_header span { background-position:right 2px; }
+table.data_report_Table tr th.sorting_ASC span { background-position:right -13px; }
+table.data_report_Table tr th.sorting_DESC span { background-position:right -28px; }
+	
+table.data_report_Table th.total {
+	border-right:solid 1px #40a9c7;
+}
+
+table.data_report_Table tr td {
+	padding:5px 0 5px 5px;
+	color:#575757;
+	text-align:left;
+	vertical-align:center;
+	background:#fff url(images/rows.gif) repeat-x bottom left;
+	border-left:solid 1px #e1e1e1;border-right:solid 1px #fff;border-top:solid 1px #e1e1e1;
+}
+
+table.data_report_Table td.total div {
+	margin:0;padding:0;
+	background:none	
+}
+
+table.data_report_Table td.units,
+table.data_report_Table tfoot td.total {
+	line-height:2.2em;
+	font-weight:bold;
+}
+
+table.data_report_Table tr.odd td {
+	background:url(images/rows_odd.gif) no-repeat -26px 0 !important;
+}
+table.data_report_Table tr.highlight td{
+	background:#a20100 url(images/rows_highlight.gif) top left repeat-x !important;
+	border-left:solid 1px #a20100;
+	border-right:solid 0px #db0000;
+	border-top:solid 1px #a20100;
+	color:#fff !important;
+}
+table.data_report_Table tr td.action{
+}
+table.data_report_Table tr.highlight td.action{
+	border-right:solid 1px #5c5c5c !important;
+}
+
+
