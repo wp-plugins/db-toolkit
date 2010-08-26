@@ -18,6 +18,14 @@
                     echo dais_customfield('Text', 'Title', '_chartTitle', '_chartTitle', 'list_row1' , @$Element['Content']['_chartTitle'] , '');
                     echo dais_customfield('Text', 'Caption', '_chartCaption', '_chartCaption', 'list_row1' , @$Element['Content']['_chartCaption'] , '');
 
+                    echo '<div style="width:450px;">';
+                    InfoBox('Notice');
+                    echo '<img src="http://www.highcharts.com/images/stories/logohighcharts.png" /><br />';
+                    echo 'Charting is powered <a href="http://www.highcharts.com" target="_blank">Highcharts</a> Which is only free for Personal/non-profit under the Creative Commons Attribution-NonCommercial 3.0 License.<br /><br />
+                        For more on licencing for commercial use see the <a href="http://www.highcharts.com/license" target="_blank">licencing page on highcharts site</a>.';
+                    EndInfoBox();
+                    echo '</div>';
+
 
 ?>
 </div>
