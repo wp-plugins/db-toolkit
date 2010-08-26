@@ -20,8 +20,8 @@
 
                     echo '<div style="width:450px;">';
                     InfoBox('Notice');
-                    echo '<img src="http://www.highcharts.com/images/stories/logohighcharts.png" /><br />';
-                    echo 'Charting is powered <a href="http://www.highcharts.com" target="_blank">Highcharts</a> Which is only free for Personal/non-profit under the Creative Commons Attribution-NonCommercial 3.0 License.<br /><br />
+                    echo '<a href="http://www.highcharts.com" target="_blank" border="0"><img src="'.WP_PLUGIN_URL . '/dbtoolkit/images/logohighcharts.png" /></a><br /><br />';
+                    echo 'Charting is powered <a href="http://www.highcharts.com" target="_blank">Highcharts</a> Which is free for Personal/non-profit under the Creative Commons Attribution-NonCommercial 3.0 License.<br /><br />
                         For more on licencing for commercial use see the <a href="http://www.highcharts.com/license" target="_blank">licencing page on highcharts site</a>.';
                     EndInfoBox();
                     echo '</div>';
