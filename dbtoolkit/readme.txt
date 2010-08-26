@@ -37,6 +37,8 @@ Features Currently in Development:
 
 == Frequently Asked Questions ==
 
+Well, I think some questions need to be asked first. Please use the forum link to the right to aske questions.
+
 == Changelog ==
 
 = 0.1.0 alpha =
