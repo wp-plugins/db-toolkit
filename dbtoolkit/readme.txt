@@ -23,6 +23,12 @@ Features include:
 *	Templates for output
 *	Field Specific configuration
 
+Features Currently in Development:
+
+*       Cleaner Interface
+*       Inline Documentation
+*       Dynamic Table Creation and Field Manipulation
+
 == Installation ==
 
 1. Upload the plugin folder 'dbtoolkit' to your `/wp-content/plugins/` folder
