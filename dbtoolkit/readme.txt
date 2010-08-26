@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: trunk
+Stable tag: 0.1.0
 
 Create interfaces (forms, reports, graphs etc.) from database tables already existing.
 
