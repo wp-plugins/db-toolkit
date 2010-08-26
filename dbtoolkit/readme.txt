@@ -11,8 +11,11 @@ Create interfaces (forms, reports, graphs etc.) from database tables already exi
 == Description ==
 
 Adds interfaces to database tables on pages, posts, dashboard and custom menu groups within admin, to manage data.
-This version is an alpha, proof of concept. there are a lot of bugs still. There is no documentation yet so you'll have to guess your way around. I tried to make it as intuative as possable but due to the complex nature of it somethings may not be so eay to grasp.
-Please dont use it in a production site just yet. It is under active devlopment so changes will be frequent.
+This version is an alpha, proof of concept and there are a lot of bugs still present.
+There is no documentation yet so you'll have to guess your way around.
+I tried to make it as intuative as possable but due to the complex nature of it somethings may not be so easy to grasp.
+
+Please dont use it in a production site just yet. It is under active development so changes will be frequent.
 
 Features include:
 
