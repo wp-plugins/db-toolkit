@@ -1,6 +1,6 @@
 === DB Toolkit ===
 Contributors: Desertsnowman
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=David%20Cramer%20%28Digilab%20Development%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
