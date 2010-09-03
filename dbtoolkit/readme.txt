@@ -39,6 +39,14 @@ Features Currently in Development:
 
 Well, I think some questions need to be asked first. Please use the forum link to the right to aske questions.
 
+== Screenshots ==
+
+1. List of already created interfaces and reports
+2. report/manager interface created against table
+3. Field setup on an interface
+4. Easy form building for input/capture forms
+5. modal dialog input forms
+
 == Changelog ==
 
 = 0.1.0 alpha =
