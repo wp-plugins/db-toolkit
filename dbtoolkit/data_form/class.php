@@ -114,7 +114,7 @@ if(is_admin()) {
     function df_ListFields($Table, $Default, $Name) {
         if(empty($Table)){
             return;
-        }
+        }        
         $result = mysql_query("SHOW COLUMNS FROM ".$Table);
         $Return = '<select name="Data[Content]['.$Name.']" id="Return_'.$Table.'">';
         //$Return .= '<option value="false">None</option>';

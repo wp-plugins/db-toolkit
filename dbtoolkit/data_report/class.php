@@ -47,7 +47,7 @@ function df_cleanArray($Array) {
 if(is_admin()) {
     // Admin Functiuons
 
-    function dr_loadPassbackFields($Table, $Defaults = 'none') {
+    function dr_loadPassbackFields($Table, $Defaults = 'none', $Config = false) {
 
         if(empty($Table)) {
             return;
@@ -58,6 +58,20 @@ if(is_admin()) {
             while ($row = mysql_fetch_assoc($result)) {
                 $TotalsField .= '<option value="'.$row['Field'].'" {{'.$row['Field'].'}}>'.$row['Field'].'</option>';
                 $FieldsClearer[] = $row['Field'];
+            }
+
+            if(!empty($Config)) {
+                if(!empty ($Config['_CloneField'])) {
+                    $TotalsField .= '<optgroup label="Cloned Fields">';
+                    foreach ($Config['_CloneField'] as $FieldKey=>$Array) {                        
+                        $Sel = '';
+                        if($Default == $FieldKey) {
+                            $Sel = 'selected="selected"';
+                        }
+                        $TotalsField .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['_FieldTitle'][$FieldKey].'</option>';
+                    }
+
+                }
             }
         }
         if($Defaults == 'none') {
@@ -308,7 +322,13 @@ if(is_admin()) {
         //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
 
 
-        $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" /><h3>'.$name.'</h3>';
+        $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;">';
+
+        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
+
+        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" />';
+
+        $PreReturn[$Field] .= '<h3>'.$name.'</h3>';
         
         // Linking Master
         if(substr($Field,0, 2) == '__') {
@@ -334,6 +354,23 @@ if(is_admin()) {
                 }
                 $PreReturn[$Field] .= '<option value="'.$MasterField.'" '.$Sel.'>'.$MasterField.'</option>';
             }
+            // get clones
+            if(!empty($Config)) {
+                if(!empty ($Config['Content']['_CloneField'])) {
+                    $PreReturn[$Field] .= '<optgroup label="Cloned Fields">';
+                    foreach ($Config['Content']['_CloneField'] as $FieldKey=>$Array) {
+                        if($FieldKey != $Field){
+                            $Sel = '';
+                            if($Config['Content']['_CloneField'][$Field]['Master'] == $FieldKey) {
+                                $Sel = 'selected="selected"';
+                            }
+                            $PreReturn[$Field] .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['Content']['_FieldTitle'][$FieldKey].'</option>';
+                        }
+                    }
+                }
+
+            }
+
             $PreReturn[$Field] .= '</select>';
 
             $PreReturn[$Field] .= '</div>';
@@ -381,7 +418,7 @@ if(is_admin()) {
             $Justify = $Config['Content']['_Justify'][$Field];
         }
         $PreReturn[$Field] .= '<label>Lable</label>';
-        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
+
         $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="'.$Title.'" name="Data[Content][_FieldTitle]['.$Field.']" /> ';
         $PreReturn[$Field] .= 'Caption: <input type="text" value="'.$Caption.'" name="Data[Content][_FieldCaption]['.$Field.']" /></div>';
         $PreReturn[$Field] .= '<label>Alignment</label>';
@@ -938,6 +975,18 @@ function df_buildDataSheet($EID, $ID) {
 
 }
 
+//clone mater finder
+function dr_cloneFindMater($Field, $Clones){
+
+    if(substr($Field,0,2) == '__'){
+        $ReturnField = $Clones[$Field]['Master'];
+        if(substr($ReturnField,0,2) == '__'){
+            return dr_cloneFindMater($ReturnField, $Clones);
+        }
+        return $ReturnField;
+    }
+return $Field;
+}
 
 //* new report Grid
 
@@ -1126,7 +1175,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
         }
     }
-
+    
     // Add the return field to select
     if(!empty($Config['_ReturnFields'])) {
         //$querySelects[$Config['_ReturnFields'][0]] = 'prim.'.$Config['_ReturnFields'][0];
@@ -1176,7 +1225,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
    // Linkup CLoned Fields
     //vardump($Config);
     if(!empty($Config['_CloneField'])) {
-
+        //vardump($Config['_CloneField']);
+        $querySelectsPre = $querySelects;
         foreach($Config['_CloneField'] as $CloneKey=>$Clone) {
             //echo 'BEFORE';
             //vardump($querySelects);
@@ -1186,6 +1236,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 if(strstr($selectScan, " AS ") === false){
                     //echo $Clone['Master'].' - concat <br />';
                     if(strstr($selectScan, "_sourceid_") === false){
+                        //echo $Clone['Master'];
                         $querySelects[$selectKey] = str_replace($CloneKey, $Clone['Master'].' AS '.$CloneKey, $selectScan);
                     }
                 }
@@ -1193,7 +1244,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             //echo 'After';
             //vardump($querySelects);
         }
+        
     }
+    
     foreach($Config['_Field'] as $Field=>$Type) {
         // Run Filters that have been set through each field type
         if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')) {
@@ -1205,9 +1258,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 if($WhereTag == '') {
                     $WhereTag = " WHERE ";
                 }
-                if(substr($Field,0,2) != '__'){
-                    $keyField = 'prim.'.$Field;
-                    
+                 if(!empty($Config['_CloneField'][$Field])){
+                    $keyField = 'prim.'.$Field;                    
                 }else{
                     if(!empty($Config['_CloneField'][$Field]['Master'])){
                         $keyField = $Config['_CloneField'][$Field]['Master'];
@@ -1227,14 +1279,28 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
         $joinIndex++;
     }
-    // combine keyword search if there are any
+    //post clone fixes
+    foreach($querySelects as $fieldToFix=>$select){
+        if(!empty($Config['_CloneField'][$fieldToFix])){
+            $cloneReturns[$fieldToFix] = explode(' AS ', $select);            
+        }
+    }
+    
+    foreach($cloneReturns as $cloneKey=>$cloneField){
+        $pureName = str_replace('prim.','',$cloneField[0]);
+        if(!empty($cloneReturns[$pureName])){
+           $cloneReturns[$cloneKey][0] = $cloneReturns[$pureName][0];
+           $querySelects[$cloneKey] = implode(' AS ', $cloneReturns[$cloneKey]);
+        }
+    }
+// combine keyword search if there are any
     if(!empty($preWhere)) {
         $queryWhere[] = '('.implode(' OR ', $preWhere).')';
     }
 
     // create Query Selects and Where clause string
-    $querySelect = implode(',',$querySelects);
-    $queryWhere = implode(' AND ', $queryWhere);
+    $querySelect = implode(",\n\t",$querySelects);
+    $queryWhere = implode("\n AND ", $queryWhere);
 
 
     // build the ordering
@@ -2156,12 +2222,12 @@ var ".$ChartID." = new Highcharts.Chart({
         if(!empty($_GET['debug'])) {
 
 
-            $ReportReturn .= '<div id="'.$EID.'_queryDebug" class="button" style="cursor:pointer; width:100px; text-align: center;" onclick="jQuery(\'#'.$EID.'_queryDebug_panel\').toggle();">Show Query</div>';
-            $ReportReturn .= '<div id="'.$EID.'_queryDebug_panel" style="display:none;">';
+            //$ReportReturn .= '<div id="'.$EID.'_queryDebug" class="button" style="cursor:pointer; width:100px; text-align: center;" onclick="jQuery(\'#'.$EID.'_queryDebug_panel\').toggle();">Show Query</div>';
+            $ReportReturn .= '<div id="'.$EID.'_queryDebug_panel" style="display:block;">';
             $ReportReturn .= '<textarea style="width:99%; height:200px;">'.$CountQuery.'</textarea><br />';
             $ReportReturn .= '<textarea style="width:99%; height:200px;">'.$Query.'</textarea><br />';
             $ReportReturn .= 'ERRORS: '.mysql_error();
-            $ReportReturn .= '</div>';
+            //$ReportReturn .= '</div>';
 
         }
     }

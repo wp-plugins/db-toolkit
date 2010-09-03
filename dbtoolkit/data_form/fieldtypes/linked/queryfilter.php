@@ -2,28 +2,20 @@
 //Filters query variables for the field type
 		if($Type[1] == 'linked'){
 			// replace primary table field with linked table field as primary table field name
-			$outList = array();
-			if($Config['_Linkedfields'][$Field]['Type'] != 'checkbox'){
-				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
-					$outList[] = $joinIndex.'.'.$outValue;
-				}
-			//if(count($outList) >= 2){
-				$outString = 'CONCAT('.implode(',\' \',',$outList).')';
-			//}else{
-			//	$outString = $outList[0];
+			//$outList = array();
+                                
+                                foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){                                   
+                                    $outList[$Field][] = $joinIndex.'.'.$outValue;
+                                }
+                                
+                                if(count($outList[$Field]) > 1){
+                                    $outString = 'CONCAT('.implode(',\' \',',$outList[$Field]).')';
+                                }else{
+                                    $outString = $outList[$Field][0];
+                                }
+				$querySelects[$Field] = $outString.' AS '.$Field;                                
 			//}
-				$querySelects[$Field] = $outString.' AS '.$Field;
-			}
-			if(!empty($Config['_Linkedfields'][$Field]['LocalURL'])){
-				if($Config['_Linkedfields'][$Field]['LocalURL'] != 'none'){
-					$querySelects['_LURL_Link_'.$Field] = 'prim.'.$Config['_Linkedfields'][$Field]['LocalURL'].' AS LURL_LINK_'.$Field;
-				}
-			}
-			if(!empty($Config['_Linkedfields'][$Field]['URL'])){
-				if($Config['_Linkedfields'][$Field]['URL'] != 'none'){
-					$querySelects['_URL_Link_'.$Field] = $joinIndex.'.'.$Config['_Linkedfields'][$Field]['URL'].' AS LURL_LINK_'.$Field;
-				}
-			}
+
 			
 			$querySelects['_sourceid_'.$Field] = $joinIndex.'.'.$Config['_Linkedfields'][$Field]['ID'].' AS _sourceid_'.$Field;
 			
@@ -40,7 +32,16 @@
 				// join product p on p.id=pl.productid;
 				
 			}else{
-				$queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndex." on (prim.".$Field." = ".$joinIndex.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
+                            $linkField = "prim.".$Field;
+                            if(!empty($Config['_CloneField'][$Field])){
+                                if(!empty($Config['_CloneField'][$Config['_CloneField'][$Field]['Master']])){
+                                    $linkField = $outList[$Config['_CloneField'][$Field]['Master']][0];
+                                }else{
+                                    $linkField = 'prim.'.$Config['_CloneField'][$Field]['Master'];
+                                }
+                            }
+
+				$queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndex." on (".$linkField." = ".$joinIndex.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
 			}
 		}
 		if($Type[1] == 'linkedfiltered'){

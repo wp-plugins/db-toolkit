@@ -19,15 +19,15 @@ Please dont use it in a production site just yet. It is under active development
 
 Features include:
 
-*	Visual forms and reports builder
-*	Templates for output
-*	Field Specific configuration
+*   Visual forms and reports builder
+*   Templates for output
+*   Field Specific configuration
 
 Features Currently in Development:
 
-*       Cleaner Interface
-*       Inline Documentation
-*       Dynamic Table Creation and Field Manipulation
+*   Cleaner Interface
+*   Inline Documentation
+*   Dynamic Table Creation and Field Manipulation
 
 == Installation ==
 
