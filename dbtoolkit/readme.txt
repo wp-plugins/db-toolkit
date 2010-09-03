@@ -43,9 +43,3 @@ Well, I think some questions need to be asked first. Please use the forum link t
 
 = 0.1.0 alpha =
 * Initial alpha release. (still heavily in development)
-
-== Screenshots ==
-
-== Upgrade Notice ==
-
-Upgrade to what?

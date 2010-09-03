@@ -112,7 +112,7 @@ if(is_admin()) {
     }
 
     function df_ListFields($Table, $Default, $Name) {
-        if(empty($Table)) {
+        if(empty($Table)){
             return;
         }
         $result = mysql_query("SHOW COLUMNS FROM ".$Table);
@@ -127,7 +127,23 @@ if(is_admin()) {
                 $Return .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
             }
         }
+        if(!empty($_GET['interface'])) {
+            $Element = getElement($_GET['interface']);
+            $Config = &$Element['Content'];
+            if(!empty ($Config['_CloneField'])) {
+                $Return .= '<optgroup label="Cloned Fields">';
+                foreach ($Config['_CloneField'] as $Field=>$Array) {
+                    $Sel = '';
+                    if($Default == $Field) {
+                        $Sel = 'selected="selected"';
+                    }
+                    $Return .= '<option value="'.$Field.'" '.$Sel.'>'.$Config['_FieldTitle'][$Field].'</option>';
+                }
+            }
+
+        }
         $Return .= '</select>';
+
         return $Return;
     }
 

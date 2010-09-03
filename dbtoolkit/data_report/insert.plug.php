@@ -34,7 +34,7 @@
         <div id="col-container">
         <?php
         InfoBox('Report Setup');
-        ?>
+        /*
         <div id="col-right">
 
                 <?php InfoBox('Advanced Field Types'); ?>
@@ -44,6 +44,9 @@
                 <?php EndInfoBox(); ?>
 
         </div>
+         *
+         */
+        ?>
         <div id="col-left">
         <div id="referenceSetup"></div>
         <table width="500px" border="0" cellspacing="2" cellpadding="2">

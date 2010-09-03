@@ -72,12 +72,13 @@
         EndInfoBox();
         ?>
 
-        <div id="col-container">
+        <div id="col-container" >
             <?php
             InfoBox('Report Setup');
             //dump($Element);
+            if($_GET['page'] != 'Add_New'){
             ?>
-            <div style="width:555px;">
+            <div style="width:565px;">
 
                 <?php InfoBox('Advanced Field Types'); ?>
                 <div class="list_row3"><input type="button" value="Add Clone Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /></div>
@@ -89,7 +90,9 @@
                 <?php EndInfoBox(); ?>
 
             </div>
-
+            <?php
+            }
+            ?>
             <div style="">
                 <div id="referenceSetup"></div>
                 <div style="overflow:auto;">
@@ -129,7 +132,13 @@
         EndInfobox();
         InfoBox('Sort Field');
         ?>
-        <div id="sortFieldSelect"><?php echo df_loadSortFields($Element['Content']['_main_table'], $Element['Content']['_SortField'], $Element['Content']['_SortDirection']); ?></div>
+        <div id="sortFieldSelect">
+        <?php
+            if($_GET['page'] != 'Add_New'){
+                echo df_loadSortFields($Element['Content']['_main_table'], $Element['Content']['_SortField'], $Element['Content']['_SortDirection']);
+            }
+        ?>
+        </div>
         <?php
         EndInfobox();
         ?>

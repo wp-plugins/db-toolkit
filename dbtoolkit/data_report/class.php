@@ -528,7 +528,7 @@ if(is_admin()) {
 
             $name = df_parseCamelCase($Field);
             //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
-            $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" /><h3>'.df_parseCamelCase($Field).'</h3>';            
+            $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" /><h3>'.df_parseCamelCase($Field).'</h3>';
             // Linking Master
             $PreReturn[$Field] .= '<div style="padding:5px;">';
 
