@@ -1,0 +1,87 @@
+@charset "UTF-8";
+/* CSS Document */
+
+div.fbutton .add {
+	background:transparent url(images/add.png) no-repeat scroll left center;
+}
+div.fbutton .lockfilterfilter {
+	background:transparent url(images/lock.png) no-repeat scroll left center;
+}
+div.fbutton .unlockfilterfilter {
+	background:transparent url(images/lock_open.png) no-repeat scroll left center;
+}
+div.fbutton .delete {
+	background:transparent url(images/cross.png) no-repeat scroll left center;
+}
+div.fbutton .filterbutton {
+	background:transparent url(images/magnifier.png) no-repeat scroll left center;
+}
+div.fbutton .clearfilter {
+	background:transparent url(images/magnifier.png) no-repeat scroll left center;
+}
+div.fbutton .applyfilter {
+	background:transparent url(images/accept.png) no-repeat scroll left center;
+}
+div.fbutton .closefilter {
+	background:transparent url(images/arrow_090.png) no-repeat scroll left center;
+}
+div.fbutton .selectall {
+	background:transparent url(images/selectall.png) no-repeat scroll left center;
+}
+div.fbutton .unselectall {
+	background:transparent url(images/unselect.png) no-repeat scroll left center;
+}
+div.fbutton .export {
+	background:transparent url(images/disk.png) no-repeat scroll left center;
+}
+div.fbutton .reload{
+	background:transparent url(images/load.png) no-repeat scroll left center;
+}
+
+.filterpanels{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	border: 0px solid #eee;
+	overflow: hidden;
+	color: #000;
+}
+	div.fbutton, div.fpanel
+		{
+			float: left;
+			display: block;
+			cursor: pointer;
+			padding: 1px;
+		}
+
+	div.fbutton div
+		{
+			float: left;
+			padding: 1px 3px;
+		}		
+		
+	div.fbutton span
+		{
+		float: left;
+		display: block;
+		padding: 3px;
+		}
+
+
+.widefat tr th.sorting_ASC,
+.widefat tr th.sorting_DESC{
+	
+}
+
+.widefat tr th span {
+	display:block;margin:0 10px }
+
+.widefat tr th.sorting_ASC span,
+.widefat tr th.sorting_DESC span,
+.widefat tr th.report_header span {
+	background:url(images/bg-sort.gif) no-repeat;
+	padding-right:10px;
+}
+
+.widefat tr th.report_header span { background-position:right 2px; }
+.widefat tr th.sorting_ASC span { background-position:right -13px; }
+.widefat tr th.sorting_DESC span { background-position:right -28px; }
