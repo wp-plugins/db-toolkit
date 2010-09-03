@@ -27,7 +27,7 @@ if($FieldSet[1] == 'date'){
 						changeMonth: true,
 						changeYear: true,
 						showOn: 'button',
-						buttonImage: '".WP_PLUGIN_URL."/dbtoolkit/data_form/fieldtypes/date/calendar.png',
+						buttonImage: '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/date/calendar.png',
 						buttonImageOnly: true,
 						duration: 50
 						
@@ -69,7 +69,7 @@ if($FieldSet[1] == 'datetime'){
 		changeMonth: true,
 		changeYear: true,
 		//showOn: 'button',
-		//buttonImage: WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/date/calendar.png',
+		//buttonImage: WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/date/calendar.png',
 		//buttonImageOnly: true,
 		duration: 50
 	});

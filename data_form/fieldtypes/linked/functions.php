@@ -246,7 +246,7 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 	$IReturn .= '</select></div>';
 	$VReturn .= '<div class="list_row1" style="padding:3px;">Value Field:<select name="Data[Content][_Linkedfields]['.$Field.'][Value][]" id="Ref_'.$Table.'">';
 		$VReturn .= $ValueReturn;
-	$VReturn .= '</select> <img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/nadd.png" width="16" width="16" id="addbtn_'.$Field.'" onclick="linked_addReturn(\''.$Table.'\', \''.$Field.'\', 0);" /></div>';
+	$VReturn .= '</select> <img src="'.WP_PLUGIN_URL.'/db-toolkit/images/nadd.png" width="16" width="16" id="addbtn_'.$Field.'" onclick="linked_addReturn(\''.$Table.'\', \''.$Field.'\', 0);" /></div>';
 	$VReturn .= '<div id="'.$Field.'_additionalValues">';
 		$TotalValues = count($Defaults[$Field]['Value'])-1;
 		if($TotalValues >= 1){
@@ -328,7 +328,7 @@ function linked_loadAdditionalValue($Table, $Field, $Default = false, $filtered 
 			$Val .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
 			$Sel = '';
 		}
-	$Val .= '</select> <img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cancel.png" width="16" width="16" onclick="jQuery(\'#'.$ElID.'\').remove();" /></div>';
+	$Val .= '</select> <img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cancel.png" width="16" width="16" onclick="jQuery(\'#'.$ElID.'\').remove();" /></div>';
 	}
 	
 	return $Val;
@@ -376,7 +376,7 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 	$ValField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Value][]" id="val_'.$Table.'">';
 		$ValField .= $Val;
 	$ValField .= '</select>';
-	$ValField  .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/nadd.png" width="16" width="16" id="addbtn_'.$Field.'" onclick="linked_addReturn(\''.$Table.'\', \''.$Field.'\', 1);" />';
+	$ValField  .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/nadd.png" width="16" width="16" id="addbtn_'.$Field.'" onclick="linked_addReturn(\''.$Table.'\', \''.$Field.'\', 1);" />';
 	$ValField .= '<div id="'.$Field.'_additionalValues">';
 		$TotalValues = count($Defaults[$Field]['Value'])-1;
 		if($TotalValues > 1){
@@ -449,7 +449,7 @@ function linked_makeFilterdLinkedField($IDField , $ValueField, $FilterField, $Fi
 		}
 		$Return .= '<option value="'.$row[$IDField].'" '.$Sel.' >'.$row['_Value_Field'].'</option>';
 	}
-	//$Return .= '</select>&nbsp;<a href="'.$Page.'" onclick="df_buildQuickCaptureForm('.$_GET['PageData']['ID'].', '.$RefEle.'); return false;"><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/add.png" width="16" height="16" alt="Add New" align="absmiddle" border="0" /></a>';
+	//$Return .= '</select>&nbsp;<a href="'.$Page.'" onclick="df_buildQuickCaptureForm('.$_GET['PageData']['ID'].', '.$RefEle.'); return false;"><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/add.png" width="16" height="16" alt="Add New" align="absmiddle" border="0" /></a>';
 return $Return;
 }
 
@@ -476,7 +476,7 @@ function linked_makeFilterdLinkedFilter($EID, $IDField , $ValueField, $FilterFie
 		$Return .= '<option value="'.$row[$IDField].'" '.$Sel.'>'.$row[$ValueField].'</option>';
 	}
 	$Return .= '</select>';
-//$Return .= '</select>&nbsp;<a href="'.$Page.'" onclick="df_buildQuickCaptureForm('.$_GET['PageData']['ID'].', '.$RefEle.'); return false;"><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/add.png" width="16" height="16" alt="Add New" align="absmiddle" border="0" /></a>';
+//$Return .= '</select>&nbsp;<a href="'.$Page.'" onclick="df_buildQuickCaptureForm('.$_GET['PageData']['ID'].', '.$RefEle.'); return false;"><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/add.png" width="16" height="16" alt="Add New" align="absmiddle" border="0" /></a>';
 return $Return;
 }
 
@@ -552,7 +552,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		$_SESSION['dataform']['OutScripts'] .= "
 			jQuery('#filter_".$Config['_Linkedfilterfields'][$Field]['Filter']."').unbind();
 			jQuery('#filter_".$Config['_Linkedfilterfields'][$Field]['Filter']."').bind('change', function(o){
-				jQuery('#status_".$Field."').html('<img src=\"".WP_PLUGIN_URL."/dbtoolkit/data_report/loading.gif\" width=\"16\" height=\"16\" align=\"absmiddle\"> <strong>loading...</strong>');
+				jQuery('#status_".$Field."').html('<img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/loading.gif\" width=\"16\" height=\"16\" align=\"absmiddle\"> <strong>loading...</strong>');
 				ajaxCall('linked_makeFilterdLinkedFilter', '".$EID."', '".$Config['_Linkedfilterfields'][$Field]['ID']."' , '".$Config['_Linkedfilterfields'][$Field]['Value']."', '".$Config['_Linkedfilterfields'][$Field]['Filter']."', ''+this.value+'', '".$Config['_Linkedfilterfields'][$Field]['Table']."', '".$Field."', '".$FieldTitle."', function(f){
 					//jQuery('#status_".$Field."').html(f);
 					//jQuery('.filterBoxes').multiSelect({ oneOrMoreSelected: '*' });

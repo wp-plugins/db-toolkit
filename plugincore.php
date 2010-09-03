@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.1.3
+Version: 0.1.4
 Author URI: http://www.digilab.co.za
 */
 
@@ -124,9 +124,9 @@ function dt_headers() {
 function dt_styles() {
 
     
-    wp_register_style('jqueryUI-base', WP_PLUGIN_URL . '/dbtoolkit/jqueryui/jquery-ui.css');
-    wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/dbtoolkit/libs/ui.dropdownchecklist.css');
-    wp_register_style('jquery-validate', WP_PLUGIN_URL . '/dbtoolkit/libs/validationEngine.jquery.css');
+    wp_register_style('jqueryUI-base', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+    wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
+    wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
     wp_enqueue_style('jqueryUI-base');
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
@@ -136,15 +136,15 @@ function dt_styles() {
 function dt_scripts() {
 
     // queue & register scripts
-    wp_register_script('data_report', WP_PLUGIN_URL . '/dbtoolkit/data_form/javascript.php', false, false, true);
-    wp_register_script('data_form', WP_PLUGIN_URL . '/dbtoolkit/data_report/javascript.php', false, false, true);
-    wp_register_script('jquery-ui-datepicker' , WP_PLUGIN_URL . '/dbtoolkit/libs/ui.datepicker.js');
-    wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/dbtoolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
-    wp_register_script('jquery-validate', WP_PLUGIN_URL . '/dbtoolkit/libs/jquery.validationEngine.js');
-    wp_register_script('highcharts', WP_PLUGIN_URL . '/dbtoolkit/data_report/js/highcharts.js');
+    wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
+    wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
+    wp_register_script('jquery-ui-datepicker' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.datepicker.js');
+    wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
+    wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
+    wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
     /*
      * experimentsl
-     * wp_register_script('jquery-flot', WP_PLUGIN_URL . '/dbtoolkit/libs/jquery.flot.js');
+     * wp_register_script('jquery-flot', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.flot.js');
      */
 
     wp_enqueue_script("jquery-ui-core");
@@ -161,10 +161,10 @@ function dt_scripts() {
     
     wp_enqueue_script('highcharts');
 
-        $Types = loadFolderContents(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes');
+        $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
-		if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php')){
-			wp_register_script('fieldType_'.$Type[1], WP_PLUGIN_URL.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php', false, false, true);
+		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php')){
+			wp_register_script('fieldType_'.$Type[1], WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php', false, false, true);
                         wp_enqueue_script('fieldType_'.$Type[1]);
                 }
 	}
@@ -180,7 +180,7 @@ function dt_menus() {
 
     
     
-    $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/dbtoolkit/data_report/cog.png');
+    $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	add_submenu_page("Database_Toolkit", 'Manage Interfaces', 'Edit', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
@@ -235,7 +235,7 @@ function dt_menus() {
 
             $pageName = $Interfaces[0]['ID'];
             
-            $groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/dbtoolkit/data_report/table.png');
+            $groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
             add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
                // add_action('admin_head-'.$subPage, 'dt_headers');
                // add_action('admin_print_scripts-'.$subPage, 'dt_scripts');
@@ -566,8 +566,8 @@ function dt_process() {
             $Config = $Element['Content'];
             if(!empty($Config['_Show_Plugins'])) {
                 // to do : configure adding plugins to the tool bar
-                if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_report/plugins/'.$exportFormat.'/functions.php')) {
-                    include_once(WP_PLUGIN_DIR.'/dbtoolkit/data_report/plugins/'.$exportFormat.'/functions.php');
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_report/plugins/'.$exportFormat.'/functions.php')) {
+                    include_once(WP_PLUGIN_DIR.'/db-toolkit/data_report/plugins/'.$exportFormat.'/functions.php');
                     mysql_close();
                     die;
                 }

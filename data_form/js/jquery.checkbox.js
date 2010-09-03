@@ -20,7 +20,7 @@
 		/* Default settings */
 		var settings = {
 			cls: 'jquery-checkbox',  /* checkbox  */
-			empty: WP_PLUGIN_DIR.'/dbtoolkit/data_form/css/empty.png'  /* checkbox  */
+			empty: WP_PLUGIN_DIR.'/db-toolkit/data_form/css/empty.png'  /* checkbox  */
 		};
 		
 		/* Processing settings */

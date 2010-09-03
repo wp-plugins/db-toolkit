@@ -153,10 +153,10 @@ if(empty($Config['_SearchMode'])) {
         //echo '<div class="fbutton ui-dialog-tile" style="display:none;"><div class="button"><span class="selectall" style="padding-left: 20px;" onclick="dialog_tile();">Tile Dialogs</span></div></div>';
 
         if(!empty($Config['_Show_Plugins'])) {
-            $ListButtons = loadFolderContents(WP_PLUGIN_DIR.'/dbtoolkit/data_report/plugins');
+            $ListButtons = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_report/plugins');
             foreach($ListButtons as $PlugButton) {
                 foreach($PlugButton as $Button) {
-                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_report/plugins/'.$Button[1].'/button.php');
+                    include(WP_PLUGIN_DIR.'/db-toolkit/data_report/plugins/'.$Button[1].'/button.php');
                 }
             }
         }

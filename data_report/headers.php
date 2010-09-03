@@ -5,7 +5,7 @@ $themeURL = get_bloginfo('template_url');
 if(is_admin()){
 /*
 ?>
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_report/css/table.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/css/table.css" />
 <?php
 */
 
@@ -24,7 +24,7 @@ if(file_exists('styles/themes/'.themeDir.'/toolbar.css')){
 <?php
 }else{
 ?>
-<link rel="stylesheet" href="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_report/css/style.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/css/style.css" type="text/css" />
 <?php
 }
 ?>

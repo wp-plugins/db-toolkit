@@ -92,7 +92,7 @@ if($SelectType == 'M'){
 	
 	$Row = dais_rowswitch($Row);
 		//$Tree .= '<div style="padding:3px;" class="'.$Row.'"><label for="pageNo'.$Page['ID'].'"><img src="system/dais/images/'.$Icon.'" width="16" height="16" border="0" align="middle" /><input name="Data[Content][PageList]'.$SelType.'" type="'.$InputType.'" id="pageNo'.$Page['ID'].'" value="'.$Page['ID'].'" '.$Script.'  '.$callbackscript.' >'.$Page['Title'].'</label></div>';
-		$Tree .= '<div style="padding:3px 3px 3px '.(3*($Level*4)).'px;" class="list_row4"><label for="'.$ValueName.'_'.$Page->ID.'"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/'.$Icon.'" width="16" height="16" border="0" align="absmiddle" /><input name="Data[Content]['.$ValueName.']'.$SelType.'" type="'.$InputType.'" id="'.$ValueName.'_'.$Page->ID.'" value="'.$Page->ID.'" '.$Script.'  '.$callbackscript.' > '.$Page->post_title.'</label>';
+		$Tree .= '<div style="padding:3px 3px 3px '.(3*($Level*4)).'px;" class="list_row4"><label for="'.$ValueName.'_'.$Page->ID.'"><img src="'.WP_PLUGIN_URL.'/db-toolkit/images/'.$Icon.'" width="16" height="16" border="0" align="absmiddle" /><input name="Data[Content]['.$ValueName.']'.$SelType.'" type="'.$InputType.'" id="'.$ValueName.'_'.$Page->ID.'" value="'.$Page->ID.'" '.$Script.'  '.$callbackscript.' > '.$Page->post_title.'</label>';
 		$Tree .= '</div>';
 		$Tree .= dais_pagetree($SelectType, $Default, $Name, $callback,$ValueName, $Page->ID, $Level+1);
 	}

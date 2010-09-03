@@ -108,19 +108,19 @@ function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class 
     $Hc = (($ImageHeight) / 2);
     //$FullSize = GetFileSize($Dir);
     if ($Option == 0) {
-        return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&h=" . $Size . "&q=" . $Quality . "&zc=1\" class=\"" . $Class . "\" border=\"0\">";
+        return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&h=" . $Size . "&q=" . $Quality . "&zc=1\" class=\"" . $Class . "\" border=\"0\">";
     }
     if ($Option == 1) {
-        return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&sy=" . (($Hc) / 2) . "&sw=" . $Hc . "&sh=" . $Hc . "&q=" . $Quality . "\" width=\"" . $Size . "\" height =\"" . $Size . "\" class=\"" . $Class . "\" border=\"0\">";
+        return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&sy=" . (($Hc) / 2) . "&sw=" . $Hc . "&sh=" . $Hc . "&q=" . $Quality . "\" width=\"" . $Size . "\" height =\"" . $Size . "\" class=\"" . $Class . "\" border=\"0\">";
     }
     if ($Option == 2) {
-        return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $ImageWidth . "&q=" . $Quality . "\" class=\"" . $Class . "\" border=\"0\">";
+        return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $ImageWidth . "&q=" . $Quality . "\" class=\"" . $Class . "\" border=\"0\">";
     }
     if ($Option == 3) {
-        return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" class=\"" . $Class . "\" border=\"0\">";
+        return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" class=\"" . $Class . "\" border=\"0\">";
     }
     if ($Option == 4) {
-        return WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "";
+        return WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "";
     }
     if ($Option == 5) {
         if ($ImageHeight > $ImageWidth) {
@@ -129,14 +129,14 @@ function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class 
             }
             $new_width = $ImageWidth * ($Size / $ImageHeight);
             //return "<img src=\"libs/useimage.class.php?src=/".$TDir."&h=".$Size."&q=".$Quality."\" height=\"".$Size."\" width=\"".round($new_width)."\" border=\"0\">";
-            return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" height=\"" . $Size . "\" width=\"" . round($new_width) . "\" border=\"0\">";
+            return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" height=\"" . $Size . "\" width=\"" . round($new_width) . "\" border=\"0\">";
         } else {
             if ($ImageWidth < $Size) {
                 $Size = $ImageWidth;
             }
             $new_height = $ImageHeight * ($Size / $ImageWidth);
             //return "<img src=\"libs/useimage.class.php?src=/".$TDir."&w=".$Size."&q=".$Quality."\" width=\"".$Size."\" height=\"".round($new_height)."\" border=\"0\">";
-            return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "\" width=\"" . $Size . "\" height=\"" . round($new_height) . "\" border=\"0\">";
+            return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "\" width=\"" . $Size . "\" height=\"" . round($new_height) . "\" border=\"0\">";
         }
     }
     if ($Option == 6) {
@@ -146,14 +146,14 @@ function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class 
             }
             $new_width = $ImageWidth * ($Size / $ImageHeight);
             //return "<img src=\"libs/useimage.class.php?src=/".$TDir."&h=".$Size."&q=".$Quality."\" height=\"".$Size."\" width=\"".round($new_width)."\" border=\"0\">";
-            return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" height=\"" . $Size . "\" width=\"" . round($new_width) . "\" border=\"0\">";
+            return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" height=\"" . $Size . "\" width=\"" . round($new_width) . "\" border=\"0\">";
         } else {
             if ($ImageWidth < $Size) {
                 $Size = $ImageWidth;
             }
             $new_height = $ImageHeight * ($Size / $ImageWidth);
             //return "<img src=\"libs/useimage.class.php?src=/".$TDir."&w=".$Size."&q=".$Quality."\" width=\"".$Size."\" height=\"".round($new_height)."\" border=\"0\">";
-            return "<img src=\"".WP_PLUGIN_URL."/dbtoolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "\" width=\"" . $Size . "\" height=\"" . round($new_height) . "\" border=\"0\">";
+            return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "\" width=\"" . $Size . "\" height=\"" . round($new_height) . "\" border=\"0\">";
         }
     }
 }

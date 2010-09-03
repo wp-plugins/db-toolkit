@@ -116,8 +116,8 @@ function di_showItem($EID, $Item, $Setup = false){
         // Build Query
 	foreach($Config['_Field'] as $Field=>$Type){
 		// Run Filters that have been set through each field type
-		if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')){
-			include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php');
+		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')){
+			include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php');
 		}
 		//apply a generic keyword filter to each field is a key word has been sent
 		if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])){
@@ -190,16 +190,16 @@ function di_showItem($EID, $Item, $Setup = false){
 				}
 			}
 		//	dump($Type);
-			if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')){
+			if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')){
 				if(!empty($Config['_FieldTitle'][$Field])){					
 					$name = $Config['_FieldTitle'][$Field];
 				}else{
 					$name = df_parseCamelCase($Field);
 				}
 				$PreReturn = str_replace('{{_'.$Field.'_name}}', $name, $PreReturn);
-				if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/output.php')){
+				if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/output.php')){
 					$Out = false;
-					include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/output.php');
+					include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/output.php');
 					$PreReturn = str_replace('{{'.$Field.'}}', $Out, $PreReturn);
 				}
 				$PreReturn = str_replace('{{_PageID}}', $Element['ParentDocument'], $PreReturn);
@@ -255,7 +255,7 @@ function di_showItem($EID, $Item, $Setup = false){
 								$Field = $Fields['Name'];								
 								$FieldSet = $Config['_Field'][$Field];
 								//$FieldSet = explode('_',$FieldDet);
-									if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')){
+									if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')){
 										if(!empty($Config['_FieldTitle'][$Field])){					
 											$name = $Config['_FieldTitle'][$Field];
 										}else{
@@ -263,7 +263,7 @@ function di_showItem($EID, $Item, $Setup = false){
 										}
 										//echo $Field;
 										$Form .= '<div id="view-field-'.$Field.'" class="view-gen-field-wrapper"><label id="lable_'.$Element['ID'].'_'.$Field.'" for="entry_'.$Element['ID'].'_'.$Field.'" class="view-gen-lable '.$FieldSet[1].'">'.$name.'</label>';
-										include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+										include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
 										$Val = '';
 										if(!empty($Data[$Field])){
 										$Val = stripslashes($Data[$Field]);
@@ -278,7 +278,7 @@ function di_showItem($EID, $Item, $Setup = false){
 												//df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
 												$Types = $FieldSet;
 												$Out = false;
-												include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/output.php');
+												include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/output.php');
 												$Pre = '<div id="view-field-'.$Field.'-data" class="view-gen-field-data-wrapper">'.$Out.'</div>';
 											//$Pre .= '</td>';
 											//$Pre .= '</tr>';
@@ -389,11 +389,11 @@ function di_showItem($EID, $Item, $Setup = false){
 					
 					
 					if(!empty($Types[1])){
-						include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
+						include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
 						if($FieldTypes[$Types[1]]['visible'] == true){
 							$Out = false;
 							$Out = '<div id="lable_'.$Element['ID'].'_'.$Field.'" for="entry_'.$Element['ID'].'_'.$Field.'" class="view-gen-lable"><strong>'.$FieldTitle.'</strong></div>';
-							include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/output.php');
+							include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/output.php');
 							$$ColumnSet .= $Out;
 						}
 					}
@@ -412,11 +412,11 @@ function di_showItem($EID, $Item, $Setup = false){
 				}else{
 					$FieldTitle = df_parsecamelcase($Field);						
 				}
-				include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
+				include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
 				if($FieldTypes[$Types[1]]['visible'] == true){
 					$Out = false;
 					$Out = '<div id="lable_'.$Element['ID'].'_'.$Field.'" for="entry_'.$Element['ID'].'_'.$Field.'" class="view-gen-lable"><strong>'.$FieldTitle.'</strong></div>';
-					include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/output.php');
+					include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/output.php');
 					//echo $Out;
 					if(!empty($Columns)){
 						if(in_array($Field, $Columns['FieldList_Main'])){

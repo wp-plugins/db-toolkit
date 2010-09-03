@@ -5,11 +5,11 @@ if(empty($_SESSION['dataform']['OutScripts'])) {
 }
 
 
-$FieldTypeFunctions = loadFolderContents(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes');
+$FieldTypeFunctions = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 
 foreach($FieldTypeFunctions[0] as $Type) {
-    if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/functions.php')) {
-        include_once(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/functions.php');
+    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/functions.php')) {
+        include_once(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/functions.php');
     }
 }
 
@@ -74,10 +74,10 @@ if(is_admin()) {
                 if(!empty($Config['Content']['_Required'][$Field])) {
                     $Sel = 'checked="checked"';
                 }
-                echo '<div id="Field_'.$Field.'" class="list_row1 table_sorter" style="padding:3px;"><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/arrow_out.png" align="absmiddle" class="OrderSorter" /><input type="checkbox" name="Data[Content][_Required]['.$Field.']" id="required_'.$Field.'" '.$Sel.' /> '.ucwords($name).' : '.df_fieldTypes($Field, $Table, $row, $Defaults).'<span class="list_row3" id="ExtraSetting_'.$Field.'">';
+                echo '<div id="Field_'.$Field.'" class="list_row1 table_sorter" style="padding:3px;"><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/arrow_out.png" align="absmiddle" class="OrderSorter" /><input type="checkbox" name="Data[Content][_Required]['.$Field.']" id="required_'.$Field.'" '.$Sel.' /> '.ucwords($name).' : '.df_fieldTypes($Field, $Table, $row, $Defaults).'<span class="list_row3" id="ExtraSetting_'.$Field.'">';
                 if(!empty($FieldSet[1])) {
-                    if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
-                        include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
+                        include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
                         if($FieldTypes[$FieldSet[1]]['func'] != 'null') {
                             echo $FieldTypes[$FieldSet[1]]['func']($Field, $Table, $Config);
                         }
@@ -155,20 +155,20 @@ if(is_admin()) {
         //$Return = $Type[0];
         
         if($Defaults[$Field] == 'hidden' || empty($Defaults[$Field])){
-            $Icon = WP_PLUGIN_URL.'/dbtoolkit/data_form/wand.png';
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Auto</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Auto</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
             return $Return;
         }
-        if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/conf.php')) {
-            $Icon = WP_PLUGIN_URL.'/dbtoolkit/data_form/fieldtype.png';
-            if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/icon.png')) {
-                $Icon = WP_PLUGIN_URL.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/icon.png';
+        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/conf.php')) {
+            $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtype.png';
+            if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/icon.png')) {
+                $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/icon.png';
             }
 
-            include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/conf.php');
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/conf.php');
             //vardump($FieldTypes[$Type[0]]);
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$FieldTypes[$Type[1]]['name'].'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$FieldTypes[$Type[1]]['name'].'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
 
         }
@@ -179,7 +179,7 @@ if(is_admin()) {
     function df_buildFieldTypesMenu($Field){
     
 
-        $Types = loadFolderContents(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes');
+        $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
         //$Return = '<select name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" >';
         //$Return = '<select name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" >'
         //$Return .= '<optgroup label="Auto Increment">';
@@ -189,7 +189,7 @@ if(is_admin()) {
         
         $Return .= '<div style="width:33.333333%; float:left;">';
         $Return .= '<div style="padding:3px;" class="highlight">Default / Auto Increment</div>';
-            $Icon = WP_PLUGIN_URL.'/dbtoolkit/data_form/wand.png';
+            $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
             $Return .= '<div style="padding:3px;">';
             $Return .= '<a href="#" id="'.$Field.'_hidden" onclick="return df_setOptions(\''.$Field.'\', \'null\', \'hidden\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Auto / Default</span></a>';
             $Return .= '</div>';
@@ -197,20 +197,20 @@ if(is_admin()) {
 
         foreach($Types[0] as $Type) {
             
-            if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/conf.php')) {
-                include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/conf.php');
+            if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php')) {
+                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php');
                 //$Return .= '<optgroup label="'.$FieldTypeTitle.'">';
-                $CIcon = WP_PLUGIN_URL.'/dbtoolkit/data_form/fieldtype.png';
-                if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/icon.png')) {
-                    $CIcon = WP_PLUGIN_URL.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/icon.png';
+                $CIcon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtype.png';
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png')) {
+                    $CIcon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png';
                 }
                 $Return .= '<div style="width:33.333333%; float:left;">';
                 $Return .= '<div style="padding:3px;" class="highlight"><span style="background: url('.$CIcon.') left center no-repeat; padding:5px 20px;"> '.$FieldTypeTitle.'</span></div>';
                 foreach($FieldTypes as $Key=>$FieldSet) {
                     //$Return .= $FieldSet['name'].'<br />';
-                    $Icon = WP_PLUGIN_URL.'/dbtoolkit/data_form/insert.png';
-                    if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png')) {
-                        $Icon = WP_PLUGIN_URL.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png';
+                    $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/insert.png';
+                    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png')) {
+                        $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png';
                     }
                     $Return .= '<div style="padding:4px;">';
                     $Return .= '<a href="#" id="'.$Field.'_'.$Type[1].'_'.$Key.'" onclick="return df_setOptions(\''.$Field.'\', \''.$FieldSet['func'].'\', \''.$Type[1].'_'.$Key.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 20px;"> '.$FieldSet['name'].'</span></a>';
@@ -463,7 +463,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                         $FieldDet = $Config['_Field'][$Field];
                         $FieldSet = explode('_',$FieldDet);
                         //dump($FieldSet);
-                        if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
+                        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
                             if(!empty($Config['_FieldTitle'][$Field])) {
                                 $name = $Config['_FieldTitle'][$Field];
                             }else {
@@ -483,7 +483,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                 }
                             }
                             //echo $Field;
-                            include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
                             if(substr($Field,0, 2) != '__' || !empty($FieldTypes[$FieldSet[1]]['cloneview'])) {
                                 if(!empty($FieldTypes[$FieldSet[1]]['visible'])) {
                                     $Form .= '<div id="form-field-'.$Field.'" class="form-gen-field-wrapper"><label id="lable_'.$Element['ID'].'_'.$Field.'" for="entry_'.$Element['ID'].'_'.$Field.'" class="form-gen-lable '.$FieldSet[1].'">'.$name.'</label>';
@@ -498,7 +498,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     //$Pre .= '<td class="'.$Row.'" style="background-color:inherit; border:inherit;padding:3px;" valign="top">';
                                     //df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
                                     ob_start();
-                                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $Pre = ob_get_clean();
                                     //$Pre .= '</td>';
                                     //$Pre .= '</tr>';
@@ -517,7 +517,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
                                 }else {
                                     ob_start();
-                                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $Hidden .= ob_get_clean();
                                 }
                             }
@@ -689,8 +689,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         //if(file_exists(
         $FieldSet = explode('_',$Type);
 
-        if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
-            include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
             $Val = '';
             if(!empty($Defaults[$Field])) {
                 $Val = stripslashes($Defaults[$Field]);
@@ -704,7 +704,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                     $Pre .= '<td class="'.$Row.'" style="background-color:inherit; border:inherit;padding:3px;" valign="top">';
                     //df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
                     ob_start();
-                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                     $Pre .= ob_get_clean();
                     // Caption
                     $Pre .= '<div class="caption">';
@@ -723,7 +723,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                 }else {
                     $Row = dais_rowSwitch($Row);
                     ob_start();
-                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                     $Hidden .= ob_get_clean();
                 }
             }

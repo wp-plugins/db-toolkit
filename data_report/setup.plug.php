@@ -27,7 +27,7 @@
         visibility: hidden;
     }
 </style>
-<img src="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_report/arrow_out.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_report/tag.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
+<img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/arrow_out.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/tag.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
 <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
 <div id="tabs">
     <ul class="content-box-tabs">
@@ -145,9 +145,9 @@
     </div>
     <?php
 
-    include(WP_PLUGIN_DIR.'/dbtoolkit/data_report/formlayout.php');
-    include(WP_PLUGIN_DIR.'/dbtoolkit/data_report/viewlayout.php');
-    include(WP_PLUGIN_DIR.'/dbtoolkit/data_report/chartlayout.php');
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_report/formlayout.php');
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_report/viewlayout.php');
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartlayout.php');
 
     ?>
     <div id="tabs-3">
@@ -414,7 +414,7 @@
                                         //echo dais_customfield('radio', $Interface['_interfaceName'], '_ItemViewInterface', '_ItemViewInterface', 'list_row1' , 0, $Sel);
                                         echo '<div class="list_row4 '.$Cls.'" style="padding: 3px 3px 3px 12px;">';
                                         echo '<label for="_ItemViewInterface_'.$Interface['ID'].'">';
-                                            echo '<img width="16" height="16" border="0" align="absmiddle" src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/table.png">';
+                                            echo '<img width="16" height="16" border="0" align="absmiddle" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/table.png">';
                                             echo '<input type="radio" value="'.$Interface['ID'].'" id="_ItemViewInterface_'.$Interface['ID'].'" name="Data[Content][_ItemViewInterface]" '.$Sel.' '.$Dis.'> '.$Interface['_interfaceName'].'<div style="padding: 3px 3px 3px 18px;" class="description">'.$Interface['_ReportDescription'].'</div></label>';
                                         echo '</div>';
                                     }

@@ -341,7 +341,7 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 			$Return .= '<div style="padding:2px;float:left;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />
 						<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="FieldSearch" id="startRange_'.$EID.'" value="'.$DateFrom.'" size="12" /> to 
 						<input type="text" class="FieldSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'" value="'.$DateTo.'" size="12" /> 
-						<a id="pickerSelect"><img id="calPick_'.$EID.'" src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/calendar_month.png" alt="Date Picker" style="cursor:pointer;" align="absmiddle" /></a>&nbsp;&nbsp;&nbsp;</div>';
+						<a id="pickerSelect"><img id="calPick_'.$EID.'" src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/calendar_month.png" alt="Date Picker" style="cursor:pointer;" align="absmiddle" /></a>&nbsp;&nbsp;&nbsp;</div>';
 			$Return .= '<div id="DatePickerBox_'.$EID.'" style="clear:left;" class="MultiDatePickerBox"><div style="clear:both;"></div></div>';
 			
 			$_SESSION['dataform']['OutScripts'] .= "

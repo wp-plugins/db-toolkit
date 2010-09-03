@@ -114,10 +114,10 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 						$File = explode('|', $Value);
 						$Dets = pathinfo($File[1]);
 						$ext = strtolower($Dets['extension']);
-						if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
-							$Icon = '<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
+						if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
+							$Icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
 						}else{
-							$Icon = '<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/file.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
+							$Icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
 						}
 						$Output .= '<a href="'.$File[0].'" target="_blank">'.$Icon.'</a>&nbsp;';
 					}
@@ -126,10 +126,10 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 					$File = explode('|', $Value);
 					$Dets = pathinfo($File[1]);
 					$ext = strtolower($Dets['extension']);
-					if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
-						$Icon = '<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" align="absmiddle" />&nbsp;';
+					if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
+						$Icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" align="absmiddle" />&nbsp;';
 					}else{
-						$Icon = '<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/file.gif" align="absmiddle" />&nbsp;';					
+						$Icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" align="absmiddle" />&nbsp;';					
 					}
 				}
 				
@@ -183,9 +183,9 @@ if(!empty($_GET['uploadify'])){
 	//return $newLoc;
 	//echo '<input $newLoc.'|'.$_FILES['Filedata']['name'];
 //	dump($_FILES['Filedata']);
-	$icon = '<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/file.gif" width="16" height="16" align="absmiddle" />';
-	if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif')){
-		$icon = '<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif" width="16" height="16" align="absmiddle" />';
+	$icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" width="16" height="16" align="absmiddle" />';
+	if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif')){
+		$icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif" width="16" height="16" align="absmiddle" />';
 	}
 	echo '<div class="uploadifyQueueItem" id="entry_'.$El[1].'_'.uniqid().'">';
 	echo '<span class="fileName">'.$icon.' '.$_FILES['Filedata']['name'].'</span>&nbsp;<span class="caption">Uploaded.</span>';

@@ -314,7 +314,7 @@ if(is_admin()) {
         $name = df_parseCamelCase($Field);
         if(!empty($Config['Content']['_FieldTitle'][$Field])) {
             if(substr($Field, 0, 2) == '__') {
-                $name = '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/copy.png" width="16" height="16" align="absmiddle" /> '.$Config['Content']['_FieldTitle'][$Field];
+                $name = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/copy.png" width="16" height="16" align="absmiddle" /> '.$Config['Content']['_FieldTitle'][$Field];
             }else {
                 $name = $Config['Content']['_FieldTitle'][$Field];
             }
@@ -324,9 +324,9 @@ if(is_admin()) {
 
         $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;">';
 
-        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
+        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
 
-        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" />';
+        $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" />';
 
         $PreReturn[$Field] .= '<h3>'.$name.'</h3>';
         
@@ -509,9 +509,9 @@ if(is_admin()) {
         $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> '.df_fieldTypes($Field, $Table, $row, $Defaults['_Field']).dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
         // inline settings
         //class="button-highlighted"
-        $PreReturn[$Field] .= ' &nbsp;<span class="'.$UClass.'" id="unique_'.$Field.'" onclick="df_setToggle(\'unique_'.$Field.'\');" title="Unique"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        $PreReturn[$Field] .= ' &nbsp;<span class="'.$RClass.'" id="required_'.$Field.'" onclick="df_setToggle(\'required_'.$Field.'\');" title="Required"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        $PreReturn[$Field] .= ' &nbsp;<span class="'.$SClass.'" id="issortable_'.$Field.'" onclick="df_setToggle(\'issortable_'.$Field.'\');" title="Sortable"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $PreReturn[$Field] .= ' &nbsp;<span class="'.$UClass.'" id="unique_'.$Field.'" onclick="df_setToggle(\'unique_'.$Field.'\');" title="Unique"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $PreReturn[$Field] .= ' &nbsp;<span class="'.$RClass.'" id="required_'.$Field.'" onclick="df_setToggle(\'required_'.$Field.'\');" title="Required"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $PreReturn[$Field] .= ' &nbsp;<span class="'.$SClass.'" id="issortable_'.$Field.'" onclick="df_setToggle(\'issortable_'.$Field.'\');" title="Sortable"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
 
         $PreReturn[$Field] .= '<div class="widefat" id="'.$Field.'_FieldTypePanel" style="display:none; text-align:left;"></div>';
 
@@ -521,8 +521,8 @@ if(is_admin()) {
         $PreReturn[$Field] .= '</div><div class="admin_config_panel" style="text-align:right;" id="ExtraSetting_'.$Field.'">';
         unset($Types);
         $Types = explode('_', $Defaults['_Field'][$Field]);
-        if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')) {
-            include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
+        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')) {
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
             $func = $FieldTypes[$Types[1]]['func'];
             if($func != 'null') {
                 if($func != '') {
@@ -565,7 +565,7 @@ if(is_admin()) {
 
             $name = df_parseCamelCase($Field);
             //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
-            $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" /><h3>'.df_parseCamelCase($Field).'</h3>';
+            $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;"><img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" style="float:right; padding:5px;" /><h3>'.df_parseCamelCase($Field).'</h3>';
             // Linking Master
             $PreReturn[$Field] .= '<div style="padding:5px;">';
 
@@ -630,7 +630,7 @@ if(is_admin()) {
                     $Justify = $Config['Content']['_Justify'][$Field];
                 }
             }
-            $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/dbtoolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
+            $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
         $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="'.$Title.'" name="Data[Content][_FieldTitle]['.$Field.']" /> ';
         $PreReturn[$Field] .= 'Caption: <input type="text" value="'.$Caption.'" name="Data[Content][_FieldCaption]['.$Field.']" /></div>';
         $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="'.$Width.'" name="Data[Content][_WidthOverride]['.$Field.']" />';
@@ -646,9 +646,9 @@ if(is_admin()) {
 
             $PreReturn[$Field] .= '<div class="admin_config_toolbar"> '.df_fieldTypes($Field, $Table, $row, $Defaults['_Field']).dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
             
-        $PreReturn[$Field] .= ' &nbsp;<span class="'.$UClass.'" id="unique_'.$Field.'" onclick="df_setToggle(\'unique_'.$Field.'\');" title="Unique"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        $PreReturn[$Field] .= ' &nbsp;<span class="'.$RClass.'" id="required_'.$Field.'" onclick="df_setToggle(\'required_'.$Field.'\');" title="Required"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        $PreReturn[$Field] .= ' &nbsp;<span class="'.$SClass.'" id="issortable_'.$Field.'" onclick="df_setToggle(\'issortable_'.$Field.'\');" title="Sortable"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $PreReturn[$Field] .= ' &nbsp;<span class="'.$UClass.'" id="unique_'.$Field.'" onclick="df_setToggle(\'unique_'.$Field.'\');" title="Unique"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $PreReturn[$Field] .= ' &nbsp;<span class="'.$RClass.'" id="required_'.$Field.'" onclick="df_setToggle(\'required_'.$Field.'\');" title="Required"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $PreReturn[$Field] .= ' &nbsp;<span class="'.$SClass.'" id="issortable_'.$Field.'" onclick="df_setToggle(\'issortable_'.$Field.'\');" title="Sortable"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
 
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Unique]['.$Field.']" id="unique_'.$Field.'_check" '.$USel.' />';
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Required]['.$Field.']" id="required_'.$Field.'_check" '.$RSel.' />';
@@ -663,8 +663,8 @@ if(is_admin()) {
 
 
             $Types = explode('_', $Defaults['_Field'][$Field]);
-            if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')) {
-                include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
+            if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')) {
+                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
                 $func = $FieldTypes[$Types[1]]['func'];
                 if($func != 'null') {
                     if($func != '') {
@@ -733,9 +733,9 @@ if(is_admin()) {
 
             foreach($Ref['Content']['_Field'] as $Field=>$FieldSet) {
                 $Row = dais_rowswitch($Row);
-                //$Return .= '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/arrow_out.png" align="absmiddle" class="OrderSorter" />&nbsp;<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/tag.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" /><input type="texfield" style="width:40px; display:none;" name="Data[Content][_WidthOverride]['.$Field.']" id="overide_'.$Field.'" /> &nbsp;'.df_parseCamelCase($Field).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
-                $Return .= '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/arrow_out.png" align="absmiddle" class="OrderSorter" />';
-                $Return .= '&nbsp;<img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/tag.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" /><span id="overide_'.$Field.'" style="display:none;">';
+                //$Return .= '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/arrow_out.png" align="absmiddle" class="OrderSorter" />&nbsp;<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/tag.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" /><input type="texfield" style="width:40px; display:none;" name="Data[Content][_WidthOverride]['.$Field.']" id="overide_'.$Field.'" /> &nbsp;'.df_parseCamelCase($Field).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
+                $Return .= '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/arrow_out.png" align="absmiddle" class="OrderSorter" />';
+                $Return .= '&nbsp;<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/tag.png" align="absmiddle" onclick="jQuery(\'#overide_'.$Field.'\').toggle();" /><span id="overide_'.$Field.'" style="display:none;">';
                 //New Options
                 $Return .= '&nbsp;Width: <input type="texfield" style="width:40px;" name="Data[Content][_WidthOverride]['.$Field.']" />&nbsp;';
                 $Return .= df_alignmentSetup($Field);
@@ -743,8 +743,8 @@ if(is_admin()) {
                 $Return .= '</span> &nbsp;'.df_parseCamelCase($Field).' : '.dr_reportListTypes($Field, $Ref['Content']['_IndexType']).df_fieldTypes($Field, $Table, $row, $Ref['Content']['_Field']).'<span id="ExtraSetting_'.$Field.'">';
 
                 $Types = explode('_', $FieldSet);
-                if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')) {
-                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php')) {
+                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Types[0].'/conf.php');
                     $func = $FieldTypes[$Types[1]]['func'];
                     if($func != 'null') {
                         $Return .= '<div style="padding:3px; text-align:right;"><input type="button" class="buttons" value="Setup" onclick="toggle(\''.$Field.'_configPanel\');" /></div>';
@@ -778,10 +778,10 @@ if(is_admin()) {
 
 
 
-    $Return = ' &nbsp;<span class="'.$VClass.'" id="displayType_'.$Field.'_show" onclick="" title="Visible"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/eye.png) left center no-repeat; padding:5px 8px;"></span></span>';
+    $Return = ' &nbsp;<span class="'.$VClass.'" id="displayType_'.$Field.'_show" onclick="" title="Visible"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/eye.png) left center no-repeat; padding:5px 8px;"></span></span>';
     $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType]['.$Field.']" id="unique_'.$Field.'_check" '.$USel.' />';
 
-    $Return .= ' &nbsp;<span class="'.$IClass.'" id="displayType_'.$Field.'_show" onclick="" title="Searchable"><span style="background: url('.WP_PLUGIN_URL.'/dbtoolkit/data_report/indexed.png) left center no-repeat; padding:5px 8px;"></span></span>';
+    $Return .= ' &nbsp;<span class="'.$IClass.'" id="displayType_'.$Field.'_show" onclick="" title="Searchable"><span style="background: url('.WP_PLUGIN_URL.'/db-toolkit/data_report/indexed.png) left center no-repeat; padding:5px 8px;"></span></span>';
     $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType]['.$Field.']" id="unique_'.$Field.'_check" '.$USel.' />';
 
    // return $Return;
@@ -1249,8 +1249,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     
     foreach($Config['_Field'] as $Field=>$Type) {
         // Run Filters that have been set through each field type
-        if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')) {
-            include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php');
+        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')) {
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php');
         }
         //apply a generic keyword filter to each field is a key word has been sent
         if(($Config['_IndexType'][$Field][0]) == 'index'){
@@ -1744,7 +1744,7 @@ var ".$ChartID." = new Highcharts.Chart({
                     if(!empty($Config['_Show_View']) || !empty($Config['_Show_Edit'])) {
                         $ViewLink = '';
                         if(!empty($Config['_Show_View'])) {
-                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(".$row['_return_'.$Config['_ReturnFields'][0]].", ".$EID.", ".$isModal."); return false;\"><img src=\"".WP_PLUGIN_URL."/dbtoolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(".$row['_return_'.$Config['_ReturnFields'][0]].", ".$EID.", ".$isModal."); return false;\"><img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
                             if(!empty($Config['_ItemViewPage'])) {
                                 $ReportVars = array();
                                 foreach($Config['_ReturnFields'] as $ReportReturnField) {
@@ -1760,14 +1760,14 @@ var ".$ChartID." = new Highcharts.Chart({
                                 }else {
                                     $PageLink = $PageLink.'?'.htmlspecialchars_decode(http_build_query($ReportVars));
                                 }
-                                $ViewLink = "<a href=\"".$PageLink."\"><img src=\"".WP_PLUGIN_URL."/dbtoolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
+                                $ViewLink = "<a href=\"".$PageLink."\"><img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
                             }
                         }
                         if(!empty($Config['_Show_Edit'])) {
                             if($ViewLink != '') {
                                 $ViewLink .= " ";
                             }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm('.$EID.', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm('.$EID.', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                         }
                         $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn);//'Edit | View';
                         $PreReturn = str_replace('{{_ViewLink}}', getdocument($Config['_ItemViewPage'])."?".$ReportReturnString, $PreReturn);//'Edit | View';
@@ -1885,11 +1885,11 @@ var ".$ChartID." = new Highcharts.Chart({
                                 if(!empty($Config['_InlineEdit'][$Field])) {
                                     $Req = 'inlineedit';
                                     $FieldSet = $Config['_Field'][$Field];
-                                    //$ReportReturn .= WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php';
+                                    //$ReportReturn .= WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php';
                                     ob_start();
                                     $Defaults[$Field] = $row['_sourceid_'.$Field];
-                                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
-                                    include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $ReportReturn .= ob_get_clean();
                                 }else {
                                     $PreReportReturn = '';
@@ -2050,7 +2050,7 @@ var ".$ChartID." = new Highcharts.Chart({
                     $ActionWidth = 16;
                     if(!empty($Config['_Show_View'])) {
                         $ActionWidth = $ActionWidth+16;
-                        $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('".$row['_return_'.$Config['_ReturnFields'][0]]."', '".$EID."', ".$isModal."); return false;\"><img src=\"".WP_PLUGIN_URL."/dbtoolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                        $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('".$row['_return_'.$Config['_ReturnFields'][0]]."', '".$EID."', ".$isModal."); return false;\"><img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
                         if(!empty($Config['_ItemViewPage'])) {
                             $ReportVars = array();
                             foreach($Config['_ReturnFields'] as $ReportReturnField) {
@@ -2066,7 +2066,7 @@ var ".$ChartID." = new Highcharts.Chart({
                             }else {
                                 $PageLink = $PageLink.'?'.htmlspecialchars_decode(http_build_query($ReportVars));
                             }
-                            $ViewLink = "<a href=\"".$PageLink."\"><img src=\"".WP_PLUGIN_URL."/dbtoolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
+                            $ViewLink = "<a href=\"".$PageLink."\"><img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
                         }
                     }
                     if(!empty($Config['_Show_Edit'])) {
@@ -2074,14 +2074,14 @@ var ".$ChartID." = new Highcharts.Chart({
                         if($ViewLink != '') {
                             $ViewLink .= " ";
                         }
-                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                     }
                     if(!empty($Config['_Show_Delete_action'])) {
                         $ActionWidth = $ActionWidth+16;
                         if($ViewLink != '') {
                             $ViewLink .= " ";
                         }
-                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
+                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
                     }
                     //vardump($Config);
 
@@ -2151,11 +2151,11 @@ var ".$ChartID." = new Highcharts.Chart({
             $ReportReturn .= '<div class="reportFooter_totals" style="float:left; width:47%;">';
             //$ReportReturn .= '<div class="reportFooter_totals">';
             if($TotalPages > 1) {
-                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
-                $ReportReturn .= '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Prev.');"><div><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
+                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
+                $ReportReturn .= '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Prev.');"><div><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
                 $ReportReturn .= '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_'.$EID.'" style="width:30px; font-size:11px;" value="'.$Page.'" onkeypress="dr_pageInput(\''.$EID.'\', this.value);" /> of '.$TotalPages.'</div>';
-                $ReportReturn .= '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Next.');"><div><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
-                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/dbtoolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
+                $ReportReturn .= '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Next.');"><div><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
+                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
             }
 
 
@@ -2183,9 +2183,9 @@ var ".$ChartID." = new Highcharts.Chart({
             }
             if(!empty($Config['_ListViewTemplateFooter'])) {
 
-                $prevbutton = '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Prev.');"><div><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
+                $prevbutton = '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Prev.');"><div><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
                 $pagejump = '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_'.$EID.'" style="width:30px; font-size:11px;" value="'.$Page.'" onkeypress="dr_pageInput(\''.$EID.'\', this.value);" /> of '.$TotalPages.'</div>';
-                $nextbutton = '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Next.');"><div><img src="'.WP_PLUGIN_URL.'/dbtoolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
+                $nextbutton = '<div class="fbutton" onclick="dr_goToPage(\''.$EID.'\', '.$Next.');"><div><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
 
                 if($Count['Total'] == 0) {
                     $nothingFound = 'Nothing Found';

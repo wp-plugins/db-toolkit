@@ -8,17 +8,17 @@ $themeURL = get_bloginfo('template_url');
 <?php
 }else{
 ?>
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_form/css/form.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/css/form.css" />
 <?php
 }
 ?>
-<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_form/css/ui.timepickr.css" />
-<script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/dbtoolkit/data_form/js/ui.timepickr.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/css/ui.timepickr.css" />
+<script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/js/ui.timepickr.js"></script>
 <?php
-	$Types = loadFolderContents(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes');
+	$Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
-		if(file_exists(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/header.php')){
-			include(WP_PLUGIN_DIR.'/dbtoolkit/data_form/fieldtypes/'.$Type[1].'/header.php');
+		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php')){
+			include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php');
 		}
 	}
 
