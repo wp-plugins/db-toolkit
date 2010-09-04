@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.4
+Stable tag: 0.1.5
 
 Create interfaces (forms, reports, graphs etc.) from database tables already existing.
 
@@ -51,3 +51,9 @@ Well, I think some questions need to be asked first. Please use the forum link t
 
 = 0.1.0 alpha =
 * Initial alpha release. (still heavily in development)
+= 0.1.2 - 0.1.3 =
+This contained minor bug fixes for stability
+= 0.1.4 =
+Added support for cloning cloned fields. this allows you to create a chain link or multiple references to fields
+= 0.1.5 =
+fixed a bug that prevented viewing of cloned cloned fields.
