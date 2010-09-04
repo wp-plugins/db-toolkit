@@ -1285,13 +1285,14 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $cloneReturns[$fieldToFix] = explode(' AS ', $select);            
         }
     }
-    
+    if(!empty($cloneReturns)){
     foreach($cloneReturns as $cloneKey=>$cloneField){
         $pureName = str_replace('prim.','',$cloneField[0]);
         if(!empty($cloneReturns[$pureName])){
            $cloneReturns[$cloneKey][0] = $cloneReturns[$pureName][0];
            $querySelects[$cloneKey] = implode(' AS ', $cloneReturns[$cloneKey]);
         }
+    }
     }
 // combine keyword search if there are any
     if(!empty($preWhere)) {
