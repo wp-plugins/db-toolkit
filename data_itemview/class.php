@@ -134,7 +134,23 @@ function di_showItem($EID, $Item, $Setup = false){
 		}
 	$joinIndex++;
 	}
-	
+
+         //post clone fixes
+            foreach($querySelects as $fieldToFix=>$select){
+                if(!empty($Config['_CloneField'][$fieldToFix])){
+                    $cloneReturns[$fieldToFix] = explode(' AS ', $select);
+                }
+            }
+            if(!empty($cloneReturns)){
+            foreach($cloneReturns as $cloneKey=>$cloneField){
+                $pureName = str_replace('prim.','',$cloneField[0]);
+                if(!empty($cloneReturns[$pureName])){
+                   $cloneReturns[$cloneKey][0] = $cloneReturns[$pureName][0];
+                   $querySelects[$cloneKey] = implode(' AS ', $cloneReturns[$cloneKey]);
+                }
+            }
+            }
+
 	// create Query Selects and Where clause string
 	$querySelect = implode(',',$querySelects);
 	if(!empty($Setup)){
