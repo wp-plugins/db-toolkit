@@ -93,16 +93,17 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 					AudioPlayer.embed(\"".$UniID."\", {
 					";
 						if(!empty($Config['_PlayerCFG']['Autoplay'][$Field])){
-							$_SESSION['dataform']['OutScripts'] .= " autoplay: 'yes', "; 	
+							$_SESSION['dataform']['OutScripts'] .= " autostart: 'yes', ";
 						}
 						if(!empty($Config['_PlayerCFG']['Animation'][$Field])){
 							$_SESSION['dataform']['OutScripts'] .= " animation: 'yes', "; 	
 						}
 				$_SESSION['dataform']['OutScripts'] .= "
+                                                transparentpagebg: 'yes',
 						soundFile: \"".$File[0]."\",
 						titles: \"".$File[1]."\"
 					});
-				";
+				";                               
 				return $ReturnData;
 				break;
 			case 'file';
@@ -202,7 +203,11 @@ function file_playerSetup($Field, $Table, $Config = false){
 	//$Return = '<div class="list_row1" style="padding:3px;">Icon Size (px): <input type="text" name="Data[Content][_ImageSizeI]['.$Field.']" value="'.$icon.'" class="textfield" size="3" maxlength="3" /> Square Crop: <input type="checkbox" name="Data[Content][_ImageSquareI]['.$Field.']" value="1" '.$Sel1.' /></div>';
 
 	$Return = 'Player Preview<div style="padding:5px; width: 200px;" id="'.$Field.'_preview"></div>';
-	//$Return .= '<div style="padding:3px;">Auto Play: <input type="checkbox" name="Data[Content][_PlayerCFG][Autoplay]['.$Field.']" id="'.$Field.'_autoPlay" value="yes" /> In a list, the last item will auto play</div>';
+        $Sel = '';
+        if(!empty($Config['Content']['_PlayerCFG']['Autoplay'][$Field])){
+            $Sel = 'checked="checked"';
+        }
+	$Return .= '<div style="padding:3px;">Auto Play: <input type="checkbox" name="Data[Content][_PlayerCFG][Autoplay]['.$Field.']" id="'.$Field.'_autoPlay" '.$Sel.' value="yes" /> In a list, the last item will auto play</div>';
 	//$Return .= '<div style="padding:3px;">Animation: <input type="checkbox" name="Data[Content][_PlayerCFG][Animation]['.$Field.']" id="'.$Field.'_autoPlay" value="no" /> Unchecked, the player will be open, checked minimized.</div>';
 		$_SESSION['dataform']['OutScripts'] .= "
 			AudioPlayer.embed(\"".$Field."_preview\", {

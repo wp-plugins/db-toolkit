@@ -321,7 +321,7 @@ if(is_admin()) {
         }
         //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
 
-
+        
         $PreReturn[$Field] .= '<div id="Field_'.$Field.'" class="admin_list_row3 table_sorter postbox" style="width:550px;">';
 
         $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
