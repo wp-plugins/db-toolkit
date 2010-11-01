@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 
 Create interfaces (forms, reports, graphs etc.) from database tables already existing.
 
@@ -25,13 +25,12 @@ Features include:
 
 Features Currently in Development:
 
-*   Cleaner Interface
 *   Inline Documentation
 *   Dynamic Table Creation and Field Manipulation
 
 == Installation ==
 
-1. Upload the plugin folder 'dbtoolkit' to your `/wp-content/plugins/` folder
+1. Upload the plugin folder 'db-toolkit' to your `/wp-content/plugins/` folder
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Select DB Toolkit from the menu group
 
@@ -57,3 +56,6 @@ This contained minor bug fixes for stability
 Added support for cloning cloned fields. this allows you to create a chain link or multiple references to fields
 = 0.1.5 =
 fixed a bug that prevented viewing of cloned cloned fields.
+= 0.1.6 =
+Made room for documentation and some minor bug fixes.
+Fixed a bug with unserilizing general settings
