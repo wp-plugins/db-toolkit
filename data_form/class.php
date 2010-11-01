@@ -885,17 +885,17 @@ function df_processInsert($EID, $Data) {
                 $prerows[] = $row['Field'];
             }
             $rows = implode(',', $prerows);
-            if(mysql_query("CREATE TABLE `_audit_".$Config['_main_table']."` SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."' LIMIT 1")) {
+			if(mysql_query("CREATE TABLE `_audit_".$Config['_main_table']."` SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."' LIMIT 1")){
 
-                mysql_query("ALTER TABLE `_audit_".$Config['_main_table']."` ADD `_ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ,
+				mysql_query("ALTER TABLE `_audit_".$Config['_main_table']."` ADD `_ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ,
 							ADD `_DateInserted` DATETIME NOT NULL AFTER `_ID` ,
 							ADD `_DateModified` DATETIME NOT NULL AFTER `_ID` ,
-							ADD `_User` INT NOT NULL AFTER `_DateModified`");
-                //mysql_query("UPDATE `_audit_".$Config['_main_table']."` SET `_DateModified` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `".$Config['_ReturnFields'][0]."` = '".$newInsertID."'");
-                mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
-            }else {
-                mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
-            }
+							ADD `_User` INT NOT NULL AFTER `_DateModified`  ,
+                                                        ADD `_RawData` TEXT NOT NULL AFTER `_DateInserted`");
+                                mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
+			}else{
+				mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
+			}
         }
 
         if(empty($Config['_InsertSuccess'])) {
