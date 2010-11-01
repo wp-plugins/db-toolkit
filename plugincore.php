@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.1.5
+Version: 0.1.6
 Author URI: http://www.digilab.co.za
 */
 
@@ -180,11 +180,12 @@ function dt_menus() {
 
     
     
-    $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
-	add_submenu_page("Database_Toolkit", 'Manage Interfaces', 'Edit', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
+        $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
+	add_submenu_page("Database_Toolkit", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $setup = add_submenu_page("Database_Toolkit", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
+        $setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
 
             add_action('admin_print_styles-'.$adminPage, 'dt_styles');
             add_action('admin_head-'.$adminPage, 'dt_headers');
@@ -324,6 +325,10 @@ function dbtoolkit_admin() {
 function dbtoolkit_setup() {
     global $user_ID;
     include_once('dbtoolkit_settings.php');
+}
+function dbtoolkit_manual() {
+    global $user_ID;
+    include_once('manual/index.php');
 }
 
 function dbtoolkit_viewinterface(){
@@ -624,7 +629,7 @@ add_action('wp_print_scripts', 'dt_scripts');
 
 add_action('wp_footer', 'dt_footers');
 add_action('wp_dashboard_setup', 'dt_dashboard_widgets' );
-add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
+//add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
 
 
 /// Dashboard Widgets
@@ -672,6 +677,8 @@ function dt_dashboard_widgets() {
 
 function dt_remove_dashboard_widgets() {
 	// Globalize the metaboxes array, this holds all the widgets for wp-admin
+        // chose to keep these as the user can remove the defaults if they so choose.
+        // perhaps i'll make a setting to keep remove defaults
 
 	global $wp_meta_boxes;
         unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now']);

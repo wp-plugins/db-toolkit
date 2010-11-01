@@ -25,7 +25,7 @@ if(!empty($_POST['Data'])){
                 <tr>
                     <td width="50%" valign="top"><?php
                         InfoBox('General Settings');
-                        echo dais_customfield('text', 'Chat Height (px)', '_chartHeight', '_chartHeight', 'list_row1' , $Element['Content']['_chartHeight'], '');
+                        echo dais_customfield('text', 'Chart Height (px)', '_chartHeight', '_chartHeight', 'list_row1' , $Element['Content']['_chartHeight'], '');
 
                         $Sel = '';
                         if(!empty($Element['Content']['_ViewMode'])) {
