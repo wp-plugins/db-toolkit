@@ -1012,8 +1012,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $apiOutput = array();
         }
 
-
-
     }
     $ReportReturn = '';
     $Element = getelement($EID);
@@ -2426,14 +2424,16 @@ function df_processupdate($Data, $EID) {
         }
         $rows = implode(',', $prerows);
         if(mysql_query("CREATE TABLE `_audit_".$Config['_main_table']."` SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."' LIMIT 1")) {
+            // new entry
 
             mysql_query("ALTER TABLE `_audit_".$Config['_main_table']."` ADD `_ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ,
 						ADD `_DateInserted` DATETIME NOT NULL AFTER `_ID` ,
 						ADD `_DateModified` DATETIME NOT NULL AFTER `_ID` ,
-						ADD `_User` INT NOT NULL AFTER `_DateModified`");
-            mysql_query("UPDATE `_audit_".$Config['_main_table']."` SET `_DateModified` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."'");
-            mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `".$Config['_ReturnFields'][0]."`, ".$OldData." = '".$Data[$Config['_ReturnFields'][0]]."'  ;");
-            mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."'  ;");
+						ADD `_User` INT NOT NULL AFTER `_DateModified` ,
+                                                ADD `_RawData` TEXT NOT NULL AFTER `_DateInserted`");
+            mysql_query("UPDATE `_audit_".$Config['_main_table']."` SET `_DateModified` = '".date('Y-m-d H:i:s')."', `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."';");
+            mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."`, ".$OldData." = '".$Data[$Config['_ReturnFields'][0]]."'  ;");
+            mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."'  ;");
 
         }else {
             $predata = mysql_query("SELECT * FROM ".$Config['_main_table']." WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."';");
@@ -2443,10 +2443,9 @@ function df_processupdate($Data, $EID) {
                 $OldData[] = "`".$Field."` = '".mysql_real_escape_string($Value)."' ";
             }
             $OldData = implode(', ', $OldData);
-            mysql_query("UPDATE `_audit_".$Config['_main_table']."` SET `_DateModified` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', ".$OldData." WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."' ORDER BY `_ID` DESC LIMIT 1;");
-            mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."'  ;");
-            //$lastid = mysql_insert_id();
-            //mysql_query("UPDATE `_audit_".$Config['_main_table']."` SET `_DateModified` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."' WHERE `_ID` = '".$lastid."'");
+            $UpdateQuery = "UPDATE `_audit_".$Config['_main_table']."` SET `_DateModified` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', ".$OldData." WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."' ORDER BY `_ID` DESC LIMIT 1;";
+            mysql_query($UpdateQuery);
+            mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."'  ;");
 
         }
     }
