@@ -6,8 +6,11 @@ if(!empty($_POST['Data'])){
 	}
         
    $defaults = get_option('_dbtoolkit_defaultinterface');
-   $Element['Content'] = unserialize($defaults);
-
+   if(!is_array($defaults)){
+    $Element['Content'] = unserialize($defaults);
+   }else{
+       $Element['Content'] = $defaults;
+   }
 ?>
 
 
