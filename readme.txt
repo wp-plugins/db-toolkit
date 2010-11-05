@@ -63,3 +63,8 @@ fixed a bug that prevented viewing of cloned cloned fields.
 = 0.1.6 =
 Made room for documentation and some minor bug fixes.
 Fixed a bug with unserilizing general settings
+
+== Upgrade Notice ==
+
+Simply overwrite the existing folder with the new one.
+
