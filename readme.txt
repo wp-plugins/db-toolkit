@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.6
+Stable tag: 0.1.7
 
 Create interfaces (forms, reports, graphs etc.) from database tables already existing.
 
@@ -16,6 +16,10 @@ There is no documentation yet so you'll have to guess your way around.
 I tried to make it as intuative as possable but due to the complex nature of it somethings may not be so easy to grasp.
 
 Please dont use it in a production site just yet. It is under active development so changes will be frequent.
+
+I'm running a tutorial series to explain the fundermentals on using the system and will be building documentation as i go.
+Tutorials will be on up on http://dbtoolkit.digilab.co.za
+
 
 Features include:
 
@@ -59,3 +63,8 @@ fixed a bug that prevented viewing of cloned cloned fields.
 = 0.1.6 =
 Made room for documentation and some minor bug fixes.
 Fixed a bug with unserilizing general settings
+
+== Upgrade Notice ==
+
+Simply overwrite the existing folder with the new one.
+
