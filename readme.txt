@@ -52,17 +52,18 @@ Well, I think some questions need to be asked first. Please use the forum link t
 
 == Changelog ==
 
-= 0.1.0 alpha =
-* Initial alpha release. (still heavily in development)
-= 0.1.2 - 0.1.3 =
-This contained minor bug fixes for stability
-= 0.1.4 =
-Added support for cloning cloned fields. this allows you to create a chain link or multiple references to fields
-= 0.1.5 =
-fixed a bug that prevented viewing of cloned cloned fields.
+= 0.1.7 =
+Fixed a bug with the auto id
+added a link to the tutorials and documentation website
 = 0.1.6 =
 Made room for documentation and some minor bug fixes.
 Fixed a bug with unserilizing general settings
+= 0.1.5 =
+fixed a bug that prevented viewing of cloned cloned fields.
+= 0.1.4 =
+Added support for cloning cloned fields. this allows you to create a chain link or multiple references to fields
+= 0.1.0 alpha =
+* Initial alpha release. (still heavily in development)
 
 == Upgrade Notice ==
 
