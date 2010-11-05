@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.1.6
+Version: 0.1.7
 Author URI: http://www.digilab.co.za
 */
 
@@ -185,6 +185,7 @@ function dt_menus() {
 
         $addNew = add_submenu_page("Database_Toolkit", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $setup = add_submenu_page("Database_Toolkit", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
+        //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
 
             add_action('admin_print_styles-'.$adminPage, 'dt_styles');
@@ -694,7 +695,9 @@ function dt_remove_dashboard_widgets() {
 
 // Hoook into the 'wp_dashboard_setup' action to register our function
 
-
+function dbtoolkit_bugreport(){
+    include('bugreport.php');
+}
 
 
 ?>

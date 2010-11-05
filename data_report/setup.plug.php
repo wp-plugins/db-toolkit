@@ -32,7 +32,6 @@
 <div id="tabs">
     <ul class="content-box-tabs">
         <li><a href="#tabs-1">Field Setup</a></li>
-        <li><a href="#tabs-validate">Advanced Validation</a></li>
         <li><a href="#tabs-2">Form Layout</a></li>
         <li><a href="#tabs-2b">View Layout</a></li>
         <li><a href="#tabs-2c">Chart</a></li>
@@ -471,9 +470,13 @@
 
 Field Keys:
 <?php
-foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val){
-    echo $Val.' = {{'.$FieldKey.'}}<br />';
-}
+if(!empty($Element['Content']['_FieldTitle'])){
+    foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val){
+        echo $Val.' = {{'.$FieldKey.'}}<br />';
+    }
+}else{
+        echo 'Save and edit to see available fields';
+    }
 ?>
 
         </pre>
