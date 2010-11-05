@@ -40,7 +40,11 @@ Features Currently in Development:
 
 == Frequently Asked Questions ==
 
-Well, I think some questions need to be asked first. Please use the forum link to the right to aske questions.
+Q: Is there any Dcumentation?
+A: Not fully, but I am putting together a tutorial series and building the documentation as i go along. you can access these at http://dbtoolkit.digilab.co.za/
+
+Q: When will you have an RC release?
+A: When I am happy that all the major bugs are out. this may be as soon as December.
 
 == Screenshots ==
 
