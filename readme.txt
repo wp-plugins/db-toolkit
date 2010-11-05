@@ -63,6 +63,9 @@ fixed a bug that prevented viewing of cloned cloned fields.
 = 0.1.6 =
 Made room for documentation and some minor bug fixes.
 Fixed a bug with unserilizing general settings
+= 0.1.7 =
+Fixed a bug with the auto id
+added a link to the tutorials and documentation website
 
 == Upgrade Notice ==
 
