@@ -56,8 +56,10 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.1.7c =
+= 0.1.8 =
 Fixed a small bug where field names with duplicate parts ('nameID' and 'nameTime' where 'name' is the duplicate) gets incorrectly wrapped.
+Updated the jqueryUI theme.
+minor changes to base
 = 0.1.7b =
 Fixed a bug for the auto capture of fieldtype userID
 = 0.1.7a =
