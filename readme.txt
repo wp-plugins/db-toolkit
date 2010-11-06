@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.7b
+Stable tag: 0.1.7c
 
 Create interfaces (forms, reports, graphs etc.) from database tables already existing.
 
@@ -56,6 +56,8 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
+= 0.1.7c =
+Fixed a small bug where field names with duplicate parts ('nameID' and 'nameTime' where 'name' is the duplicate) gets incorrectly wrapped.
 = 0.1.7b =
 Fixed a bug for the auto capture of fieldtype userID
 = 0.1.7a =

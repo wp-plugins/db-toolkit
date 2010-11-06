@@ -1,7 +1,6 @@
 <?php
 
 
-
 function grid_rowswitch($Row = '') {
     if($Row == 'odd') {
         return '';
@@ -1165,7 +1164,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $ReportReturn .= '</th>';
             }
             // Preset the selects from query
-            $querySelects[$Field] = 'prim.'.$Field;
+            $querySelects[$Field] = 'prim.`'.$Field.'`';
             // Set average width and min width
             $minWidth[$Field] = strlen($fieldTitle)*8;
             $AvrageWidth[$Field] = array();
@@ -1179,7 +1178,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         //$querySelects[$Config['_ReturnFields'][0]] = 'prim.'.$Config['_ReturnFields'][0];
         foreach($Config['_ReturnFields'] as $Field) {
             $newField = '_return_'.$Field;
-            $querySelects[$newField] = 'prim.'.$Field.' AS '.$newField.' ';
+            $querySelects[$newField] = 'prim.`'.$Field.'` AS `'.$newField.'` ';
         }
     }
     if(empty($Config['_Show_popup'])) {
@@ -1235,7 +1234,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     //echo $Clone['Master'].' - concat <br />';
                     if(strstr($selectScan, "_sourceid_") === false){
                         //echo $Clone['Master'];
-                        $querySelects[$selectKey] = str_replace($CloneKey, $Clone['Master'].' AS '.$CloneKey, $selectScan);
+                        $querySelects[$selectKey] = str_replace($CloneKey, $Clone['Master'].'` AS `'.$CloneKey, $selectScan);
                     }
                 }
             }
@@ -1257,7 +1256,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     $WhereTag = " WHERE ";
                 }
                  if(!empty($Config['_CloneField'][$Field])){
-                    $keyField = 'prim.'.$Field;                    
+                    $keyField = 'prim.`'.$Field.'`';
                 }else{
                     if(!empty($Config['_CloneField'][$Field]['Master'])){
                         $keyField = $Config['_CloneField'][$Field]['Master'];
@@ -1285,7 +1284,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
     if(!empty($cloneReturns)){
     foreach($cloneReturns as $cloneKey=>$cloneField){
-        $pureName = str_replace('prim.','',$cloneField[0]);
+        $pureName = trim(str_replace('prim.','',$cloneField[0]), '`');
+        
         if(!empty($cloneReturns[$pureName])){
            $cloneReturns[$cloneKey][0] = $cloneReturns[$pureName][0];
            $querySelects[$cloneKey] = implode(' AS ', $cloneReturns[$cloneKey]);
@@ -1337,9 +1337,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // Totals Query & Results
     $CountQuery = "SELECT count(prim.".$Config['_ReturnFields'][0].") as Total FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere." \n ".$groupBy." ".$countLimit.";";
     // Wrap fields with ``
-    foreach($querySelects as $Field=>$FieldValue){       
-       $CountQuery = str_replace($Field, '`'.$Field.'`', $CountQuery);
-    }
+    //foreach($querySelects as $Field=>$FieldValue){
+    //   $CountQuery = str_replace($Field, '`'.$Field.'`', $CountQuery);
+    //}
 
 
 
@@ -1392,10 +1392,10 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     
     $Query = "SELECT ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n ".$groupBy." \n ".$orderStr." \n ".$queryLimit.";";
     // Wrap fields with ``
-    foreach($querySelects as $Field=>$FieldValue){
+    //foreach($querySelects as $Field=>$FieldValue){
        // echo $Field.' = '.$FieldValue.'<br />';
-       $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
-    }
+    //   $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
+    //}
     $_SESSION['queries'][$EID] = $Query;
 
     if(!empty($Config['_chartMode']) && empty($Format)) {

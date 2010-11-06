@@ -47,13 +47,13 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget { font-family: Arial,Helvetica,sans-serif; font-size: 11px; }
-.ui-widget .ui-widget { font-size: 1em; }
+.ui-widget { font-family: Arial,Helvetica,sans-serif; font-size: 0.9em; }
+.ui-widget .ui-widget { font-size: 1.1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Arial,Helvetica,sans-serif; font-size: 11px; }
-.ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }
+.ui-widget-content { border: 1px solid #dfdfdf; background: #ffffff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #222222; }
 .ui-widget-content a { color: #222222; }
-.ui-widget-header { border: 0; background: #444; color: #fff; font-weight: bold; }
-.ui-widget-header a { color: #222222; }
+.ui-widget-header { border: 0; background: #dfdfdf; color: #333; font-weight: bold; }
+.ui-widget-header a { color: #dfdfdf; }
 
 /* Interaction states
 ----------------------------------*/
@@ -383,7 +383,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0; }
 .ui-dialog .ui-dialog-content { position: relative; border: 0; padding: 1em; background: none; overflow: auto; zoom: 1; }
 .ui-dialog .ui-dialog-buttonpane { text-align: left; border-width: 1px 0 0 0; background: #f6f6f6; margin: .5em 0 0 0; padding: .3em 1em .5em .4em; }
-.ui-dialog .ui-dialog-buttonpane button { float: right; margin: .5em .4em .5em 0; cursor: pointer; padding: .2em .6em .3em .6em; line-height: 1.4em; width:auto; overflow:visible; }
+.ui-dialog .ui-dialog-buttonpane button { float: right; margin: .5em .4em .3em 0; cursor: pointer; padding: 0.2em 0.7em 0.2em; line-height: 1.4em; width:auto; overflow:visible; }
 .ui-dialog .ui-resizable-se { width: 14px; height: 14px; right: 3px; bottom: 3px; }
 .ui-draggable .ui-dialog-titlebar { cursor: move; }
 /* Slider
@@ -484,7 +484,6 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 }
 
 
-@import "jqueryui/jquery-ui-1.8rc2.custom.css"; 
 #admin_toolbarcontrol{
 	position:absolute;
 
