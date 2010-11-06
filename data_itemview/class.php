@@ -90,7 +90,7 @@ function di_showItem($EID, $Item, $Setup = false){
 	// field type filters
 	$joinIndex = 'a';
 	foreach($Config['_IndexType'] as $Field=>$Type){
-	$querySelects[$Field] = 'prim.'.$Field;
+	$querySelects[$Field] = 'prim.`'.$Field.'`';
 	}
 	
         if(!empty($Config['_CloneField'])) {
@@ -104,7 +104,7 @@ function di_showItem($EID, $Item, $Setup = false){
                         if(strstr($selectScan, " AS ") === false){
                             //echo $Clone['Master'].' - concat <br />';
                             if(strstr($selectScan, "_sourceid_") === false){
-                                $querySelects[$selectKey] = str_replace($CloneKey, $Clone['Master'].' AS '.$CloneKey, $selectScan);
+                                $querySelects[$selectKey] = str_replace($CloneKey, $Clone['Master'].'` AS `'.$CloneKey, $selectScan);
                             }
                         }
                     }
@@ -143,7 +143,7 @@ function di_showItem($EID, $Item, $Setup = false){
             }
             if(!empty($cloneReturns)){
             foreach($cloneReturns as $cloneKey=>$cloneField){
-                $pureName = str_replace('prim.','',$cloneField[0]);
+                $pureName = trim(str_replace('prim.','',$cloneField[0]), '`');
                 if(!empty($cloneReturns[$pureName])){
                    $cloneReturns[$cloneKey][0] = $cloneReturns[$pureName][0];
                    $querySelects[$cloneKey] = implode(' AS ', $cloneReturns[$cloneKey]);
@@ -176,9 +176,9 @@ function di_showItem($EID, $Item, $Setup = false){
         
         $Query = "SELECT ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n ".$groupBy." \n ".$orderStr." \n LIMIT 1;";
         // Wrap fields with ``
-        foreach($querySelects as $Field=>$FieldValue){
-           $Query = str_replace($Field, '`'.$Field.'`', $Query);
-        }
+        //foreach($querySelects as $Field=>$FieldValue){
+        //   $Query = str_replace($Field, '`'.$Field.'`', $Query);
+        //}
         // Query Results
 	$Res = mysql_query($Query);
 	//echo $Query.'<br /><br /><br />';
