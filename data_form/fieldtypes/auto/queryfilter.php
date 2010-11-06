@@ -14,8 +14,8 @@ switch ($Type[1]) {
         break;
     case 'userbase':
     //if(!empty($Config['_UserBaseFilter'][$Field])){
-
-        $queryJoin .= " LEFT JOIN `".$wpdb->prefix."users` AS ".$joinIndex." on (prim.".$Field." = ".$joinIndex.".ID) \n";
+        
+        $queryJoin .= " LEFT JOIN `".$wpdb->users."` AS ".$joinIndex." on (prim.".$Field." = ".$joinIndex.".ID) \n";
         $querySelects[$Field] = $joinIndex.'.user_login AS '.$Field;
         if(!empty($Config['_UserBaseFilter'][$Field])) {
             

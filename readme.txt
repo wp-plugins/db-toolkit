@@ -57,6 +57,8 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 == Changelog ==
 
 = 0.1.7a =
+Fixed a bug for the auto capture of fieldtype userID
+= 0.1.7a =
 Fixed a bug the prevented the selection of FieldTypes on fields with an underscore (_)
 Fixed a bug the caused entries not to be displayed if a field name has a hyphen (-)
 = 0.1.7 =
