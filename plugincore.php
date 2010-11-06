@@ -545,6 +545,7 @@ function dt_process() {
             //dump($OutData);
             //die;
             // headers//
+            if(!empty($OutData[0])){
             foreach($OutData[0] as $Header=>$v) {
                 if(!empty($Config['_FieldTitle'][$Header])) {
                     $Headers[] = $Config['_FieldTitle'][$Header];
@@ -563,6 +564,7 @@ function dt_process() {
             $options["width"] = "100%";
 
             $report->cf_report_data_col_grid($Headers, $Body, $options, "");
+            }
             $report->cf_report_generate_output();
             mysql_close();
             die;
