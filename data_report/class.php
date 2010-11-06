@@ -1336,7 +1336,13 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
     // Totals Query & Results
     $CountQuery = "SELECT count(prim.".$Config['_ReturnFields'][0].") as Total FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere." \n ".$groupBy." ".$countLimit.";";
-    
+    // Wrap fields with ``
+    foreach($querySelects as $Field=>$FieldValue){       
+       $CountQuery = str_replace($Field, '`'.$Field.'`', $CountQuery);
+    }
+
+
+
     //$CountrResult = $wpdb->get_results($CountQuery, ARRAY_A);
     //vardump($CountResult);
     $CountResult = mysql_query($CountQuery);    
@@ -1385,6 +1391,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     //$Query = "SELECT count(b.Country) as TotalCountry, ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n GROUP BY b.Country \n ".$orderStr." \n ".$queryLimit.";";
     
     $Query = "SELECT ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n ".$groupBy." \n ".$orderStr." \n ".$queryLimit.";";
+    // Wrap fields with ``
+    foreach($querySelects as $Field=>$FieldValue){
+       // echo $Field.' = '.$FieldValue.'<br />';
+       $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
+    }
     $_SESSION['queries'][$EID] = $Query;
 
     if(!empty($Config['_chartMode']) && empty($Format)) {

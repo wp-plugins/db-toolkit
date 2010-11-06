@@ -175,7 +175,11 @@ function di_showItem($EID, $Item, $Setup = false){
         }
         
         $Query = "SELECT ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n ".$groupBy." \n ".$orderStr." \n LIMIT 1;";
-	// Query Results
+        // Wrap fields with ``
+        foreach($querySelects as $Field=>$FieldValue){
+           $Query = str_replace($Field, '`'.$Field.'`', $Query);
+        }
+        // Query Results
 	$Res = mysql_query($Query);
 	//echo $Query.'<br /><br /><br />';
         echo mysql_error();

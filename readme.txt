@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.7
+Stable tag: 0.1.7a
 
 Create interfaces (forms, reports, graphs etc.) from database tables already existing.
 
@@ -56,6 +56,9 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
+= 0.1.7a =
+Fixed a bug the prevented the selection of FieldTypes on fields with an underscore (_)
+Fixed a bug the caused entries not to be displayed if a field name has a hyphen (-)
 = 0.1.7 =
 Fixed a bug with the auto id
 added a link to the tutorials and documentation website

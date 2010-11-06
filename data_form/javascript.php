@@ -66,7 +66,7 @@ function df_setToggle(id){
     }
 }
 function bf_loadFieldTypePanel(el){
-    ert = el.split('_');
+    ert = el.split('_FieldTypePanel');
     field = ert[0];
     if(ert.length == 4){
         field = '__'+ert[2];
