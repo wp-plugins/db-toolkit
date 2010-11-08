@@ -152,6 +152,9 @@ function date_handleInput($Field, $Input, $FieldType, $Config, $Data){
 		return date('Y-m-d H:i:s');	
 	}
 	if($FieldType == 'datetime'){
+            if(!is_array($Input)){
+                $Input = unserialize($Input);
+            }
 		return implode(' ', $Input);
 	}
 return $Input;
@@ -262,6 +265,7 @@ return $Return;
 }
 
 function date_showFilter($Field, $Type, $Default, $Config, $EID){
+    
 			$FieldTitle = '';
 			if(!empty($Config['_FieldTitle'][$Field])){
 				$FieldTitle = df_parseCamelCase($Field);	
@@ -278,9 +282,11 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 				$DateTo = $Default[$Field][1];
 			}
 			$UID = uniqid(rand(1,999));
-			$Return .= '<div style="padding:2px;float:left;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />
-						<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="FieldSearch" id="startRange_'.$EID.'_'.$UID.'" value="'.$DateFrom.'" size="12" /> to 
-						<input type="text" class="FieldSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'_'.$UID.'" value="'.$DateTo.'" size="12" />&nbsp;</div>';
+                        
+			$Return = '<div style="padding:2px;float:left;" '.$Class.'><strong>'.$FieldTitle.'</strong><br />';
+			$Return .= '<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="FieldSearch" id="startRange_'.$EID.'_'.$UID.'" value="'.$DateFrom.'" size="12" /> to';
+			$Return .= '<input type="text" class="FieldSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'_'.$UID.'" value="'.$DateTo.'" size="12" />&nbsp;';
+                        $Return .= '</div>';
 			
 			$_SESSION['dataform']['OutScripts'] .= "
 			
@@ -299,75 +305,7 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 			
 			
 			";
-			/*
-			jQuery('#calPick_".$EID."_".$UID."').DatePicker({
-					format:'Y-m-d',
-					date: [jQuery('#startRange_".$EID."_".$UID."').val(), jQuery('#endRange_".$EID."_".$UID."').val()],
-					current: jQuery('#startRange_".$EID."_".$UID."').val(),
-					starts: 1,
-					calendars: 2,
-					mode: 'range',
-					position: 'bottom',
-					onBeforeShow: function(){
-						jQuery('#startRange_".$EID."_".$UID."').DatePickerSetDate(jQuery('#startRange_".$EID."_".$UID."').val(), true);
-					},
-					onChange: function(formated, dates){
-						jQuery('#startRange_".$EID."_".$UID."').val(formated[0]);
-						jQuery('#endRange_".$EID."_".$UID."').val(formated[1]);
-					}
-				});
-			";
 			
-			jQuery('#endRange_".$EID."_".$UID."').DatePicker({
-					format:'Y-m-d',
-					date: [jQuery('#startRange_".$EID."_".$UID."').val(), jQuery('#endRange_".$EID."_".$UID."').val()],
-					current: jQuery('#endRange_".$EID."_".$UID."').val(),
-					starts: 1,
-					calendars: 3,
-					mode: 'range',
-					position: 'bottom',
-					onBeforeShow: function(){
-						jQuery('#endRange_".$EID."_".$UID."').DatePickerSetDate(jQuery('#endRange_".$EID."_".$UID."').val(), true);
-					},
-					onChange: function(formated, dates){
-						jQuery('#startRange_".$EID."_".$UID."').val(formated[0]);
-						jQuery('#endRange_".$EID."_".$UID."').val(formated[1]);
-					}
-				});
-
-				";
-			
-			
-			$Return .= '<div style="padding:2px;float:left;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />
-						<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="FieldSearch" id="startRange_'.$EID.'" value="'.$DateFrom.'" size="12" /> to 
-						<input type="text" class="FieldSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'" value="'.$DateTo.'" size="12" /> 
-						<a id="pickerSelect"><img id="calPick_'.$EID.'" src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/calendar_month.png" alt="Date Picker" style="cursor:pointer;" align="absmiddle" /></a>&nbsp;&nbsp;&nbsp;</div>';
-			$Return .= '<div id="DatePickerBox_'.$EID.'" style="clear:left;" class="MultiDatePickerBox"><div style="clear:both;"></div></div>';
-			
-			$_SESSION['dataform']['OutScripts'] .= "
-			jQuery('#DatePickerBox_".$EID."').DatePicker({
-				format:'Y-m-d',
-				flat: true,
-				date: [jQuery('#startRange_".$EID."').val(), jQuery('#endRange_".$EID."').val()],
-				current: jQuery('#startRange_".$EID."').val(),
-				starts: 1,
-				position: 'bottom',
-				calendars: 2,
-				mode: 'range',
-				onBeforeShow: function(){
-				//	jQuery('#startRange').DatePickerSetDate(jQuery('#startRange').val(), jQuery('#endRange').val());
-				},
-				onChange: function(formated, dates){
-					jQuery('#startRange_".$EID."').val(formated[0]);
-					jQuery('#endRange_".$EID."').val(formated[1]);
-				}
-			});
-			jQuery('#calPick_".$EID."').bind('click',function(){
-				jQuery('#DatePickerBox_".$EID."').animate({\"height\": \"toggle\"}, {\"duration\": 200});
-			});
-						
-			";
-			*/
 		
 return $Return;
 

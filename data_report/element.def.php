@@ -7,7 +7,6 @@
 
 
 
-
 $test = array();
 $Render = true;
 $TitleNotice = '';
@@ -35,12 +34,14 @@ foreach($Config['_Field'] as $Key=>$Value) {
 if($Render != true) {
     return;
 }
+
 $FilterLocks = unserialize(get_option('filter_Lock_'.$Media['ID']));
 if(!empty($FilterLocks)) {
-    $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];if(empty($_SESSION['reportFilters'][$Media['ID']])){
+    $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];
+    if(empty($_SESSION['reportFilters'][$Media['ID']])) {
         $_SESSION['reportFilters'][$Media['ID']] = $FilterLocks;
-    }else{
-       array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
+    }else {
+        array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
     }
     $_SESSION['lockedFilters'][$Media['ID']] = $FilterLocks;
     //vardump($_SESSION['reportFilters'][$Media['ID']]);
@@ -48,11 +49,11 @@ if(!empty($FilterLocks)) {
 //vardump($_SESSION['reportFilters'][$Media['ID']]);
 // Form Mode
 if(!empty($Config['_FormMode'])) {
-    foreach($Config['_Field'] as $Field=>$Value){
+    foreach($Config['_Field'] as $Field=>$Value) {
         $typeSet = explode('_', $Value);
         if(function_exists($typeSet[0].'_preForm')) {
-                $Func = $typeSet[0].'_preForm';
-                $Func($Field, $typeSet[1], $Media, $Config);
+            $Func = $typeSet[0].'_preForm';
+            $Func($Field, $typeSet[1], $Media, $Config);
         }
     }
     if(!empty($_GET[$Config['_ReturnFields'][0]])) {
@@ -60,11 +61,11 @@ if(!empty($Config['_FormMode'])) {
     }else {
         $Form = df_buildQuickCaptureForm($Media['ID']);
     }
-    foreach($Config['_Field'] as $Field=>$Value){
+    foreach($Config['_Field'] as $Field=>$Value) {
         $typeSet = explode('_', $Value);
         if(function_exists($typeSet[0].'_postForm')) {
-                $Func = $typeSet[0].'_postForm';
-                $Func($Field, $typeSet[1], $Media, $Config);
+            $Func = $typeSet[0].'_postForm';
+            $Func($Field, $typeSet[1], $Media, $Config);
         }
     }
     if(empty($Config['_HideFrame'])) {
@@ -77,6 +78,7 @@ if(!empty($Config['_FormMode'])) {
     return;
 }
 //dump($Config);
+
 if(!empty($Config['_ViewMode'])) {
     if(!empty($_SESSION['DocumentLoaded'])) {
         echo '<div class="warning">Database Interface View Mode. Requires: ';
@@ -84,6 +86,7 @@ if(!empty($Config['_ViewMode'])) {
         echo '</div>';
     }
     if(!empty($_GET[$Config['_ReturnFields'][0]])) {
+
         $Item = di_showItem($Media['ID'], $_GET[$Config['_ReturnFields'][0]]);
         //dump($Item);
         if(empty($Config['_HideFrame'])) {
@@ -106,12 +109,12 @@ if(empty($Config['_SearchMode'])) {
         echo '<div id="report_tools_'.$Media['ID'].'" class="report_tools list_row3">';
         if(empty($Config['_New_Item_Hide'])) {
             $ajaxSubmit = 'true';
-            if(is_admin()){
-                if(!empty($Config['_ItemViewInterface'])){
+            if(is_admin()) {
+                if(!empty($Config['_ItemViewInterface'])) {
                     $ajaxSubmit = 'false';
                 }
-            }else{
-                if(!empty($Config['_ItemViewInterface'])){
+            }else {
+                if(!empty($Config['_ItemViewInterface'])) {
                     $ajaxSubmit = 'false';
                 }
 
@@ -177,18 +180,19 @@ if(empty($Config['_SearchMode'])) {
                 $FilterVisiable = 'block';
             }
         }
+
         //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
         ?>
 <div class="filterpanels" id="filterPanel_<?php echo $Media['ID']; ?>" style="visibility:visible; display:<?php echo $FilterVisiable; ?>;">
             <?php
             InfoBox('Filters');
-            ?>
+        ?>
     <form id="setFilters_<?php echo $Media['ID']; ?>" name="setFilters" method="post" action="" style="margin:0;">
         <input type="hidden" id="reportFilters_<?php echo $Media['ID']; ?>" value="<?php echo $Media['ID']; ?>" name="reportFilter[<?php echo $Media['ID']; ?>][EID]" />
         <div class="report_filters_panel">
                     <?php
                     echo dr_BuildReportFilters($Config, $Media['ID'], $Filters);
-                    ?>
+        ?>
             <div style="clear:both"></div>
         </div>
         <div class="list_row3" style="clear:both;">
@@ -199,7 +203,7 @@ if(empty($Config['_SearchMode'])) {
             </div>
                     <?php
                     if(!empty($Config['_toggle_Filters'])) {
-                        ?>
+            ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
@@ -208,7 +212,7 @@ if(empty($Config['_SearchMode'])) {
             </div>
                         <?php
                     }
-                    ?>
+        ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
@@ -219,7 +223,7 @@ if(empty($Config['_SearchMode'])) {
                     if(is_admin()) {
                         if(empty($Config['_Hide_FilterLock'])) {
                             if(empty($_SESSION['lockedFilters'][$Media['ID']])) {
-                                ?>
+                    ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
@@ -230,7 +234,7 @@ if(empty($Config['_SearchMode'])) {
                             }
                             if(!empty($_SESSION['lockedFilters'][$Media['ID']])) {
 
-                                ?>
+                    ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
@@ -243,19 +247,20 @@ if(empty($Config['_SearchMode'])) {
                         ?>
                         <?php
                     }
-                    ?>
+        ?>
        <!-- <input type="submit" name="reportFilter[Submit]" id="button" value="Apply Filters" class="buttons" />&nbsp;<input type="button" name="button" id="button" value="Close Panel" class="buttons" onclick="toggle('filterPanel_<?php echo $Media['ID']; ?>'); return false; " />&nbsp;<input type="submit" name="reportFilter[ClearFilters]" id="button" value="Clear Filters" class="buttons" onclick="return confirm('Are you sure you want to clear the filters?');" /></div> -->
             <div style="clear:both;"></div>
         </div>
     </form>
             <?php
             endinfobox();
-            ?>
+        ?>
 </div>
         <?php
         //}
     }
 }else {
+
     InfoBox($Config['_ReportTitle']);
     ?>
 <div class="report_filters_panel">
@@ -270,7 +275,7 @@ if(empty($Config['_SearchMode'])) {
                 }
             }
             echo dr_BuildReportFilters($Config, $Media['ID'], $Filters);
-            ?>
+    ?>
         <div style="clear:both;"></div>
             <?php
             $ButtonAlign = 'center';
@@ -278,17 +283,17 @@ if(empty($Config['_SearchMode'])) {
                 $ButtonAlign = $Config['_SubmitAlignment'];
             }
 
-            ?>
+    ?>
         <div style="padding: 2px; text-align:<?php echo $ButtonAlign; ?>">
             <input type="submit" value="Search" class="filterSearchbutton" />&nbsp;
                 <?php
                 if(!empty($_SESSION['reportFilters'][$Media['ID']])) {
                     //dump($_SESSION['reportFilters']);
-                    ?>
+        ?>
             <input type="submit" value="Clear Results" class="filterSearchbutton" onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();" /><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />
                     <?php
                 }
-                ?>
+    ?>
         </div>
     </form>
     <div style="clear:both"></div>
@@ -345,16 +350,16 @@ if(!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMod
         $gotTo = $_GET['_pg'];
     }
     echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir']);
-    if(!empty($Config['_autoPolling'])){
+    if(!empty($Config['_autoPolling'])) {
         $Rate = $Config['_autoPolling']*1000;
-    
+
         $_SESSION['dataform']['OutScripts'] .= "
             
                 setInterval('dr_reloadData(\'".$Media['ID']."\')', ".$Rate.");
         ";
 
     }
-    
+
     /*
      * Experimental Graphing
      
@@ -394,7 +399,7 @@ $_SESSION['dataform']['OutScripts'] .= "
         }], { xaxis: { mode: \"time\", timeformat: \"%y-%m-%d %H:%M:%S\"} });
 
 ";
-*/
+    */
 
 }
 echo '</div>';
