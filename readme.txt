@@ -58,7 +58,7 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 = 0.1.11 =
 Fixed a vulnerability with a file upload script that could be exploited by allowing the upload of arbatary code as described at johnleitch.net http://www.johnleitch.net/Vulnerabilities/WordPress.Database.Interface.Toolkit.0.1.7.Arbitrary.Upload/61
-
+files are now source validated to confirm they are being uploaded via the interface.
 = 0.1.10 =
 fixed a bug that prevented the datestap from working coreectly
 = 0.1.9 =
