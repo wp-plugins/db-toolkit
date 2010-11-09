@@ -64,13 +64,13 @@ if($FieldSet[1] == 'multi'){
 		foreach($FileList as $File){
 			$FileParts = explode('|', $File);
 			$Ext = pathinfo($FileParts[1]);
-			$icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" width="16" height="16" align="absmiddle" />';
+			$icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" width="16" height="16" align="absmiddle" />';
 			if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif')){
-				$icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif" width="16" height="16" align="absmiddle" />';
+				$icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif" width="16" height="16" align="absmiddle" />';
 			}
 			$entryID = uniqid();
 			$Return .= '<div class="uploadifyQueueItem" id="box_entry_'.$Element['ID'].'_'.$Field.'_'.$entryID.'">';
-			$Return .= '<div class="cancel"><img border="0" class="togglebutton" src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/cancel.png" style="cursor:pointer;" onclick="file_removeFile(\'entry_'.$Element['ID'].'_'.$Field.'_'.$entryID.'\');""><img border="0" class="togglebutton" src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/add.png" style="cursor:pointer; display:none;" onclick="file_undoRemoveFile(\'entry_'.$Element['ID'].'_'.$Field.'_'.$entryID.'\');""></div>';
+			$Return .= '<div class="cancel"><img border="0" class="togglebutton" src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/cancel.png" style="cursor:pointer;" onclick="file_removeFile(\'entry_'.$Element['ID'].'_'.$Field.'_'.$entryID.'\');""><img border="0" class="togglebutton" src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/add.png" style="cursor:pointer; display:none;" onclick="file_undoRemoveFile(\'entry_'.$Element['ID'].'_'.$Field.'_'.$entryID.'\');""></div>';
 			$Return .= '<span class="fileName">'.$icon.' <a href="'.$FileParts[0].'" target="_blank">'.$FileParts[1].'</a></span>';
 			$Return .= '<input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$entryID.'" value="'.$File.'" class="'.$Req.'" />';
 			$Return .= '</div>';				
@@ -83,16 +83,16 @@ if($FieldSet[1] == 'multi'){
 	var entry".$Element['ID'].$Field." = new Array();
 	var uploadComplete = false;
 	jQuery(\"#entry_".$Element['ID']."_".$Field."\").uploadify({
-		'uploader'       : WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/scripts/uploadify.swf',
-		'script'		 : '?uploadify=".urlencode(base64_encode($Req.'_'.$Element['ID'].'_'.$Field))."',
-		'cancelImg'      : WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/cancel.png',
+		'uploader'       : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/scripts/uploadify.swf',
+		'script'	 : '?uploadify=".urlencode(base64_encode($Req.'_'.$Element['ID'].'_'.$Field))."',
+		'cancelImg'      : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/icons/cancel.png',
 		'queueID'        : '".$Element['ID'].$Field."',
 		'auto'           : false,
 		'rollover'		 : true,
 		'multi'          : true,
 		'width'			 : '83',
 		'height'		 : '21',
-		'buttonImg'      : WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/select.gif',
+		'buttonImg'      : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/icons/select.gif',
 		'wmode'          : 'transparent',
 		'onSelectOnce' 	 : function(a,b){
 			if(b.fileCount > 0){
