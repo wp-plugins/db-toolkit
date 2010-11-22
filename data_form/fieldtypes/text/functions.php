@@ -36,6 +36,37 @@ switch ($Type){
 		}
 }
 
+function text_postProcess($Field, $Input, $Type, $Element, $Data){
+    if($Type == 'emailaddress'){
+
+        if(!empty($Element['Content']['_forwardResult'][$Field])){
+
+
+            $default_headers = array(
+                'Version' => 'Version'
+            );
+            $version = get_file_data(WP_PLUGIN_DIR.'/db-toolkit/plugincore.php', $default_headers, 'db-toolkit-fieldtype');
+            $Headers = 'From: '.$Element['Content']['_emailSender'][$Field] . "\r\n" .
+                       'Reply-To: '.$Element['Content']['_emailSender'][$Field] . "\r\n" .
+                       'X-Mailer: DB-Toolkit/'.$version['Version'];
+            
+            $Body = "Submitted Data from ".date("r")."\r\n";
+            $Body .= "=============================\r\n";
+            foreach($Data as $FieldKey=>$FieldValue){
+                if(strpos($FieldKey, '_control_') === false){
+                    $Body .= $FieldKey.": ".$FieldValue."\r\n";
+                }
+            }
+            $Body .= "=============================\r\n";
+            $Body .= "Powered By DB-Toolkit\r\n";
+           mail($Data[$Field], $Element['Content']['_emailForwardSubject'][$Field], $Body, $Headers);
+        }
+
+    }
+    //vardump($Data);
+}
+
+
 
 function text_presuff($Field, $Table, $Config = false){
 	
@@ -73,6 +104,33 @@ function text_preset($Field, $Table, $Config = false){
 	$Return .= '&nbsp;Preset Value: <input type="text" name="Data[Content][_Preset]['.$Field.']" value="'.$Preset.'" class="textfield" /> ';
 return $Return;
 }
+
+function text_emailSetup($Field, $Table, $Config = false){
+
+
+        $sel = '';
+	if(!empty($Config['Content']['_forwardResult'][$Field])){
+		$sel = 'checked="checekd"';
+	}
+
+        $Return .= '&nbsp;Forward result to this address: <input type="checkbox" name="Data[Content][_forwardResult]['.$Field.']" value="1" '.$sel.' /><br />';
+
+        $Pre = 'Confirmation of Submitted data';
+	if(!empty($Config['Content']['_emailForwardSubject'][$Field])){
+		$Pre = $Config['Content']['_emailForwardSubject'][$Field];
+	}
+        $Return .= 'Email Subject: <input type="text" name="Data[Content][_emailForwardSubject]['.$Field.']" value="'.$Pre.'" class="textfield" />&nbsp;';
+                
+
+        $Pre = 'db-toolkit';       
+	if(!empty($Config['Content']['_emailSender'][$Field])){
+		$Pre = $Config['Content']['_emailSender'][$Field];
+	}
+        $Return .= 'Email Sender: <input type="text" name="Data[Content][_emailSender]['.$Field.']" value="'.$Pre.'" class="textfield" />&nbsp;';
+
+return $Return;
+}
+
 
 function text_runCode($Field, $EID, $ID){
 	$Element = getelement($EID);

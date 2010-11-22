@@ -9,10 +9,9 @@
             InfoBox('View Layout');
             ?>
             <div style="margin-top: 20px; padding: 5px;" class="ui-state-highlight ui-corner-all">
-                <input type="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
-                &nbsp;
-                <input type="button" value="Insert Row" onclick="viewSetup_AddRow();" />
-                <input type="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
+                <input type="button" class="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
+                <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
+                <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
 				Popup View Width:
                 <input type="text" id="_popupWidth" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])) {
                     echo $Element['Content']['_popupWidthview'];
@@ -154,8 +153,10 @@
 
             Field Keys:
             <?php
-            foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val) {
-                echo $Val.' = {{'.$FieldKey.'}}<br />';
+            if(!empty($Element['Content']['_FieldTitle'])){
+                foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val) {
+                    echo $Val.' = {{'.$FieldKey.'}}<br />';
+                }
             }
             EndInfoBox();
             echo dais_customfield('textarea', 'PostContent', '_ViewTemplatePostContent', '_ViewTemplatePostContent', 'list_row2' , $Element['Content']['_ViewTemplatePostContent'], '');
@@ -164,9 +165,6 @@
 
 
             ?>
-
-
-
         </div>
     </div>
 </div>

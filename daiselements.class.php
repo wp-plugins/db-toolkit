@@ -122,9 +122,14 @@ if($Type == 'textarea'){
 	$Return .= ''.$Title.':<br /> <textarea name="Data[Content]['.$Name.']" rows="8" id="'.$ID.'" '.$Att.' />'.$Default.'</textarea>';
 	$Return .= '</div>';
 }else{
-	$Return = '<div style="padding:3px" class="'.$Row.'">';
-	$Return .= ''.$Title.':<input type="'.$Type.'" name="Data[Content]['.$Name.']" id="'.$ID.'" value="'.$Default.'" '.$Att.' />';
-	$Return .= '</div>';
+
+$Return = '<div style="padding:3px" class="'.$Row.'">';
+    $Return .="<table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\"><tr><td width=\"150\" align=\"\" class=\"\">";
+        $Return .= '<label for="'.$ID.'">'.$Title.'</label>';
+    $Return .= '</td><td class="">';
+        $Return .= '<input type="'.$Type.'" name="Data[Content]['.$Name.']" id="'.$ID.'" style="padding:5px;" value="'.$Default.'" '.$Att.' />';
+    $Return .= '</td></tr></table>';
+$Return .= '</div>';
 }
 return $Return;
 }

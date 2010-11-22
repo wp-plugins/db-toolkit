@@ -111,200 +111,6 @@ if(is_admin()) {
         return false;
     }
 
-    function dr_addTotalsField($Table, $Defaults = false, $Key = false) {
-        //dump($Defaults);
-        $ID = uniqid(rand(100, 999));
-        $result = mysql_query("SHOW COLUMNS FROM ".$Table);
-        $TotalsField = '';
-        $GroupingField = '';
-        if (mysql_num_rows($result) > 0) {
-            while ($row = mysql_fetch_assoc($result)) {
-                $Sel = '';
-                if(!empty($Defaults['_TotalsField'][$Key])) {
-                    if($Defaults['_TotalsField'][$Key] == $row['Field']) {
-                        $Sel = 'selected=selected';
-                    }
-                }
-                $TotalsField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-                $Sel = '';
-                if(!empty($Defaults['_TotalsGroupingField'][$Key])) {
-                    if($Defaults['_TotalsGroupingField'][$Key] == $row['Field']) {
-                        $Sel = 'selected=selected';
-                    }
-                }
-                $GroupingField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-            }
-        }
-        $Return = 'Totals Field: <select name="Data[Content][_TotalsField][]" id="totalsField_'.$ID.'">';
-        $Return .= $TotalsField;
-        $Return .= '</select>&nbsp;';
-
-        $Return .= 'Grouping Field: <select name="Data[Content][_TotalsGroupingField][]" id="groupingField_'.$ID.'">';
-        $Return .= $GroupingField;
-        $Return .= '</select>&nbsp;';
-
-        $Return .= 'Grouping: <select name="Data[Content][_TotalsFieldType][]" id="totalsFieldType_'.$ID.'">';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldType'][$Key])) {
-            if($Defaults['_TotalsFieldType'][$Key] == 'count') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="count" '.$Sel.'>Count</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldType'][$Key])) {
-            if($Defaults['_TotalsFieldType'][$Key] == 'sum') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="sum" '.$Sel.'>Sum</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldType'][$Key])) {
-            if($Defaults['_TotalsFieldType'][$Key] == 'avg') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="avg" '.$Sel.'>Average</option>';
-        //$Return .= '<option value="average">average</option>';
-        //$Return .= '<option value="percentage">percentage</option>';
-        $Return .= '</select>&nbsp;';
-
-        $Return .= 'Location: <select name="Data[Content][_TotalsFieldLocation][]" id="totalsFieldLocation_'.$ID.'">';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldLocation'][$Key])) {
-            if($Defaults['_TotalsFieldLocation'][$Key] == 'header') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="header" '.$Sel.'>Header</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldLocation'][$Key])) {
-            if($Defaults['_TotalsFieldLocation'][$Key] == 'footer') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="footer" '.$Sel.'>Footer</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldLocation'][$Key])) {
-            if($Defaults['_TotalsFieldLocation'][$Key] == 'inline') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="inline" '.$Sel.'>Inline</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldLocation'][$Key])) {
-            if($Defaults['_TotalsFieldLocation'][$Key] == 'headerinline') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="headerinline" '.$Sel.'>Header + Inline</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldLocation'][$Key])) {
-            if($Defaults['_TotalsFieldLocation'][$Key] == 'footerinline') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="footerinline" '.$Sel.'>Footer + Inline</option>';
-        //$Return .= '<option value="average">average</option>';
-        //$Return .= '<option value="percentage">percentage</option>';
-        $Return .= '</select>&nbsp;';
-
-        $Return .= 'Justify: <select name="Data[Content][_TotalsFieldJustify][]" id="totalsFieldJustify_'.$ID.'">';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldJustify'][$Key])) {
-            if($Defaults['_TotalsFieldJustify'][$Key] == 'left') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="left" '.$Sel.'>Left</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldJustify'][$Key])) {
-            if($Defaults['_TotalsFieldJustify'][$Key] == 'Center') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="Center" '.$Sel.'>Center</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldJustify'][$Key])) {
-            if($Defaults['_TotalsFieldJustify'][$Key] == 'Right') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="Right" '.$Sel.'>Right</option>';
-        $Return .= '</select>&nbsp;';
-
-        $title = '';
-        if(!empty($Defaults['_TotalsFieldTitle'][$Key])) {
-            $title = $Defaults['_TotalsFieldTitle'][$Key];
-        }
-        $Return .= 'Title: <input type="texfield" name="Data[Content][_TotalsFieldTitle][]" value="'.$title.'" />&nbsp;';
-        $caption = '';
-        if(!empty($Defaults['_TotalsFieldCaption'][$Key])) {
-            $caption = $Defaults['_TotalsFieldCaption'][$Key];
-        }
-        $Return .= 'Caption: <input type="texfield" name="Data[Content][_TotalsFieldCaption][]" value="'.$caption.'" />&nbsp;';
-
-        $Return .= 'Inline Function: <select name="Data[Content][_TotalsFieldFunction][]" id="totalsFieldFunction_'.$ID.'">';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldFunction'][$Key])) {
-            if($Defaults['_TotalsFieldFunction'][$Key] == 'none') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="none" '.$Sel.'>none</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldFunction'][$Key])) {
-            if($Defaults['_TotalsFieldFunction'][$Key] == 'percent') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="percent" '.$Sel.'>Percentage</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldFunction'][$Key])) {
-            if($Defaults['_TotalsFieldFunction'][$Key] == 'VAT') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="VAT" '.$Sel.'>VAT (14%)</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldFunction'][$Key])) {
-            if($Defaults['_TotalsFieldFunction'][$Key] == 'AddVAT') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="AddVAT" '.$Sel.'>Add VAT (14%)</option>';
-        $Sel = '';
-        if(!empty($Defaults['_TotalsFieldFunction'][$Key])) {
-            if($Defaults['_TotalsFieldFunction'][$Key] == 'averages') {
-                $Sel = 'selected=selected';
-            }
-        }
-        $Return .= '<option value="averages" '.$Sel.'>Average Compare</option>';
-        $Return .= '</select>';
-        $Width = '';
-        if(!empty($Defaults['_TotalsFieldTitleWidth'][$Key])) {
-            $Width = $Defaults['_TotalsFieldTitleWidth'][$Key];
-        }
-        $Return .= '&nbsp;Inline Width: <input type="texfield" style="width:40px;" value="'.$Width.'" name="Data[Content][_TotalsFieldTitleWidth][]" />&nbsp;';
-        $Prefix = '';
-        if(!empty($Defaults['_TotalsFieldPrefix'][$Key])) {
-            $Width = $Defaults['_TotalsFieldPrefix'][$Key];
-        }
-        $Return .= '&nbsp;Header/Footer Prefix: <input type="texfield" style="width:40px;" value="'.$Prefix.'" name="Data[Content][_TotalsFieldPrefix][]" />&nbsp;';
-        $Suffix = '';
-        if(!empty($Defaults['_TotalsFieldSuffix'][$Key])) {
-            $Width = $Defaults['_TotalsFieldSuffix'][$Key];
-        }
-        $Return .= '&nbsp;Header/Footer Suffix: <input type="texfield" style="width:40px;" value="'.$Suffix.'" name="Data[Content][_TotalsFieldSuffix][]" />&nbsp;';
-
-
-        $Return .= '<a href="#" onclick="jQuery(\'#totalsField_'.$ID.'\').remove(); return false;">remove</a>';
-
-
-        return layout_listOption('totalsField_'.$ID, false, 'Field: '.$Return, false, 'list_row3', false);
-
-    }
-
     function df_makeFieldConfigBox($Field, $Config, $Defaults = false) {
         global $wpdb;
 
@@ -1408,18 +1214,19 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $XValue = $chartData[$Config['_xaxis']];
             if(function_exists($Config['_Field'][$Config['_xaxis']][0].'_processValue')) {
                 $processFunc = $Config['_Field'][$Config['_xaxis']][0].'_processValue';
-                $XValue = '"'.$processFunc($XValue, $Config['_Field'][$Config['_xaxis']][1], $Config['_xaxis'], $Config, $EID, 'Graph').'"';
+                $XValue = '"'.$processFunc($XValue, $Config['_Field'][$Config['_xaxis']][1], $Config['_xaxis'], $Config, $EID, $chartData).'"';
             }
-            $x[] = $XValue;
+            $x[] = trim($XValue, '"');
             foreach($Config['_chartValue'] as $ChartLine => $on) {
 
                 $YValue = $chartData[$ChartLine];
                 if(function_exists($Config['_Field'][$ChartLine][0].'_processValue')) {
                     $processFunc = $Config['_Field'][$ChartLine][0].'_processValue';
-                    $YValue = $processFunc($chartData[$ChartLine], $Config['_Field'][$ChartLine][1], $ChartLine, $Config, $EID, 'Graph');
+                    $YValue = $processFunc($chartData[$ChartLine], $Config['_Field'][$ChartLine][1], $ChartLine, $Config, $EID, $chartData);
 
+                }else{
+                    echo 'no process for '.$Config['_Field'][$ChartLine][0].'_processValue<br>';
                 }
-
 
                 $y[$ChartLine][] = $YValue;
 
@@ -1471,7 +1278,42 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if(!empty($Config['_chartHeight'])) {
             $height = $Config['_chartHeight'];
         }
+
+        $topPad = 60;
         $rightPad = (20+(100*count($Config['_chartValue']))-100);
+        $bottomPad = 120;
+        $leftPad = 80;
+        $xAngle = -45;
+
+        $toolTipTemplate = '<b>{{SeriesName}}</b><br/>{{YValue}}: {{XValue}}';
+        if(!empty($Config['_yToolTipTemplate'])){
+            $toolTipTemplate = $Config['_yToolTipTemplate'];
+        }
+        // setup tooltip
+        /*
+         * '<b></b><br/>'+
+            this.y +': '+ this.x
+         */
+        $toolTipTemplate = str_replace('{{SeriesName}}', "'+this.series.name+'", $toolTipTemplate);
+        $toolTipTemplate = str_replace('{{YValue}}', "'+this.y+'", $toolTipTemplate);
+        $toolTipTemplate = str_replace('{{XValue}}', "'+this.x+'", $toolTipTemplate);
+
+        if(!empty($Config['_topPad'])){
+            $topPad = $Config['_topPad'];
+        }
+        if(!empty($Config['_rightPad'])){
+            $rightPad = $Config['_rightPad'];
+        }
+        if(!empty($Config['_bottomPad'])){
+            $bottomPad = $Config['_bottomPad'];
+        }
+        if(!empty($Config['_leftPad'])){
+            $leftPad = $Config['_leftPad'];
+        }
+        if(isset($Config['_xAngle'])){
+            $xAngle = $Config['_xAngle'];
+        }
+
         //dump($Config);
         $ChartTitle = '';
         if(!empty($Config['_chartTitle'])){
@@ -1481,6 +1323,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if(!empty($Config['_chartCaption'])){
             $ChartCaption = $Config['_chartCaption'];
         }
+        $xAlign = 'right';
+        if(!empty($Config['_xAxis_Align'])){
+            $xAlign = $Config['_xAxis_Align'];
+        }
+
         $ChartID = uniqid('chart_');
         $_SESSION['dataform']['OutScripts'] .= "
 var ".$ChartID." = new Highcharts.Chart({
@@ -1488,10 +1335,21 @@ var ".$ChartID." = new Highcharts.Chart({
       renderTo: 'chart_".$ChartID."',
       //defaultSeriesType: '".$chartType."',
       zoomType: 'x',
-      margin: [60, ".$rightPad.", 120, 80],
+      margin: [".$topPad.", ".$rightPad.", ".$bottomPad.", ".$leftPad."],
       height: ".$height.",
       backgroundColor: null,
    },
+   colors: [
+	'#4572A7',
+	'#89A54E',
+	'#062F55',
+	'#AA4643',
+	'#3D96AE',
+	'#DB843D',
+	'#92A8CD',
+	'#A47D7C',
+	'#B5CA92'
+    ],
    title: {
       align: 'left',
       text: '".$ChartTitle."',
@@ -1505,10 +1363,10 @@ var ".$ChartID." = new Highcharts.Chart({
 
    },
    xAxis: {
-      categories: [".implode(', ', $x)."],
+      categories: ['".implode('\',\' ', $x)."'],
       labels: {
-         rotation: -45,
-         align: 'right',
+         rotation: $xAngle,
+         align: '$xAlign',
          style: {
              font: 'normal 9px Verdana, sans-serif'
          }
@@ -1516,38 +1374,46 @@ var ".$ChartID." = new Highcharts.Chart({
       tickInterval: 'auto'
    },
 
+
+
+
    yAxis: [";
         $index = 1;
         $margin = 50;
         $off = '';
-        $color = array("#4572A7","#AA4643","#89A54E","#80699B","#3D96AE","#DB843D","#92A8CD","#A47D7C","#B5CA92");
+        $axisTitle = $Config['_FieldTitle'][$Key];
+        $color = array("#4572A7","#89A54E","#062F55","#AA4643","#80699B","#3D96AE","#DB843D","#92A8CD","#A47D7C","#B5CA92");
         foreach($y as $Key=>$Series) {
+            $thisColor = $color[$index-1];
             $op = '';
-            if($index > 1) {
-                $margin = 60;
-                $op = "opposite: true";
+            if($index > 1 && $Config['_multiAxis']) {
+                $margin = 360;
+                $op = "opposite: true,";
+            }else{
+                $axisTitle = '';
+                $thisColor = $thisColor;
             }
-            if($index > 2) {
-                $off = ', offset: '.(40*($index-1));
+            if($index >= 2) {
+                $off = 'offset: '.(40*($index-2));
                 $margin = 60;
             }
             $axis[] = "
-    {
-      labels: {
-         style: {
-            color: '".$color[$index-1]."'
-         }
-      },
-      title: {
-         text: '".$Config['_FieldTitle'][$Key]."',
-         margin: ".$margin.",
-         style: {
-            color: '".$color[$index-1]."'
-         },
-      },
-      ".$op."
-      ".$off."
-   }";
+            {
+              labels: {
+                 style: {
+                    color: '".$thisColor."'
+                 }
+              },
+              title: {
+                 text: '".$axisTitle."',
+                 margin: ".$margin.",
+                 style: {
+                    color: '".$color[$index-1]."'
+                 },
+              },
+              ".$op."
+              ".$off."
+           }";
 
             $index++;
         }
@@ -1558,18 +1424,36 @@ var ".$ChartID." = new Highcharts.Chart({
    ],
    tooltip: {
       formatter: function() {
-            return '<b>'+ this.series.name +'</b><br/>'+
-            this.y +': '+ this.x;
+            return '$toolTipTemplate';
       }
    },
    plotOptions: {
+        ";
+    if(!empty($Config['_yShowDataLables'])){
+    $_SESSION['dataform']['OutScripts'] .= "
+      column: {
+         dataLabels: {
+            enabled: true,
+            color: 'auto'
+         },
+      },
       bar: {
          dataLabels: {
             enabled: true,
             color: 'auto'
-         }
+         },
       },
-      marker: {
+      line: {
+         dataLabels: {
+            enabled: true,
+            color: 'auto'
+         },
+        stacking: 'normal',
+      },
+      ";
+    }
+    $_SESSION['dataform']['OutScripts'] .= "
+    marker: {
             enabled: false,
             states: {
                hover: {
@@ -1581,7 +1465,12 @@ var ".$ChartID." = new Highcharts.Chart({
 
    },
    legend: {
-      layout: 'horizontal',
+      layout: 'horizontal',";
+    if(!empty($Config['_hideLegend'])){
+    $_SESSION['dataform']['OutScripts'] .= "
+        enabled: false,";
+    }
+    $_SESSION['dataform']['OutScripts'] .= "
       style: {
          left: 'auto',
          bottom: 'auto',
@@ -1598,9 +1487,9 @@ var ".$ChartID." = new Highcharts.Chart({
 
             $Line = '{';
             $Line .= 'name: "'.$Config['_FieldTitle'][$Key].'", ';
-            $Line .= 'data: ['.implode(', ', $Series).']';
+            $Line .= 'data: ["'.implode('", "', $Series).'"]';
             $Line .= ', type: \''.$Config['_chartType'][$Key].'\' ';
-            if($index >= 1) {
+            if(!empty($Config['_multiAxis'])) {
                 $Line .= ', ';
                 $Line .= 'yAxis: '.$index.'';
             }
@@ -1620,7 +1509,7 @@ var ".$ChartID." = new Highcharts.Chart({
         //TODO : make the interface remember its in sqlmode;
 
         $ReportReturn = '<div id="chart_'.$ChartID.'" style="height:'.$height.'px;"></div>'.$ReportReturn;
-        
+
     }
 
 
@@ -1634,7 +1523,9 @@ var ".$ChartID." = new Highcharts.Chart({
     $Result = $wpdb->get_results($Query, ARRAY_A);
     
     //$Result = mysql_query($Query);
-
+    if(!empty($Config['_chartOnly'])){
+        return '<div id="chart_'.$ChartID.'" style="height:'.$height.'px;"></div>';//$ReportReturn;
+    }
     // Build Rows
     if(!empty($Config['_UseListViewTemplate'])) {
         if(!empty($Config['_ListViewTemplateContentWrapperStart'])) {

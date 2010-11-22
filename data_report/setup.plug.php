@@ -29,7 +29,7 @@
 </style>
 <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/arrow_out.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/tag.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
 <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
-<div id="tabs">
+<div id="dbtools_tabs">
     <ul class="content-box-tabs">
         <li><a href="#tabs-1">Field Setup</a></li>
         <li><a href="#tabs-2">Form Layout</a></li>
@@ -81,7 +81,7 @@
             <div style="width:565px;">
 
                 <?php InfoBox('Advanced Field Types'); ?>
-                <div class="list_row3"><input type="button" value="Add Clone Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /></div>
+                <div class="list_row3"><input type="button" class="button" value="Add Clone Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /></div>
                 <div class="columnSorter" id="drToolBox">
                     <?php
                     //echo df_tableReportSetup($Element['Content']['_main_table'], $Element, false, 'C');
@@ -110,22 +110,10 @@
             ?>
         </div>
         <?php
-        InfoBox('Totals');
-        echo '<div style="padding3px;"><input type="button" name="button" id="button" value="Add Totals Field" onclick="dr_addTotalsField();"/></div>';
-        echo '<div id="totalsListStatus"></div>';
-        echo '<div id="totalsList">';
-        if(is_array($Element['Content']['_TotalsField'])) {
-            foreach($Element['Content']['_TotalsField'] as $Key=>$Field) {
-                echo dr_addTotalsField($Element['Content']['_main_table'], $Element['Content'], $Key);
-            }
-        }
-        echo '</div>';
-        EndInfoBox();
-
         InfoBox('Passback Field');
         ?>
         <div style="padding3px;">
-            <input type="button" name="button" id="button" value="Add Passback Field" onclick="dr_addPassbackField();"/>
+            <input type="button" name="button" id="button" class="button" value="Add Passback Field" onclick="dr_addPassbackField();"/>
             (First one is primary)</div>
         <div id="PassBack_FieldSelect"><?php echo dr_loadPassbackFields($Element['Content']['_main_table'], $Element['Content']['_ReturnFields'], $Element['Content']); ?></div>
         <?php
@@ -153,7 +141,7 @@
     <div id="tabs-3">
         <table width="100%" border="0" cellspacing="1" cellpadding="1">
             <tr>
-                <td width="50%" valign="top"><?php
+                <td width="50%" valign="top" style="padding-right:15px;"><?php
                     InfoBox('General Settings');
                     $Sel = '';
                     if(!empty($Element['Content']['_ViewMode'])) {
@@ -501,13 +489,14 @@ if(!empty($Element['Content']['_FieldTitle'])){
         <?php
         EndInfoBox();
         echo dais_customfield('textarea', 'Post Footer', '_ListViewTemplatePostFooter', '_ListViewTemplatePostFooter', 'list_row2' , $Element['Content']['_ListViewTemplatePostFooter'], '');
-
+        
         ?>
     </div>
-</div>
+</div><br />
 <?php
 echo dais_standardSetupbuttons($Element);
-
+?>
+<?php
 ob_start();
 ?>
 		jQuery('select').each(function(){
@@ -519,7 +508,7 @@ ob_start();
 			}
 		});
 
-		jQuery("#tabs").tabs();
+		jQuery("#dbtools_tabs").tabs();
 jQuery("#redirectTabs").tabs();
 
 		jQuery('select').live('change', function(){

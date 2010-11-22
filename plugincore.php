@@ -4,11 +4,12 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.1.11
+Version: 0.1.12
 Author URI: http://www.digilab.co.za
 */
 
 //init
+
 function dbtoolkit_activate_run() {
     $defaults = 'a:29:{s:12:"_chartHeight";s:3:"250";s:15:"_New_Item_Title";s:9:"Add Entry";s:15:"_Items_Per_Page";s:2:"20";s:12:"_autoPolling";s:0:"";s:13:"_Show_Filters";s:1:"1";s:15:"_toggle_Filters";s:1:"1";s:20:"_Show_KeywordFilters";s:1:"1";s:14:"_Keyword_Title";s:6:"Search";s:11:"_showReload";s:1:"1";s:12:"_Show_Export";s:1:"1";s:13:"_Show_Plugins";s:1:"1";s:12:"_orientation";s:1:"P";s:12:"_Show_Select";s:1:"1";s:12:"_Show_Delete";s:1:"1";s:10:"_Show_Edit";s:1:"1";s:10:"_Show_View";s:1:"1";s:19:"_Show_Delete_action";s:1:"1";s:12:"_Show_Footer";s:1:"1";s:14:"_InsertSuccess";s:27:"Entry inserted successfully";s:14:"_UpdateSuccess";s:26:"Entry updated successfully";s:11:"_InsertFail";s:22:"Could not insert entry";s:11:"_UpdateFail";s:22:"Could not update entry";s:17:"_SubmitButtonText";s:6:"Submit";s:17:"_UpdateButtonText";s:6:"Submit";s:13:"_EditFormText";s:10:"Edit Entry";s:13:"_ViewFormText";s:10:"View Entry";s:14:"_NoResultsText";s:13:"Nothing Found";s:10:"_ShowReset";s:1:"1";s:16:"_SubmitAlignment";s:4:"left";}';
     update_option('_dbtoolkit_defaultinterface', $defaults, NULL, 'No');
@@ -123,8 +124,6 @@ function dt_headers() {
 }
 //styles
 function dt_styles() {
-
-    
     wp_register_style('jqueryUI-base', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
@@ -143,10 +142,7 @@ function dt_scripts() {
     wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
     wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
     wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
-    /*
-     * experimentsl
-     * wp_register_script('jquery-flot', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.flot.js');
-     */
+
 
     wp_enqueue_script("jquery-ui-core");
     wp_enqueue_script("jquery-ui-tabs");
@@ -166,7 +162,7 @@ function dt_scripts() {
         $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
 		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php')){
-			wp_register_script('fieldType_'.$Type[1], WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php', false, false, true);
+                    wp_register_script('fieldType_'.$Type[1], WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php', false, false, true);
                         wp_enqueue_script('fieldType_'.$Type[1]);
                 }
 	}
@@ -175,13 +171,13 @@ function dt_scripts() {
 
 //Menus
 function dt_menus() {
-    
+
     global $wpdb;
-    
+
     $user = wp_get_current_user();
 
-    
-    
+
+
         $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	add_submenu_page("Database_Toolkit", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
@@ -204,13 +200,13 @@ function dt_menus() {
             add_action('admin_head-'.$setup, 'dt_headers');
             add_action('admin_print_scripts-'.$setup, 'dt_scripts');
             add_action('admin_footer-'.$setup, 'dt_footers');
-           
+
 	////add_submenu_page("Database_Toolkit", 'Setup', 'Setup', 'read', "General Settings", 'dbtoolkit_setup');
 
 
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
 
-    
+
     if(!empty($interfaces)) {
         foreach($interfaces as $interface) {
             $cfg = unserialize(get_option($interface['option_name']));
@@ -220,7 +216,7 @@ function dt_menus() {
             if($cfg['_menuAccess'] == 'null'){
                 $cfg['_menuAccess'] = 'read';
             }
-            if(!empty($user->allcaps[$cfg['_menuAccess']])){  
+            if(!empty($user->allcaps[$cfg['_menuAccess']])){
                 if(!empty($cfg['_ItemGroup'])) {
                     $Groups[$cfg['_ItemGroup']][] = $cfg;
                    // echo $cfg['_ItemGroup'].'<br />';
@@ -238,7 +234,7 @@ function dt_menus() {
             $pageName = str_replace(" ",'_', $pageName);
 
             $pageName = $Interfaces[0]['ID'];
-            
+
             $groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
             add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
                // add_action('admin_head-'.$subPage, 'dt_headers');
@@ -246,33 +242,15 @@ function dt_menus() {
                // add_action('admin_print_styles-'.$subPage, 'dt_styles');
                // add_action('admin_footer-'.$subPage, 'dt_footers');
             for($i = 1; $i <= count($Interfaces)-1; $i++){
-                //$cfg = get_option($Interface);
-                //vardump($Interface);
-                //die;
-                // Group Menus
                 $subPage = add_submenu_page($pageName, $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
-                //add_menu_page($cfg['_interfaceName'], $cfg['_interfaceName'], 1, "Database_Toolkit&renderinterface=".$interface['option_name'], "dbtoolkit_admin");
-                    //add_action('admin_head-'.$subPage, 'dt_headers');
-                    //add_action('admin_print_scripts-'.$subPage, 'dt_scripts');
-                    //add_action('admin_print_styles-'.$subPage, 'dt_styles');
-                    //add_action('admin_footer-'.$subPage, 'dt_footers');
-                }
-                
-                //add_action('admin_head-'.$groupPage, 'dt_headers');
-                //add_action('admin_print_scripts-'.$groupPage, 'dt_scripts');
-                //add_action('admin_print_styles-'.$groupPage, 'dt_styles');
-                //add_action('admin_footer-'.$groupPage, 'dt_footers');
+            }
+
+                add_action('admin_head-'.$groupPage, 'dt_headers');
+                add_action('admin_print_scripts-'.$groupPage, 'dt_scripts');
+                add_action('admin_print_styles-'.$groupPage, 'dt_styles');
+                add_action('admin_footer-'.$groupPage, 'dt_footers');
         }
     }
-//add_action('wp_head', 'dt_headers');
-//add_action('wp_print_styles', 'dt_styles');
-//add_action('wp_print_scripts', 'dt_scripts');
-//add_action('wp_footer', 'dt_footers');
-
-            add_action('admin_head', 'dt_headers');
-            add_action('admin_print_styles', 'dt_styles');
-            add_action('admin_print_scripts', 'dt_scripts');
-            add_action('admin_footer', 'dt_footers');
 }
 
 //Footers
@@ -286,6 +264,8 @@ function dt_footers() {
 
 // Ajax System
 function dt_ajaxCall() {
+    $ref = parse_url(basename($_SERVER['HTTP_REFERER']));
+
     global $wpdb;
 
     include_once('libs/lib.php');
@@ -342,11 +322,6 @@ function dbtoolkit_viewinterface(){
     }?>
 <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?><a class="button add-new-h2" href="admin.php?page=Database_Toolkit&interface=<?php echo $_GET['page']; ?>">Edit</a></h2>
-    <?php
-    if(!empty($Interface['_ReportDescription'])) {
-        //_e($Interface['_ReportDescription']);
-    }
-    ?>
     <div class="clear"></div>
     <div id="poststuff">
     <?php
@@ -423,10 +398,7 @@ function dt_process() {
             if(!empty($ReturnValue)) {
                 $url = parse_url($_SERVER['HTTP_REFERER']);
                 $returntoken = '?';
-                if(is_admin()){
-                    //vardump($Setup);
-                    
-                }
+
                 if(!empty($url['query'])) {
                     if(empty($Setup['Content']['_ItemViewPage'])) {
                         $Location = str_replace('?'.$url['query'], '', $_SERVER['HTTP_REFERER']);
@@ -441,8 +413,7 @@ function dt_process() {
                 
                 $Redirect = $Location.$returntoken.$ReturnValue;
             }
-            //echo $Redirect.'<br />';
-            //echo $Location;
+
             header('Location: '.$Redirect);
             die;
         }
@@ -536,16 +507,8 @@ function dt_process() {
                 unset($OutData['Totals']);
             }
 
-            //have url for an image
-            //$report->cf_report_image($graphlink, "Total Emails and Clicks for the Period");
-            $report->cf_report_spacer();            //$CountStat["No of Employees:"] = number_format(73, 0, '.', ',');
+            $report->cf_report_spacer();        
 
-
-            //$report->cf_report_spacer();
-
-
-            //dump($OutData);
-            //die;
             // headers//
             if(!empty($OutData[0])){
             foreach($OutData[0] as $Header=>$v) {
@@ -624,6 +587,7 @@ function dt_removeInterface($Interface) {
 
 // Enable shortcode
 add_shortcode("interface", "dt_renderInterface");
+add_shortcode("visibility", "dt_publicReg");
 // enable shortcode in widgets
 add_filter('widget_text', 'do_shortcode');
 
@@ -635,6 +599,29 @@ add_action('wp_print_scripts', 'dt_scripts');
 add_action('wp_footer', 'dt_footers');
 add_action('wp_dashboard_setup', 'dt_dashboard_widgets' );
 //add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
+
+
+function dt_publicReg($a, $b, $c){
+    global $current_user;
+
+    if(!empty($a[0])){
+        // check permissions for public
+        if($a[0] == 'public'){
+            // check the user is not signed in
+            if(empty($current_user->id)){
+                return do_shortcode($b);
+            }
+        }
+        if($a[0] == 'private'){
+            // check the user is signed in
+            if(!empty($current_user->id)){
+                return do_shortcode($b);
+            }
+        }
+
+    }
+    return;
+}
 
 
 /// Dashboard Widgets
@@ -649,35 +636,30 @@ function dt_renderDashboardWidget($a, $b) {
 // Create the function use in the action hook
 
 function dt_dashboard_widgets() {
-    //wp_add_dashboard_widget('example_dashboard_widget', 'Example Dashboard Widget', 'example_dashboard_widget_function');
     global $wpdb;
     $dashBoardWidgets = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
     foreach($dashBoardWidgets as $widget) {
+        
+        $myWidget = unserialize(get_option($widget['option_name']));
+        if(!empty($myWidget['_Dashboard'])) {
 
-
-
-        $winter = unserialize(get_option($widget['option_name']));
-        if(!empty($winter['_Dashboard'])) {
-
-            $Title = $winter['_interfaceName'];
+            $Title = $myWidget['_interfaceName'];
             $Show = true;
-            if(!empty($winter['_ReportDescription'])) {
-                $Title = $winter['_ReportDescription'];
+            if(!empty($myWidget['_ReportDescription'])) {
+                $Title = $myWidget['_ReportDescription'];
             }
-            if($winter['_menuAccess'] != 'null'){
+            if($myWidget['_menuAccess'] != 'null'){
                 $user = wp_get_current_user();
-                if(empty($user->allcaps[$winter['_menuAccess']])){
+                if(empty($user->allcaps[$myWidget['_menuAccess']])){
                     $Show = false;
                 }
             }
             if(!empty($Show)){
-                wp_add_dashboard_widget($winter['ID'], $Title, 'dt_renderDashboardWidget');
+                wp_add_dashboard_widget($myWidget['ID'], $Title, 'dt_renderDashboardWidget', 'alert');
             }
-            //add_meta_box($winter['ID'], $Title, 'dt_renderDashboardWidget', 'dashboard', 'normal', 'core', $winter['ID']);
         }
     }
-    //global $wp_meta_boxes;
-    //vardump($wp_meta_boxes);
+
 }
 
 function dt_remove_dashboard_widgets() {

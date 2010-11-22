@@ -1,12 +1,12 @@
 === DB Toolkit ===
 Contributors: Desertsnowman
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
-Tags: interface, database, tables, database tables, application development, app engine
+Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.11
+Stable tag: 0.1.12
 
-Create interfaces (forms, reports, graphs etc.) from database tables already existing.
+Database Interface Toolkit creates interfaces (forms, reports, graphs etc.) from database tables.
 
 == Description ==
 
@@ -55,6 +55,18 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.1.12 =
+Fixed:
+ - Enqueue scripts and styles are now only added to interface pages and not all admin pags so they dont interfere with other plugins.
+
+Added:
+ - New FieldType: Email Address - Validates as email and options to have result emailed as confirmation.
+ - New FieldType: Telephone Number - validates a telephone number.
+ - Visibility Shortcode: [visibility private] and [visibility public]
+   - private: content nested is only rendered to logged in users
+   - public: content nested is only visible to public/not logged in users
+ - Cleaned up page styles
 
 = 0.1.11 =
 Fixed a vulnerability with a file upload script that could be exploited by allowing the upload of arbatary code as described at johnleitch.net http://www.johnleitch.net/Vulnerabilities/WordPress.Database.Interface.Toolkit.0.1.7.Arbitrary.Upload/61

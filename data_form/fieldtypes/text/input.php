@@ -8,6 +8,18 @@ if($FieldSet[1] == 'singletext'){
 	}
 	echo $Config['_Prefix'][$Field].'<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />'.$Config['_Suffix'][$Field];
 }
+if($FieldSet[1] == 'emailaddress'){
+    if(!empty($Req)){
+        $Req = 'validate[required,custom[email]]';
+    }
+	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />';
+}
+if($FieldSet[1] == 'telephonenumber'){
+    if(!empty($Req)){
+        $Req = 'validate[required,custom[telephone]]';
+    }
+	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />';
+}
 if($FieldSet[1] == 'textarea'){
 	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textbox ">'.htmlentities($Val).'</textarea>';
 }
