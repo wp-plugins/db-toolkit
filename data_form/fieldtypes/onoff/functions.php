@@ -71,6 +71,7 @@ function onoff_setValue($val, $id, $field, $eid){
 
 // setup the fieldtype
 function onoff_timestamp($Field, $Table, $Config = false){
+    //vardump($Config['Content']['_onoff'][$Field]);
         if(empty($Table)){
             $Table = $Config['Content']['_main_table'];
         }
@@ -83,7 +84,7 @@ function onoff_timestamp($Field, $Table, $Config = false){
 	$Return .= '<div style="padding:3px;" class="list_row3">Date Stamp Field: <select name="Data[Content][_onoff]['.$Field.'][datestampField]" id="_autodatestamp_Field">';
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
-			$sel = '';
+			$Sel = '';
 			if(!empty($Config['Content']['_onoff'][$Field]['datestampField'])){
 				if($Config['Content']['_onoff'][$Field]['datestampField'] == $row['Field']){
 					$Sel = 'selected="selected"';	

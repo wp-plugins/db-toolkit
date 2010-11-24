@@ -232,7 +232,11 @@ function date_processValue($Value, $Type, $Field, $Config, $EID){
 		}
 		return $Value;
 	}
-	return date($Config['_dateFormat'][$Field], strtotime($Value));
+	$outValue = date($Config['_dateFormat'][$Field], strtotime($Value));
+        if($Value == '0000-00-00 00:00:00' || $Value == '0000-00-00'){
+            return '--.';
+        }
+        return $outValue;
 
 }
 

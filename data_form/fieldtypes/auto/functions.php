@@ -12,8 +12,7 @@ function auto_preForm($Field, $Type, $Element, $Config){
     switch($Type){
 		case 'userbase':
                     if(!empty($Config['_UserBaseFilter'][$Field])){
-                        global $user_ID;
-                        get_currentuserinfo();
+                        global $user_ID;                        
                         $_GET[$Field] = $user_ID;
                     }
 		break;
@@ -81,9 +80,7 @@ function auto_handleInput($Field, $Input, $FieldType, $Element, $Data){
 			return $_SERVER['REMOTE_ADDR'];
 		break;
 		case 'autovalue':
-                    vardump($Element);
-                die;
-			return $Element['Content']['_AutoValue'][$Field];
+        		return $Element['Content']['_AutoValue'][$Field];
 	}
 }
 function auto_preset($Field, $Table, $Config = false){

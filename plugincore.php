@@ -237,12 +237,16 @@ function dt_menus() {
 
             $groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
             add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+
+            for($i = 1; $i <= count($Interfaces)-1; $i++){
+                $subPage = add_submenu_page($pageName, $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+
                 add_action('admin_head-'.$subPage, 'dt_headers');
                 add_action('admin_print_scripts-'.$subPage, 'dt_scripts');
                 add_action('admin_print_styles-'.$subPage, 'dt_styles');
-                add_action('admin_footer-'.$subPage, 'dt_footers');
-            for($i = 1; $i <= count($Interfaces)-1; $i++){
-                $subPage = add_submenu_page($pageName, $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                add_action('admin_footer-'.$subPage, 'dt_footers');            
+                
+                
             }
 
                 add_action('admin_head-'.$groupPage, 'dt_headers');
@@ -598,7 +602,10 @@ add_action('wp_print_scripts', 'dt_scripts');
 
 add_action('wp_footer', 'dt_footers');
 add_action('wp_dashboard_setup', 'dt_dashboard_widgets' );
-//add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
+
+
+
+add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
 
 
 function dt_publicReg($a, $b, $c){
@@ -631,6 +638,7 @@ function dt_publicReg($a, $b, $c){
 function dt_renderDashboardWidget($a, $b) {
     //vardump($b);
     echo dt_renderInterface($b['id']);
+
 }
 
 // Create the function use in the action hook
@@ -638,6 +646,12 @@ function dt_renderDashboardWidget($a, $b) {
 function dt_dashboard_widgets() {
     global $wpdb;
     $dashBoardWidgets = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+    if(!empty($dashBoardWidgets)){
+        add_action('admin_head', 'dt_headers');
+        add_action('admin_print_scripts', 'dt_scripts');
+        add_action('admin_print_styles', 'dt_styles');
+        add_action('admin_footer', 'dt_footers');
+    }
     foreach($dashBoardWidgets as $widget) {
         
         $myWidget = unserialize(get_option($widget['option_name']));

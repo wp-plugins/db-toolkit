@@ -6,12 +6,12 @@ if($FieldSet[1] == 'multiply'){
 	
 	$_SESSION['dataform']['OutScripts'] .="
 	
-	jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').unbind();
-	jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').bind('change', function(){
+	$('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').unbind();
+	$('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').bind('change', function(){
 		aval = this.value;
-		bval = jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['A']."').val();
+		bval = $('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['A']."').val();
 		newval = math_CurrencyFormatted(aval*bval);
-		jQuery('#".$Field."_mult').html(newval);
+		$('#".$Field."_mult').html(newval);
 	});
 	
 	";
