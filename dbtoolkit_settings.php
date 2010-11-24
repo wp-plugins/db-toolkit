@@ -49,6 +49,11 @@ if(!is_array($defaults)) {
                             <td width="50%" valign="top"><?php
                                 InfoBox('General Settings');
                                 $Sel = '';
+                                if(!empty($Element['Content']['_DisableDashboardDefaults'])) {
+                                    $Sel = 'checked="checked"';
+                                }
+                                echo dais_customfield('checkbox', 'Disable Default Dashboard Widgets', '_DisableDashboardDefaults', '_DisableDashboardDefaults', 'list_row2' , 1 , $Sel);
+                                $Sel = '';
                                 if(!empty($Element['Content']['_ViewMode'])) {
                                     $Sel = 'checked="checked"';
                                 }

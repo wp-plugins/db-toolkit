@@ -4,21 +4,18 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.13
+Stable tag: 0.1.14
 
-Database Interface Toolkit creates interfaces (forms, reports, graphs etc.) from database tables.
+Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
 == Description ==
 
 Adds interfaces to database tables on pages, posts, dashboard and custom menu groups within admin, to manage data.
-This version is an alpha, proof of concept and there are a lot of bugs still present.
-There is no documentation yet so you'll have to guess your way around.
-I tried to make it as intuative as possable but due to the complex nature of it somethings may not be so easy to grasp.
-
-Please dont use it in a production site just yet. It is under active development so changes will be frequent.
+Build custom databased application for managing data from simple data entries to more complex linking tables.
 
 I'm running a tutorial series to explain the fundermentals on using the system and will be building documentation as i go.
 Tutorials will be on up on http://dbtoolkit.digilab.co.za
+
 
 
 Features include:
@@ -29,7 +26,6 @@ Features include:
 
 Features Currently in Development:
 
-*   Inline Documentation
 *   Dynamic Table Creation and Field Manipulation
 
 == Installation ==
@@ -55,6 +51,9 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.1.14 =
+RC1 - yup this is the the forrunner of V1.0 so post any bugs you find in the formms.
 
 = 0.1.13 =
 Fixed:

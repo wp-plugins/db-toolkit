@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.1.13
+Version: 0.1.14
 Author URI: http://www.digilab.co.za
 */
 
@@ -27,6 +27,7 @@ function dt_start() {
             $_SESSION['adminscripts'] = "";
         }
     }
+    
     include_once('libs/lib.php');
     include_once('daiselements.class.php');
     include_once('data_form/class.php');
@@ -680,8 +681,16 @@ function dt_remove_dashboard_widgets() {
 	// Globalize the metaboxes array, this holds all the widgets for wp-admin
         // chose to keep these as the user can remove the defaults if they so choose.
         // perhaps i'll make a setting to keep remove defaults
+	
+                $defaults = unserialize(get_option('_dbtoolkit_defaultinterface'));
+                if(empty($defaults['_DisableDashboardDefaults'])){
+                    return;
+                }
+    
+    global $wp_meta_boxes;
 
-	global $wp_meta_boxes;
+
+
         unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now']);
         unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
         unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_incoming_links']);
