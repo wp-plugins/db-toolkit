@@ -10,6 +10,9 @@ div.fbutton .lockfilterfilter {
 div.fbutton .unlockfilterfilter {
 	background:transparent url(images/lock_open.png) no-repeat scroll left center;
 }
+div.fbutton .savefilterfilter {
+	background:transparent url(images/disk.png) no-repeat scroll left center;
+}
 div.fbutton .delete {
 	background:transparent url(images/cross.png) no-repeat scroll left center;
 }

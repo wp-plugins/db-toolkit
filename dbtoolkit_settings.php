@@ -2,17 +2,13 @@
 //vardump($_POST);
 if(!empty($_POST['Data'])) {
     $_POST = stripslashes_deep($_POST);
-    update_option('_dbtoolkit_defaultinterface', serialize($_POST['Data']['Content']));
+    update_option('_dbtoolkit_defaultinterface', $_POST['Data']['Content']);
 }
 
 
 
 $defaults = get_option('_dbtoolkit_defaultinterface');
-if(!is_array($defaults)) {
-    $Element['Content'] = unserialize($defaults);
-}else {
-    $Element['Content'] = $defaults;
-}
+$Element['Content'] = $defaults;
 
 
 ?>

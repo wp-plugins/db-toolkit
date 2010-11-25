@@ -620,7 +620,7 @@ if(is_admin()) {
 }
 function dr_lockFilters($EID) {
     //   vardump($_SESSION['reportFilters']);
-    $setFilters = serialize($_SESSION['reportFilters'][$EID]);
+    $setFilters = $_SESSION['reportFilters'][$EID];
     add_option('filter_Lock_'.$EID, $setFilters);
     return true;
 }
@@ -755,21 +755,6 @@ function dr_BuildUpDateForm($EID, $ID){
 }
 
 
-function dr_loadreportElements($ID) {
-
-    $Res = mysql_query("SELECT ID, Content FROM `dais_elements` WHERE `ParentDocument` = '".$ID."' && `Element` = 'data_report';");
-    if(mysql_num_rows($Res) == 0) {
-        return 'No reference insert forms found';
-    }
-    $Return = 'Reference From: <select name="Data[Content][_Report_Element_Reference]" id="edit_reference_'.$ID.'" >';
-    while($Data = mysql_fetch_assoc($Res)) {
-        $Out = unserialize($Data['Content']);
-        $Return .= '<option value="'.$Data['ID'].'">'.$Out['_ReportTitle'].'</option>';
-    }
-    $Return .= '</select>';
-    return $Return;
-}
-
 
 function df_buildDataSheet($EID, $ID) {
 
@@ -795,7 +780,8 @@ return $Field;
 
 //* new report Grid
 
-function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false) {
+function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $filterSet = false) {
+    
 
 //Filters will be picked up via Session value
 // Set Vars
@@ -1052,6 +1038,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     
     foreach($Config['_Field'] as $Field=>$Type) {
         // Run Filters that have been set through each field type
+        
         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')) {
             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php');
         }
@@ -1173,6 +1160,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }else {
             $Count = 0;
         }
+    }
+    if($Format == 'count'){
+        return $Count['Total'];
     }
     $TotalPages = ceil($Count['Total']/$Config['_Items_Per_Page']);
     $Start = ($Page*$Config['_Items_Per_Page'])-$Config['_Items_Per_Page'];

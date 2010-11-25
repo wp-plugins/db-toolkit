@@ -24,7 +24,7 @@ class PDF extends FPDF {
 		if($or == 'P'){
 			//$this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template.jpg',0,0, 210);
 		}else{
-		//	$this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template_l.jpg',0,0, 297);
+			//$this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template_l.jpg',0,0, 297);
 		}
 		if((!isset($this->logo)) || !is_file($this->logo)){
 		//	$this->logo = 'styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_logo.jpg';

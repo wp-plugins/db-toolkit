@@ -9,7 +9,7 @@ function GetDocument() {
 
 function getelement($optionTitle) {
 
-    $Media = unserialize(get_option($optionTitle));
+    $Media = get_option($optionTitle);
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     return $Media;
 }

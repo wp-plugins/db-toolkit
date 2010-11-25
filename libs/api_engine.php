@@ -4,7 +4,7 @@
 if(!empty($_GET['APIKey'])){
 	// validate API Key
 	$apikey = explode('_', $_GET['APIKey']);
-        $Intrface = unserialize(get_option('dt_intfc'.$apikey[0]));
+        $Intrface = get_option('dt_intfc'.$apikey[0]);
         $Config = unserialize(base64_decode($Intrface['Content']));
         $VerifyKey = md5(serialize($Config));
         if($VerifyKey !== $apikey[1]){
@@ -12,6 +12,10 @@ if(!empty($_GET['APIKey'])){
             die;
         }
         $Format = 'xml';
+        if(empty($_GET['format'])){
+            $_GET['format'] = 'xml';
+        }
+        $_GET['action'] = 'list';
         if(!empty($_GET['action'])) {
             switch ($_GET['action']) {
                 case 'list':
@@ -47,15 +51,7 @@ function api_dencode_string($str){
 	return str_replace('=', '', $str);
 }
 
-function api_getPageID($pagename){
-	$pagename = str_replace('_', ' ', $pagename);
-	$Res = mysql_query("SELECT ID FROM `dais_documents` WHERE `Title` = '".mysql_real_escape_string(urldecode($pagename))."' LIMIT 1");
-	if(mysql_num_rows($Res) == 0){
-		return false;
-	}
-	$Page = mysql_fetch_assoc($Res);
-	return $Page['ID'];
-}
+
 
 function api_Deny(){
 	mysql_close();

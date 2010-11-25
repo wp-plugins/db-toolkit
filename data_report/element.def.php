@@ -1,12 +1,6 @@
 <?php
 
 
-
-
-
-
-
-
 $test = array();
 $Render = true;
 $TitleNotice = '';
@@ -35,17 +29,22 @@ if($Render != true) {
     return;
 }
 
-$FilterLocks = unserialize(get_option('filter_Lock_'.$Media['ID']));
+$FilterLocks = get_option('filter_Lock_'.$Media['ID']);
+
 if(!empty($FilterLocks)) {
     $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];
+
     if(empty($_SESSION['reportFilters'][$Media['ID']])) {
         $_SESSION['reportFilters'][$Media['ID']] = $FilterLocks;
     }else {
         array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
     }
+
     $_SESSION['lockedFilters'][$Media['ID']] = $FilterLocks;
     //vardump($_SESSION['reportFilters'][$Media['ID']]);
 }
+
+
 //vardump($_SESSION['reportFilters'][$Media['ID']]);
 // Form Mode
 if(!empty($Config['_FormMode'])) {
@@ -176,7 +175,7 @@ if(empty($Config['_SearchMode'])) {
         }
         if(!empty($_SESSION['reportFilters'][$Media['ID']])) {
             if(count($_SESSION['reportFilters'][$Media['ID']]) > 1) {
-                $Filters = df_cleanArray($_SESSION['reportFilters'][$Media['ID']]);
+                $Filters = core_cleanArray($_SESSION['reportFilters'][$Media['ID']]);
                 $FilterVisiable = 'block';
             }
         }
@@ -241,7 +240,15 @@ if(empty($Config['_SearchMode'])) {
                     <span class="unlockfilterfilter" style="padding-left: 20px;" onclick="jQuery('#unlockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterUnlock]" id="unlockFilters_<?php echo $Media['ID']; ?>" value="" />Unlock Filters</span>
                 </div>
             </div>
-                                <?php
+
+
+            <div class="btnseparator"></div>
+            <div class="fbutton">
+                <div class="button">
+                    <span class="savefilterfilter" style="padding-left: 20px;" onclick="dt_saveFilterSet('<?php echo $Media['ID']; ?>');"><input type="hidden" name="reportFilter[saveFilterLock]" id="saveFilters_<?php echo $Media['ID']; ?>" value="" />Save Filter Set</span>
+                </div>
+            </div>
+            <?php
                             }
                         }
                         ?>

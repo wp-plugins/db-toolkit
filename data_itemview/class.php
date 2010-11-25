@@ -1,41 +1,5 @@
 <?php
 
-function di_listReports($Default = false) {
-    $Res = mysql_query("SELECT ID, Content, ParentDocument FROM `dais_elements` WHERE `Element` = 'data_report'");
-    echo mysql_error();
-    $Return .= '<div style="padding:3px;" class="list_row3">';
-    $Return .= '<strong>Select Source Report</strong>: <select name="Data[Content][_source]" id="sourceSelect">';
-    while($report = mysql_fetch_assoc($Res)) {
-        $Config = unserialize($report['Content']);
-        $Sel = '';
-        if($Default == $report['ID']) {
-            $Sel = 'selected="selected"';
-        }
-        $Return .= '<option value="'.$report['ID'].'" '.$Sel.'>\''.$Config['_ReportTitle'].'\' on '.getdocument($report['ParentDocument']).'</option>';
-    }
-    $Return .= '</select>';
-    $Return .= '&nbsp;<input type="button" name="loader" id="loader" value="Load Setup" onclick="di_loadElement(jQuery(\'#sourceSelect\').val());" />';
-    $Return .= '</div>';
-    return $Return;
-}
-function di_listReference($Default = false) {
-    $Res = mysql_query("SELECT ID, Content, ParentDocument FROM `dais_elements` WHERE `Element` = 'data_report'");
-    echo mysql_error();
-    $Return .= '<div style="padding:3px;" class="list_row3">';
-    $Return .= '<strong>Select Reference</strong>: <select name="Data[Content][_reference]" id="elementSelect">';
-    while($report = mysql_fetch_assoc($Res)) {
-        $Config = unserialize($report['Content']);
-        $Sel = '';
-        if($Default == $report['ID']) {
-            $Sel = 'selected="selected"';
-        }
-        $Return .= '<option value="'.$report['ID'].'" '.$Sel.'>\''.$Config['_ReportTitle'].'\' on '.getdocument($report['ParentDocument']).'</option>';
-    }
-    $Return .= '</select>';
-    $Return .= '&nbsp;<input type="button" name="loader" id="loader" value="Load Setup" onclick="di_loadReference(jQuery(\'#elementSelect\').val());" />';
-    $Return .= '</div>';
-    return $Return;
-}
 
 function di_sourceSetup($id, $Default = false) {
     $Element = getelement($id);

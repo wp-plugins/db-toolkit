@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.1.14
+Version: 0.2.0
 Author URI: http://www.digilab.co.za
 */
 
@@ -42,7 +42,7 @@ function dt_start() {
     if(is_admin()) {
         if(!empty($_GET['duplicateinterface'])) {
             $dupvar = get_option($_GET['duplicateinterface']);
-            $oldOption = unserialize($dupvar);
+            $oldOption = $dupvar;
 
             $NewName = uniqid($oldOption['_interfaceName'].' ');
             $oldOption['_interfaceName'] = $NewName;
@@ -50,7 +50,7 @@ function dt_start() {
             $oldOption['ID'] = $newTitle;
             $oldOption['ParentDocument'] = $newTitle;
             //vardump($oldOption);
-            add_option($newTitle, serialize($oldOption), NULL, 'No');
+            add_option($newTitle, $oldOption, NULL, 'No');
             header( 'Location: '.$_SERVER['HTTP_REFERER']);
             die;
         }
@@ -174,9 +174,17 @@ function dt_scripts() {
 function dt_menus() {
 
     global $wpdb;
+    global $menu;
 
     $user = wp_get_current_user();
 
+
+        //vardump($menu);
+        // Create the new separator
+        $menu['2.995'] = array( '', 'manage_options', 'separator-dbtoolkit', '', 'wp-menu-separator' );
+
+        // Create the new top-level Menu
+        add_menu_page ('Application Marketplace', 'App Marketplace', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/icons/shop_cart.png', '2.996');
 
 
         $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
@@ -210,17 +218,13 @@ function dt_menus() {
 
     if(!empty($interfaces)) {
         foreach($interfaces as $interface) {
-            $cfg = unserialize(get_option($interface['option_name']));
-            //vardump($cfg);
-            //$access = 'read';
-           // echo $cfg['_menuAccess'].' - '.$user->allcaps[$cfg['_menuAccess']].'<br />';
-            if($cfg['_menuAccess'] == 'null'){
+            $cfg = get_option($interface['option_name']);
+             if($cfg['_menuAccess'] == 'null'){
                 $cfg['_menuAccess'] = 'read';
             }
             if(!empty($user->allcaps[$cfg['_menuAccess']])){
                 if(!empty($cfg['_ItemGroup'])) {
                     $Groups[$cfg['_ItemGroup']][] = $cfg;
-                   // echo $cfg['_ItemGroup'].'<br />';
                 }
 
             }
@@ -320,13 +324,51 @@ function dbtoolkit_manual() {
 }
 
 function dbtoolkit_viewinterface(){
-    $Interface = unserialize(get_option($_GET['page']));
+    $Interface = get_option($_GET['page']);
     $Title = $Interface['_interfaceName'];
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];
-    }?>
+    }
+    //get set filters  
+    $fset = get_option('dt_set_'.$Interface['ID']);
+    
+    ?>
 <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?><a class="button add-new-h2" href="admin.php?page=Database_Toolkit&interface=<?php echo $_GET['page']; ?>">Edit</a></h2>
+
+    <?php
+    if(!empty($fset)){
+    ?>
+    	<ul class="subsubsub">
+		
+                <?php
+                    $tablen = count($fset);
+                    $index = 1;
+                    $link = explode('&ftab', $_SERVER['REQUEST_URI']);
+                    echo '<li><a href="'.$link[0].'">All</a> | </li>';
+                    foreach($fset as $tab){
+                        $break = '';
+                        $counter = '';
+                        if($index < $tablen){
+                            $break = ' | ';
+                        }
+                        if($tab['ShowCount'] == 'yes'){
+                            // need to do a counter only process                                                        
+                            $total = dr_BuildReportGrid($Interface['ID'], false, false, false, 'count', true, $tab['Filters']);
+                            unset($_SESSION['reportFilters'][$Interface['ID']]);
+                            $counter = ' <span class="count">(<span class="popular-'.$tab['code'].'">'.$total.'</span>)</span> ';
+                        }
+                        $link = explode('&ftab', $_SERVER['REQUEST_URI']);
+                        echo '<li><a href="'.$link[0].'&ftab='.$tab['code'].'">'.$tab['Title'].$counter.'</a>'.$break.'</li>';
+                        $index++;
+                    }
+                ?>
+
+	</ul>
+    <?php
+    }
+    ?>
+
     <div class="clear"></div>
     <div id="poststuff">
     <?php
@@ -558,6 +600,24 @@ function dt_process() {
 
 
 }
+
+function dt_listApplications($Application){
+
+    $Apps = get_option('dt_int_Apps');
+    echo '<select id="appsSelector" name="Data[Content][_Application]" >';
+    foreach($Apps as $app=>$state){
+        if($state == 'open'){
+            $Sel = '';
+            if($app == $Application){
+                $Sel = 'selected="selected"';
+            }
+            echo '<option value="'.$app.'" '.$Sel.'>'.ucwords($app).'</option>';
+        }
+    }
+    echo '</select>';
+
+}
+
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface) {
   
@@ -566,10 +626,11 @@ function dt_renderInterface($interface) {
     }else {
         $ID = $interface;
     }
-    $Media = unserialize(get_option($ID));
+    $Media = get_option($ID);
     if(empty($Media)) {
         return;
     }
+    //echo $Media['_Icon'];
     if($Media['_menuAccess'] != 'null'){
         $user = wp_get_current_user();
         if(empty($user->allcaps[$Media['_menuAccess']])){
@@ -655,7 +716,7 @@ function dt_dashboard_widgets() {
     }
     foreach($dashBoardWidgets as $widget) {
         
-        $myWidget = unserialize(get_option($widget['option_name']));
+        $myWidget = get_option($widget['option_name']);
         if(!empty($myWidget['_Dashboard'])) {
 
             $Title = $myWidget['_interfaceName'];
@@ -682,7 +743,7 @@ function dt_remove_dashboard_widgets() {
         // chose to keep these as the user can remove the defaults if they so choose.
         // perhaps i'll make a setting to keep remove defaults
 	
-                $defaults = unserialize(get_option('_dbtoolkit_defaultinterface'));
+                $defaults = get_option('_dbtoolkit_defaultinterface');
                 if(empty($defaults['_DisableDashboardDefaults'])){
                     return;
                 }
@@ -702,11 +763,79 @@ function dt_remove_dashboard_widgets() {
         unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_secondary']);
 }
 
+function dt_iconSelector($default = false){
+    $dir = WP_PLUGIN_DIR.'/db-toolkit/images/icons';
+    $icons_dir = opendir($dir);
+    ob_start();
+    while (($icon = readdir($icons_dir)) !== false) {
+        if($icon != '.' && $icon != '..') {
+            $dt = pathinfo(WP_PLUGIN_DIR.'/db-toolkit/images/icons/'.$icon);
+            
+            if(strtolower($dt['extension']) == 'png'){
+                $IconID = uniqid('icon_');
+                $Sel = '';
+                if($default == $dt['basename']){
+                    $Sel = 'checked="checked"';
+                }
+                echo '<div style="padding:4px; float:left;">';
+                echo '<label for="'.$IconID.'"><img src="'.WP_PLUGIN_URL.'/db-toolkit/images/icons/'.$dt['basename'].'" width="16" height="16" /></label>';
+                echo '<input type="radio" name="selectedIcon" id="'.$IconID.'" value="'.WP_PLUGIN_URL.'/db-toolkit/images/icons/'.$dt['basename'].'" '.$Sel.' />';
+                echo '</div>';
+            }
+        }        
+    }
+    echo '<br class="clearfix">';
+    return ob_get_clean();
+}
+
+function dt_appMarket(){
+    include('marketplace.php');
+}
+
 // Hoook into the 'wp_dashboard_setup' action to register our function
 
 function dbtoolkit_bugreport(){
     include('bugreport.php');
 }
 
+function dt_saveFilterLock($Interface, $Settings = false){
+
+    if(!empty($Settings)){
+        $Title = $Settings[0]['value'];
+        $Count = 'no';
+        if(!empty($Settings[1]['value'])){
+            $Count = 'yes';
+        }
+        $Newset = get_option('filter_Lock_'.$Interface);
+        $fset = get_option('dt_set_'.$Interface);
+        if(!empty($Title)){
+            $set['Title'] = $Title;
+            $set['code'] = uniqid();
+            $set['ShowCount'] = $Count;
+            $set['Filters'] = $Newset;            
+            $fset[] = $set;
+            update_option('dt_set_'.$Interface, $fset);            
+            return true;
+        }
+        ob_start();
+        ?>
+            <div style="padding: 0pt 0.7em;" class="ui-state-error ui-corner-all">
+                <p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span>
+                <strong>Alert:</strong> You need to provide a <strong>Set Name</strong>.</p>
+            </div>
+        <?php
+        $error = ob_get_clean();
+    }
+
+    ob_start();
+    if(!empty($error)){
+        echo $error;
+    }
+    echo dais_customfield('text', 'Set Title', '_SetTitle', '_SetTitle', 'list_row1' , '' , false);
+    echo dais_customfield('checkbox', 'Show Count', '_ShowCount', '_ShowCount', 'list_row2' , '1' , false);
+    $Out = ob_get_clean();
+    return $Out;
+
+}
 
 ?>

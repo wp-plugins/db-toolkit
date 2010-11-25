@@ -1,4 +1,5 @@
 <?php
+
 //add to the query that is generated for the FINAL QUERY IN VIEW/REPORT/LIST
 /*
 variables avaiable

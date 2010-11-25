@@ -14,7 +14,7 @@
  $Req - the form validation class, sets the field to required if configured to do so
  
 */
-$Det = unserialize(get_option($Data[$Field]));
+$Det = get_option($Data[$Field]);
 $Out .= $Det['name'];
 
 ?>

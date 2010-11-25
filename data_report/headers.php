@@ -29,12 +29,23 @@ if(file_exists('styles/themes/'.themeDir.'/toolbar.css')){
 }
 ?>
 <?php
+
+        $EID = $_GET['page'];
+        if(isset($_SESSION['reportFilters'][$EID]['__lastSet'])){
+            unset($_SESSION['reportFilters'][$EID]);
+            unset($_SESSION['lockedFilters'][$EID]);
+        }        
+
 	if(!empty($_POST['reportFilter'])){
+            //vardump($_POST);
 		foreach($_POST['reportFilter'] as $EID=>$FilterSet){
+                        //vardump($FilterSet);
+                        $FilterSet = core_cleanArray($FilterSet);
+                        //vardump($FilterSet);
 			if(!empty($_POST['reportFilter']['ClearFilters'])){
 				unset($_SESSION['reportFilters'][$EID]);
 			}else{
-				unset($_SESSION['reportFilters'][$EID]);
+				unset($_SESSION['reportFilters'][$EID]);                                
 				$_SESSION['reportFilters'][$EID] = $FilterSet;
 			}
 		}
@@ -50,4 +61,29 @@ if(file_exists('styles/themes/'.themeDir.'/toolbar.css')){
 			//dump($EID);
 		}
 	}
+
+        if(!empty($_GET['ftab'])){
+            $EID = $_GET['page'];
+            if(!empty($_SESSION['lockedFilters'][$EID])){
+                unset($_SESSION['lockedFilters'][$EID]);
+            }
+            
+            $fset = get_option('dt_set_'.$EID);
+            foreach($fset as $setKey=>$filterSet){
+                $fkey = array_search($_GET['ftab'], $filterSet);
+                if(!empty($fkey)){
+                    $filterSet['Filters']['__lastSet'] = $setKey;
+                    if(!empty($_SESSION['reportFilters'][$EID])){
+                        $_SESSION['reportFilters'][$EID] = array_merge($_SESSION['reportFilters'][$EID], $filterSet['Filters']);
+                    }else{
+                        $_SESSION['reportFilters'][$EID] = $filterSet['Filters'];
+                    }
+                    $_SESSION['lockedFilters'][$EID] = $filterSet['Filters'];
+                    break;
+                }
+
+            }
+
+        }
+
 ?>

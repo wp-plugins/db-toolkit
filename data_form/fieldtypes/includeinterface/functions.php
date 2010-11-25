@@ -52,7 +52,7 @@ function includeinterface_setup($Field, $Table, $Config = false){
     $Return = 'Interface: <select name="Data[Content][_includeInterface]['.$Field.']" >';
     
     foreach($interfaces as $Interface){
-        $Data = unserialize(get_option($Interface['option_name']));
+        $Data = get_option($Interface['option_name']);
         //echo $Data['_interfaceName'].'<br />';
         $Sel = '';
         if(!empty($Config['Content']['_includeInterface'][$Field])){

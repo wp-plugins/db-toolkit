@@ -25,7 +25,7 @@
     $Out .= '<option value="">Select a Group</option>';
     $Out .= '<option value="_public">Public</option>';
         foreach($accessGroups as $Group){
-            $Det = unserialize(get_option($Group['option_name']));
+            $Det = get_option($Group['option_name']);
             //vardump($Det);
             $Sel = '';
 		$Sel = '';

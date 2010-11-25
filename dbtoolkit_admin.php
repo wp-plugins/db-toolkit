@@ -12,7 +12,7 @@ get_option('oscimp_store_url'); = get option value
 
 
 if(!empty($_GET['renderinterface'])){
-    $Interface = unserialize(get_option($_GET['renderinterface']));
+    $Interface = get_option($_GET['renderinterface']);
     $Title = $Interface['_interfaceName'];
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];
@@ -34,6 +34,9 @@ if(!empty($_GET['renderinterface'])){
        // _e($Interface['_ReportDescription']);
     }
     ?>
+
+
+
     <div class="clear"></div>
     <div id="poststuff">
     <?php
@@ -48,7 +51,6 @@ if(!empty($_GET['renderinterface'])){
 
 if(!empty($_POST['Data'])) {
     
-  
 
     $_POST = stripslashes_deep($_POST);
     //vardump($_POST);
@@ -56,7 +58,7 @@ if(!empty($_POST['Data'])) {
     if(!empty($_POST['Data']['ID'])){
         $optionTitle = $_POST['Data']['ID'];
 
-        $newCFG = unserialize(get_option($optionTitle));
+        $newCFG = get_option($optionTitle);
         //vardump($newCFG);
     }else{
         $optionTitle = uniqid('dt_intfc');
@@ -76,8 +78,21 @@ if(!empty($_POST['Data'])) {
     }
 
     $newCFG['Content'] = base64_encode(serialize($_POST['Data']['Content']));
-
     $newCFG['_interfaceType'] = 'Configured';
+    if(!empty($_POST['Data']['Content']['_Application'])){
+        $newCFG['_Application'] = $_POST['Data']['Content']['_Application'];
+    }else{
+        $newCFG['_Application'] = 'Base';
+    }
+    $Apps = get_option('dt_int_Apps');
+    if(!empty($Apps[$newCFG['_Application']])){
+        $Apps[$newCFG['_Application']] = 'open';
+        update_option('dt_int_Apps', $Apps);
+    }else{
+        $Apps[$newCFG['_Application']] = 'open';
+        update_option('dt_int_Apps', $Apps);
+    }
+    $_SESSION['activeApp'] = $newCFG['_Application'];
     $newCFG['_interfaceName'] = $_POST['Data']['Content']['_ReportTitle'];
     if(!empty($_POST['Data']['Content']['_SetMenuItem'])) {
         $newCFG['_isMenu'] = true;
@@ -92,17 +107,18 @@ if(!empty($_POST['Data'])) {
     $newCFG['_ReportDescription'] = $_POST['Data']['Content']['_ReportDescription'];
     $newCFG['_ItemGroup'] = $_POST['Data']['Content']['_ItemGroup'];
     $newCFG['_menuAccess'] = $_POST['Data']['Content']['_menuAccess'];
+    $newCFG['_Icon'] = $_POST['Data']['Content']['_Icon'];
 
 
     //vardump($newCFG);
 
-    update_option($optionTitle, serialize($newCFG));
+    update_option($optionTitle, $newCFG);
 }
 
         if($_GET['page'] == 'Add_New'){
             ?>
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2><?php _e('Database Toolkit'); ?></h2>
+            <div id="icon-tools" class="icon32"></div><h2>Database Toolkit</h2>
             <div class="clear"></div>
                 <br />
             <div id="poststuff">
@@ -144,8 +160,9 @@ if(!empty($_POST['Data'])) {
         }
 
         if(!empty($_GET['interface'])) {
-            $Element = unserialize(get_option($_GET['interface']));
+            $Element = get_option($_GET['interface']);
             $Element['Content'] = unserialize(base64_decode($Element['Content']));
+            
             ?>
         <div class="wrap">
             <div id="icon-tools" class="icon32"></div><h2><?php _e('Interface: '.$Element['_interfaceName']); ?></h2>
@@ -163,19 +180,48 @@ if(!empty($_POST['Data'])) {
             return;
         }
 
+
+
+        if(!empty($_POST['application'])){            
+            $_SESSION['activeApp'] = $_POST['application'];
+
+        }
+
+        if(empty($_SESSION['activeApp'])){
+            $_SESSION['activeApp'] = 'Base';
+        }
+
         ?>
 
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2><?php _e('Database Toolkit'); ?></h2>
+            <div id="icon-tools" class="icon32"></div><h2>Database Toolkit <a href="admin.php?page=Add_New" class="button add-new-h2">New Interface</a></h2>
             <br class="clear" /><br />
             <?php
             if(!empty($_POST['Data'])) {
                 echo '<div class="updated fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$_POST['Data']['ID'].'">'.$_POST['Data']['Content']['_ReportTitle'].'</a> Updated.</strong></p></div>';
             }
             ?>
+            <form method="post" action="" id="application-switcher">
             <div class="tablenav">
-                
-                <a href="admin.php?page=Add_New" class="button">New Interface</a>
+                <div class="alignleft actions">Application
+                    <select name="application">
+                    <?php
+
+                    $appList = get_option('dt_int_Apps');
+                    foreach($appList as $app=>$state){
+                        if($state == 'open'){
+                            $Sel = '';
+                            if($app == $_SESSION['activeApp']){
+                                $Sel = 'selected="selected"';
+                            }
+                            echo '<option '.$Sel.' value="'.$app.'">'.$app.'</option>';
+                        }
+                    }
+                    ?>
+                    </select>
+                    <input type="submit" class="button-secondary action" id="doaction" name="loadApp" value="Switch">
+                </div>
+            </form>
                 
             </div>
             <?php
@@ -205,25 +251,26 @@ if(!empty($_POST['Data'])) {
                 </tfoot>
                 <?php
                 if(!empty($interfaces)) {
+                    $Groups = array();
                     foreach($interfaces as $interface) {
                         //vardump($interface);
                         
                         $Iname = $interface['option_name'];
                         $cfg = get_option($Iname);
-                        //echo $cfg;
-                        //vardump($cfg);
-                        if(!is_array($cfg)){
-                            $cfg = unserialize($cfg);
+                        if(empty($cfg['_Application'])){
+                            $cfg['_Application'] = 'Base';
                         }
-                        $GroupName = '__Ungrouped';
-                        if(!empty($cfg['_ItemGroup'])){
-                            $GroupName = $cfg['_ItemGroup'];
+                        if($cfg['_Application'] == $_SESSION['activeApp']){
+                            $GroupName = '__Ungrouped';
+                            if(!empty($cfg['_ItemGroup'])){
+                                $GroupName = $cfg['_ItemGroup'];
+                            }
+                            $Groups[$GroupName][] = $cfg;
                         }
-                        $Groups[$GroupName][] = $cfg;
                     }
                     ksort($Groups);
                     foreach($Groups as $Group=>$Interfaces){
-                        //vardump($Interfaces);
+                        
                         if($Group == '__Ungrouped'){
                             $Group = '<em>Ungrouped</em>';
                         }
@@ -244,7 +291,7 @@ if(!empty($_POST['Data'])) {
                 
 
 
-                <tr id="<?php echo $interface['option_name']; ?>">
+                <tr id="<?php echo $Interface['ID']; ?>">
                     <td></td>
                     <td>
                         <strong><?php
@@ -257,7 +304,13 @@ if(!empty($_POST['Data'])) {
                     </td>
                     <td><?php echo $Config['_main_table']; ?></td>
                     <td>[interface id="<?php echo $Interface['ID']; ?>"]</td>
-                    <td><?php echo $API; ?></td>
+                    <td>
+                    <?php echo $API; ?>
+                        <div class="row-actions">
+                            <a href="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&format=xml" target="_blank">XML</a> |
+                            <a href="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&format=json" target="_blank">JSON</a>
+                        </div>
+                    </td>
                 </tr>
                         <?php
                     }

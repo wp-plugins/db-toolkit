@@ -39,7 +39,57 @@
         <li><a href="#tabs-4">List Template</a></li>
     </ul>
     <div id="tabs-1">
+    <?php
+    
+    if(!empty($Element['_Application'])){
+        $Application = $Element['_Application'];
+    }else{
+        $Application = 'Base';
+        if(!empty($_SESSION['activeApp'])){
+            $Application = $_SESSION['activeApp'];
+        }
+    }
+
+   
+
+    ?>
+    <div class="list_row1" style="padding: 3px;">
+        <table width="100%" cellspacing="2" cellpadding="2" border="0" class="highlight">
+            <tbody>
+                <tr>
+                    <td width="150" align="" class="">
+                        <label for="_Application">Application</label>
+                    </td>
+                    <td class="">
+                        <?php
+                        echo dt_listApplications($Application);
+                        ?><input type="text" value="" style="padding: 5px; display:none;" id="_Application_New" name="Data[Content][_Application]" disabled="disabled">
+                        <a id="addAppB" href="#" onclick="return dt_addNewApp();">Add New</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="list_row1" style="padding: 3px;">
+        <table width="100%" cellspacing="2" cellpadding="2" border="0">
+            <tbody>
+                <tr>
+                    <td width="150" align="" class="">
+                        <label for="_iconSelect">Icon</label>
+                    </td>
+                    <td class="">
+                        <?php
+                        echo '<img id="interfaceIconPreview" src="'.WP_PLUGIN_URL.'/db-toolkit/images/icons/app_window.png" width="16" height="16" align="absmiddle" />';
+                        ?>
+                        <input type="hidden" value="app_window.png" style="padding: 5px;" id="_Application_Icon" name="Data[Content][_Icon]" >
+                        <a id="changeIcon" href="#" onclick="return dt_iconChooser();">Change</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
         <?php
+        
         echo dais_customfield('text', 'Interface Title', '_ReportTitle', '_ReportTitle', 'list_row1' , $Element['_interfaceName'] , '');
         echo dais_customfield('text', 'Interface Description', '_ReportDescription', '_ReportDescription', 'list_row1' , $Element['_ReportDescription']  , '');
         $Sel = '';
@@ -373,7 +423,7 @@
                             if(!empty($Interfaces)) {
                                 $Groups = array();
                                 foreach($Interfaces as $Interface) {                                    
-                                        $option = unserialize(get_option($Interface['option_name']));
+                                        $option = get_option($Interface['option_name']);
                                         if(empty($option['_ItemGroup'])){
                                             $option['_ItemGroup'] = '__Ungrouped';
                                         }
