@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.0
+Version: 0.2.0.1
 Author URI: http://www.digilab.co.za
 */
 
@@ -125,16 +125,99 @@ function dt_headers() {
 }
 //styles
 function dt_styles() {
-    wp_register_style('jqueryUI-base', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+
+    if(!is_admin()){
+        global $post;
+        //vardump($post);
+        $pattern = get_shortcode_regex();
+
+        preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
+        //vardump($matches);
+        if (in_array('interface', $matches[2])) {
+            foreach($matches[3] as $preInterface){
+                $preIs[] = substr(trim($preInterface, '"'), 5);
+            }
+        }
+    }
+
+
+    //<link type="text/css" rel="stylesheet" href="" />
+    wp_register_style('jqueryUI-base-internal', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+    //wp_register_style('jqueryUI-base', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.3/themes/smoothness/jquery-ui.css');
+    //wp_register_style('jqueryUI-base-custom', WP_PLUGIN_URL . '/db-toolkit/jqueryui/custom-theme/jquery-ui-1.7.3.custom.css');
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
-    wp_enqueue_style('jqueryUI-base');
+    wp_enqueue_style('jqueryUI-base-internal');
+    //wp_enqueue_style('jqueryUI-base');
+    //wp_enqueue_style('jqueryUI-base-custom');
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
+
+
+
+    // load interface specifics
+    if(is_admin()){
+        if(!empty($_GET['page']) || !empty($_GET['renderinterface'])){
+            if(!empty($_GET['page'])){
+                if(substr($_GET['page'],0,8) == 'dt_intfc'){
+                    $isInterface = $_GET['page'];
+                }
+            }
+            if(!empty($_GET['renderinterface'])){
+                if(substr($_GET['renderinterface'],0,8) == 'dt_intfc'){
+                    $isInterface = $_GET['renderinterface'];
+                }
+            }
+
+            if(!empty($isInterface)){
+               $preInterface = get_option($isInterface);
+               if(!empty($preInterface['_CustomCSSSource'])){
+                   // load scripts
+                   // setup scripts and styles
+                   foreach($preInterface['_CustomCSSSource'] as $handle=>$CSS){
+                       wp_register_style($handle, $CSS['source']);
+                       wp_enqueue_style($handle);
+                   }
+               }
+            }
+        }
+    }else{
+        if(!empty($preIs)){
+            foreach($preIs as $interface){
+               $preInterface = get_option($interface);
+               if(!empty($preInterface['_CustomCSSSource'])){
+                   // load scripts
+                   // setup scripts and styles
+                   foreach($preInterface['_CustomCSSSource'] as $handle=>$CSS){
+                       wp_register_style($handle, $CSS['source']);
+                       wp_enqueue_style($handle);
+                   }
+               }
+            }
+        }
+    }
+
+
+    
 }
 
 //Scripts
 function dt_scripts() {
+
+    if(!is_admin()){
+        global $post;
+        //vardump($post);
+        $pattern = get_shortcode_regex();
+
+        preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
+        //vardump($matches);
+        if (in_array('interface', $matches[2])) {
+            foreach($matches[3] as $preInterface){
+                $preIs[] = substr(trim($preInterface, '"'), 5);
+                
+            }
+        }
+    }
 
     // queue & register scripts
     wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
@@ -168,6 +251,59 @@ function dt_scripts() {
                 }
 	}
 
+    // load interface specifics
+    
+    if(is_admin()){
+        if(!empty($_GET['page']) || !empty($_GET['renderinterface'])){
+            if(!empty($_GET['page'])){
+                if(substr($_GET['page'],0,8) == 'dt_intfc'){
+                    $isInterface = $_GET['page'];
+                }
+            }
+            if(!empty($_GET['renderinterface'])){
+                if(substr($_GET['renderinterface'],0,8) == 'dt_intfc'){
+                    $isInterface = $_GET['renderinterface'];                   
+                }
+            }
+
+            if(!empty($isInterface)){
+               $preInterface = get_option($isInterface);
+               if(!empty($preInterface['_CustomJSLibraries'])){
+                   // load scripts
+                   // setup scripts and styles
+                   foreach($preInterface['_CustomJSLibraries'] as $handle=>$script){
+                       $in_footer = false;
+                       if($script['location'] == 'foot'){
+                           $in_footer = true;
+                       }
+                       wp_register_script($handle, $script['source'], false, false, $in_footer);
+                       wp_enqueue_script($handle);
+                   }
+               }
+            }
+        }
+    }else{
+       
+        if(!empty($preIs)){
+            foreach($preIs as $interface){
+               $preInterface = get_option($interface);
+               if(!empty($preInterface['_CustomJSLibraries'])){
+                   // load scripts
+                   // setup scripts and styles
+                   foreach($preInterface['_CustomJSLibraries'] as $handle=>$script){
+                       $in_footer = false;
+                       if($script['location'] == 'foot'){
+                           $in_footer = true;
+                       }
+                       wp_register_script($handle, $script['source'], false, false, $in_footer);
+                       wp_enqueue_script($handle);
+                   }
+               }
+            }
+        }
+    
+    }
+    
 }
 
 //Menus
@@ -176,15 +312,16 @@ function dt_menus() {
     global $wpdb;
     global $menu;
 
+
     $user = wp_get_current_user();
 
 
         //vardump($menu);
         // Create the new separator
-        $menu['2.995'] = array( '', 'manage_options', 'separator-dbtoolkit', '', 'wp-menu-separator' );
+        //$menu['2.995'] = array( '', 'manage_options', 'separator-dbtoolkit', '', 'wp-menu-separator' );
 
         // Create the new top-level Menu
-        add_menu_page ('Application Marketplace', 'App Marketplace', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/icons/shop_cart.png', '2.996');
+        //add_menu_page ('Application Marketplace', 'App Marketplace', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/icons/shop_cart.png', '2.996');
 
 
         $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
@@ -329,19 +466,20 @@ function dbtoolkit_viewinterface(){
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];
     }
-    //get set filters  
-    $fset = get_option('dt_set_'.$Interface['ID']);
+    
     
     ?>
 <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?><a class="button add-new-h2" href="admin.php?page=Database_Toolkit&interface=<?php echo $_GET['page']; ?>">Edit</a></h2>
 
     <?php
+    $fset = get_option('dt_set_'.$Interface['ID']);
     if(!empty($fset)){
     ?>
     	<ul class="subsubsub">
 		
                 <?php
+                    
                     $tablen = count($fset);
                     $index = 1;
                     $link = explode('&ftab', $_SERVER['REQUEST_URI']);
@@ -355,8 +493,8 @@ function dbtoolkit_viewinterface(){
                         if($tab['ShowCount'] == 'yes'){
                             // need to do a counter only process                                                        
                             $total = dr_BuildReportGrid($Interface['ID'], false, false, false, 'count', true, $tab['Filters']);
-                            unset($_SESSION['reportFilters'][$Interface['ID']]);
-                            $counter = ' <span class="count">(<span class="popular-'.$tab['code'].'">'.$total.'</span>)</span> ';
+                            //unset($_SESSION['reportFilters'][$Interface['ID']]);
+                            $counter = ' <span class="count">(<span class="'.$tab['code'].'">'.$total.'</span>)</span> ';
                         }
                         $link = explode('&ftab', $_SERVER['REQUEST_URI']);
                         echo '<li><a href="'.$link[0].'&ftab='.$tab['code'].'">'.$tab['Title'].$counter.'</a>'.$break.'</li>';
@@ -620,7 +758,7 @@ function dt_listApplications($Application){
 
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface) {
-  
+    
     if(is_array($interface)) {
         $ID = $interface['id'];
     }else {
@@ -639,6 +777,15 @@ function dt_renderInterface($interface) {
     }
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
+
+
+
+    wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
+
+    wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
+    wp_enqueue_style("jquery-ui-core");
+
+    
     ob_start();
     include('data_report/element.def.php');
     return ob_get_clean();
@@ -731,6 +878,7 @@ function dt_dashboard_widgets() {
                 }
             }
             if(!empty($Show)){
+
                 wp_add_dashboard_widget($myWidget['ID'], $Title, 'dt_renderDashboardWidget', 'alert');
             }
         }

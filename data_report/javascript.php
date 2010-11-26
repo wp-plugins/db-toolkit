@@ -1,5 +1,18 @@
 //<script>
 
+    function dt_addLibrary(){
+        ajaxCall('dais_addJSLibrary', function(i){
+            jQuery('#addonLibrary').append(i);
+        })
+        
+    }
+    function dt_addCSSLibrary(){
+        ajaxCall('dais_addCSSLibrary', function(i){
+            jQuery('#addonCSSLibrary').append(i);
+        })
+
+    }
+
     function dt_saveFilterSet(EID){
         //alert(EID);
 	jQuery('body').prepend('<div id="ui-jsDialog-filterlock" title="Save Filter Set"><p>Loading Panel</p></div>');
@@ -499,14 +512,6 @@
     function toggle(foo) {
 	jQuery("#"+foo).animate({"height": "toggle"}, {"duration": 200});				   
     }
-
-
-
-
-
-
-
-
 
 
 

@@ -37,6 +37,7 @@
         <li><a href="#tabs-2c">Chart</a></li>
         <li><a href="#tabs-3">Settings</a></li>
         <li><a href="#tabs-4">List Template</a></li>
+        <li><a href="#tabs-5">Custom Scripts</a></li>
     </ul>
     <div id="tabs-1">
     <?php
@@ -70,6 +71,8 @@
             </tbody>
         </table>
     </div>
+    <?php
+    /*
     <div class="list_row1" style="padding: 3px;">
         <table width="100%" cellspacing="2" cellpadding="2" border="0">
             <tbody>
@@ -89,7 +92,7 @@
         </table>
     </div>
         <?php
-        
+        */
         echo dais_customfield('text', 'Interface Title', '_ReportTitle', '_ReportTitle', 'list_row1' , $Element['_interfaceName'] , '');
         echo dais_customfield('text', 'Interface Description', '_ReportDescription', '_ReportDescription', 'list_row1' , $Element['_ReportDescription']  , '');
         $Sel = '';
@@ -541,6 +544,40 @@ if(!empty($Element['Content']['_FieldTitle'])){
         echo dais_customfield('textarea', 'Post Footer', '_ListViewTemplatePostFooter', '_ListViewTemplatePostFooter', 'list_row2' , $Element['Content']['_ListViewTemplatePostFooter'], '');
         
         ?>
+    </div>
+    <div id="tabs-5">
+        <?php
+        echo dais_customfield('textarea', 'Footer Scripts', '_customFooterJavaScript', '_customFooterJavaScript', 'list_row1' , $Element['Content']['_customFooterJavaScript'], 'style="height:300px;"');
+        ?>
+        <a href="#" onclick="dt_addLibrary(); return false;">Add Custom JS Library</a> | <a href="#" onclick="dt_addCSSLibrary(); return false;">Add Custom Style Sheet</a>
+        <div id="addonLibrary">
+            <?php
+            if(empty($Element['Content']['_customJSLibrary'])){
+                echo dais_addJSLibrary();
+            }else{
+                foreach($Element['Content']['_customJSLibrary'] as $jsScript){
+                    if(!empty($jsScript['source'])){
+                        echo dais_addJSLibrary($jsScript['source'], $jsScript['location']);
+                    }
+
+                }
+            }
+            ?>
+        </div>
+        <div id="addonCSSLibrary">
+            <?php
+            if(empty($Element['Content']['_customCSSSource'])){
+                echo dais_addCSSLibrary();
+            }else{
+                foreach($Element['Content']['_customCSSSource'] as $cssScript){
+                    if(!empty($cssScript['source'])){
+                        echo dais_addCSSLibrary($cssScript['source']);
+                    }
+                }
+            }
+            ?>
+        </div>
+        
     </div>
 </div><br />
 <?php

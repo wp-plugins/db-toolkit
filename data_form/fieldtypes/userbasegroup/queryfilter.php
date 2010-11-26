@@ -8,7 +8,7 @@ variables avaiable
  $Config - config for the element
  $EID - element ID
  $querySelects - fields to be returned - array(fieldnames)
- $queryWhere[] - array with string of where clause e.g 'prim.'.$Field." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+ $queryWhere[] - array with string of where clause e.g 'prim.'.$Field." in ('".implode('\',\'', $filterSet[$Field])."')";
  $joinIndex - uniqu index value created for joins
  $queryJoin - string .= with join string
  

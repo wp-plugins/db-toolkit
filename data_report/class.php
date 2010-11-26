@@ -618,17 +618,13 @@ if(is_admin()) {
 
     // End Admin Functions
 }
-function dr_lockFilters($EID) {
-    //   vardump($_SESSION['reportFilters']);
-    $setFilters = $_SESSION['reportFilters'][$EID];
-    add_option('filter_Lock_'.$EID, $setFilters);
+function dr_lockFilters($EID, $Filters){    
+    add_option('filter_Lock_'.$EID, $Filters);
     return true;
 }
-function dr_unlockFilters($EID) {
-    delete_option('filter_Lock_'.$EID);
-    unset($_SESSION['reportFilters'][$EID]);
+function dr_unlockFilters($EID){
+    delete_option('filter_Lock_'.$EID);    
     unset($_SESSION['lockedFilters'][$EID]);
-
 }
 function dr_readSetFilters($EID) {
     return false;
@@ -641,11 +637,11 @@ function dr_readSetFilters($EID) {
             //dump($out);
             foreach($out as $key=>$value) {
                 if(!empty($value)) {
-                    $_SESSION['reportFilters'][$EID][$key] = $value;
+                    $filterSet[$key] = $value;
                     $_SESSION['lockedFilters'][$EID][$key] = true;
                 }
             }
-            //unset($_SESSION['reportFilters'][$EID]);
+            //unset($filterSet);
         }
     }
 }
@@ -782,7 +778,6 @@ return $Field;
 
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $filterSet = false) {
     
-
 //Filters will be picked up via Session value
 // Set Vars
     if(!empty($Format)) {
@@ -1044,7 +1039,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
         //apply a generic keyword filter to each field is a key word has been sent
         if(($Config['_IndexType'][$Field][0]) == 'index'){
-            if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
+            if(!empty($filterSet['_keywords'])) {
                 if($WhereTag == '') {
                     $WhereTag = " WHERE ";
                 }
@@ -1062,9 +1057,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     $keyField = $preKeyField[0];
                     //$keyField = strtok($querySelects[$Field], ' AS ');
                 }
-                $preWhere[] = $keyField." LIKE '%".$_SESSION['reportFilters'][$EID]['_keywords']."%' ";
-                //echo $keyField." LIKE '%".$_SESSION['reportFilters'][$EID]['_keywords']."%' <br />";
-                //dump($_SESSION['reportFilters'][$EID]);
+                $preWhere[] = $keyField." LIKE '%".$filterSet['_keywords']."%' ";
+                //echo $keyField." LIKE '%".$filterSet['_keywords']."%' <br />";
+                //dump($filterSet);
             }
         }
         $joinIndex++;
@@ -1580,7 +1575,7 @@ var ".$ChartID." = new Highcharts.Chart({
                 }
                 if(strtolower($Format) == 'pdf') {
                     //$apiOutput[$jsonIndex][] = array();
-                    if(!empty($_SESSION['reportFilters'][$EID])) {
+                    if(!empty($filterSet)) {
                         //$apiOutput['filters'] = array();
                     }
                 }
@@ -1705,11 +1700,11 @@ var ".$ChartID." = new Highcharts.Chart({
 
 
                             // Apply keyword Fitler Highlight
-                            if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
-                                //$outData = str_replace($_SESSION['reportFilters'][$EID]['_keywords'], '<strong>'.$_SESSION['reportFilters'][$EID]['_keywords'].'</strong>', $outData);
-                                //$outData = str_replace(ucwords($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.ucwords($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
-                                //$outData = str_replace(strtoupper($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtoupper($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
-                                //$outData = str_replace(strtolower($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtolower($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
+                            if(!empty($filterSet['_keywords'])) {
+                                //$outData = str_replace($filterSet['_keywords'], '<strong>'.$filterSet['_keywords'].'</strong>', $outData);
+                                //$outData = str_replace(ucwords($filterSet['_keywords']), '<strong>'.ucwords($filterSet['_keywords']).'</strong>', $outData);
+                                //$outData = str_replace(strtoupper($filterSet['_keywords']), '<strong>'.strtoupper($filterSet['_keywords']).'</strong>', $outData);
+                                //$outData = str_replace(strtolower($filterSet['_keywords']), '<strong>'.strtolower($filterSet['_keywords']).'</strong>', $outData);
                             }
 
                             // set row output
@@ -1839,7 +1834,7 @@ var ".$ChartID." = new Highcharts.Chart({
                                         // PDF output
                                         if(strtolower($Format) == 'pdf') {
                                             $apiOutput[$pdfIndex][$Field] = htmlentities(stripslashes($outData));
-                                            if(!empty($_SESSION['reportFilters'][$EID][$Field])) {
+                                            if(!empty($filterSet[$Field])) {
                                                 $apiOutput['filters'][$Field][stripslashes($outData)] = stripslashes($outData);
                                             }
                                         }
@@ -2277,7 +2272,12 @@ var ".$ChartID." = new Highcharts.Chart({
             return $apiOutput;
         }
     }
+    // final JS output
+    $_SESSION['dataform']['OutScripts'] .= "
 
+        ".$Config['_customFooterJavaScript']."
+
+    ";
     return $header.$ReportReturn.$footer;
 }
 function df_inlineedit($Entry, $ID, $Value) {

@@ -1,5 +1,50 @@
 <?php
+function dais_addJSLibrary($src='', $loc='foot'){
+    ob_start();
+    $uni = uniqid();
+    ?>
+        <table class="_addonJSLibrary" width="100%" cellspacing="2" cellpadding="2" border="0">
+            <tbody>
+                <tr>
+                    <td width="150" align="" class="">
+                        Library source
+                    </td>
+                    <td class="">
+                        <input type="text" value="<?php echo $src; ?>" id="<?php echo $uni; ?>" style="padding: 5px; width: 300px;" name="Data[Content][_customJSLibrary][<?php echo $uni; ?>][source]">
+                        Header <input type="radio" name="Data[Content][_customJSLibrary][<?php echo $uni; ?>][location]" id="<?php echo $uni; ?>_head" value="head" <?php if($loc == 'head'){ echo 'checked="checked"';} ?> /> &nbsp;
+                        Footer <input type="radio" name="Data[Content][_customJSLibrary][<?php echo $uni; ?>][location]" id="<?php echo $uni; ?>_head" value="foot" <?php if($loc == 'foot'){ echo 'checked="checked"';} ?> />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<?php
+return ob_get_clean();
+}
+
+function dais_addCSSLibrary($src=''){
+    ob_start();
+    $uni = uniqid();
+    ?>
+        <table class="_addonCSSLibrary" width="100%" cellspacing="2" cellpadding="2" border="0">
+            <tbody>
+                <tr>
+                    <td width="150" align="" class="">
+                        CSS Source
+                    </td>
+                    <td class="">
+                        <input type="text" value="<?php echo $src; ?>" id="<?php echo $uni; ?>" style="padding: 5px; width: 300px;" name="Data[Content][_customCSSSource][<?php echo $uni; ?>][source]">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+<?php
+return ob_get_clean();
+
+}
+
 // File Selection stuff
+
+
 function dais_page_selector($Type = 's', $DefaultList = false, $callback = false, $Name = 'PageList') {
     $Tree =	dais_pagetree(strtoupper($Type), $DefaultList, 'Site pages', $callback, $Name);
     //$Tree = ob_get_clean();

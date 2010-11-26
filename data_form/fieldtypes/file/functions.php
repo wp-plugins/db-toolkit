@@ -63,7 +63,7 @@ function file_handleInput($Field, $Input, $FieldType, $Config, $predata){
 		
 	//return $newLoc;
         
-	return $upload['url'].'|'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
+	return $upload['url'];//.'|'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
 	}
 	
 }

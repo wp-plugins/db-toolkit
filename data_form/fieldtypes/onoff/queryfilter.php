@@ -9,7 +9,7 @@ variables avaiable
  $Config - config for the element
  $EID - element ID
  $querySelects - fields to be returned - array(fieldnames)
- $queryWhere[] - array with string of where clause e.g 'prim.'.$Field." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+ $queryWhere[] - array with string of where clause e.g 'prim.'.$Field." in ('".implode('\',\'', $filterSet[$Field])."')";
  $joinIndex - uniqu index value created for joins
  $queryJoin - string .= with join string
  
@@ -18,9 +18,9 @@ variables avaiable
 
 */
 
-if(!empty($_SESSION['reportFilters'][$EID][$Field])){
+if(!empty($filterSet[$Field])){
 	//echo 'ping';
-	foreach($_SESSION['reportFilters'][$EID][$Field] as $FilterVal){
+	foreach($filterSet[$Field] as $FilterVal){
 		$filterValue = 0;
 		if($FilterVal == 'checked'){
 			$filterValue = 1;	

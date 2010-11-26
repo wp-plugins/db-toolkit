@@ -11,7 +11,10 @@ div.fbutton .unlockfilterfilter {
 	background:transparent url(images/lock_open.png) no-repeat scroll left center;
 }
 div.fbutton .savefilterfilter {
-	background:transparent url(images/disk.png) no-repeat scroll left center;
+	background:transparent url(images/ui-tab-plus.png) no-repeat scroll left center;
+}
+div.fbutton .deletesavefilterfilter {
+	background:transparent url(images/ui-tab-minus.png) no-repeat scroll left center;
 }
 div.fbutton .delete {
 	background:transparent url(images/cross.png) no-repeat scroll left center;
@@ -39,6 +42,15 @@ div.fbutton .export {
 }
 div.fbutton .reload{
 	background:transparent url(images/load.png) no-repeat scroll left center;
+}
+.btnseparator{
+    height: 1px;
+    display: block;
+    float: left;    
+    width: 5px;
+}
+.report_filters_panel{
+    padding-bottom: 10px;
 }
 
 .filterpanels{

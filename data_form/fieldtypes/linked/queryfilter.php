@@ -82,7 +82,7 @@
 
 		}
 		// Setup Where Clause in Query
-		if(!empty($_SESSION['reportFilters'][$EID][$Field])){
+		if(!empty($filterSet[$Field])){
 			if($WhereTag == ''){
 				$WhereTag = " WHERE ";	
 			}
@@ -90,12 +90,12 @@
 			$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
 			//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex." on (prim.".$Field." = ".$joinIndex.".".$Config['_Linkedfilterfields'][$Field]['Ref'].") \n";
 				$prewhere = array();
-				foreach($_SESSION['reportFilters'][$EID][$Field] as $like){
+				foreach($filterSet[$Field] as $like){
 					$prewhere[] = 'prim.'.$Field." LIKE '%|".$like."|%' ";
 				}
 				$queryWhere[] = '('.implode(' OR ', $prewhere).')';
 			}else{
-				$queryWhere[] = 'prim.'.$Field." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+				$queryWhere[] = 'prim.'.$Field." in ('".implode('\',\'', $filterSet[$Field])."')";
 			}
 		}
 		// apply Where Filter

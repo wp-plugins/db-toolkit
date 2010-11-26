@@ -8,7 +8,7 @@ variables avaiable
  $Config - config for the element
  $EID - element ID
  $querySelects - fields to be returned - array(fieldnames)
- $queryWhere[] - array with string of where clause e.g 'prim.'.$Field." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+ $queryWhere[] - array with string of where clause e.g 'prim.'.$Field." in ('".implode('\',\'', $filterSet[$Field])."')";
  $joinIndex - uniqu index value created for joins
  $queryJoin - string .= with join string
  
@@ -17,7 +17,7 @@ variables avaiable
 
 */
 
-if(!empty($_SESSION['reportFilters'][$EID][$Field])){
+if(!empty($filterSet[$Field])){
     if($WhereTag == ''){
             $WhereTag = " WHERE ";
     }
@@ -30,8 +30,8 @@ if(!empty($_SESSION['reportFilters'][$EID][$Field])){
     $queryJoin .= " LEFT JOIN `".$Config['_Linkingtablefields'][$Field]['LinkingTable']."` AS ".$joinIndex."_linking on (prim.".$Config['_CloneField'][$Field]['Master']." = ".$joinIndex."_linking.".$Config['_Linkingtablefields'][$Field]['LinkID'].") \n";
     $queryJoin .= " LEFT JOIN `".$Config['_Linkingtablefields'][$Field]['DestinationTable']."` AS ".$joinIndex."_destination on (".$joinIndex."_linking.".$Config['_Linkingtablefields'][$Field]['LinkDestID']." = ".$joinIndex."_destination.".$Config['_Linkingtablefields'][$Field]['DestID'].") \n";
 
-    //$queryWhere[] = 'prim.'.$Config['_CloneField'][$Field]['Master']." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
-    $queryWhere[] = $joinIndex."_destination.".$Config['_Linkingtablefields'][$Field]['DestID']." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+    //$queryWhere[] = 'prim.'.$Config['_CloneField'][$Field]['Master']." in ('".implode('\',\'', $filterSet[$Field])."')";
+    $queryWhere[] = $joinIndex."_destination.".$Config['_Linkingtablefields'][$Field]['DestID']." in ('".implode('\',\'', $filterSet[$Field])."')";
 
     
     $groupBy[$Config['_ReturnFields'][0]] = 'prim.'.$Config['_ReturnFields'][0];

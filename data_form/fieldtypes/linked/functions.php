@@ -532,8 +532,8 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 			//$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';				
 		}
 		$Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br /><span id="status_'.$Field.'">';
-		if(!empty($_SESSION['reportFilters'][$EID][$Config['_Linkedfilterfields'][$Field]['ID']][0])){
-			$Return .= linked_makeFilterdLinkedFilter($EID, $Config['_Linkedfilterfields'][$Field]['Ref'] , $Config['_Linkedfilterfields'][$Field]['Value'], $Config['_Linkedfilterfields'][$Field]['Filter'], $_SESSION['reportFilters'][$EID][$Config['_Linkedfilterfields'][$Field]['ID']][0], $Config['_Linkedfilterfields'][$Field]['Table'], $Field, $FieldTitle, $_SESSION['reportFilters'][$EID][$Field]);
+		if(!empty($filterSet[$Config['_Linkedfilterfields'][$Field]['ID']][0])){
+			$Return .= linked_makeFilterdLinkedFilter($EID, $Config['_Linkedfilterfields'][$Field]['Ref'] , $Config['_Linkedfilterfields'][$Field]['Value'], $Config['_Linkedfilterfields'][$Field]['Filter'], $filterSet[$Config['_Linkedfilterfields'][$Field]['ID']][0], $Config['_Linkedfilterfields'][$Field]['Table'], $Field, $FieldTitle, $filterSet[$Field]);
 		}else{
 			$Return .= '<select disabled="disabled" id="filter_'.$Field.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
 			$Return .= '<option>Select '.$Config['_FieldTitle'][$Config['_Linkedfilterfields'][$Field]['Filter']].'</option>';

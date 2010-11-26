@@ -1,10 +1,10 @@
 <?php
 //Filters query variables for the field type
-if(!empty($_SESSION['reportFilters'][$EID][$Field])){
+if(!empty($filterSet[$Field])){
 	if($WhereTag == ''){
 		$WhereTag = " WHERE ";	
 	}
 
-	$queryWhere[] = 'prim.'.$Field." = '".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."'";
+	$queryWhere[] = 'prim.'.$Field." = '".implode('\',\'', $filterSet[$Field])."'";
 }
 ?>

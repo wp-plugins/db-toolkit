@@ -30,12 +30,53 @@ if(!empty($_GET['renderinterface'])){
             }
     ?></h2>
     <?php
-    if(!empty($Interface['_ReportDescription'])) {
-       // _e($Interface['_ReportDescription']);
-    }
+    $fset = get_option('dt_set_'.$Interface['ID']);
+    if(!empty($fset)){
     ?>
+        <ul class="subsubsub">
 
+                <?php
+                    
+                    $tablen = count($fset);
+                    $index = 1;
+                    $link = explode('&ftab', $_SERVER['REQUEST_URI']);
+                    $class = 'class="current"';
+                    if(!empty($_GET['ftab'])){
+                        $class = '';
+                    }
+                    $total = dr_BuildReportGrid($Interface['ID'], false, false, false, 'count', true, false);
+                    //unset($_SESSION['reportFilters'][$Interface['ID']]);
+                    $counter = ' <span class="count">(<span class="'.$tab['code'].'">'.$total.'</span>)</span> ';
+                    
+                    echo '<li><a '.$class.' href="'.$link[0].'">All '.$counter.'</a> | </li>';
+                    foreach($fset as $tab){
+                        $break = '';
+                        $counter = '';
+                        $class = '';
+                        if(!empty($_GET['ftab'])){                            
+                            if($_GET['ftab'] == $tab['code']){
+                                $class = 'class="current"';
+                            }
+                        }
+                        if($index < $tablen){
+                            $break = ' | ';
+                        }
+                        if($tab['ShowCount'] == 'yes'){
+                            // need to do a counter only process
+                            $total = dr_BuildReportGrid($Interface['ID'], false, false, false, 'count', true, $tab['Filters']);
+                            //unset($_SESSION['reportFilters'][$Interface['ID']]);
+                            $counter = ' <span class="count">(<span class="'.$tab['code'].'">'.$total.'</span>)</span> ';
+                        }
+                        $link = explode('&ftab', $_SERVER['REQUEST_URI']);
+                        echo '<li><a '.$class.' href="'.$link[0].'&ftab='.$tab['code'].'">'.$tab['Title'].$counter.'</a>'.$break.'</li>';
+                        $index++;
+                    }
+                ?>
 
+        </ul>
+<?php
+}
+?>
 
     <div class="clear"></div>
     <div id="poststuff">
@@ -75,6 +116,13 @@ if(!empty($_POST['Data'])) {
         $newCFG['Column'] = 0;
         $newCFG['Type'] = 'Plugin';
         $newCFG['Row'] = 0;
+    }
+    //vardump($_POST);
+    if(!empty($_POST['Data']['Content']['_customJSLibrary'])){
+        $newCFG['_CustomJSLibraries'] = $_POST['Data']['Content']['_customJSLibrary'];
+    }
+    if(!empty($_POST['Data']['Content']['_customCSSSource'])){        
+        $newCFG['_CustomCSSSource'] = $_POST['Data']['Content']['_customCSSSource'];
     }
 
     $newCFG['Content'] = base64_encode(serialize($_POST['Data']['Content']));
