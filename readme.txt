@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.1
-Stable tag: 0.1.14
+Stable tag: 0.2.0.4
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,9 +52,12 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.1.14 =
-RC1 - yup this is the the forrunner of V1.0 so post any bugs you find in the formms.
+= 0.2.0.4 =
+Made a massiv amount of changes on the structure + some exrea new features.
+see http://dbtoolkit.digilab.co.za/version-0-2-on-the-horizon/ for more.
 
+= 0.1.14 =
+Some minor Fixes
 = 0.1.13 =
 Fixed:
  - Enqueue scripts and styles where not being included within sub menu pages.

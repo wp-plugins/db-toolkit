@@ -316,7 +316,7 @@ if(!empty($_POST['Data'])) {
                         <th scope="col" class="manage-column" id="interface-name-top">Interface Name</th>
                         <th scope="col" class="manage-column" id="interface-table-top">Table Interfaced</th>
                         <th scope="col" class="manage-column" id="interface-date-top">Short Code</th>
-                        <th scope="col" class="manage-column" id="interface-api-top">API Key</th>
+                        <th scope="col" class="manage-column" id="interface-api-top">API Access</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -325,7 +325,7 @@ if(!empty($_POST['Data'])) {
                         <th scope="col" class="manage-column" id="interface-name-bottom">Interface Name</th>
                         <th scope="col" class="manage-column" id="interface-table-bottom">Table Interfaced</th>
                         <th scope="col" class="manage-column" id="interface-date-bottom">Short Code</th>
-                        <th scope="col" class="manage-column" id="interface-api-bottom">API Key</th>
+                        <th scope="col" class="manage-column" id="interface-api-bottom">API Access</th>
                     </tr>
                 </tfoot>
                 <?php
@@ -384,11 +384,19 @@ if(!empty($_POST['Data'])) {
                     <td><?php echo $Config['_main_table']; ?></td>
                     <td>[interface id="<?php echo $Interface['ID']; ?>"]</td>
                     <td>
-                    <?php echo $API; ?>
+                    <?php
+                    
+                    if($Config['_ViewMode'] == 'list' && empty($Config['_UseListViewTemplate'])){
+                    echo $API; ?>
                         <div class="row-actions">
                             <a href="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&format=xml" target="_blank">XML</a> |
                             <a href="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&format=json" target="_blank">JSON</a>
                         </div>
+                    <?php
+                    }else{
+                        echo "<div class=\"row-actions\">API Only Supported in non-templated list mode</div>";
+                    }
+                    ?>
                     </td>
                 </tr>
                         <?php
