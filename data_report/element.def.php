@@ -1,6 +1,12 @@
 <?php
 
 
+
+
+
+
+
+
 $test = array();
 $Render = true;
 $TitleNotice = '';
@@ -30,21 +36,16 @@ if($Render != true) {
 }
 
 $FilterLocks = get_option('filter_Lock_'.$Media['ID']);
-
 if(!empty($FilterLocks)) {
     $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];
-
     if(empty($_SESSION['reportFilters'][$Media['ID']])) {
         $_SESSION['reportFilters'][$Media['ID']] = $FilterLocks;
     }else {
         array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
     }
-
     $_SESSION['lockedFilters'][$Media['ID']] = $FilterLocks;
     //vardump($_SESSION['reportFilters'][$Media['ID']]);
 }
-
-
 //vardump($_SESSION['reportFilters'][$Media['ID']]);
 // Form Mode
 if(!empty($Config['_FormMode'])) {
@@ -123,7 +124,6 @@ if(empty($Config['_SearchMode'])) {
         //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
         if(!empty($Config['_Show_Filters'])) {
             if(!empty($Config['_toggle_Filters'])) {
-                echo '<div class="btnseparator"></div>';
                 echo '<div class="fbutton"><div class="button"><span class="filterbutton" style="padding-left: 20px;" onclick="toggle(\'filterPanel_'.$Media['ID'].'\');">Show Filters</span></div></div>';
             }
         }
@@ -139,7 +139,6 @@ if(empty($Config['_SearchMode'])) {
             echo '<div class="btnseparator"></div>';
             if(!empty($Config['_Show_Select'])) {
                 echo '<div class="fbutton"><div class="button"><span class="selectall" style="padding-left: 20px;" onclick="dr_selectAll(\''.$Media['ID'].'\');">Select All</span></div></div>';
-                echo '<div class="btnseparator"></div>';
                 echo '<div class="fbutton"><div class="button"><span class="unselectall" style="padding-left: 20px;" onclick="dr_deSelectAll(\''.$Media['ID'].'\');">Unselect All</span></div></div>';
                 echo '<div class="btnseparator"></div>';
             }
@@ -177,7 +176,7 @@ if(empty($Config['_SearchMode'])) {
         }
         if(!empty($_SESSION['reportFilters'][$Media['ID']])) {
             if(count($_SESSION['reportFilters'][$Media['ID']]) > 1) {
-                $Filters = core_cleanArray($_SESSION['reportFilters'][$Media['ID']]);
+                $Filters = df_cleanArray($_SESSION['reportFilters'][$Media['ID']]);
                 $FilterVisiable = 'block';
             }
         }
@@ -187,13 +186,13 @@ if(empty($Config['_SearchMode'])) {
 <div class="filterpanels" id="filterPanel_<?php echo $Media['ID']; ?>" style="visibility:visible; display:<?php echo $FilterVisiable; ?>;">
             <?php
             InfoBox('Filters');
-            ?>
+        ?>
     <form id="setFilters_<?php echo $Media['ID']; ?>" name="setFilters" method="post" action="" style="margin:0;">
         <input type="hidden" id="reportFilters_<?php echo $Media['ID']; ?>" value="<?php echo $Media['ID']; ?>" name="reportFilter[<?php echo $Media['ID']; ?>][EID]" />
         <div class="report_filters_panel">
                     <?php
                     echo dr_BuildReportFilters($Config, $Media['ID'], $Filters);
-                    ?>
+        ?>
             <div style="clear:both"></div>
         </div>
         <div class="list_row3" style="clear:both;">
@@ -204,7 +203,7 @@ if(empty($Config['_SearchMode'])) {
             </div>
                     <?php
                     if(!empty($Config['_toggle_Filters'])) {
-                        ?>
+            ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
@@ -213,83 +212,53 @@ if(empty($Config['_SearchMode'])) {
             </div>
                         <?php
                     }
-                    ?>
+        ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
                     <span class="clearfilter" style="padding-left: 20px;" onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />Clear Filters</span>
                 </div>
             </div>
-            <?php
-            if(is_admin()) {
-                if(empty($Config['_Hide_FilterLock'])) {
-                    $isLoc = get_option('filter_Lock_'.$Media['ID']);
-
-                    if(empty($isLoc)){
-            ?>
+                    <?php
+                    if(is_admin()) {
+                        if(empty($Config['_Hide_FilterLock'])) {
+                            if(empty($_SESSION['lockedFilters'][$Media['ID']])) {
+                    ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
                     <span class="lockfilterfilter" style="padding-left: 20px;" onclick="jQuery('#lockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterLock]" id="lockFilters_<?php echo $Media['ID']; ?>" value="" />Lock Filters</span>
                 </div>
             </div>
-            <?php
+                                <?php
+                            }
+                            if(!empty($_SESSION['lockedFilters'][$Media['ID']])) {
 
-                    }else{
-
-            ?>
+                    ?>
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button">
                     <span class="unlockfilterfilter" style="padding-left: 20px;" onclick="jQuery('#unlockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterUnlock]" id="unlockFilters_<?php echo $Media['ID']; ?>" value="" />Unlock Filters</span>
                 </div>
             </div>
-            <?php
-
-                    }
-                    $isPreSet = get_option('dt_set_'.$Media['ID']);
-                    if(!empty($isLoc)){
-                    if(!empty($isPreSet) && isset($_GET['ftab'])){
-
-            ?>
-            <div class="btnseparator"></div>
-            <div class="fbutton">
-                <div class="button">
-                    <span class="deletesavefilterfilter" style="padding-left: 20px;" onclick="dt_deleteFilterSet('<?php echo $Media['ID']; ?>');"><input type="hidden" name="reportFilter[deleteFilterLock]" id="deleteFilters_<?php echo $Media['ID']; ?>" value="" />Delete Filter Set</span>
-                </div>
-            </div>
-            <?php
-
-                    }else{
-
-            
-            ?>
-            <div class="btnseparator"></div>
-            <div class="fbutton">
-                <div class="button">
-                    <span class="savefilterfilter" style="padding-left: 20px;" onclick="dt_saveFilterSet('<?php echo $Media['ID']; ?>');"><input type="hidden" name="reportFilter[saveFilterLock]" id="saveFilters_<?php echo $Media['ID']; ?>" value="" />Save Filter Set</span>
-                </div>
-            </div>
-
-            <?php
-                    }
-                    }
-
-
+                                <?php
                             }
-            }
-            ?>
+                        }
+                        ?>
+                        <?php
+                    }
+        ?>
        <!-- <input type="submit" name="reportFilter[Submit]" id="button" value="Apply Filters" class="buttons" />&nbsp;<input type="button" name="button" id="button" value="Close Panel" class="buttons" onclick="toggle('filterPanel_<?php echo $Media['ID']; ?>'); return false; " />&nbsp;<input type="submit" name="reportFilter[ClearFilters]" id="button" value="Clear Filters" class="buttons" onclick="return confirm('Are you sure you want to clear the filters?');" /></div> -->
             <div style="clear:both;"></div>
         </div>
     </form>
-        <?php
-        endinfobox();
+            <?php
+            endinfobox();
         ?>
 </div>
-    <?php
-    //}
-}
+        <?php
+        //}
+    }
 }else {
 
     InfoBox($Config['_ReportTitle']);
@@ -306,7 +275,7 @@ if(empty($Config['_SearchMode'])) {
                 }
             }
             echo dr_BuildReportFilters($Config, $Media['ID'], $Filters);
-            ?>
+    ?>
         <div style="clear:both;"></div>
             <?php
             $ButtonAlign = 'center';
@@ -314,17 +283,17 @@ if(empty($Config['_SearchMode'])) {
                 $ButtonAlign = $Config['_SubmitAlignment'];
             }
 
-            ?>
+    ?>
         <div style="padding: 2px; text-align:<?php echo $ButtonAlign; ?>">
             <input type="submit" value="Search" class="filterSearchbutton" />&nbsp;
                 <?php
                 if(!empty($_SESSION['reportFilters'][$Media['ID']])) {
                     //dump($_SESSION['reportFilters']);
-                    ?>
+        ?>
             <input type="submit" value="Clear Results" class="filterSearchbutton" onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();" /><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />
                     <?php
                 }
-                ?>
+    ?>
         </div>
     </form>
     <div style="clear:both"></div>
@@ -380,7 +349,7 @@ if(!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMod
     if(!empty($_GET['_pg'])) {
         $gotTo = $_GET['_pg'];
     }
-    echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], false, false, $_SESSION['reportFilters'][$Media['ID']]);
+    echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir']);
     if(!empty($Config['_autoPolling'])) {
         $Rate = $Config['_autoPolling']*1000;
 

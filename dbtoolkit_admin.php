@@ -228,9 +228,27 @@ if(!empty($_POST['Data'])) {
             return;
         }
 
+        global $wpdb;
+        $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+
+        if(!empty($_POST['deleteApp'])){
 
 
-        if(!empty($_POST['application'])){            
+            $apps = get_option('dt_int_Apps');
+            
+            foreach($interfaces as $interface){
+                $tmp = get_option($interface['option_name']);
+                if($tmp['_Application'] == $_POST['application']){
+                    dt_removeInterface($interface['option_name']);
+                }
+                
+            }
+            unset($apps[$_SESSION['activeApp']]);
+            update_option('dt_int_Apps', $apps);
+            $_SESSION['activeApp'] = 'Base';
+        }
+
+        if(!empty($_POST['loadApp'])){
             $_SESSION['activeApp'] = $_POST['application'];
 
         }
@@ -238,6 +256,8 @@ if(!empty($_POST['Data'])) {
         if(empty($_SESSION['activeApp'])){
             $_SESSION['activeApp'] = 'Base';
         }
+
+        
 
         ?>
 
@@ -256,6 +276,10 @@ if(!empty($_POST['Data'])) {
                     <?php
 
                     $appList = get_option('dt_int_Apps');
+                    if(empty($appList)){
+                        $appList['Base'] = 'open';
+                        update_option('dt_int_Apps', $appList);
+                    }
                     foreach($appList as $app=>$state){
                         if($state == 'open'){
                             $Sel = '';
@@ -268,14 +292,20 @@ if(!empty($_POST['Data'])) {
                     ?>
                     </select>
                     <input type="submit" class="button-secondary action" id="doaction" name="loadApp" value="Switch">
+                    
+                </div>
+                <div class="alignright actions">
+<?php
+                    if($_SESSION['activeApp'] != 'Base'){
+                        echo '<input type="submit" class="button-primary action" id="doaction" name="deleteApp" value="Delete Application" onClick="return confirm(\'This will delete all interfaces in this Application. Data will remain intact. This cannot be undone. Continue?\');" >';
+                    }
+                    ?>
                 </div>
             </form>
                 
             </div>
             <?php
-            global $wpdb;
-
-            $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+            
 
             ?>
             <table width="100%" border="0" cellspacing="2" cellpadding="2" class="widefat">

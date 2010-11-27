@@ -618,33 +618,19 @@ if(is_admin()) {
 
     // End Admin Functions
 }
-function dr_lockFilters($EID, $Filters){    
-    add_option('filter_Lock_'.$EID, $Filters);
+function dr_lockFilters($EID) {
+    //   vardump($_SESSION['reportFilters']);
+    $setFilters = serialize($_SESSION['reportFilters'][$EID]);
+    add_option('filter_Lock_'.$EID, $setFilters);
     return true;
 }
-function dr_unlockFilters($EID){
-    delete_option('filter_Lock_'.$EID);    
+function dr_unlockFilters($EID) {
+    delete_option('filter_Lock_'.$EID);
+    unset($_SESSION['reportFilters'][$EID]);
     unset($_SESSION['lockedFilters'][$EID]);
+
 }
-function dr_readSetFilters($EID) {
-    return false;
-    $selQuery = "SELECT FilterSet FROM `report_filterlocks` WHERE `EID` = '".$EID."' LIMIT 1;";
-    $res = mysql_query($selQuery);
-    if(mysql_num_rows($res) == 1) {
-        $data = mysql_fetch_assoc($res);
-        if($out = unserialize($data['FilterSet'])) {
-            //$out = core_cleanarray($out);
-            //dump($out);
-            foreach($out as $key=>$value) {
-                if(!empty($value)) {
-                    $filterSet[$key] = $value;
-                    $_SESSION['lockedFilters'][$EID][$key] = true;
-                }
-            }
-            //unset($filterSet);
-        }
-    }
-}
+
 
 function dr_BuildReportFilters($Config, $EID, $Defaults = false) {
 
@@ -752,6 +738,7 @@ function dr_BuildUpDateForm($EID, $ID){
 
 
 
+
 function df_buildDataSheet($EID, $ID) {
 
     $Data = getelement($EID);
@@ -776,8 +763,8 @@ return $Field;
 
 //* new report Grid
 
-function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $filterSet = false) {
-    
+function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false) {
+
 //Filters will be picked up via Session value
 // Set Vars
     if(!empty($Format)) {
@@ -1033,13 +1020,12 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     
     foreach($Config['_Field'] as $Field=>$Type) {
         // Run Filters that have been set through each field type
-        
         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php')) {
             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/queryfilter.php');
         }
         //apply a generic keyword filter to each field is a key word has been sent
         if(($Config['_IndexType'][$Field][0]) == 'index'){
-            if(!empty($filterSet['_keywords'])) {
+            if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
                 if($WhereTag == '') {
                     $WhereTag = " WHERE ";
                 }
@@ -1057,9 +1043,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     $keyField = $preKeyField[0];
                     //$keyField = strtok($querySelects[$Field], ' AS ');
                 }
-                $preWhere[] = $keyField." LIKE '%".$filterSet['_keywords']."%' ";
-                //echo $keyField." LIKE '%".$filterSet['_keywords']."%' <br />";
-                //dump($filterSet);
+                $preWhere[] = $keyField." LIKE '%".$_SESSION['reportFilters'][$EID]['_keywords']."%' ";
+                //echo $keyField." LIKE '%".$_SESSION['reportFilters'][$EID]['_keywords']."%' <br />";
+                //dump($_SESSION['reportFilters'][$EID]);
             }
         }
         $joinIndex++;
@@ -1155,9 +1141,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }else {
             $Count = 0;
         }
-    }
-    if($Format == 'count'){
-        return $Count['Total'];
     }
     $TotalPages = ceil($Count['Total']/$Config['_Items_Per_Page']);
     $Start = ($Page*$Config['_Items_Per_Page'])-$Config['_Items_Per_Page'];
@@ -1575,7 +1558,7 @@ var ".$ChartID." = new Highcharts.Chart({
                 }
                 if(strtolower($Format) == 'pdf') {
                     //$apiOutput[$jsonIndex][] = array();
-                    if(!empty($filterSet)) {
+                    if(!empty($_SESSION['reportFilters'][$EID])) {
                         //$apiOutput['filters'] = array();
                     }
                 }
@@ -1700,11 +1683,11 @@ var ".$ChartID." = new Highcharts.Chart({
 
 
                             // Apply keyword Fitler Highlight
-                            if(!empty($filterSet['_keywords'])) {
-                                //$outData = str_replace($filterSet['_keywords'], '<strong>'.$filterSet['_keywords'].'</strong>', $outData);
-                                //$outData = str_replace(ucwords($filterSet['_keywords']), '<strong>'.ucwords($filterSet['_keywords']).'</strong>', $outData);
-                                //$outData = str_replace(strtoupper($filterSet['_keywords']), '<strong>'.strtoupper($filterSet['_keywords']).'</strong>', $outData);
-                                //$outData = str_replace(strtolower($filterSet['_keywords']), '<strong>'.strtolower($filterSet['_keywords']).'</strong>', $outData);
+                            if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
+                                //$outData = str_replace($_SESSION['reportFilters'][$EID]['_keywords'], '<strong>'.$_SESSION['reportFilters'][$EID]['_keywords'].'</strong>', $outData);
+                                //$outData = str_replace(ucwords($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.ucwords($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
+                                //$outData = str_replace(strtoupper($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtoupper($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
+                                //$outData = str_replace(strtolower($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtolower($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
                             }
 
                             // set row output
@@ -1834,7 +1817,7 @@ var ".$ChartID." = new Highcharts.Chart({
                                         // PDF output
                                         if(strtolower($Format) == 'pdf') {
                                             $apiOutput[$pdfIndex][$Field] = htmlentities(stripslashes($outData));
-                                            if(!empty($filterSet[$Field])) {
+                                            if(!empty($_SESSION['reportFilters'][$EID][$Field])) {
                                                 $apiOutput['filters'][$Field][stripslashes($outData)] = stripslashes($outData);
                                             }
                                         }
@@ -2272,12 +2255,7 @@ var ".$ChartID." = new Highcharts.Chart({
             return $apiOutput;
         }
     }
-    // final JS output
-    $_SESSION['dataform']['OutScripts'] .= "
 
-        ".$Config['_customFooterJavaScript']."
-
-    ";
     return $header.$ReportReturn.$footer;
 }
 function df_inlineedit($Entry, $ID, $Value) {

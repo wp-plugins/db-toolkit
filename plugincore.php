@@ -793,7 +793,10 @@ function dt_renderInterface($interface) {
 
 // delete interface
 function dt_removeInterface($Interface) {
+    
     delete_option($Interface);
+    delete_option('filter_Lock_'.$Interface);
+    delete_option('dt_set_'.$Interface);
     return true;
 }
 
