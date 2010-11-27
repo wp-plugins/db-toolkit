@@ -197,7 +197,8 @@ if(!empty($_POST['Data'])) {
                 <form name="newInterfaceForm" method="post" action="admin.php?page=Database_Toolkit">
                         <?php
                         $defaults = get_option('_dbtoolkit_defaultinterface');
-                        $Element['Content'] = unserialize($defaults);
+                        
+                        $Element['Content'] = $defaults;
                         include('data_report/setup.plug.php');
                         ?>
                 </form>

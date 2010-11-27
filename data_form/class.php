@@ -598,7 +598,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         }
         $Form .= '<div style="clear:left;"></div>';
         $Shown = '';
-        if(!empty($Config['_FormMode'])) {
+        
+        if(!empty($Config['_FormMode']) || $Config['_ViewMode'] == 'form') {
             $ButtonText = 'Submit';
             if(!empty($Config['_SubmitButtonText'])) {
                 $ButtonText = $Config['_SubmitButtonText'];

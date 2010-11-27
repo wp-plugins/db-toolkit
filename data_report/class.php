@@ -1798,8 +1798,10 @@ var ".$ChartID." = new Highcharts.Chart({
                                         }
                                     }
                                     $ReturnFields = array();
+                                    if(is_array($Config['_ReturnFields'])){
                                     foreach($Config['_ReturnFields'] as $ReturnField) {
                                         $ReturnFields[] = $ReturnField.'='.urlencode($row['_return_'.$ReturnField]);
+                                    }
                                     }
                                     //$ReturnMix = implode('&', $ReturnFields);
                                     //$PreReportReturn .= '<a href="'.getdocument($_GET['PageData']['ID']).'#'.$ReturnMix.'">'.stripslashes($outData).'</a>';
