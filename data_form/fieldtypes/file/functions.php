@@ -26,7 +26,22 @@ function file_imageConfig($Field, $Table, $Config = false){
 	$Return = '<div class="list_row1" style="padding:3px;">Icon Size (px): <input type="text" name="Data[Content][_ImageSizeI]['.$Field.']" value="'.$icon.'" class="textfield" size="3" maxlength="3" /> Square Crop: <input type="checkbox" name="Data[Content][_ImageSquareI]['.$Field.']" value="1" '.$Sel1.' /></div>';
 	$Return .= '<div class="list_row2" style="padding:3px;">View Size (px): <input type="text" name="Data[Content][_ImageSizeM]['.$Field.']" value="'.$med.'" class="textfield" size="3" maxlength="3" /> Square Crop: <input type="checkbox" name="Data[Content][_ImageSquareM]['.$Field.']" value="1" '.$Sel2.' /></div>';
 	$Return .= '<div class="list_row1" style="padding:3px;">Full Size (px): <input type="text" name="Data[Content][_ImageSizeF]['.$Field.']" value="'.$full.'" class="textfield" size="3" maxlength="3" /></div>';
+
+        $Class = '';
+ 	if(!empty($Config['Content']['_ClassName'][$Field])){
+		$Class = $Config['Content']['_ClassName'][$Field];
+	}
+        $Return .= '<div class="list_row1" style="padding:3px;">Image Class: <input type="text" name="Data[Content][_ClassName]['.$Field.']" value="'.$Class.'" class="textfield" /></div>';
 	
+        $Sel = '';
+	if(!empty($Config['Content']['_URLOnly'][$Field])){
+		$Sel = 'checked="checked"';//$Config['Content']['_ImageSquare'][$Field]
+	}
+        $Return .= '<div class="list_row2" style="padding:3px;">URL Only: <input type="checkbox" name="Data[Content][_URLOnly]['.$Field.']" value="1" '.$Sel.' /></div>';
+
+
+
+
 return $Return;
 
 }
@@ -69,6 +84,7 @@ function file_handleInput($Field, $Input, $FieldType, $Config, $predata){
 }
 
 function file_processValue($Value, $Type, $Field, $Config, $EID){
+
 	if(!empty($Value)){
 		//dump($Value);
 		//dump($Type);
@@ -79,9 +95,15 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 			case 'image';
 				$Image = explode('|', $Value);
 				if(!empty($Config['_ImageSquareI'][$Field])){
-					return UseImage($Image[0], 0, $Config['_ImageSizeI'][$Field]);
-				}
-				return UseImage($Image[0], 6, $Config['_ImageSizeI'][$Field]);
+                                    if(!empty($Config['_URLOnly'][$Field])){
+                                        return UseImage($Image[0], 4, $Config['_ImageSizeI'][$Field]);
+                                    }
+                                    return UseImage($Image[0], 0, $Config['_ImageSizeI'][$Field]);
+				}                                
+                                if(!empty($Config['_URLOnly'][$Field])){
+                                    return UseImage($Image[0], 7, $Config['_ImageSizeI'][$Field]);
+                                }
+				return UseImage($Image[0], 6, $Config['_ImageSizeI'][$Field], 10, $Config['_ClassName'][$Field]);
 		 		break;
 			case 'mp3';
 					$File = explode('|', $Value);

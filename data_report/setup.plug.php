@@ -196,21 +196,34 @@
             <tr>
                 <td width="50%" valign="top" style="padding-right:15px;"><?php
                     InfoBox('General Settings');
+                    $Sel = 'checked="checked"';
+                    if(!empty($Element['Content']['_ViewMode'])) {
+                        if($Element['Content']['_ViewMode']!='list'){
+                            $Sel = '';
+                        }
+                    }
+                    echo dais_customfield('radio', 'List Mode', '_ViewMode', '_ViewMode_View', 'list_row2' , 'list' , $Sel);
                     $Sel = '';
                     if(!empty($Element['Content']['_ViewMode'])) {
-                        $Sel = 'checked="checked"';
+                        if($Element['Content']['_ViewMode']=='view'){
+                            $Sel = 'checked="checked"';
+                        }
                     }
-                    echo dais_customfield('checkbox', 'View Mode', '_ViewMode', '_ViewMode', 'list_row2' , 1 , $Sel);
+                    echo dais_customfield('radio', 'View Mode', '_ViewMode', '_ViewMode_View', 'list_row2' , 'view' , $Sel);
                     $Sel = '';
-                    if(!empty($Element['Content']['_FormMode'])) {
-                        $Sel = 'checked="checked"';
+                    if(!empty($Element['Content']['_ViewMode'])) {
+                        if($Element['Content']['_ViewMode']=='form'){
+                            $Sel = 'checked="checked"';
+                        }
                     }
-                    echo dais_customfield('checkbox', 'Form Mode', '_FormMode', '_FormMode', 'list_row1' , 1 , $Sel);
+                    echo dais_customfield('radio', 'Form Mode', '_ViewMode', '_ViewMode_Form', 'list_row1' , 'form' , $Sel);
                     $Sel = '';
-                    if(!empty($Element['Content']['_SearchMode'])) {
-                        $Sel = 'checked="checked"';
+                    if(!empty($Element['Content']['_ViewMode'])) {
+                        if($Element['Content']['_ViewMode']=='search'){
+                            $Sel = 'checked="checked"';
+                        }
                     }
-                    echo dais_customfield('checkbox', 'Search Mode', '_SearchMode', '_SearchMode', 'list_row2' , 1 , $Sel);
+                    echo dais_customfield('radio', 'Search Mode', '_ViewMode', '_ViewMode_Search', 'list_row2' , 'search' , $Sel);
                     $Sel = '';
                     if(!empty($Element['Content']['_HideFrame'])) {
                         $Sel = 'checked="checked"';

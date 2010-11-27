@@ -45,13 +45,16 @@ function linked_handleInput($Field, $Input, $FieldType, $Config, $Data){
 	$_SESSION['LinkingControl'][$Config['ID']] = md5(uniqid(date('YmdHis')));
 	$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
 	mysql_query("CREATE TABLE `".$LinkingTable."` (`from` INT NOT NULL ,`to` INT NOT NULL, `control` VARCHAR( 100 ) ,INDEX ( `from` , `to`, `control` )) ENGINE = InnoDB");
-	//mysql_query("INSERT INTO `".$LinkingTable."` ( `from` , `to`, `control` ) VALUES 
+	//mysql_query("INSERT INTO `".$LinkingTable."` ( `from` , `to`, `control` ) VALUES
 	//	('2', '6')
 		
 		$Inserts = array();
 		$Inputs = array();
 		//dump($Input);
 		//die;
+                if(!is_array($Input)){
+                    $Input = unserialize($Input);
+                }
 		foreach($Input as $Value){
 			$Inserts[] = '(\''.$Value.'\', \''.$_SESSION['LinkingControl'][$Config['ID']].'\')';
 			$Inputs[] = $Value;
@@ -284,7 +287,7 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 		if($Defaults[$Field]['Type'] == 'multiselect'){
 			$Sel = 'selected="selected"';	
 		}
-		$Types .= '<option value="multiselect" '.$Sel.'>Multi-Select</option>';
+		//$Types .= '<option value="multiselect" '.$Sel.'>Multi-Select</option>';
 	$Types .= '</select></div>';
 	// Local URL Field
 	$result = mysql_query("SHOW COLUMNS FROM ".$MainTable);

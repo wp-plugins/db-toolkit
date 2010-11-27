@@ -2255,7 +2255,10 @@ var ".$ChartID." = new Highcharts.Chart({
             return $apiOutput;
         }
     }
-
+    // redner JS template custom output
+    $_SESSION['dataform']['OutScripts'] .= "
+        ".$Config['_customFooterJavaScript']."
+    ";
     return $header.$ReportReturn.$footer;
 }
 function df_inlineedit($Entry, $ID, $Value) {

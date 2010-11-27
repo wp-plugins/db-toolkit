@@ -23,9 +23,12 @@
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 
 				//$LinkingTable = '_linking_'.$Config['_Linkedfields'][$Field]['Table'].'_'.$Config['_Linkedfields'][$Field]['ID'];
-				//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex."_linking on (prim.".$Config['_ReturnFields'][0]." = ".$joinIndex."_linking.from) \n";
-				//$queryJoin .= " LEFT JOIN `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndex." on (".$joinIndex."_linking.to = ".$joinIndex.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
-				//echo $LinkingTable;
+                                $LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
+                                $queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex."_linking on (prim.".$Config['_ReturnFields'][0]." = ".$joinIndex."_linking.from) \n";
+				$queryJoin .= " LEFT JOIN `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndex." on (".$joinIndex."_linking.to = ".$joinIndex.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
+				
+                                $groupBy[] = $Config['_ReturnFields'][0];
+                                //echo $LinkingTable;
 				//die;
 				//select u.name,p.product from user u
 				// join user_product_link pl on pl.userid=u.id
@@ -82,20 +85,18 @@
 
 		}
 		// Setup Where Clause in Query
-		if(!empty($filterSet[$Field])){
+                
+		if(!empty($_SESSION['reportFilters'][$EID][$Field])){
 			if($WhereTag == ''){
 				$WhereTag = " WHERE ";	
 			}
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 			$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
 			//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex." on (prim.".$Field." = ".$joinIndex.".".$Config['_Linkedfilterfields'][$Field]['Ref'].") \n";
-				$prewhere = array();
-				foreach($filterSet[$Field] as $like){
-					$prewhere[] = 'prim.'.$Field." LIKE '%|".$like."|%' ";
-				}
-				$queryWhere[] = '('.implode(' OR ', $prewhere).')';
+				
+				$queryWhere[] = $joinIndex.'.'.$Config['_Linkedfields'][$Field]['ID']." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
 			}else{
-				$queryWhere[] = 'prim.'.$Field." in ('".implode('\',\'', $filterSet[$Field])."')";
+				$queryWhere[] = 'prim.'.$Field." in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
 			}
 		}
 		// apply Where Filter

@@ -11,10 +11,14 @@
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeForm]" value="modal" <?php if(!empty($Element['Content']['_popupTypeForm'])) {
                     echo 'checked="checked"';
                        } ?> /> <label for="_modalPopup">Modal</label>
-
+    <?php
+    /*
     <input type="checkbox" id="_ajaxForms" name="Data[Content][_ajaxForms]" value="1" <?php if(!empty($Element['Content']['_ajaxForms'])) {
                     echo 'checked="checked"';
-                       } ?> /> <label for="_ajaxForms">Ajax Form</label>
+                       } ?> /> <label for="_ajaxForms">Ajax Form</label>\
+     
+     */
+    ?>
     </div>
 
 	

@@ -120,6 +120,9 @@ function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class 
         return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&h=" . $Size . "&q=" . $Quality . "\" class=\"" . $Class . "\" border=\"0\">";
     }
     if ($Option == 4) {
+        return WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&h=" . $Size . "&q=" . $Quality . "&zc=1";
+    }
+    if ($Option == 7) {
         return WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=/" . $TDir . "&w=" . $Size . "&q=" . $Quality . "";
     }
     if ($Option == 5) {

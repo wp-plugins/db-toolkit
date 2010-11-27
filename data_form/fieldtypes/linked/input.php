@@ -5,6 +5,7 @@
 if($FieldSet[1] == 'linked'){
 	switch($Config['_Linkedfields'][$Field]['Type']){
 		case "checkbox":
+                    
 				$concatvalues = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$concatvalues[] = $outValue;
@@ -16,12 +17,13 @@ if($FieldSet[1] == 'linked'){
 			//if(empty($Defaults[$Field])){
 				//$Return .= '<option value=""></option>';
 			//}
+                        //$DefaultChecks = explode(',' $Defaults[$Field]);
 			$checkindex = 0;
 			$Return = '';
 			while($lrow = mysql_fetch_assoc($Res)){
 				$Sel = '';
 				if(!empty($Defaults[$Field])){
-					$DefaultArray = core_cleanArray(explode('|',$Defaults[$Field]));
+					$DefaultArray = core_cleanArray(explode(',',$Defaults[$Field]));
 					if(in_array($lrow[$Config['_Linkedfields'][$Field]['ID']], $DefaultArray)){
 						$Sel = 'checked="checked"';
 					}
