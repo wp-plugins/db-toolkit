@@ -229,12 +229,7 @@ if(is_admin()) {
         $PreReturn[$Field] .= '<label>Alignment</label>';
         $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="'.$Width.'" name="Data[Content][_WidthOverride]['.$Field.']" /> ';
         $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify).'</div>';
-        
-        //$PreReturn[$Field] .= '<div style="padding:3px;">Inline Editing: <input type="checkbox" name="Data[Content][_InlineEdit]['.$Field.']" id="sortable_'.$Field.'" '.$inlineSel.' /></div>';
 
-
-        // Graphing
-        // X AXIS
         $XAxis = '';
         if($Config['Content']['_xaxis'] == $Field) {
             $XAxis = 'checked="checked"';
@@ -252,7 +247,6 @@ if(is_admin()) {
 
 
                     /// charts
-
                     $Sel = '';
                     if(!empty($Config['Content']['_chartType'][$Field])) {
                         switch($Config['Content']['_chartType'][$Field]) {
@@ -271,10 +265,9 @@ if(is_admin()) {
                             case 'area':
                                 $Sel = 'area';
                                 break;
-
                         }
-
                     }
+                    
                     $PreReturn[$Field] .= ' Chart Type: ';
                     $PreReturn[$Field] .= '<select name="Data[Content][_chartType]['.$Field.']" >';
                     $PreReturn[$Field] .= '<option value="line" ';
@@ -306,7 +299,6 @@ if(is_admin()) {
 
                     $PreReturn[$Field] .= '</select>';
                     $PreReturn[$Field] .= '</div>';
-
 
 
 
@@ -759,6 +751,47 @@ function dr_cloneFindMater($Field, $Clones){
         return $ReturnField;
     }
 return $Field;
+}
+
+
+
+
+function dr_findCloneParent($Clone, $Clones, $querySelects){
+    // Clear out _Return_
+
+    $preParent = $Clones[$Clone]['Master'];
+    if(!empty($querySelects[$preParent])){
+        $preParent = $querySelects[$preParent];
+    }
+    $pattern = '__[a-zA-Z0-9]+';
+    preg_match('/'.$pattern.'/s', $preParent, $matches);
+    if(!empty($matches)){
+        $preParent = dr_findCloneParent($preParent, $Clones, $querySelects);
+    }
+    return $preParent;
+}
+
+function dr_processQuery($Config, $querySelects){
+    $pattern = '__[a-zA-Z0-9]+';
+    $Selects = array();
+    foreach($querySelects as $Field=>$Select){
+        $returnPrefix = '';
+        if(strpos($Field, '_return_') !== false){
+            $subField = str_replace('_return_', '', $Field);
+            if(!empty($querySelects[$subField])){
+                $Select = $querySelects[$subField];
+            }
+        }
+        preg_match('/'.$pattern.'/s', $Select, $matches);
+        if(!empty($matches[0])){
+            $Select = dr_findCloneParent($Field, $Config['_CloneField'], $querySelects);
+        }
+        if(strpos($Select, '.') === false){
+           $Select = 'prim.`'.$Select.'`';
+        }
+        $Selects[$Field] = $Select;
+    }
+return $Selects;
 }
 
 //* new report Grid

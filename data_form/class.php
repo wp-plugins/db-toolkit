@@ -236,11 +236,7 @@ function df_processAjaxForm($Input){
     //vardump($Data);
     if(!empty($Data['processKey'])) {
         $Data = stripslashes_deep($Data);
-        if($Data['processKey'] == $_SESSION['processKey']) {
-            //unset($_SESSION['processKey']);
-
-
-
+        if($Data['processKey'] == $_SESSION['processKey']) {            
             if(!empty($Data['dr_update'])) {
                 $EID = $Data['dataForm']['EID'];
                 $Setup = getelement($EID);
@@ -341,6 +337,16 @@ function df_checkTabState($ColSet, $Tabs){
 return false;
     
 }
+
+function set_iso($string) {
+
+    if(mb_detect_encoding($string, "UTF-8, ISO-8859-1") == "UTF-8"){
+        return utf8_decode($string);
+    }else{
+        return $string;
+    }
+}
+
 function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
     $Config = $Element['Content'];
@@ -491,6 +497,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     if(!empty($Defaults[$Field])) {
                                         $Val = stripslashes($Defaults[$Field]);
                                     }
+                                    $Val = set_iso($Val);
                                     //$Pre = '<tr class="'.$Row.'" style="padding:3px;">';
                                     //$Pre .= '<td id="'.$Element['ID'].'_'.$Field.'" class="'.$Row.'" nowrap="nowrap" width="30%" style="background-color:inherit; border:inherit;padding:3px;" valign="top"><div class="title"><strong>'.$name.'&nbsp;</strong></div>';//</td>';
                                     //$Pre .= '</tr>';

@@ -93,17 +93,20 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 	//die;
 		switch ($Type){
 			case 'image';
-				$Image = explode('|', $Value);
+                                
+				$Image = str_replace(get_bloginfo('url'), '', $Value);
+                                
 				if(!empty($Config['_ImageSquareI'][$Field])){
                                     if(!empty($Config['_URLOnly'][$Field])){
-                                        return UseImage($Image[0], 4, $Config['_ImageSizeI'][$Field]);
+                                        return UseImage($Image, 4, $Config['_ImageSizeI'][$Field]);
                                     }
-                                    return UseImage($Image[0], 0, $Config['_ImageSizeI'][$Field]);
+                                    return UseImage($Image, 0, $Config['_ImageSizeI'][$Field]);
 				}                                
                                 if(!empty($Config['_URLOnly'][$Field])){
-                                    return UseImage($Image[0], 7, $Config['_ImageSizeI'][$Field]);
+                                    return UseImage($Image, 7, $Config['_ImageSizeI'][$Field]);
                                 }
-				return UseImage($Image[0], 6, $Config['_ImageSizeI'][$Field], 10, $Config['_ClassName'][$Field]);
+                                
+				return UseImage($Image, 6, $Config['_ImageSizeI'][$Field], 10, $Config['_ClassName'][$Field]);
 		 		break;
 			case 'mp3';
 					$File = explode('|', $Value);

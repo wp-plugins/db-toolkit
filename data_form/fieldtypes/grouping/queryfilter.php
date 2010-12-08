@@ -17,8 +17,8 @@ variables avaiable
 
 */
 
-$groupBy[$Config['_CloneField'][$Field]['Master']] = $Config['_CloneField'][$Field]['Master'];
+$groupBy[$Config['_CloneField'][$Field]['Master']] = 'prim.`'.$Config['_CloneField'][$Field]['Master'].'`';
 //vardump($Config['_GroupingFields']);
-$querySelects[] = $Config['_GroupingFields'][$Field]['Action'].'('.$Config['_GroupingFields'][$Field]['Field'].') AS '.$Field;
+$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(prim.`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
 
 ?>
