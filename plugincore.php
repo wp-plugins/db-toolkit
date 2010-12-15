@@ -337,8 +337,9 @@ function dt_menus() {
 	add_submenu_page("Database_Toolkit", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
-        $setup = add_submenu_page("Database_Toolkit", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
         $Import = add_submenu_page("Database_Toolkit", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
+        $setup = add_submenu_page("Database_Toolkit", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
+        
         //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
 
