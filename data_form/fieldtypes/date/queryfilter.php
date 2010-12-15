@@ -1,14 +1,34 @@
 <?php
 //Filters query variables for the field type
 
-		if(!empty($filterSet[$Field][0]) && !empty($filterSet[$Field][1])){
+                //apply substr to date formate length.
+                if(!empty ($groupBy[$Field]) && !empty($Config['_dateFormat'][$Field])){
+                    $groupBy[$Field] = 'SUBSTRING('.$Field.',1,'.strlen(date($Config['_dateFormat'][$Field])).')';
+                }
+
+		if(!empty($_SESSION['reportFilters'][$EID][$Field][0]) && !empty($_SESSION['reportFilters'][$EID][$Field][1])){
+
 			if($WhereTag == ''){
-				$WhereTag = " WHERE ";	
+				$WhereTag = " WHERE ";
 			}
-			if($filterSet[$Field][0] == $filterSet[$Field][1]){
-				$filterSet[$Field][1]++;
-			}
-			$queryWhere[] = "( prim.".$Field." BETWEEN '".$filterSet[$Field][0]."' AND '".$filterSet[$Field][1]."' )";
-		}
-	
+			if($_SESSION['reportFilters'][$EID][$Field][0] == $_SESSION['reportFilters'][$EID][$Field][1]){
+                            $queryWhere[] = "( prim.".$Field." BETWEEN '".$_SESSION['reportFilters'][$EID][$Field][0]." 00:00:00' AND '".$_SESSION['reportFilters'][$EID][$Field][0]." 23:59:59')";
+			}else{
+
+                            $StartDate = date('Y-m-d 00:00:00', strtotime($_SESSION['reportFilters'][$EID][$Field][0]));
+                            $EndDate = date('Y-m-d 23:59:59', strtotime($_SESSION['reportFilters'][$EID][$Field][1]));
+
+
+                            $queryWhere[] = "( prim.".$Field." BETWEEN '".$StartDate."' AND '".$EndDate."' )";
+                        }
+
+                }
+	//dump($_SESSION['reportFilters'][$EID]);
+        if(!empty($Format)){
+            if($Format == 'pdf'){
+
+                $apiOutput['filters'][$Field] = date($Config['_dateFormat'][$Field], strtotime($_SESSION['reportFilters'][$EID][$Field][0])).' to '.date($Config['_dateFormat'][$Field], strtotime($_SESSION['reportFilters'][$EID][$Field][1]));
+            }
+        }
+  //      $apiOutput['filters'][$Field] = ;
 ?>

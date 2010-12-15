@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.0.5
+Version: 0.2.1.0
 Author URI: http://www.digilab.co.za
 */
 
@@ -1149,6 +1149,65 @@ function dt_saveFilterLock($Interface, $Settings = false){
 
 }
 
+if(!empty($_POST['exportApp'])){
+    exportApp($_POST['application']);
+}
+
+function exportApp($app){
+    global $wpdb;
+    $Len = strlen($app);
+    $appString = 's:12:"_Application";s:'.$Len.':"'.$app.'"';
+    $interfaces = $wpdb->get_results( "SELECT option_name, option_value FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'");
+
+    $export = array();
+    $export['application'] = $app;
+    if(!empty($interfaces)){
+
+        $name = uniqid('intfc');
+        //$file = fopen(__DIR__.'/libs/cache/'.$name.'.itf', 'w+');
+        $tables = array();
+        foreach($interfaces as $interface){
+            $cfg = unserialize($interface->option_value);
+            $cfg = unserialize(base64_decode($cfg['Content']));
+            $tables[] = $cfg['_main_table'];
+            //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
+            $export['interfaces'][$interface->option_name] = base64_encode($interface->option_value);
+        }
+    }
+        if(!empty($tables)){
+
+            foreach($tables as $table){
+                $tableCreates = $wpdb->get_row("SHOW CREATE TABLE ".$table, ARRAY_N);
+                $export['tables'][$tableCreates[0]] = base64_encode($tableCreates[1]);
+
+
+                //export data
+                $result = $wpdb->get_results("SELECT * FROM ".$table, ARRAY_A);
+                foreach($result as $entries){
+                    foreach ($entries as $field=>$value){
+                        $Fields[] = '`'.$field.'`';
+                        $Values[] = "'".mysql_real_escape_string($value)."'";
+                    }
+                    $export['entries'][$tableCreates[0]][] = base64_encode("INSERT INTO `".$tableCreates[0]."` (".implode(',', $Fields).") VALUES (".implode(',', $Values).");");
+                }
+            }
+        }        
+        
+        //fwrite($file, gzdeflate(base64_encode(serialize($export)),9));
+        //fclose($file);
+
+        $fileName = preg_replace('/[^\w\-]+/u', '-', $app);
+
+        $output = gzdeflate(base64_encode(serialize($export)),9);
+        header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
+        header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
+        header ("Pragma: no-cache");                          // HTTP/1.0
+        header('Content-type: application/itf');
+        header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
+        print($output);
+        die;
+}
 
 
 ?>

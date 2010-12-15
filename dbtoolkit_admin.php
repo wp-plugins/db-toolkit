@@ -257,9 +257,7 @@ if(!empty($_POST['Data'])) {
         if(empty($_SESSION['activeApp'])){
             $_SESSION['activeApp'] = 'Base';
         }
-
         
-
         ?>
 
         <div class="wrap">
@@ -293,17 +291,28 @@ if(!empty($_POST['Data'])) {
                     ?>
                     </select>
                     <input type="submit" class="button-secondary action" id="doaction" name="loadApp" value="Switch">
+                    <?php
+                    if($_SESSION['activeApp'] != 'Base'){
+                        echo '<input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
+                    }
+                    ?>
                     
                 </div>
                 <div class="alignright actions">
-<?php
+                    <?php
                     if($_SESSION['activeApp'] != 'Base'){
                         echo '<input type="submit" class="button-primary action" id="doaction" name="deleteApp" value="Delete Application" onClick="return confirm(\'This will delete all interfaces in this Application. Data will remain intact. This cannot be undone. Continue?\');" >';
                     }
                     ?>
                 </div>
             </form>
-                
+            <form name="exportPublish" method="post" action="<?php echo str_replace('&interface='.$Element['ID'], '', $_SERVER['REQUEST_URI']); ?>">
+                <?php
+                if($_SESSION['activeApp'] != 'Base'){
+                    echo '<input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
+                }
+                ?>
+            </form>
             </div>
             <?php
             
