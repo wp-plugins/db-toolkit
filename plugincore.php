@@ -338,6 +338,7 @@ function dt_menus() {
 
         $addNew = add_submenu_page("Database_Toolkit", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $setup = add_submenu_page("Database_Toolkit", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
+        $Import = add_submenu_page("Database_Toolkit", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
 
@@ -350,6 +351,11 @@ function dt_menus() {
             add_action('admin_head-'.$addNew, 'dt_headers');
             add_action('admin_print_scripts-'.$addNew, 'dt_scripts');
             add_action('admin_footer-'.$addNew, 'dt_footers');
+
+            add_action('admin_print_styles-'.$Import, 'dt_styles');
+            add_action('admin_head-'.$Import, 'dt_headers');
+            add_action('admin_print_scripts-'.$Import, 'dt_scripts');
+            add_action('admin_footer-'.$Import, 'dt_footers');
 
             add_action('admin_print_styles-'.$setup, 'dt_styles');
             add_action('admin_head-'.$setup, 'dt_headers');
@@ -463,6 +469,10 @@ function dbtoolkit_admin() {
 function dbtoolkit_setup() {
     global $user_ID;
     include_once('dbtoolkit_settings.php');
+}
+function dbtoolkit_import() {
+    global $user_ID;
+    include_once('dbtoolkit_import.php');
 }
 function dbtoolkit_manual() {
     global $user_ID;
@@ -1207,6 +1217,86 @@ function exportApp($app){
         header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
         print($output);
         die;
+}
+
+function core_createInterfaces($Installer){
+
+    $apps = get_option('dt_int_Apps');
+    $data = file_get_contents($Installer);
+    $data = gzinflate($data);
+    $data = unserialize(base64_decode($data));
+    if(empty($apps[$data['application']])){
+        $apps[$data['application']] = 'open';
+        update_option('dt_int_Apps', $apps);
+    }
+    if(!empty($data['interfaces'])){
+        foreach($data['interfaces'] as $interface=>$configData){
+            $Config = unserialize(base64_decode($configData));
+            update_option($interface, $Config);
+        }
+        return true;
+    }else{
+        unlink($Installer);
+        unset($_SESSION['appInstall']);
+        return false;
+    }           
+    unlink($Installer);
+    unset($_SESSION['appInstall']);
+    return false;
+    //vardump($data);
+}
+
+function core_createTables($Installer){
+
+    global $wpdb;
+    $apps = get_option('dt_int_Apps');
+    $data = file_get_contents($Installer);
+    $data = gzinflate($data);
+    $data = unserialize(base64_decode($data));
+
+    if(!empty($data['tables'])){
+        foreach($data['tables'] as $table=>$configData){
+            $Query = base64_decode($configData);
+            $wpdb->query($Query);
+        }
+        return true;
+    }else{
+        unlink($Installer);
+        unset($_SESSION['appInstall']);
+        return false;
+    }
+    unlink($Installer);
+    unset($_SESSION['appInstall']);
+    return false;
+    //vardump($data);
+}
+
+function core_populateApp($Installer){
+
+    global $wpdb;
+    $apps = get_option('dt_int_Apps');
+    $data = file_get_contents($Installer);
+    $data = gzinflate($data);
+    $data = unserialize(base64_decode($data));
+
+    if(!empty($data['entries'])){
+        foreach($data['entries'] as $table=>$entries){
+            foreach($entries as $entry){
+                $Query = base64_decode($entry);
+                $wpdb->query($Query);
+            }
+        }
+        unlink($Installer);
+        unset($_SESSION['appInstall']);
+        return true;
+    }else{
+        unlink($Installer);
+        unset($_SESSION['appInstall']);
+        return false;
+    }
+    unlink($Installer);
+    unset($_SESSION['appInstall']);
+    return false;
 }
 
 

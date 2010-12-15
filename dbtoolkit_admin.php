@@ -306,6 +306,8 @@ if(!empty($_POST['Data'])) {
                     ?>
                 </div>
             </form>
+            <?php
+            /*
             <form name="exportPublish" method="post" action="<?php echo str_replace('&interface='.$Element['ID'], '', $_SERVER['REQUEST_URI']); ?>">
                 <?php
                 if($_SESSION['activeApp'] != 'Base'){
@@ -313,6 +315,8 @@ if(!empty($_POST['Data'])) {
                 }
                 ?>
             </form>
+             */
+            ?>
             </div>
             <?php
             
