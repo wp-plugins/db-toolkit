@@ -10,7 +10,7 @@ interface ReportOutPut
 	 public function cf_report_summary($string);
 	 public function cf_report_image($source, $caption=null);
 	 public function cf_report_datagrid($data);
-	 public function cf_report_data_col_grid($headers, $data, $options=null, $title=null);
+	 public function cf_report_data_col_grid($headers, $data);
 	 public function cf_report_spacer($string=null);
 	 public function cf_report_generate_output();
 	 
@@ -21,24 +21,13 @@ class PDF extends FPDF {
 	var $logo;
 	//Page header
 	function Header($or){
-		if($or == 'P'){
-			//$this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template.jpg',0,0, 210);
+                
+		if($or == 'L'){
+                   // $this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template_l.jpg',0,0, 297);
 		}else{
-			//$this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template_l.jpg',0,0, 297);
+                   // $this->Image('styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_template.jpg',0,0, 210);
 		}
-		if((!isset($this->logo)) || !is_file($this->logo)){
-		//	$this->logo = 'styles/themes/'.$_SESSION['settings'][$_SESSION['key']]['Theme'].'/pdf_logo.jpg';
-		} 
-		//$this->Image($this->logo,20,20, 80, 24);
-		
-		
-		$this->SetFont('arial','B',15);
-		//align center code bounds-> 66 - 187
-		$l = $this->GetStringWidth($this->headertext);
-		
-		$x = (150) - ($l / 2); 
-		$this->Text($x, 35, $this->headertext);
-		
+		$this->SetFont('arial','B',15);		
 		$this->Ln(20);
 	}
 	
@@ -58,9 +47,10 @@ class PDFReport implements ReportOutPut {
 	private $y;
 	private $orentation;
 	function PDFReport($Or, $Title){
+
 		$this->orentation = $Or;
 		$this->pdf=new PDF($Or);
-		$this->pdf->SetCreator('Dais Reporting');
+		$this->pdf->SetCreator('Vodashop CRM');
 		$this->pdf->SetTitle($Title);
 		if(!empty($_SESSION['UserBase']['Member'])){
 			$this->pdf->SetAuthor($_SESSION['UserBase']['Member']['Firstname'].' '.$_SESSION['UserBase']['Member']['Lastname'].' ('.$_SESSION['UserBase']['Member']['EmailAddress'].')');
@@ -72,24 +62,23 @@ class PDFReport implements ReportOutPut {
 		$this->pdf->AddPage($Or);
 		$this->pdf->SetFont('Times','',10);
 		$this->pdf->SetMargins(0, 25, 10);
-		$this->pdf->SetAutoPageBreak(false, 35);		
+		$this->pdf->SetAutoPageBreak(false, 35);
 	}
-	
+
+        function addPage(){
+            //$this->addPage();
+            $this->pdf->AddPage($this->orentation);
+        }
 		
 	function Header($or){
-		//$this->Image('CFtemplate.jpg',10,8, 190);
 		$this->pdf->SetFont('Arial','B',15);
-		//align center code bounds-> 66 - 187
 		$l = $this->pdf->GetStringWidth($this->companyname);
-		
 		$x = (125) - ($l / 2); 
 		$this->pdf->Text($x, 33, $this->companyname);
 		$this->Ln(20);
-		
 	}
 	
 	function cf_report_title($string){
-		//$this->pdf->Text(, float y, $string);
 		$this->pdf->SetFont('Arial','B',15);
 		$this->pdf->SetTextColor(50, 50, 50);
 		
@@ -103,14 +92,16 @@ class PDFReport implements ReportOutPut {
 	function cf_report_header($string, $size=12){
 		$this->pdf->SetFont('Arial','B',$size);
 		$this->pdf->SetTextColor(150, 150, 150);
-		$this->pdf->Text(10, $this->pdf->GetY(), $string);
-		//Line break
-		//$this->pdf->Ln(0);
-		//$this->y += 30;
+		$this->pdf->Text(10, $this->pdf->GetY(), $string);		
 	}
 	
-	function cf_report_footer($string){     
-		
+	function cf_report_footer($string){
+            //Go to 1.5 cm from bottom
+            $this->pdf->SetY(-15);
+            //Select Arial italic 8
+            $this->pdf->SetFont('Arial','I',8);
+            //Print centered page number
+            $this->pdf->Cell(0,10,$string,0,0,'C');
 	}
 	
 	function cf_report_summary($string){
@@ -130,7 +121,15 @@ class PDFReport implements ReportOutPut {
 		$this->pdf->Image($source,20,$this->pdf->GetY(), 170);
 		$this->pdf->SetY($this->pdf->GetY()+$height);
 	}
-	
+	function cf_report_chart($file){
+            if($this->orentation == 'P'){
+                $this->pdf->Image($file,10,50,210);
+            }else{
+                $this->pdf->Image($file,10,50,210);
+            }
+            
+            $this->pdf->Ln(3);
+        }
 	function cf_report_datagrid($data){
 		$this->pdf->Cell(10);
 		$this->pdf->SetFont('Arial','',8);
@@ -148,97 +147,131 @@ class PDFReport implements ReportOutPut {
 		//$this->pdf->Ln(20);
 	}
 	
-	function cf_report_data_col_grid($headers, $data, $options=null, $title=null){
-		$this->pdf->Cell(10);
-		if($title){
-			$this->pdf->SetFont('Arial','B',8);
-			$this->pdf->Text(10, $this->pdf->GetY(), $title);
-		}
-		$this->pdf->SetTextColor(0, 0, 0);
-		$y = $this->pdf->GetY() + 5;
-		$x = 10;
-		$headers = is_array($headers) ? $headers : array();
-		//$tab = ($pageWidth/count($headers));
-		$maxWidth = array();
-		// Incl Headers
-		foreach ($headers as $key=>$value) {
-			//echo $rowkey.' - '.$colkey.'<br />';
-			$width = round($this->pdf->GetStringWidth($value));
-			if(empty($maxWidth[$key])){
-				$maxWidth[$key] = 0;	
-			}
-			//echo $value.' - '.$width.'<br />';
-			if($width > $maxWidth[$key]){
-				$maxWidth[$key] = $width+8;
-			}
-		}
-		//dump($maxWidth);
-		foreach ($data as $rowkey=>$list) {
-			foreach ($list as $colkey=>$value) {
-				$width = round($this->pdf->GetStringWidth($value));
-				if($width > $maxWidth[$colkey]+10){
-					//echo $value.'- '.$width.' > '.$maxWidth[$colkey].'<br />';
-					$maxWidth[$colkey] = $width+10;
-				}
-				if($maxWidth[$key] > 80){
-					$maxWidth[$key] == 80;	
-				}
-			}
-		}
-		//dump($maxWidth);
-		//$tab = 25;
-		//$tab = $maxWidth;
-		foreach ($headers as $key=>$val) {
-			$this->pdf->SetFont('Arial','B',8);
-			$this->pdf->Text($x, $y, df_parseCamelCase($val));
-			if($maxWidth[$key] > 80){
-				$maxWidth[$key] = 80;
-			}
-			$x += $maxWidth[$key];
-		}
-		$this->pdf->SetY($y+5);
-		$data = is_array($data) ? $data : array();
-		foreach ($data as $rkey=>$list) {
-			$y = $this->pdf->GetY();
-			$x = 10;
-			$list = is_array($list) ? $list : array();
-			foreach ($list as $ckey=>$value) {
-				$this->pdf->SetFont('Arial','',7);
-				if($options["align"][$ckey] == "right"){
-					$width = $this->pdf->GetStringWidth($value);
-					$xv = ($x+12) - $width;
-				} else {
-					$xv = $x;
-				}			
-				$this->pdf->Text($xv, $y, html_entity_decode($value));
-				$x += $maxWidth[$ckey];
-			}
-			$this->pdf->Cell(10);
-			$this->pdf->Ln(4);
-			if($this->orentation == 'L'){
-				$h = 170;
-			}else{
-				$h = 278;	
-			}
-			if($this->pdf->Gety() >= $h){
-				$this->pdf->AddPage($this->orentation);
-				//$this->cf_report_header('Page '.$this->pdf->PageNo(), $size=12);
-				//$this->pdf->Ln(5);
-				$x= 10;
-				$y= $this->pdf->Gety();
-				foreach ($headers as $key=>$val) {
-					$this->pdf->SetFont('Arial','B',8);
-					$this->pdf->Text($x, $y, df_parseCamelCase($val));
-					if($maxWidth[$key] > 80){
-						$maxWidth[$key] = 80;
-					}
-					$x += $maxWidth[$key];
-				}
-				$this->pdf->Cell(10);
-				$this->pdf->Ln(5);
-			}
-		}
-		//$this->pdf->Ln(20);
+	function cf_report_data_col_grid($headers, $data){
+                //dump($headers);
+                //Colors, line width and bold font
+
+                // dark grey
+                // 122 122 122
+                // light grey
+                // 222 222 222
+
+                //$this->pdf->SetFillColor(122,122,122);
+                $this->pdf->SetTextColor(255);
+                $this->pdf->SetDrawColor(99,99,99);
+                //$this->pdf->SetLineWidth(10);
+                $this->pdf->SetFont('','', 6);
+                //Header
+                //Max Withs
+                $this->pdf->SetLeftMargin(10);
+                $w=array(40,35,40,45);
+                //dump($data);
+                foreach($data as $row){
+                    foreach($row as $key=>$col){
+                        $col = strip_tags(htmlspecialchars_decode($col));
+                        $pw = $this->pdf->GetStringWidth($col);                       
+                        //if($pw > $w[$key]){
+                        $w[$key] = $w[$key]+$pw;
+                        //}
+                    }
+                }
+                //dump($data);
+                foreach($w as $pkey=>$p){
+                    $totalrows=0;
+                    foreach($data as $predata){                        
+                        if(!empty($predata[$pkey])){
+                            $totalrows++;
+                        }                        
+                    }
+
+                    if($totalrows < 20){
+                        $totalrows = 20;
+                    }
+                    
+                    $width = ceil($p/$totalrows);
+                    $headerWidth = $this->pdf->GetStringWidth($headers[$pkey]);
+                    if($width < $headerWidth){
+                        $widths[] = $headerWidth+5;
+                    }else{
+                        $widths[] = $width;
+                    }
+                }
+
+
+                //my widths calculator
+                if($this->orentation == 'P'){
+                    $Max = 190;
+                }else{
+                    $Max = 277;
+                }
+
+                $total = array_sum($widths);
+                $diff = $Max-$total;
+                $toAdd = $diff/count($widths);
+                $newWidths = array();
+                foreach($widths as $width){
+                    $newWidths[] = $width+$toAdd;
+                }
+                $widths = array();
+                $widths = $newWidths;
+                $this->pdf->SetFillColor(222,222,222);
+                $this->pdf->SetTextColor(0);
+                $this->pdf->SetFont('');
+                $fill=false;
+                $rows = 0;
+                $runheaders = true;
+                $maxStuff = 185;
+                if($this->orentation == 'P'){
+                    $maxStuff = 275;
+                }
+                
+                foreach($data as $row){
+                    // place headers
+                    if($runheaders == true){
+                        $this->pdf->SetFillColor(99,99,99);
+                        $this->pdf->SetTextColor(255);
+                        for($i=0;$i<count($headers);$i++){
+                            $this->pdf->Cell($widths[$i],7,$headers[$i],1,0,'C',true);
+                        }
+                        $this->pdf->Ln();
+                        $this->pdf->SetFillColor(222,222,222);
+                        $this->pdf->SetTextColor(0);
+                        $runheaders = false;
+                    }                    
+                    foreach($row as $key=>$col){
+                        if($fill){
+                            $this->pdf->SetFillColor(222,222,222);
+                           // $this->pdf->SetDrawColor(224,235,255);
+                        }else{
+                            $this->pdf->SetFillColor(255,255,255);
+                           // $this->pdf->SetDrawColor(255,255,255);
+                        }
+
+                        $col = strip_tags(htmlspecialchars_decode($col));
+                        $this->pdf->Cell($widths[$key],6,$col,'LR',0,'L',true);
+                    }
+                    $this->pdf->Ln();
+                   
+                    $rows++;
+                    if($this->pdf->GetY() >= $maxStuff){
+                        $this->pdf->SetFillColor(99,99,99);
+                        foreach($row as $key=>$col){
+                            $this->pdf->Cell($widths[$key],0.01,'','LR',0,'L',true);
+                        }
+                        $this->pdf->AddPage($this->orentation);
+                        
+                        $runheaders = true;
+                        $rows = 0;
+                    }
+                    $fill=!$fill;                    
+                }
+                $this->pdf->SetFillColor(99,99,99);
+                    foreach($row as $key=>$col){
+                    $this->pdf->Cell($widths[$key],0.2,'','LR',0,'L',true);
+                }
+
+                //$this->pdf->Cell(array_sum($w),0,'','T');
+                
 	}
 	
 	function cf_report_spacer($string=null){

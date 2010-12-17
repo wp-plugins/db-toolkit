@@ -29,7 +29,9 @@ if(!empty($_FILES['itfInstaller']['size'])){
             if(!empty($data['application'])){
             echo '<p>Installing Application: <strong>'.$data['application'].'</strong></p>';
             echo '<p id="createingInterfaces">Creating Interfaces...</p>';
-            echo '<p id="buildingTables">Building Tables...</p>';
+            if(!empty($data['tables'])){
+                echo '<p id="buildingTables">Building Tables...</p>';
+            }
             echo '<p id="populatingApp">Populating App...</p>';
             echo '<p id="installStatus"></p>';
             echo '<p id="returnLink" style="display:none;"><a href="'.$_SERVER['REQUEST_URI'].'">Back to installer</p>';

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.3
-Stable tag: 0.2.0.5
+Stable tag: 0.2.1.0
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -23,6 +23,7 @@ Features include:
 *   Visual forms and reports builder
 *   Templates for output
 *   Field Specific configuration
+*   Application Export and Import
 
 Features Currently in Development:
 
@@ -51,6 +52,11 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.2.1.0
+    - Rebuilt the query builder to better allow cloned fields and multiple linking of tables.
+    - Added Application export and import to easily share applications you build (will be exploring this more in later builds)
+
 
 = 0.2.0.4 =
 Made a massiv amount of changes on the structure + some exrea new features.

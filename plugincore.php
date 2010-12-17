@@ -654,8 +654,9 @@ function dt_process() {
             include_once('data_report/class.php');
             include_once('data_itemview/class.php');
 
-            include_once('libs/fpdf.php');
-            include_once('libs/pdfexport.php');
+            //include_once('libs/fpdf.php');
+            //include_once('libs/pdfexport.php');
+
             $input_params["return"] = isset($input_params["return"]) ? $input_params["return"] : false;
             if(empty($Config['_orientation'])) {
                 $Config['_orientation'] = 'P';
@@ -1164,6 +1165,15 @@ if(!empty($_POST['exportApp'])){
     exportApp($_POST['application']);
 }
 
+function core_cleanSystemTables(&$value, $key){
+    global $wpdb;
+    $value = str_replace($wpdb->prefix, '{{wp_prefix}}', $value);
+}
+
+function core_applySystemTables(&$value, $key){
+    global $wpdb;
+    $value = str_replace('{{wp_prefix}}',$wpdb->prefix, $value);
+}
 function exportApp($app){
     global $wpdb;
     $Len = strlen($app);
@@ -1180,7 +1190,10 @@ function exportApp($app){
         foreach($interfaces as $interface){
             $cfg = unserialize($interface->option_value);
             $cfg = unserialize(base64_decode($cfg['Content']));
-            $tables[] = $cfg['_main_table'];
+            array_walk_recursive($cfg, 'core_cleanSystemTables');
+            if($wpdb->get_var("SHOW TABLES LIKE `".$cfg['_main_table']."`") != $table_name){
+                $tables[] = $cfg['_main_table'];
+            }
             //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
             $export['interfaces'][$interface->option_name] = base64_encode($interface->option_value);
         }
@@ -1233,6 +1246,7 @@ function core_createInterfaces($Installer){
     if(!empty($data['interfaces'])){
         foreach($data['interfaces'] as $interface=>$configData){
             $Config = unserialize(base64_decode($configData));
+            array_walk_recursive($Config, 'core_applySystemTables');
             update_option($interface, $Config);
         }
         return true;
@@ -1262,9 +1276,7 @@ function core_createTables($Installer){
         }
         return true;
     }else{
-        unlink($Installer);
-        unset($_SESSION['appInstall']);
-        return false;
+        return true;
     }
     unlink($Installer);
     unset($_SESSION['appInstall']);
@@ -1293,7 +1305,7 @@ function core_populateApp($Installer){
     }else{
         unlink($Installer);
         unset($_SESSION['appInstall']);
-        return false;
+        return true;
     }
     unlink($Installer);
     unset($_SESSION['appInstall']);

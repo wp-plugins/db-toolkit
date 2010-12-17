@@ -257,7 +257,7 @@ if(!empty($_POST['Data'])) {
         if(empty($_SESSION['activeApp'])){
             $_SESSION['activeApp'] = 'Base';
         }
-        
+        $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
         ?>
 
         <div class="wrap">

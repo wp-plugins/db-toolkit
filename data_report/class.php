@@ -1298,7 +1298,7 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
         }
     }
 
-    mysql_free_result($CountResult);
+    
     $TotalPages = ceil($Count['Total']/$Config['_Items_Per_Page']);
     $Start = ($Page*$Config['_Items_Per_Page'])-$Config['_Items_Per_Page'];
     $Offset = $Config['_Items_Per_Page'];
