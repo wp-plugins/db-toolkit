@@ -56,7 +56,7 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 = 0.2.1.0
     - Rebuilt the query builder to better allow cloned fields and multiple linking of tables.
     - Added Application export and import to easily share applications you build (will be exploring this more in later builds)
-
+    - Cleaned up the PDF Export to prevent overlapping columns.
 
 = 0.2.0.4 =
 Made a massiv amount of changes on the structure + some exrea new features.
