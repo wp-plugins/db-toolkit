@@ -53,6 +53,9 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
+= 0.2.1.1
+    - added Form Processors to the interface builder. see http://dbtoolkit.digilab.co.za/form-processors/ for more.
+
 = 0.2.1.0
     - Rebuilt the query builder to better allow cloned fields and multiple linking of tables.
     - Added Application export and import to easily share applications you build (will be exploring this more in later builds)
