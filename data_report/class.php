@@ -634,9 +634,9 @@ function df_buildSetProcessors($Config){
         $processor = $process['_process'];
         $func = 'config_'.$processor;
         
-        if(file_exists(__DIR__.'/../data_form/processors/'.$processor.'/conf.php')){
-            include(__DIR__.'/../data_form/processors/'.$processor.'/conf.php');
-            include(__DIR__.'/../data_form/processors/'.$processor.'/functions.php');
+        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/conf.php')){
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/conf.php');
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/functions.php');
 
                 
 
@@ -745,9 +745,9 @@ function df_addProcess($processor, $table){
 
     $Return = '';
 
-    if(file_exists(__DIR__.'/../data_form/processors/'.$processor.'/conf.php')){
-    include(__DIR__.'/../data_form/processors/'.$processor.'/conf.php');
-    include(__DIR__.'/../data_form/processors/'.$processor.'/functions.php');
+    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/conf.php')){
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/conf.php');
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/functions.php');
     $processID = uniqid('process_');
 
     $func = 'config_'.$processor;
@@ -2720,8 +2720,8 @@ function df_processupdate($Data, $EID) {
     if(!empty($Config['_FormProcessors'])){
         foreach($Config['_FormProcessors'] as $processID=>$Setup){
             if(!empty($Setup['_onUpdate'])){
-                if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
-                    include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
+                    include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                     $func = 'pre_process_'.$Setup['_process'];
                     if(function_exists($func)){
                         $updateData = $func($updateData, $Setup, $Config);
@@ -2774,8 +2774,8 @@ function df_processupdate($Data, $EID) {
     if(!empty($Config['_FormProcessors'])){
         foreach($Config['_FormProcessors'] as $processID=>$Setup){
             if(!empty($Setup['_onUpdate'])){
-                if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
-                    include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
+                    include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                     $func = 'post_process_'.$Setup['_process'];
                     if(function_exists($func)){
                         $Data = $func($updateData, $Setup, $Config);
@@ -2829,8 +2829,8 @@ function df_deleteEntries($EID, $Data) {
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
                 if(!empty($Setup['_onDelete'])){
-                    if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
-                        include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
+                        include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                         $func = 'pre_process_'.$Setup['_process'];
                         if(function_exists($func)){
                             $OldData = $func($OldData, $Setup, $Config);
@@ -2845,8 +2845,8 @@ function df_deleteEntries($EID, $Data) {
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
                 if(!empty($Setup['_onDelete'])){
-                    if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
-                        include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
+                        include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                         $func = 'post_process_'.$Setup['_process'];
                         if(function_exists($func)){
                             $OldData = $func($OldData, $Setup, $Config);

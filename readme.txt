@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.3
-Stable tag: 0.2.1.1
+Stable tag: 0.2.1.2
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,9 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.2.1.2
+    - Fixed __DIR__ which is only available in php5.3 now works with loever php versions.
 
 = 0.2.1.1
     - added Form Processors to the interface builder. see http://dbtoolkit.digilab.co.za/form-processors/ for more.
