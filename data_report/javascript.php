@@ -1,5 +1,12 @@
 //<script>
 
+    function df_addPRocess(process){
+        table = jQuery('#_main_table').val();
+        ajaxCall('df_addProcess', process, table, function(p){
+            jQuery('#formProcessList').append(p);
+        });
+    }
+
     function dt_addLibrary(){
         ajaxCall('dais_addJSLibrary', function(i){
             jQuery('#addonLibrary').append(i);

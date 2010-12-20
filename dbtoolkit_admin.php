@@ -13,6 +13,8 @@ get_option('oscimp_store_url'); = get option value
 
 if(!empty($_GET['renderinterface'])){
     $Interface = get_option($_GET['renderinterface']);
+    //$cfg = unserialize(base64_decode($Interface['Content']));
+    //vardump($cfg);
     $Title = $Interface['_interfaceName'];
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];

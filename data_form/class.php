@@ -819,7 +819,19 @@ function df_processInsert($EID, $Data) {
             }
         }
     }
-
+    if(!empty($Config['_FormProcessors'])){
+        foreach($Config['_FormProcessors'] as $processID=>$Setup){
+            if(!empty($Setup['_onInsert'])){
+                if(file_exists(__DIR__.'/processors/'.$Setup['_process'].'/functions.php')){
+                    include_once __DIR__.'/processors/'.$Setup['_process'].'/functions.php';
+                    $func = 'pre_process_'.$Setup['_process'];
+                    if(function_exists($func)){
+                        $Data = $func($Data, $Setup, $Config);                        
+                    }
+                }
+            }
+        }
+    }
 
     foreach($Config['_Field'] as $Field=>$Type) {
         if(substr($Field,0,2) != '__'){
@@ -837,8 +849,7 @@ function df_processInsert($EID, $Data) {
         }
     }
     $Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
-    //echo $Query;
-    //die;
+
     if(mysql_query($Query)) {
         //vardump($Config['_ReturnFields']);
         
@@ -881,6 +892,7 @@ function df_processInsert($EID, $Data) {
                 }
             }
         }
+
         // Auding
         if(!empty($Config['_EnableAudit'])) {
             $memberID = 0;
@@ -905,7 +917,23 @@ function df_processInsert($EID, $Data) {
 				mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
 			}
         }
-
+        //post processors
+        if(!empty($Config['_FormProcessors'])){
+            foreach($Config['_FormProcessors'] as $processID=>$Setup){
+                if(!empty($Setup['_onInsert'])){
+                    if(file_exists(__DIR__.'/processors/'.$Setup['_process'].'/functions.php')){
+                        include_once __DIR__.'/processors/'.$Setup['_process'].'/functions.php';
+                        $func = 'post_process_'.$Setup['_process'];
+                        if(function_exists($func)){
+                            $Data = $func($Data, $Setup, $Config);
+                            if(!is_array($Data)){
+                                $Config['_InsertSuccess'] = $Data;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if(empty($Config['_InsertSuccess'])) {
             $Return['Message'] = 'Entry inserted successfully';
         }else {

@@ -623,7 +623,175 @@ function dr_unlockFilters($EID) {
 
 }
 
+function df_buildSetProcessors($Config){
+    
+    if(empty($Config['_FormProcessors'])){
+        return;
+    }
+    $Return = '';
+    foreach($Config['_FormProcessors'] as $processID=>$process){
 
+        $processor = $process['_process'];
+        $func = 'config_'.$processor;
+        
+        if(file_exists(__DIR__.'/../data_form/processors/'.$processor.'/conf.php')){
+            include(__DIR__.'/../data_form/processors/'.$processor.'/conf.php');
+            include(__DIR__.'/../data_form/processors/'.$processor.'/functions.php');
+
+                
+
+                $class = 'button';
+                if(!empty($Config['_FormProcessors'][$processID]['_onInsert'])){
+                    $class = 'button-highlighted highlight"';
+                }
+                $Icons = '<span title="Run Process on Insert" onclick="df_setToggle(\'onInsert_'.$processID.'\');" id="onInsert_'.$processID.'" class="'.$class.'"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/database-insert.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+
+                $class = 'button';
+                if(!empty($Config['_FormProcessors'][$processID]['_onUpdate'])){
+                    $class = 'button-highlighted highlight"';
+                }
+                $Icons .= '&nbsp;<span title="Run Process on Update" onclick="df_setToggle(\'onUpdate_'.$processID.'\');" id="onUpdate_'.$processID.'" class="'.$class.'"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/database-pencil.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+
+                $class = 'button';
+                if(!empty($Config['_FormProcessors'][$processID]['_onDelete'])){
+                    $class = 'button-highlighted highlight"';
+                }
+                $Icons .= '&nbsp;<span title="Run Process on Delete" onclick="df_setToggle(\'onDelete_'.$processID.'\');" id="onDelete_'.$processID.'" class="'.$class.'"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/database-delete.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+                if(function_exists($func)){
+                    $class = 'button';
+                    if(!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])){
+                        $class = 'button-highlighted highlight"';
+                    }
+                    $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_'.$processID.'\'); df_setToggle(\'configirator_'.$processID.'\');" id="configirator_'.$processID.'" class="'.$class.'"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+                    $Icons .= '<input type="checkbox" value="1" id="configirator_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_configPanelOpen]" '.$Sel.' style="display: none;">';
+                }
+
+                $Sel = '';
+                if(!empty($Config['_FormProcessors'][$processID]['_onInsert'])){
+                    $Sel = 'checked="checked"';
+                }
+                $Icons .= '<input type="checkbox" value="1" id="onInsert_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_onInsert]" '.$Sel.' style="display: none;">';
+
+                $Sel = '';
+                if(!empty($Config['_FormProcessors'][$processID]['_onUpdate'])){
+                    $Sel = 'checked="checked"';
+                }
+                $Icons .= '<input type="checkbox" value="1" id="onUpdate_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_onUpdate]" '.$Sel.' style="display: none;">';
+
+                $Sel = '';
+                if(!empty($Config['_FormProcessors'][$processID]['_onDelete'])){
+                    $Sel = 'checked="checked"';
+                }
+                $Icons .= '<input type="checkbox" value="1" id="onDelete_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_onDelete]" '.$Sel.' style="display: none;">';
+
+
+
+            $Return .= '<div style="width: 550px; opacity: 1;" class="admin_list_row3 table_sorter postbox" id="'.$processID.'">';
+                $Return .= '<input type="hidden" name="Data[Content][_FormProcessors]['.$processID.'][_process]" value="'.$processor.'" />';
+                $Return .= '<img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery(\'#'.$processID.'\').remove();" src="'.WP_PLUGIN_URL . '/db-toolkit/images/cancel.png">';
+
+                $Return .= '<h3>'.$Title.'</h3>';
+                $Return .= '<div class="admin_config_toolbar">';
+
+                    // if there is a config
+                    $Return .= '<span style="float:right;"><p>'.$Icons.'</p></span>';                    
+
+                    $Return .= '<p>'.$Desc.'</p>';
+                    $Return .= '<div style="clear:right;"></div>';
+                $Return .= '</div>';
+                $Return .= '<div id="ExtraSetting_term_id" style="text-align: right;" class="admin_config_panel">';
+                if(function_exists($func)){
+                    
+                    $show = 'none';
+                    if(!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])){
+                        $show = 'block';
+                    }
+
+                    $Return .= '<div style="text-align: left; display:'.$show.';" id="config_'.$processID.'" class="widefat">';
+                        $Return .= '<h3>Configuration</h3>';
+                        $Return .= '<div class="inside"><p>';
+                            $Return .= $func($processID,$Config['_main_table'], $Config);
+                        $Return .= '</p></div>';
+                    $Return .= '</div>';
+                }
+                $Return .= '</div>';
+            $Return .= '</div>';
+
+        }
+    }
+
+
+return $Return;
+}
+
+function df_listProcessors(){
+    //return '<li><a onclick="">'.__DIR__.'</a></li>';
+    $processesDirs = @opendir(__DIR__.'/../data_form/processors');
+    $Return = '';
+    while (($processor = readdir($processesDirs)) !== false) {
+        if($processor != '.' && $processor != '..' && $processor != 'index.htm'){
+            if(file_exists(__DIR__.'/../data_form/processors/'.$processor.'/conf.php')){
+                include(__DIR__.'/../data_form/processors/'.$processor.'/conf.php');
+                $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/arrow_switch.png';
+                $Return .= '<li><a onclick="df_addPRocess(\''.$processor.'\');"><img src="'.$Icon.'" align="absmiddle" /> '.$Title.'</a></li>';
+            }
+        }
+    }
+    //<li><a onclick="">WOOT</a></li>
+    return $Return;
+}
+
+function df_addProcess($processor, $table){
+
+    $Return = '';
+
+    if(file_exists(__DIR__.'/../data_form/processors/'.$processor.'/conf.php')){
+    include(__DIR__.'/../data_form/processors/'.$processor.'/conf.php');
+    include(__DIR__.'/../data_form/processors/'.$processor.'/functions.php');
+    $processID = uniqid('process_');
+
+    $func = 'config_'.$processor;
+
+
+    $Icons = '<span title="Run Process on Insert" onclick="df_setToggle(\'onInsert_'.$processID.'\');" id="onInsert_'.$processID.'" class="button-highlighted highlight"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/database-insert.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+    $Icons .= '&nbsp;<span title="Run Process on Update" onclick="df_setToggle(\'onUpdate_'.$processID.'\');" id="onUpdate_'.$processID.'" class="button"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/database-pencil.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+    $Icons .= '&nbsp;<span title="Run Process on Delete" onclick="df_setToggle(\'onDelete_'.$processID.'\');" id="onDelete_'.$processID.'" class="button"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/database-delete.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+    if(function_exists($func)){
+        $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_'.$processID.'\'); df_setToggle(\'configirator_'.$processID.'\');" id="configirator_'.$processID.'" class="button-highlighted highlight"><span style="background: url(\''.WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+        $Icons .= '<input type="checkbox" value="1" id="configirator_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_configPanelOpen]" checked="checked" style="display: none;">';
+    }
+    $Icons .= '<input type="checkbox" value="1" id="onInsert_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_onInsert]" checked="checked" style="display: none;">';
+    $Icons .= '<input type="checkbox" value="1" id="onUpdate_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_onUpdate]" style="display: none;">';
+    $Icons .= '<input type="checkbox" value="1" id="onDelete_'.$processID.'_check" name="Data[Content][_FormProcessors]['.$processID.'][_onDelete]" style="display: none;">';
+
+
+    $Return .= '<div style="width: 550px; opacity: 1;" class="admin_list_row3 table_sorter postbox" id="'.$processID.'">';
+        $Return .= '<input type="hidden" name="Data[Content][_FormProcessors]['.$processID.'][_process]" value="'.$processor.'" />';
+        $Return .= '<img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery(\'#'.$processID.'\').remove();" src="'.WP_PLUGIN_URL . '/db-toolkit/images/cancel.png">';
+        $Return .= '<h3>'.$Title.'</h3>';
+        $Return .= '<div class="admin_config_toolbar">';
+        
+            $Return .= '<span style="float:right;"><p>'.$Icons.'</p></span>';            
+            $Return .= '<p>'.$Desc.'</p>';
+            $Return .= '<div style="clear:right;"></div>';
+        $Return .= '</div>';
+        $Return .= '<div id="ExtraSetting_term_id" style="text-align: right;" class="admin_config_panel">';
+        if(function_exists($func)){
+            $Return .= '<div style="text-align: left;" id="config_'.$processID.'" class="widefat">';
+                $Return .= '<h3>Configuration</h3>';
+                $Return .= '<div class="inside"><p>';
+                    $Return .= $func($processID, $table);
+                $Return .= '</p></div>';
+            $Return .= '</div>';
+        }
+        $Return .= '</div>';
+    $Return .= '</div>';
+    
+    }
+
+    return $Return;
+
+}
 function dr_BuildReportFilters($Config, $EID, $Defaults = false) {
 
     // For the HardUserBase filter that assigned to ta filed, make sure its too is hard filtered.
@@ -644,7 +812,7 @@ function dr_BuildReportFilters($Config, $EID, $Defaults = false) {
             if(!empty($Config['_Keyword_Title'])) {
                 $Return .= '<strong>'.$Config['_Keyword_Title'].'</strong><br />';
             }
-            $Return .= '<input type="text" name="reportFilter['.$EID.'][_keywords]" id="keyWordFilter" class="filterSearch" value="'.$Keywords.'" />&nbsp;&nbsp;&nbsp;</div>';
+            $Return .= '<input type="hidden" name="reportFilter['.$EID.'][_keywords]" id="keyWordFilter" class="filterSearch" value="'.$Keywords.'" />&nbsp;&nbsp;&nbsp;</div>';
         }else{
             if(empty($Config['_Hide_FilterLock'])){
             $Return .= '<span class="highlight"><div style="float:left; padding:2px;">';
@@ -2544,11 +2712,28 @@ function df_processupdate($Data, $EID) {
             $newValue = $PreData[$Field];
         }
         if(substr($Field,0,2) != '__') {
-            $updateData[] = "`".$Field."` = '".mysql_real_escape_string($newValue)."' ";
+            $updateData[$Field] = $newValue;
+            //$updateData[] = "`".$Field."` = '".mysql_real_escape_string($newValue)."' ";
         }
     }
-
-    $Updates = implode(', ', $updateData);
+    // process update processess
+    if(!empty($Config['_FormProcessors'])){
+        foreach($Config['_FormProcessors'] as $processID=>$Setup){
+            if(!empty($Setup['_onUpdate'])){
+                if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
+                    include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                    $func = 'pre_process_'.$Setup['_process'];
+                    if(function_exists($func)){
+                        $updateData = $func($updateData, $Setup, $Config);
+                    }
+                }
+            }
+        }
+    }
+    foreach($updateData as $Field=>$newValue){
+        $newData[] = "`".$Field."` = '".mysql_real_escape_string($newValue)."' ";
+    }
+    $Updates = implode(', ', $newData);
     $Query = "UPDATE `".$Config['_main_table']."` SET ".$Updates." WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."'";
     //echo $Query;
     //die;
@@ -2585,7 +2770,23 @@ function df_processupdate($Data, $EID) {
     }
 
 
-
+    // post update processess
+    if(!empty($Config['_FormProcessors'])){
+        foreach($Config['_FormProcessors'] as $processID=>$Setup){
+            if(!empty($Setup['_onUpdate'])){
+                if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
+                    include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                    $func = 'post_process_'.$Setup['_process'];
+                    if(function_exists($func)){
+                        $Data = $func($updateData, $Setup, $Config);
+                        if(!is_array($Data)){
+                            $Config['_UpdateSuccess'] = $Data;
+                        }
+                    }
+                }
+            }
+        }
+    }
     if(mysql_query($Query)) {
         if(empty($Config['_UpdateSuccess'])) {
             $Return['Message'] = 'Entry updated successfully';
@@ -2624,7 +2825,40 @@ function df_deleteEntries($EID, $Data) {
                 }
             }
         }
+        // post update processess
+        if(!empty($Config['_FormProcessors'])){
+            foreach($Config['_FormProcessors'] as $processID=>$Setup){
+                if(!empty($Setup['_onDelete'])){
+                    if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
+                        include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                        $func = 'pre_process_'.$Setup['_process'];
+                        if(function_exists($func)){
+                            $OldData = $func($OldData, $Setup, $Config);
+                        }
+                    }
+                }
+            }
+        }
         mysql_query("DELETE FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$ID."' LIMIT 1;") or die(mysql_error());
+
+        // post update processess
+        if(!empty($Config['_FormProcessors'])){
+            foreach($Config['_FormProcessors'] as $processID=>$Setup){
+                if(!empty($Setup['_onDelete'])){
+                    if(file_exists(__DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php')){
+                        include_once __DIR__.'/../data_form/processors/'.$Setup['_process'].'/functions.php';
+                        $func = 'post_process_'.$Setup['_process'];
+                        if(function_exists($func)){
+                            $OldData = $func($OldData, $Setup, $Config);
+                            if(!is_array($OldData)){
+                                //$Config['_UpdateSuccess'] = $OldData;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         $Index++;
     }
     $Note = 'Item';

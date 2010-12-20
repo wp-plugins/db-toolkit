@@ -33,6 +33,7 @@
     <ul class="content-box-tabs">
         <li><a href="#tabs-1">Field Setup</a></li>
         <li><a href="#tabs-2">Form Layout</a></li>
+        <li><a href="#tabs-formprocess">Form Processors</a></li>
         <li><a href="#tabs-2b">View Layout</a></li>
         <li><a href="#tabs-2c">Chart</a></li>
         <li><a href="#tabs-3">Settings</a></li>
@@ -187,6 +188,7 @@
     <?php
     //include(WP_PLUGIN_DIR.'/db-toolkit/data_report/validation.php');
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/formlayout.php');
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_report/process.php');
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/viewlayout.php');
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartlayout.php');
 
