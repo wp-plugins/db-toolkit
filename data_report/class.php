@@ -726,12 +726,12 @@ return $Return;
 
 function df_listProcessors(){
     //return '<li><a onclick="">'.__DIR__.'</a></li>';
-    $processesDirs = @opendir(__DIR__.'/../data_form/processors');
+    $processesDirs = opendir(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors');
     $Return = '';
     while (($processor = readdir($processesDirs)) !== false) {
         if($processor != '.' && $processor != '..' && $processor != 'index.htm'){
-            if(file_exists(__DIR__.'/../data_form/processors/'.$processor.'/conf.php')){
-                include(__DIR__.'/../data_form/processors/'.$processor.'/conf.php');
+            if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/conf.php')){
+                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$processor.'/conf.php');
                 $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/arrow_switch.png';
                 $Return .= '<li><a onclick="df_addPRocess(\''.$processor.'\');"><img src="'.$Icon.'" align="absmiddle" /> '.$Title.'</a></li>';
             }
