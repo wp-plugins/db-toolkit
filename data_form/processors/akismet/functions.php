@@ -13,7 +13,7 @@ function akismet_scan($Data, $Setup, $Config){
         return false;
     }
 
-    include_once __DIR__.'/Akismet.class.php';
+    include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/akismet/Akismet.class.php';
     $WordPressAPIKey = $Setup['_APIKey'];
     $MyBlogURL = get_bloginfo('url');
 
