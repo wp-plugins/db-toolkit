@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.4
-Stable tag: 0.2.1.3
+Stable tag: 0.2.1.4
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
