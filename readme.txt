@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.4
-Stable tag: 0.2.1.4
+Stable tag: 0.2.1.5
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,11 +53,15 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.2.1.3
+= 0.2.1.5
+    - Fixed a form processor bug that prevented the post process from working correctly.
+    - Fixed a bug in multiply columns field type.
+
+= 0.2.1.4
     - Fixed a bug in the UserID FieldType that prevented showing items in list view
 
 = 0.2.1.2
-    - Fixed __DIR__ which is only available in php5.3 now works with loever php versions.
+    - Fixed __DIR__ which is only available in php5.3 now works with lower php versions.
 
 = 0.2.1.1
     - added Form Processors to the interface builder. see http://dbtoolkit.digilab.co.za/form-processors/ for more.

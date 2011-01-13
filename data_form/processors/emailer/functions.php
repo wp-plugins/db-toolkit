@@ -10,7 +10,8 @@
  */
 
 function post_process_emailer($Data, $Setup, $Config){
-    
+
+
     if(empty($Setup['_recipient'])){
         return $Data;
     }

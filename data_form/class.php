@@ -822,8 +822,8 @@ function df_processInsert($EID, $Data) {
     if(!empty($Config['_FormProcessors'])){
         foreach($Config['_FormProcessors'] as $processID=>$Setup){
             if(!empty($Setup['_onInsert'])){
-                if(file_exists(__DIR__.'/processors/'.$Setup['_process'].'/functions.php')){
-                    include_once __DIR__.'/processors/'.$Setup['_process'].'/functions.php';
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
+                    include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                     $func = 'pre_process_'.$Setup['_process'];
                     if(function_exists($func)){
                         $Data = $func($Data, $Setup, $Config);                        
@@ -917,15 +917,15 @@ function df_processInsert($EID, $Data) {
 				mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
 			}
         }
-        //post processors
+        //post processors        
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
                 if(!empty($Setup['_onInsert'])){
-                    if(file_exists(__DIR__.'/processors/'.$Setup['_process'].'/functions.php')){
-                        include_once __DIR__.'/processors/'.$Setup['_process'].'/functions.php';
+                    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
+                        include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                         $func = 'post_process_'.$Setup['_process'];
                         if(function_exists($func)){
-                            $Data = $func($Data, $Setup, $Config);
+                            $Data = $func($Data, $Setup, $Config);                            
                             if(!is_array($Data)){
                                 $Config['_InsertSuccess'] = $Data;
                             }

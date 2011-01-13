@@ -151,9 +151,10 @@ return $Return;
 }
 function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 
-	include('configs/upc.cfg.php');
-	$res = mysql_list_tables($_SESSION['settings'][$_SESSION['key']]['Database']);
-	$Return = 'Table: <select name="Data[Content][_Linkedfilterfields]['.$Field.'][Table]" id="linkedField_'.$Field.'" onchange="linked_loadfilterfields(this.value, \''.$Field.'\');">';
+        global $wpdb;
+	$Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
+        
+    	$Return = 'Table: <select name="Data[Content][_Linkedfilterfields]['.$Field.'][Table]" id="linkedField_'.$Field.'" onchange="linked_loadfilterfields(this.value, \''.$Field.'\');">';
 	$Return .= '<option value="">Select table to link to</option>';
 	$Default = '';
 	if(is_array($ElementConfig)){
@@ -161,8 +162,9 @@ function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 			$Default = $ElementConfig['Content']['_Linkedfilterfields'][$Field]['Table'];
 		}
 	}
-	while($Tables = mysql_fetch_assoc($res)){
-		$Value = $Tables['Tables_in_'.$_SESSION['settings'][$_SESSION['key']]['Database']];
+	foreach($Data as $Tables){
+            //vardump($Tables);
+		$Value = $Tables[0];
 		$Sel = '';
 		if($Default == $Value){
 			$Sel = 'selected="selected"';	
@@ -395,10 +397,10 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 		$IDField .= $ID;
 	$IDField .= '</select><br />';
 	
-	$URLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][URL]" id="url_'.$Table.'" onclick="jQuery(\'#localurl_'.$Table.'\').val(\'\');">';
-		$URLField .= '<option>none</option>';
-		$URLField .= $URL;
-	$URLField .= '</select><br />';
+	//$URLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][URL]" id="url_'.$Table.'" onclick="jQuery(\'#localurl_'.$Table.'\').val(\'\');">';
+	//	$URLField .= '<option>none</option>';
+	//	$URLField .= $URL;
+	//$URLField .= '</select><br />';
 	
 	$result = mysql_query("SHOW COLUMNS FROM ".$MainTable);
 	$FilField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Filter]" id="Filter_'.$Table.'">';
@@ -422,11 +424,11 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 		}
 	}
 	$FilField .= '</select><br />';
-	$LocalURLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][LocalURL]" id="localurl_'.$Table.'" onclick="jQuery(\'#url_'.$Table.'\').val(\'\');">';
-		$LocalURLField .= '<option>none</option>';
-		$LocalURLField .= $LURL;
-	$LocalURLField .= '</select><br />';
-return 'Reference Field: '.$RefField.' Value Field:  '.$ValField.'  Filter Field:  '.$IDField.' Select Filter: '.$FilField.' URL Field: '.$URLField.' LocalURL Field: '.$LocalURLField;
+	//$LocalURLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][LocalURL]" id="localurl_'.$Table.'" onclick="jQuery(\'#url_'.$Table.'\').val(\'\');">';
+	//	$LocalURLField .= '<option>none</option>';
+	//	$LocalURLField .= $LURL;
+	//$LocalURLField .= '</select><br />';
+return 'Reference Field: '.$RefField.' Value Field:  '.$ValField.'  Filter Field:  '.$IDField.' Select Filter: '.$FilField.'';// URL Field: '.$URLField.' LocalURL Field: '.$LocalURLField;
 }
 
 function linked_loadtableFields($Table, $MainTable, $Field, $Default, $EID){

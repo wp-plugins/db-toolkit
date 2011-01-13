@@ -94,8 +94,7 @@ function math_datesetup($Field, $Table, $ElementConfig = false){
 
 function math_loadfields($Table, $Field, $Defaults = false, $Media = false){
 
-        $Config = $Media['Content'];
-        dump($Config);
+        $Config = $Media['Content'];       
 	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
