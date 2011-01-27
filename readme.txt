@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.4
-Stable tag: 0.2.1.5
+Stable tag: 0.2.1.6
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,9 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.2.1.6
+    - Added the ability to add filters to shortcodes e.g itemid=56
 
 = 0.2.1.5
     - Fixed a form processor bug that prevented the post process from working correctly.

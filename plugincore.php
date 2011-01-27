@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.1.5
+Version: 0.2.1.6
 Author URI: http://www.digilab.co.za
 */
 
@@ -893,8 +893,19 @@ function dt_listApplications($Application){
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface) {
     
+    //vardump($interface);
+
     if(is_array($interface)) {
-        $ID = $interface['id'];
+        
+        $index = 0;
+        foreach($interface as $key=>$value){
+            if($index == 0){
+                $ID = $value;
+            }else{
+                $_GET[$key] = $value;
+            }
+            $index++;
+        }
     }else {
         $ID = $interface;
     }
@@ -908,7 +919,7 @@ function dt_renderInterface($interface) {
         if(empty($user->allcaps[$Media['_menuAccess']])){
             return;
         }
-    }
+    }    
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
     $Return = '';
