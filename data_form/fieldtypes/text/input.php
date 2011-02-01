@@ -8,6 +8,10 @@ if($FieldSet[1] == 'singletext'){
 	}
 	echo $Config['_Prefix'][$Field].'<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />'.$Config['_Suffix'][$Field];
 }
+if($FieldSet[1] == 'password'){
+
+	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="password" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />';
+}
 if($FieldSet[1] == 'emailaddress'){
     if(!empty($Req)){
         $Req = 'validate[required,custom[email]]';

@@ -4,6 +4,9 @@ function text_handleInput($Field, $Input, $FieldType, $Config, $Default){
 	if($FieldType == 'presettext'){
 		return $Config['Content']['_Preset'][$Field];
 	}
+        if($FieldType == 'password'){
+            return md5($Input);
+        }
 	return $Input;
 }
 function text_processValue($Value, $Type, $Field, $Config, $EID, $Data){
