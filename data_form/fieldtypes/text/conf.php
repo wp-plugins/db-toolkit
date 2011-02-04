@@ -12,7 +12,7 @@ $FieldTypes['textarealarge'] 	= array('name' => 'Text Area Large'	, 'func' => 'n
 $FieldTypes['telephonenumber'] 	= array('name' => 'Telephone Number'	, 'func' => 'null'      	, 'visible' => true);
 $FieldTypes['emailaddress'] 	= array('name' => 'Email Address'	, 'func' => 'text_emailSetup'	, 'visible' => true);
 $FieldTypes['phpcodeblock'] 	= array('name' => 'PHP Code Block'	, 'func' => 'null'		, 'visible' => true);
-$FieldTypes['wysiwyg'] 		= array('name' => 'Wysiwyg Editor'	, 'func' => 'null'		, 'visible' => true);
+$FieldTypes['wysiwyg'] 		= array('name' => 'Wysiwyg Editor'	, 'func' => 'text_wysiwygsetup'		, 'visible' => true);
 $FieldTypes['url'] 		= array('name' => 'URL'			, 'func' => 'null'		, 'visible' => true);
 //$FieldTypes['colourpicker'] 	= array('name' => 'Colour Picker'	, 'func' => 'null'		, 'visible' => true);
 

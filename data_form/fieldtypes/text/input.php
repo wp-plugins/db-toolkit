@@ -34,10 +34,23 @@ if($FieldSet[1] ==  'phpcodeblock'){
 	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textboxcode ">'.$Val.'</textarea>';
 }
 if($FieldSet[1] == 'wysiwyg'){
-	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textboxlarge ">'.$Val.'</textarea>';
-	$_SESSION['dataform']['OutScripts'] .="
-		$('#entry_".$Element['ID']."_".$Field."').wysiwyg();
-	";
+
+    $idCount = uniqid();
+
+    echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'_'.$idCount.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.'  textboxlarge">'.$Val.'</textarea>';
+
+    $Buttons = implode("' , '",  $Config['_activatedButtons'][$Field]);
+    
+    $_SESSION['dataform']['OutScripts'] .="
+
+
+        CKEDITOR.replace('entry_".$Element['ID']."_".$Field."_".$idCount."', {
+            toolbar: [
+                ['".$Buttons."']
+            ]
+        });;
+        
+    ";
 }
 if($FieldSet[1] == 'url'){
 	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="" class="'.$Req.' text" />';

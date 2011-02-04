@@ -36,12 +36,20 @@ if($Render != true) {
 }
 
 $FilterLocks = get_option('filter_Lock_'.$Media['ID']);
+if(!is_array($FilterLocks)){
+    $FilterLocks = unserialize($FilterLocks);
+}
+
 if(!empty($FilterLocks)) {
     $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];
     if(empty($_SESSION['reportFilters'][$Media['ID']])) {
         $_SESSION['reportFilters'][$Media['ID']] = $FilterLocks;
-    }else {
-        array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
+    }else {        
+        if(is_array($FilterLocks)){
+            array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
+        }else{
+            array_merge($_SESSION['reportFilters'][$Media['ID']], array($FilterLocks));
+        }
     }
     $_SESSION['lockedFilters'][$Media['ID']] = $FilterLocks;
     //vardump($_SESSION['reportFilters'][$Media['ID']]);

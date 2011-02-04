@@ -145,4 +145,79 @@ function text_runCode($Field, $EID, $ID){
 	eval($Data[$Field]);
 	return ob_get_clean();
 }
+
+
+function text_wysiwygsetup($Field, $Table, $Config = false){
+
+
+
+        $Buttons = array('Source','Templates',
+        'Cut','Copy','Paste','PasteText','PasteFromWord','Print', 'SpellChecker', 'Scayt',
+        'Undo','Redo','Find','Replace','SelectAll','RemoveFormat',
+        'Bold','Italic','Underline','Strike','Subscript','Superscript',
+        'NumberedList','BulletedList','Outdent','Indent','Blockquote','CreateDiv',
+        'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock',
+        'BidiLtr', 'BidiRtl',
+        'Link','Unlink','Anchor',
+        'Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak',
+        'Styles','Format','Font','FontSize',
+        'TextColor','BGColor',
+        'Maximize', 'ShowBlocks','About');
+
+
+
+
+        $Return = '<h5>Select Buttons for Toolbar <span class="button-highlighted highlight">Selected</span> <span class="button">Not Selected</span></h5>';
+        $Return .= '';
+        $Return .= '<div style="clear:both;"></div>';
+        if(!empty($Config['Content']['_activatedButtons'][$Field])){
+            $Defaults = $Config['Content']['_activatedButtons'][$Field];
+        }else{
+            $Defaults = array('Source','Templates',
+                        'PasteFromWord','Print', 'SpellChecker',
+                        'SelectAll',
+                        'Bold','Italic','Underline',
+                        'NumberedList','BulletedList','Outdent','Indent',
+                        'JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock',
+
+                        'Link','Unlink',
+                        'Image',
+                        'Styles','Format','Font','FontSize',
+                        'TextColor','BGColor',
+                        'Maximize');
+        }
+
+        foreach($Buttons as $Button){
+            
+            ob_start();
+
+            $ID = uniqid('togglebutton_');
+
+            if(in_array($Button, $Defaults)){
+                $Selected = 'button-highlighted highlight';
+                $Checked = 'checked="checked"';
+            }else{
+                $Selected = 'button';
+                $Checked = '';
+            }
+
+
+            ?>
+            <div title="Sortable" onclick="df_setToggle('<?php echo $ID; ?>');" id="<?php echo $ID; ?>" class="<?php echo $Selected; ?> cke_skin_kama" style="float:left; margin: 2px;">
+                <span class="cke_button">
+                <span class="cke_button_<?php echo strtolower($Button); ?>" style=" cursor: pointer;">
+                <span class="cke_icon" style="margin: 1px 1px;"></span>
+                <input type="checkbox" id="<?php echo $ID; ?>_check" <?php echo $Checked; ?> value="<?php echo $Button; ?>" name="Data[Content][_activatedButtons][<?php echo $Field; ?>][]" style="display: none;"> <?php echo $Button; ?>
+                </span>
+                </span>
+            </div>&nbsp;
+            <?php
+            $Return .= ob_get_clean();            
+        }
+        $Return .= '<div style="clear:both;"></div>';
+        return $Return;
+
+}
+
+
 ?>

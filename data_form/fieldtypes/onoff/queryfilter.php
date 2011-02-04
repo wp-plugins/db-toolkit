@@ -18,9 +18,9 @@ variables avaiable
 
 */
 
-if(!empty($filterSet[$Field])){
+if(!empty($_SESSION['reportFilters'][$EID][$Field])){
 	//echo 'ping';
-	foreach($filterSet[$Field] as $FilterVal){
+	foreach($_SESSION['reportFilters'][$EID][$Field] as $FilterVal){
 		$filterValue = 0;
 		if($FilterVal == 'checked'){
 			$filterValue = 1;	
@@ -34,7 +34,7 @@ if(!empty($filterSet[$Field])){
 		$WhereTag = " WHERE ";	
 	}
 	
-	$queryWhere[] = 'prim.'.$Field.' in ('. implode(',',$items).')';
+	$queryWhere[] = 'prim.`'.$Field.'` in ('. implode(',',$items).')';
 }
 
 ?>

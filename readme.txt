@@ -53,6 +53,13 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
+= 0.2.1.8
+    - Added the wysiwyg using CKEditor.
+    - Fixed the PDF export.
+
+= 0.2.1.7
+    - added a password fieldtype that converts the text to a MD5 hash.
+
 = 0.2.1.6
     - Added the ability to add filters to shortcodes e.g itemid=56
 

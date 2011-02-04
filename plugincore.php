@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.1.7
+Version: 0.2.1.8
 Author URI: http://www.digilab.co.za
 */
 
@@ -663,8 +663,8 @@ function dt_process() {
             include_once('data_report/class.php');
             include_once('data_itemview/class.php');
 
-            //include_once('libs/fpdf.php');
-            //include_once('libs/pdfexport.php');
+            include_once('libs/fpdf.php');
+            include_once('libs/pdfexport.php');
 
             $input_params["return"] = isset($input_params["return"]) ? $input_params["return"] : false;
             if(empty($Config['_orientation'])) {
@@ -696,9 +696,12 @@ function dt_process() {
                     //if($Field
                     $fieldset = array();
                     $index=0;
+                    if(is_array($Value)){
                     foreach($Value as $fil) {
                         $fieldset[] = $fil;
                         $index++;
+                    }}else{
+                        $fieldset[] = $Value;
                     }
                     sort($fieldset);
                     if(strpos($Config['_Field'][$Field], 'date_') !== false) {
