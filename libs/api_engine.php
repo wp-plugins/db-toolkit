@@ -17,6 +17,14 @@ if (!empty($_GET['APIKey'])) {
     if(empty($_GET['action'])){
         $_GET['action'] = 'list';
     }
+    $Page = false;
+    if(!empty($_GET['page'])){
+        $Page = $_GET['page'];
+    }
+    $Limit = false;
+    if(!empty($_GET['limit'])){
+        $Limit = $_GET['limit'];
+    }
     if (!empty($_GET['action'])) {
         switch ($_GET['action']) {
             default:
@@ -26,7 +34,8 @@ if (!empty($_GET['APIKey'])) {
                         api_Deny();
                     }
                     header("content-type: text/" . strtolower($_GET['format']));
-                    echo dr_BuildReportGrid('dt_intfc' . $apikey[0], false, false, false, strtolower($_GET['format']));
+                        //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)                    
+                    echo dr_BuildReportGrid('dt_intfc' . $apikey[0], $Page, false, false, strtolower($_GET['format']), $Limit);
                     die;
                 }
                 break;

@@ -38,6 +38,7 @@ if($FieldSet[1] == 'wysiwyg'){
     $idCount = uniqid();
 
     echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'_'.$idCount.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.'  textboxlarge">'.$Val.'</textarea>';
+    
 
     $Buttons = implode("' , '",  $Config['_activatedButtons'][$Field]);
     

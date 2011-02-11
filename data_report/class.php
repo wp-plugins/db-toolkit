@@ -1466,7 +1466,10 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
         }
     }
 
-    
+    if(!empty($limitOveride) && $limitOveride != 'full'){
+        $Config['_Items_Per_Page'] = $limitOveride;
+    }
+
     $TotalPages = ceil($Count['Total']/$Config['_Items_Per_Page']);
     $Start = ($Page*$Config['_Items_Per_Page'])-$Config['_Items_Per_Page'];
     $Offset = $Config['_Items_Per_Page'];
@@ -1480,7 +1483,7 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
         }
         $queryLimit = " LIMIT ".$Start.", ".$Offset." ";
         //$Limit = "";
-    }
+    }    
     if(strtolower($Format) == 'pdf' && $limitOveride != false) {
         if($limitOveride = 'full') {
             $queryLimit = '';
@@ -1497,6 +1500,7 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
        // echo $Field.' = '.$FieldValue.'<br />';
     //   $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
     //}
+    
     $_SESSION['queries'][$EID] = $Query;
 
     if(!empty($Config['_chartMode']) && empty($Format)) {
