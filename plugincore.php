@@ -1214,7 +1214,7 @@ function exportApp($app){
             $cfg = unserialize($interface->option_value);
             $cfg = unserialize(base64_decode($cfg['Content']));
             array_walk_recursive($cfg, 'core_cleanSystemTables');
-            if($wpdb->get_var("SHOW TABLES LIKE `".$cfg['_main_table']."`") != $table_name){
+            if($wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'") != $table_name){
                 $tables[] = $cfg['_main_table'];
             }
             //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
@@ -1231,18 +1231,19 @@ function exportApp($app){
                 //export data
                 $result = $wpdb->get_results("SELECT * FROM ".$table, ARRAY_A);
                 foreach($result as $entries){
+                    $Fields = array();
+                    $Values = array();
                     foreach ($entries as $field=>$value){
                         $Fields[] = '`'.$field.'`';
                         $Values[] = "'".mysql_real_escape_string($value)."'";
-                    }
-                    $export['entries'][$tableCreates[0]][] = base64_encode("INSERT INTO `".$tableCreates[0]."` (".implode(',', $Fields).") VALUES (".implode(',', $Values).");");
+                    }                    
+                    $export['entries'][$tableCreates[0]][] = base64_encode("INSERT INTO `".$tableCreates[0]."` (".implode(',', $Fields).") VALUES (".implode(',', $Values).");");                    
                 }
             }
         }        
         
         //fwrite($file, gzdeflate(base64_encode(serialize($export)),9));
-        //fclose($file);
-
+        //fclose($file);        
         $fileName = preg_replace('/[^\w\-]+/u', '-', $app);
 
         $output = gzdeflate(base64_encode(serialize($export)),9);
