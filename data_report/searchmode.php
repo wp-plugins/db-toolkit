@@ -12,6 +12,7 @@ InfoBox($Config['_ReportTitle']);
                     $FilterVisiable = 'block';
                 }
             }
+            
             echo dr_BuildReportFilters($Config, $Media['ID'], $Filters);
             ?>
         <div style="clear:both;"></div>
@@ -22,7 +23,7 @@ InfoBox($Config['_ReportTitle']);
             }
 
             ?>
-        <div style="padding: 2px; text-align:<?php echo $ButtonAlign; ?>">
+        <div style="padding:10px 2px 0 2px; text-align:<?php echo $ButtonAlign; ?>">
             <input type="submit" value="Search" class="filterSearchbutton" />&nbsp;
                 <?php
                 if(!empty($_SESSION['reportFilters'][$Media['ID']])) {
@@ -36,8 +37,12 @@ InfoBox($Config['_ReportTitle']);
     </form>
     <div style="clear:both"></div>
 </div>
-    <?php
+    <?php   
+
     endInfoBox();
+
+
+    echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir']);
 
 
     return;

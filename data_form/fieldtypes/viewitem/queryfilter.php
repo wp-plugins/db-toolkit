@@ -3,7 +3,8 @@
 //echo $Field.'<br />';
 //vardump($Config);
 
-if(!empty($_GET[$Field]) || !empty($Config['_overRide'][$Field])){
+if(!empty($_GET[$Field]) || !empty($Config['_overRide'][$Field])){        
+
 	if(empty($Config['_overRide'][$Field])){
             if(!empty($_GET[$Field])){
                 $Filter = urldecode($_GET[$Field]);

@@ -86,10 +86,13 @@ function text_presuff($Field, $Table, $Config = false){
 	if(!empty($Config['Content']['_Suffix'][$Field])){
 		$Suf = $Config['Content']['_Suffix'][$Field];
 	}
+       
 
 	$Return = 'Length: <input type="text" name="Data[Content][_FieldLength]['.$Field.']" value="'.$PreLen.'" class="textfield" size="5" />&nbsp;';
 	$Return .= 'Prefix: <input type="text" name="Data[Content][_Prefix]['.$Field.']" value="'.$Pre.'" class="textfield" size="5" />&nbsp;';
 	$Return .= ' Suffix: <input type="text" name="Data[Content][_Suffix]['.$Field.']" value="'.$Suf.'" class="textfield" size="5" />';
+       
+        
 return $Return;
 }
 
@@ -219,5 +222,28 @@ function text_wysiwygsetup($Field, $Table, $Config = false){
 
 }
 
+
+function text_showFilter($Field, $Type, $Default, $Config, $EID) {
+
+    
+    $FieldTitle = '';
+    if(!empty($Config['_FieldTitle'][$Field])) {
+        $FieldTitle = df_parseCamelCase($Config['_FieldTitle'][$Field]);
+    }
+    $Class = '';
+    $text = '';
+    if(!empty($Default[$Field])) {
+        $Class = 'class="highlight"';
+        $text = $Default[$Field];
+    }
+    $UID = uniqid(rand(1,999));
+    $Return .= '<div style="padding:2px;float:left;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />
+                                    <input type="text" name="reportFilter['.$EID.']['.$Field.']" class="filterSearch" id="filter_'.$EID.'_'.$UID.'" value="'.$text.'" /></div>';
+
+
+
+    return $Return;
+
+}
 
 ?>

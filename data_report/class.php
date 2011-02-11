@@ -812,7 +812,7 @@ function dr_BuildReportFilters($Config, $EID, $Defaults = false) {
             if(!empty($Config['_Keyword_Title'])) {
                 $Return .= '<strong>'.$Config['_Keyword_Title'].'</strong><br />';
             }
-            $Return .= '<input type="hidden" name="reportFilter['.$EID.'][_keywords]" id="keyWordFilter" class="filterSearch" value="'.$Keywords.'" />&nbsp;&nbsp;&nbsp;</div>';
+            $Return .= '<input type="text" name="reportFilter['.$EID.'][_keywords]" id="keyWordFilter" class="filterSearch" value="'.$Keywords.'" />&nbsp;&nbsp;&nbsp;</div>';
         }else{
             if(empty($Config['_Hide_FilterLock'])){
             $Return .= '<span class="highlight"><div style="float:left; padding:2px;">';
