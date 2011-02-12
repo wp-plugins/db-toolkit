@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.4
-Stable tag: 0.2.2.0
+Stable tag: 0.2.2.1
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,7 +53,10 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.2.1.9
+= 0.2.2.1
+    - Fixed search mode, to only show results once a search is performed.
+
+= 0.2.2.0
     - Fixed the Export Application to include the content of tables so you can pre-populate your applications.
     - Added API changes to include limiting and paging of data.
     - Fixed Search Mode to actually show the results
