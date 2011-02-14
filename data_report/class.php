@@ -1469,7 +1469,7 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
     if(!empty($limitOveride) && $limitOveride != 'full'){
         $Config['_Items_Per_Page'] = $limitOveride;
     }
-
+    
     $TotalPages = ceil($Count['Total']/$Config['_Items_Per_Page']);
     $Start = ($Page*$Config['_Items_Per_Page'])-$Config['_Items_Per_Page'];
     $Offset = $Config['_Items_Per_Page'];

@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.2.1
+Version: 0.2.2.2
 Author URI: http://www.digilab.co.za
 */
 
@@ -26,7 +26,6 @@ function interface_VersionCheck() {
     update_option('_dbtoolkit_defaultinterface', $defaults, NULL, 'No');
 }
 register_activation_hook( __FILE__, 'interface_VersionCheck' );
-
 
 function dt_start() {
     // I like sessions
@@ -75,7 +74,6 @@ function dt_headers() {
 
     include_once('data_form/headers.php');
     include_once('data_report/headers.php');
-
     ?>
 <script type="text/javascript" >
     <?php
@@ -679,7 +677,7 @@ function dt_process() {
             if(!empty($_GET['limit'])) {
                 $limit = 'full';
             }
-            $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', 'none' );
+            $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', false );
             //dump($OutData);
             //die;
             $CountStat = array();
@@ -1335,6 +1333,5 @@ function core_populateApp($Installer){
     unset($_SESSION['appInstall']);
     return false;
 }
-
 
 ?>
