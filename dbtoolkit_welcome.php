@@ -40,15 +40,22 @@
             </div>
         </div>
     </div>
+    <div class="metabox-holder">
+        <div id="dashboard_right_now" class="postbox">
+            <h3><span>New Features in This Version</span></h3>
+            <div style="margin: 10px;">
+                <p><strong>Import Button</strong>: when greating an interface, in the settings tab, check the "<strong>Show Import</strong>" Button to enable the import feature.</p>
+                <p><strong>Dashboard</strong>: This page right here. in the next release i will show stats on the interfaces and application in db-toolkit.</p>
+                <p><strong>Access Control</strong>: Preparation have been made for access control mechanisim that will allow you to make pages and interfaces be shown only to users with qualifying access rights.</p>
+                <p><strong>Marketplace</strong>: Preparation have been made for interface publishing to the db-toolkit marketplace. Here you'll be able to share and download ready made interfaces and applications.</p>
+                
+            </div>
+        </div>
+    </div>
 </div>
 
 </div>
 
-<?php
-vardump($_SESSION['import_dt_intfc4d53ebdf0b0a9']['import']['file']);
-$PreCount = file($_SESSION['import_dt_intfc4d53ebdf0b0a9']['import']['file']);
-echo count($PreCount);
-?>
 <script>
 
 jQuery(document).ready(function($) {

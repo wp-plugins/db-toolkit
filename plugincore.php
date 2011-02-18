@@ -740,7 +740,7 @@ function dt_process() {
             if(!empty($_GET['limit'])) {
                 $limit = 'full';
             }
-            $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', false );
+            $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', 'full' );
             //dump($OutData);
             //die;
             $CountStat = array();
