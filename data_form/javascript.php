@@ -291,6 +291,160 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit){
 		});
 }
 
+function df_buildImportForm(eid){
+
+
+	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
+		jQuery("#ui-jsDialog-"+eid+"").remove();
+	}
+	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery("#ui-jsDialog-"+eid+"").dialog({
+			position: 'center',
+			autoResize: true,
+			modal: true,
+			buttons: {
+				'Cancel': function() {jQuery(this).dialog("close"); }
+			},
+			dragStart: function(event, ui) {
+			 	jQuery(".formError").remove();
+			},
+			open: function(event, ui) {
+				ajaxCall('dr_importer',eid, function(c){
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'title', c.title);
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {
+						'Close': function() {
+							jQuery(this).dialog("close");
+						},
+						'Import': function() {
+							//dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
+                                                        //if(ajaxSubmit == false){
+                                                         jQuery("#import_form_"+eid+"").submit();
+						}
+					});
+					jQuery("#ui-jsDialog-"+eid+"").html(c.html);
+					//alert(parseFloat(c.width));
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
+					df_loadOutScripts();
+				});
+			},
+			close: function(event, ui) {
+				jQuery(".formError").remove();
+				jQuery("#ui-jsDialog-"+eid+"").remove();
+			}
+		});
+}
+
+function df_buildImportManager(eid){
+
+	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
+		jQuery("#ui-jsDialog-"+eid+"").remove();
+	}
+	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery("#ui-jsDialog-"+eid+"").dialog({
+			position: 'center',
+			autoResize: true,
+			modal: true,
+			buttons: {
+				'Cancel': function() {jQuery(this).dialog("close"); }
+			},
+			dragStart: function(event, ui) {
+			 	jQuery(".formError").remove();
+			},
+			open: function(event, ui) {
+				ajaxCall('dr_buildImportManager',eid, function(c){
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'title', c.title);
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {
+						'Cancel': function() {
+                                                        ajaxCall('dr_cancelImport', eid, function(){})
+							jQuery(this).dialog("close");
+						},
+						'Import': function() {
+							//dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
+                                                        //if(ajaxSubmit == false){
+                                                        ajaxCall('dr_prepairImport', eid, function(r){
+                                                            jQuery("#import_form_"+eid+"").submit();
+                                                        });
+						}
+					});
+					jQuery("#ui-jsDialog-"+eid+"").html(c.html);
+					//alert(parseFloat(c.width));
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
+					df_loadOutScripts();
+				});
+			},
+			close: function(event, ui) {
+                                ajaxCall('dr_cancelImport', eid, function(){})
+				jQuery(".formError").remove();
+				jQuery("#ui-jsDialog-"+eid+"").remove();
+			}
+		});
+}
+function df_processImport(eid){
+
+	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
+		jQuery("#ui-jsDialog-"+eid+"").remove();
+	}
+	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery("#ui-jsDialog-"+eid+"").dialog({
+			position: 'center',
+			autoResize: true,
+			modal: true,
+			dragStart: function(event, ui) {
+			 	jQuery(".formError").remove();
+			},
+			open: function(event, ui) {
+				ajaxCall('dr_prepairImport',eid, function(c){
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'title', c.title);
+					jQuery("#ui-jsDialog-"+eid+"").html(c.html);
+					//alert(parseFloat(c.width));
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
+					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
+                                        
+                                        jQuery( "#"+eid+"_importProgress").progressbar({
+                                                value: 0
+                                        });
+                                        dr_startImportBatch(eid);
+					df_loadOutScripts();
+				});
+			},
+			close: function(event, ui) {
+                                ajaxCall('dr_cancelImport', eid, function(){})
+				jQuery(".formError").remove();
+				jQuery("#ui-jsDialog-"+eid+"").remove();
+			}
+		});
+}
+
+function dr_startImportBatch(eid){
+
+    ajaxCall('dr_processImport', eid, function(p){        
+        if(p != 'false'){
+            jQuery( "#"+eid+"_importProgress").progressbar( "option", "value", p.p );
+            jQuery('#import_processedCount').html(p.d);
+            dr_startImportBatch(eid);
+        }else{
+            jQuery( "#"+eid+"_importProgress").progressbar( "option", "value", 100 );            
+            jQuery("#ui-jsDialog-"+eid+"").remove();
+            dr_goToPage(eid, false);
+        }
+
+    });
+
+}
+
+function dr_reloadImport(eid, delim){
+
+        
+        ajaxCall('dr_buildImportManager',eid, delim, function(c){
+            jQuery("#ui-jsDialog-"+eid+"").html(c.html);
+            jQuery('#importDelimeter').focus();
+        });
+
+
+}
+
 function df_loadOutScripts(){
 	ajaxCall('df_loadOutScripts',function(os){
 		eval(os);

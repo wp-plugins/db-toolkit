@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.2.2
+Version: 0.2.2.3
 Author URI: http://www.digilab.co.za
 */
 
@@ -237,12 +237,14 @@ function dt_scripts() {
     wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
     wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
     wp_register_script('jquery-ui-datepicker' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.datepicker.js');
+    wp_register_script('jquery-ui-progressbar' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.progressbar.js', false, false, true);
     wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
     wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
     wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
 
 
     wp_enqueue_script("jquery-ui-core");
+    wp_enqueue_script("jquery-ui-progressbar");
     wp_enqueue_script("jquery-ui-tabs");
     wp_enqueue_script("jquery-ui-sortable");
     wp_enqueue_script("jquery-ui-draggable");
@@ -338,13 +340,16 @@ function dt_menus() {
         //add_menu_page ('Application Marketplace', 'App Marketplace', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/icons/shop_cart.png', '2.996');
 
 
-        $adminPage = add_menu_page("Database Toolkit", "DB Toolkit", 'activate_plugins', "Database_Toolkit", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
-	add_submenu_page("Database_Toolkit", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
+        add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
+	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
+        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
-        $addNew = add_submenu_page("Database_Toolkit", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
-        $Import = add_submenu_page("Database_Toolkit", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
-        $setup = add_submenu_page("Database_Toolkit", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
+        $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
+        $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
+        $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
+
         
+
         //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
 
@@ -367,6 +372,11 @@ function dt_menus() {
             add_action('admin_head-'.$setup, 'dt_headers');
             add_action('admin_print_scripts-'.$setup, 'dt_scripts');
             add_action('admin_footer-'.$setup, 'dt_footers');
+
+            add_action('admin_print_styles-'.$Dashboard, 'dt_styles');
+            add_action('admin_head-'.$Dashboard, 'dt_headers');
+            add_action('admin_print_scripts-'.$Dashboard, 'dt_scripts');
+            add_action('admin_footer-'.$Dashboard, 'dt_footers');
 
 	////add_submenu_page("Database_Toolkit", 'Setup', 'Setup', 'read', "General Settings", 'dbtoolkit_setup');
 
@@ -474,6 +484,11 @@ function dbtoolkit_admin() {
     include_once('dbtoolkit_admin.php');
 }
 
+function dbtoolkit_dashboard() {
+    global $user_ID;
+    include_once('dbtoolkit_welcome.php');
+}
+
 function dbtoolkit_setup() {
     global $user_ID;
     include_once('dbtoolkit_settings.php');
@@ -555,6 +570,7 @@ add_action('wp_ajax_dt_ajaxCall', 'dt_ajaxCall');
 
 function dt_process() {
 
+
     if(!empty($_POST['func']) && !empty($_POST['action'])) {
         if($_POST['action'] == 'wp_dt_ajaxCall') {
             dt_ajaxCall();
@@ -629,6 +645,53 @@ function dt_process() {
             header('Location: '.$Redirect);
             die;
         }
+    }
+    //vardump($_POST);
+    if(!empty($_POST['importKey'])) {
+        $_POST = stripslashes_deep($_POST);
+        $_SESSION['adminscripts'] .= "
+          //df_buildImportManager(eid);
+        ";
+        if(empty($_FILES['fileImport']['size'])){
+            $_SESSION['adminscripts'] .= "
+              df_buildImportForm('".$_POST['importInterface']."');
+            ";
+            $Redirect = $_SERVER['HTTP_REFERER'];
+            header('Location: '.$Redirect);
+            die;
+        }
+
+
+        $path = wp_upload_dir();
+
+		// set filename and paths
+		$Ext = pathinfo($_FILES['fileImport']['name']);
+		$newFileName = $_POST['importInterface'].'.'.$Ext['extension'];
+		$newLoc = $path['path'].'/'.$newFileName;
+
+        $_SESSION['import_'.$_POST['importInterface']]['import'] = wp_upload_bits($newFileName, null, file_get_contents($_FILES['fileImport']['tmp_name']));
+        
+        $_SESSION['adminscripts'] .= "
+          df_buildImportManager('".$_POST['importInterface']."');
+        ";
+
+        $Redirect = $_SERVER['HTTP_REFERER'];
+        header('Location: '.$Redirect);
+        die;
+    }
+
+    if(!empty($_POST['importPrepairKey'])) {
+        $Element = getelement($_POST['importInterface']);
+        $_SESSION['import_'.$_POST['importInterface']]['import']['table'] = $Element['Content']['_main_table'];
+        $_SESSION['import_'.$_POST['importInterface']]['import']['delimiter'] = $_POST['importDelimeter'];
+        $_SESSION['import_'.$_POST['importInterface']]['import']['map'] = $_POST['importMap'];
+        $_SESSION['adminscripts'] .= "
+            df_processImport('".$_POST['importInterface']."');
+        ";
+        
+        $Redirect = $_SERVER['HTTP_REFERER'];
+        header('Location: '.$Redirect);
+        die;
     }
 
     // API Call
@@ -1184,6 +1247,37 @@ function dt_saveFilterLock($Interface, $Settings = false){
 
 if(!empty($_POST['exportApp'])){
     exportApp($_POST['application']);
+}
+
+function core_loadSupportFeed($url){
+
+    include_once(ABSPATH . WPINC . '/feed.php');
+
+    // Get a SimplePie feed object from the specified feed source.
+    $rss = fetch_feed($url);
+    if (!is_wp_error( $rss ) ) : // Checks that the object is created correctly
+        // Figure out how many total items there are, but limit it to 5.
+        $maxitems = $rss->get_item_quantity(5);
+
+        // Build an array of all the items, starting with element 0 (first element).
+        $rss_items = $rss->get_items(0, $maxitems);
+    endif;
+    ?>
+
+    <ul>
+        <?php if ($maxitems == 0) echo '<li>No items.</li>';
+        else
+        // Loop through each feed item and display each item as a hyperlink.
+        foreach ( $rss_items as $item ) : ?>
+        <li>
+            <a class="rsswidget" href='<?php echo $item->get_permalink(); ?>'
+            title='<?php echo 'Posted '.$item->get_date('j F Y | g:i a'); ?>'>
+            <?php echo $item->get_title(); ?></a><span class="rss-date"><?php echo $item->get_date('j F Y | g:i a'); ?></span>
+            <?php echo $item->get_description(); ?>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+<?php
 }
 
 function core_cleanSystemTables(&$value, $key){

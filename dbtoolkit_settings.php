@@ -15,7 +15,7 @@ $Element['Content'] = $defaults;
 
 
 <div class="wrap ">
-    <div id="icon-tools" class="icon32"></div><h2><?php _e('Database Toolkit Default Settings'); ?></h2>
+    <div id="icon-tools" class="icon32"></div><h2><?php _e('DB-Toolkit Default Settings'); ?></h2>
     Setup defaults for new Interfaces.
     <br class="clear" /><br />
     <?php

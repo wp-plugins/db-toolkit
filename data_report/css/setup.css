@@ -95,4 +95,24 @@
 	margin:0;
 	text-shadow:0 1px 0 #333333;
 }
-
+.dbtoolkit li{
+    margin-bottom: 10px;
+}
+.dbtoolkit p{
+    margin:0 2px 0 !important;
+    font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+    font-size: 11px;
+}
+.dbtoolkit a.rsswidget{
+    text-decoration: none;
+}
+.dbtoolkit .rsswidget{
+    font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+    font-size: 13px;
+    line-height: 1.7em;
+}
+.dbtoolkit .rss-date{
+    color: #666;
+    margin-left: 3px;
+    font-size: 11px;
+}

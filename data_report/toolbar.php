@@ -18,6 +18,13 @@
             }
             echo '<div class="fbutton"><div class="button"><span class="add" style="padding-left: 20px;" onclick="df_buildQuickCaptureForm(\''.$Media['ID'].'\', '.$ajaxSubmit.');return false;">'.$Config['_New_Item_Title'].'</span></div></div>';
         }
+
+        if(!empty($Config['_Show_Import'])) {
+                    echo '<div class="btnseparator"></div>';
+                    echo '<div class="fbutton"><div class="button"><span class="import" style="padding-left: 20px;" onclick="df_buildImportForm(\''.$Media['ID'].'\');return false;">Import</span></div></div>';
+                    echo '<div class="btnseparator"></div>';
+        }
+
         //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
         if(!empty($Config['_Show_Filters'])) {
             if(!empty($Config['_toggle_Filters'])) {

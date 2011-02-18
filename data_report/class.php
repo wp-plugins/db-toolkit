@@ -2872,4 +2872,222 @@ function df_deleteEntries($EID, $Data) {
     return $Index.' '.$Note.' Deleted<br />';
 }
 
+function dr_importer($EID){
+
+
+    $_SESSION['importKey'] = uniqid(rand(100, 999).'_importKey_');
+
+
+    $Data = getelement($EID);
+    $html = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular" id="import_form_'.$EID.'" >';
+    $html .= '<input type="hidden" name="importInterface" id="importInterface" value="'.$EID.'" />';
+    $html .= '<input type="hidden" name="importKey" id="importKey" value="'.$_SESSION['importKey'].'" />';
+
+    $html .= '<div class="form-gen-field-wrapper" id="form-field-importer">';
+        $html .= '<label class="form-gen-lable singletext" for="fileSelector" id="fileSelectorLabel">File Import <em>(required)</em></label>';
+        $html .= '<input type="file" class="validate[required]" id="'.$EID.'" name="fileImport">';
+        $html .= '<div class="caption" id="importCaption">Accepted Format: .CSV</div>';
+        $html .= '<div style="clear: left;"></div>';
+    $html .= '</div>';
+
+
+
+    $html .= '</form>';
+
+    
+    $Out['title'] = 'Import';
+    $Out['html'] = $html;
+    $Out['width'] = 300;
+    return $Out;
+
+}
+
+function dr_prepairImport($EID){
+
+        /*if (($handle = fopen($_SESSION['import_'.$EID]['import']['file'], "r")) !== FALSE) {
+        $_SESSION['importKey'] = uniqid(rand(100, 999).'_importKey_');
+        //while($data = fgetcsv($handle, 1024, $delim)){
+
+        //}
+        //fclose($handle);
+        }*/
+    if(empty($_SESSION['import_'.$EID]['startpoint'])){
+        $_SESSION['import_'.$EID]['startpoint'] = 2;
+    }
+
+    $html .= '<div id="textImportResult"><span id="import_processedCount">0</span> of '.count(file($_SESSION['import_'.$EID]['import']['file'])).' entries imported.</div>';
+    $html .= '<div id="'.$EID.'_importProgress"></div>';
+    //$html .= filesize($_SESSION['import_'.$EID]['import']['file']);
+
+    $Out['title'] = 'Data Importer';
+    $Out['html'] = $html;
+    $Out['width'] = 300;
+    
+    return $Out;
+}
+
+function dr_processImport($EID){
+
+    $PreCount = file($_SESSION['import_'.$EID]['import']['file']);
+    $Total = count($PreCount);
+    unset($PreCount);
+    
+    if (($handle = fopen($_SESSION['import_'.$EID]['import']['file'], "r")) !== FALSE) {
+        $_SESSION['importKey'] = uniqid(rand(100, 999).'_importKey_');        
+
+
+        $Row = 2;
+        $Processed = 1;
+        while($data = fgetcsv($handle, 0, $_SESSION['import_'.$EID]['import']['delimiter'])){
+            if($Row == $_SESSION['import_'.$EID]['startpoint']){
+                $Query = 'INSERT INTO `'.$_SESSION['import_'.$EID]['import']['table'].'`';
+                $Fields = array();
+                $Values = array();
+                foreach($_SESSION['import_'.$EID]['import']['map'] as $Field=>$Value){
+                    if($Value != 'null'){
+                        $Fields[] = '`'.$Field.'`';
+                        $Values[] = "'".mysql_real_escape_string($data[$Value])."'";
+                    }
+                }
+                $Query .= '('.implode(',', $Fields).') VALUES ';
+                $Query .= '('.implode(',', $Values).');';
+                mysql_query($Query);
+                if($Processed == 25 || $_SESSION['import_'.$EID]['startpoint'] >= $Total){
+                    break;
+                }
+                $Processed++;
+                $_SESSION['import_'.$EID]['startpoint']++;
+            }
+            $Row++;
+        }
+        fclose($handle);
+    }
+
+    $out[p] = round(($_SESSION['import_'.$EID]['startpoint']/$Total)*100, 2);
+    $out[d] = $_SESSION['import_'.$EID]['startpoint'];
+    if($_SESSION['import_'.$EID]['startpoint'] == $Total){
+        if(file_exists($_SESSION['import_'.$EID]['import']['file'])){
+            unlink($_SESSION['import_'.$EID]['import']['file']);
+        }
+        unset($_SESSION['import_'.$EID]);
+        return 'false';
+    }
+    //$out = $Out.' - '.$html;
+    return $out;
+}
+
+function dr_buildImportManager($EID, $delim = ','){
+
+    if (($handle = fopen($_SESSION['import_'.$EID]['import']['file'], "r")) !== FALSE) {
+        $_SESSION['importKey'] = uniqid(rand(100, 999).'_importKey_');
+        
+        $Row = 1;
+        $head = array();
+        $body = array();
+        $titles = array();
+        while($data = fgetcsv($handle, 0, $delim)){
+            //vardump($data);
+            if($Row == 1){
+                foreach($data as $field){
+                    $head[] = '<th style="white-space: nowrap;" scope="col">'.$field.'</th>';
+                    $titles[] = $field;
+                }
+            }elseif($Row == 2){
+                foreach($data as $field){
+                    $body[] = '<td style="white-space: nowrap;">'.$field.'</td>';
+                }
+            }
+            if($Row == 2){
+                break;
+            }
+            $Row++;
+        }
+        fclose($handle);
+    }else{
+        $Out['title'] = 'Error';
+        $Out['html'] = 'Could not import. Please try again.';
+        $Out['width'] = 250;
+    }
+
+    // setup selector
+    $Selector = '';
+    foreach($titles as $csvField=>$column){
+        $Selector .= '<option value="'.$csvField.'">'.$column.'</option>';
+    }
+
+    //vardump($head);
+    //vardump($body);
+    //ob_start();
+    //vardump($_SESSION['import_'.$EID]);
+    $html = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular" id="import_form_'.$EID.'" >';
+    
+    $html .= '<input type="hidden" name="importInterface" id="importInterface" value="'.$EID.'" />';
+    $html .= '<input type="hidden" name="importPrepairKey" id="importPrepairKey" value="'.$_SESSION['importKey'].'" />';
+
+    $html .= '<h3>';
+    
+        $html .= 'Delimiter: <input type="text" name="importDelimeter" id="importDelimeter" value="'.stripslashes_deep($delim).'" style="width: 20px;" onkeyup="dr_reloadImport(\''.$EID.'\', this.value);" /> ';
+    $html .= '</h3>';
+    
+    $html .= '<div style="width:780px; overflow:auto">';
+    $html .= '<table width="100%" cellspacing="2" cellpadding="2" border="0" class="widefat">';
+        $html .= '<thead>';
+            $html .= '<tr>';
+                $html .= '<th scope="col"></th>';
+                // heading
+                $html .= implode('', $head);
+            $html .= '</tr>';
+        $html .= '</thead>';
+
+        $html .= '<tbody>';
+            $html .= '<tr >';
+                $html .= '<td>1</td>';
+                // body
+                $html .= implode('', $body);
+            $html .= '</tr>';
+        $html .= '</tbody>';
+    $html .= '</table>';
+    $html .= '</div>';
+
+    $html .= '<h3>Field Mapping</h3>';
+
+    $Element = getelement($EID);
+
+    foreach($Element['Content']['_Field'] as $Field=>$Type){
+
+        $html .= '<div style="float: left; overflow: hidden; width: 22.5%;">';
+        $html .= '<div class="form-gen-field-wrapper" id="form-field-'.$Field.'">';
+        $html .= '<label>'.$Element['Content']['_FieldTitle'][$Field].'</label>';
+
+            $html .= '<select id="dataField_'.$Field.'" name="importMap['.$Field.']">';
+                $html .= '<option value="null"></option>';
+                $html .= $Selector;
+            $html .= '</select>';
+            $html .= '<div class="caption" id="caption_'.$EID.'_Name">'.$Element['Content']['_FieldCaption'][$Field].'&nbsp;</div>';
+
+        $html .= '</div>';
+        $html .= '</div>';
+
+    }
+    $html .= '<div style="clear:both;"></div>';
+    $html .= '</form>';
+
+
+    $Out['title'] = 'Import Data Setup';
+    $Out['html'] = $html;
+    $Out['width'] = 800;
+    return $Out;
+}
+
+function dr_cancelImport($EID){
+
+    if(file_exists($_SESSION['import_'.$EID]['import']['file'])){
+        unlink($_SESSION['import_'.$EID]['import']['file']);
+    }
+    unset($_SESSION['import_'.$EID]);
+
+    return true;
+}
+
+
 ?>

@@ -2,9 +2,7 @@
 /*
 notes:
 
-add_option($name, $value, $deprecated, $autoload); = for my purposes - set to "no".
-update_option($name, $value); = update option
-get_option('oscimp_store_url'); = get option value
+
 
 */
 
@@ -19,6 +17,7 @@ if(!empty($_GET['renderinterface'])){
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];
     }
+
     ?>
     <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?>
@@ -155,6 +154,7 @@ if(!empty($_POST['Data'])) {
         $newCFG['_Dashboard'] = false;
     }
     $newCFG['_ReportDescription'] = $_POST['Data']['Content']['_ReportDescription'];
+    $newCFG['_ReportExtendedDescription'] = $_POST['Data']['Content']['_ReportExtendedDescription'];
     $newCFG['_ItemGroup'] = $_POST['Data']['Content']['_ItemGroup'];
     $newCFG['_menuAccess'] = $_POST['Data']['Content']['_menuAccess'];
     $newCFG['_Icon'] = $_POST['Data']['Content']['_Icon'];
@@ -168,7 +168,7 @@ if(!empty($_POST['Data'])) {
         if($_GET['page'] == 'Add_New'){
             ?>
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2>Database Toolkit</h2>
+            <div id="icon-tools" class="icon32"></div><h2>DB-Toolkit</h2>
             <div class="clear"></div>
                 <br />
             <div id="poststuff">
@@ -263,7 +263,7 @@ if(!empty($_POST['Data'])) {
         ?>
 
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2>Database Toolkit <a href="admin.php?page=Add_New" class="button add-new-h2">New Interface</a></h2>
+            <div id="icon-tools" class="icon32"></div><h2>DB-Toolkit <a href="admin.php?page=Add_New" class="button add-new-h2">New Interface</a></h2>
             <br class="clear" /><br />
             <?php
             if(!empty($_POST['Data'])) {
@@ -373,17 +373,23 @@ if(!empty($_POST['Data'])) {
                             <th scope="row" colspan="5" class="highlight"><?php echo $Group; ?></th>
                         </tr>
                         <?php
+
+
+
+
                         foreach($Interfaces as $Interface){
                         
                         $Config = unserialize(base64_decode($Interface['Content']));
                         //vardump($Config);
                         //vardump($cfg);
                         $API = str_replace('dt_intfc', '', $Interface['ID']).'_'.md5(serialize($Config));
+
+                        $Desc = '';
+                        if(!empty($Config['_ReportExtendedDescription'])) {
+                           $Desc = $Config['_ReportExtendedDescription'];
+                        }
+                        
                         ?>
-
-
-                
-
 
                 <tr id="<?php echo $Interface['ID']; ?>">
                     <td></td>
@@ -394,6 +400,7 @@ if(!empty($_POST['Data'])) {
                                         $titleName = $Interface['_interfaceName'];
                                     }
                                     _e($titleName); ?></strong>
+                        <div><?php echo $Desc; ?></div>
                         <div class="row-actions"><a href="<?php echo $_SERVER['REQUEST_URI']; ?>&interface=<?php echo $Interface['ID']; ?>">Edit</a> | <a href="<?php echo $_SERVER['REQUEST_URI']; ?>&renderinterface=<?php echo $Interface['ID']; ?>">View</a> | <a href="<?php echo $_SERVER['REQUEST_URI']; ?>&duplicateinterface=<?php echo $Interface['ID']; ?>">Duplicate</a> | <a href="#" onclick="dt_deleteInterface('<?php echo $Interface['ID']; ?>'); return false;">Delete</a></div></div>
                     </td>
                     <td><?php echo $Config['_main_table']; ?></td>

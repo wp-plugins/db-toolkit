@@ -4,6 +4,9 @@
 div.fbutton .add {
 	background:transparent url(images/add.png) no-repeat scroll left center;
 }
+div.fbutton .import {
+	background:transparent url(images/table-import.png) no-repeat scroll left center;
+}
 div.fbutton .lockfilterfilter {
 	background:transparent url(images/lock.png) no-repeat scroll left center;
 }
