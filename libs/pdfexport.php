@@ -1,4 +1,6 @@
 <?php
+//error_reporting(E_ALL);
+//ini_set('display_errors','On');
 
 interface ReportOutPut
 {
@@ -9,7 +11,7 @@ interface ReportOutPut
 	 public function cf_report_footer($string);
 	 public function cf_report_summary($string);
 	 public function cf_report_image($source, $caption=null);
-	 public function cf_report_datagrid($data, $size);
+	 public function cf_report_datagrid($data, $size=8);
 	 public function cf_report_data_col_grid($headers, $data, $OutData, $Config);
 	 public function cf_report_spacer($string=null);
 	 public function cf_report_generate_output();
