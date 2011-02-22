@@ -3,8 +3,8 @@ Contributors: Desertsnowman
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
-Tested up to: 3.0.4
-Stable tag: 0.2.2.5
+Tested up to: 3.0.5
+Stable tag: 0.2.2.6
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -22,12 +22,12 @@ Features include:
 
 *   Visual forms and reports builder
 *   Templates for output
+*   Data Importing and Exporting
+*   PDF Report Exporting
+*   Charts
 *   Field Specific configuration
 *   Application Export and Import
 
-Features Currently in Development:
-
-*   Dynamic Table Creation and Field Manipulation
 
 == Installation ==
 
@@ -53,8 +53,9 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.2.2.5
-    - emergency fix - left a file out of the PDF Export - Sorry.
+= 0.2.2.5/6
+    - emergency fix - left a file out of the PDF Export
+    - messed up with the SVN- sorted it now.
 
 = 0.2.2.4
     - Fixed a bug the prevented Charts to show- sorry i didnt pick this up sooner.
