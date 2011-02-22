@@ -4,13 +4,11 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for creating interfaces from database tables
 Author: David Cramer
-Version: 0.2.2.3
+Version: 0.2.2.4
 Author URI: http://www.digilab.co.za
 */
 
 //init
-
-
 
 function interface_VersionCheck() {
         global $wpdb;
@@ -22,7 +20,7 @@ function interface_VersionCheck() {
                 update_option($interface['option_name'], $cfg);
             }
         }
-    $defaults = unserialize('a:29:{s:12:"_chartHeight";s:3:"250";s:15:"_New_Item_Title";s:9:"Add Entry";s:15:"_Items_Per_Page";s:2:"20";s:12:"_autoPolling";s:0:"";s:13:"_Show_Filters";s:1:"1";s:15:"_toggle_Filters";s:1:"1";s:20:"_Show_KeywordFilters";s:1:"1";s:14:"_Keyword_Title";s:6:"Search";s:11:"_showReload";s:1:"1";s:12:"_Show_Export";s:1:"1";s:13:"_Show_Plugins";s:1:"1";s:12:"_orientation";s:1:"P";s:12:"_Show_Select";s:1:"1";s:12:"_Show_Delete";s:1:"1";s:10:"_Show_Edit";s:1:"1";s:10:"_Show_View";s:1:"1";s:19:"_Show_Delete_action";s:1:"1";s:12:"_Show_Footer";s:1:"1";s:14:"_InsertSuccess";s:27:"Entry inserted successfully";s:14:"_UpdateSuccess";s:26:"Entry updated successfully";s:11:"_InsertFail";s:22:"Could not insert entry";s:11:"_UpdateFail";s:22:"Could not update entry";s:17:"_SubmitButtonText";s:6:"Submit";s:17:"_UpdateButtonText";s:6:"Submit";s:13:"_EditFormText";s:10:"Edit Entry";s:13:"_ViewFormText";s:10:"View Entry";s:14:"_NoResultsText";s:13:"Nothing Found";s:10:"_ShowReset";s:1:"1";s:16:"_SubmitAlignment";s:4:"left";}');
+    $defaults = unserialize('a:51:{s:11:"_FormLayout";s:0:"";s:15:"_New_Item_Title";s:9:"Add Entry";s:15:"_Items_Per_Page";s:2:"20";s:12:"_autoPolling";s:0:"";s:13:"_Show_Filters";s:1:"1";s:15:"_toggle_Filters";s:1:"1";s:20:"_Show_KeywordFilters";s:1:"1";s:14:"_Keyword_Title";s:6:"Search";s:11:"_showReload";s:1:"1";s:12:"_Show_Export";s:1:"1";s:13:"_Show_Plugins";s:1:"1";s:12:"_orientation";s:1:"P";s:12:"_Show_Select";s:1:"1";s:12:"_Show_Delete";s:1:"1";s:10:"_Show_Edit";s:1:"1";s:10:"_Show_View";s:1:"1";s:19:"_Show_Delete_action";s:1:"1";s:12:"_Show_Footer";s:1:"1";s:14:"_InsertSuccess";s:27:"Entry inserted successfully";s:14:"_UpdateSuccess";s:26:"Entry updated successfully";s:11:"_InsertFail";s:22:"Could not insert entry";s:11:"_UpdateFail";s:22:"Could not update entry";s:17:"_SubmitButtonText";s:6:"Submit";s:17:"_UpdateButtonText";s:6:"Submit";s:13:"_EditFormText";s:10:"Edit Entry";s:13:"_ViewFormText";s:10:"View Entry";s:14:"_NoResultsText";s:13:"Nothing Found";s:10:"_ShowReset";s:1:"1";s:16:"_SubmitAlignment";s:4:"left";s:8:"_APISeed";s:0:"";s:12:"_chartHeight";s:3:"250";s:11:"_chartTitle";s:0:"";s:13:"_chartCaption";s:0:"";s:7:"_topPad";s:2:"30";s:9:"_rightPad";s:2:"50";s:10:"_bottomPad";s:3:"130";s:8:"_leftPad";s:2:"50";s:7:"_xAngle";s:3:"-45";s:12:"_xAxis_Align";s:5:"right";s:17:"_yToolTipTemplate";s:48:"<b>{{SeriesName}}</b><br/>{{YValue}}: {{XValue}}";s:26:"_ListViewTemplatePreHeader";s:0:"";s:23:"_ListViewTemplateHeader";s:0:"";s:27:"_ListViewTemplatePostHeader";s:0:"";s:36:"_ListViewTemplateContentWrapperStart";s:0:"";s:27:"_ListViewTemplatePreContent";s:0:"";s:24:"_ListViewTemplateContent";s:0:"";s:28:"_ListViewTemplatePostContent";s:0:"";s:34:"_ListViewTemplateContentWrapperEnd";s:0:"";s:26:"_ListViewTemplatePreFooter";s:0:"";s:23:"_ListViewTemplateFooter";s:0:"";s:27:"_ListViewTemplatePostFooter";s:0:"";}');
     update_option('_dbtoolkit_defaultinterface', $defaults, NULL, 'No');
 }
 register_activation_hook( __FILE__, 'interface_VersionCheck' );
@@ -135,15 +133,14 @@ function dt_styles() {
 
     if(!is_admin()){
         global $post;
-        //vardump($post);
+        if(!empty($post)){
         $pattern = get_shortcode_regex();
-
-        preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
-        //vardump($matches);
+        preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);        
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
                 $preIs[] = substr(trim($preInterface, '"'), 5);
             }
+        }
         }
 
 
@@ -241,6 +238,7 @@ function dt_scripts() {
     wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
     wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
     wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
+    wp_register_script('highcharts-exporting', WP_PLUGIN_URL . '/db-toolkit/data_report/js/exporting.src.js');
 
 
     wp_enqueue_script("jquery-ui-core");
@@ -258,6 +256,7 @@ function dt_scripts() {
     wp_enqueue_script('swfobject');
 
     wp_enqueue_script('highcharts');
+    wp_enqueue_script('highcharts-exporting');
 
         $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
@@ -712,102 +711,131 @@ function dt_process() {
                 $Config = $Element['Content'];
             }
         }
-
     }
+
+    //error_reporting(E_ALL);
+    //ini_set('display_errors','On');
+
+//esds
 
     if(!empty($exportFormat)) {
 
         if($exportFormat == 'pdf') {
-
+        
             include_once('daiselements.class.php');
             include_once('data_form/class.php');
             include_once('data_report/class.php');
             include_once('data_itemview/class.php');
-
+            
             include_once('libs/fpdf.php');
             include_once('libs/pdfexport.php');
 
+            
             $input_params["return"] = isset($input_params["return"]) ? $input_params["return"] : false;
             if(empty($Config['_orientation'])) {
                 $Config['_orientation'] = 'P';
             }
-            $report = new PDFReport($Config['_orientation'], $Config['_ReportTitle']);
+            
+        $report = new PDFReport($Config['_orientation'], $Config['_ReportTitle']);
+        //you should use loadlib here
+        //dump($_SESSION['reportFilters'][$Media['ID']]);
+        if(!empty($Config['_FilterMode'])){
+        $Res = mysql_query("SELECT ID, Content FROM `dais_elements` WHERE `Element` = 'data_report' AND `ParentDocument` = ".$Element['ParentDocument']." AND `ID` != '".$Media['ID']."';");        
+        while($element = mysql_fetch_assoc($Res)){            //dump($element);
+            $eConfig = unserialize($element['Content']);
+            $preReport['ID'] = $element['ID'];
+            $preReport['Config'] = $eConfig;
+            $reportExports[] = $preReport;
+        }
+        }else{
+            $preReport['ID'] = $Media['ID'];
+            $preReport['Config'] = $Config;
+            $reportExports[] = $preReport;
+        }
 
-            $report->cf_report_header(date("jS F Y"), 8);
-            $report->cf_report_title($Config['_ReportTitle']);
+        $input_params["return"] = isset($input_params["return"]) ? $input_params["return"] : false;
 
-            $limit = false;
-            if(!empty($_GET['limit'])) {
+
+        foreach($reportExports as $key=>$reportExport){
+            //dump($_SESSION);
+            $Continue = true;
+            $Media['ID'] = $reportExport['ID'];
+            $Config = $reportExport['Config'];
+
+            foreach($reportExport['Config']['_Field'] as $Key=>$Value){
+                if($Value == 'viewitem_filter'){
+                    if(empty($_SESSION['viewSelector_'.$Media['ID']])){
+                        $Continue = false;
+                    }
+                }
+            }
+
+            if(!empty($Continue)){
                 $limit = 'full';
-            }
-            $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', 'full' );
-            //dump($OutData);
-            //die;
-            $CountStat = array();
-            //dump($OutData['filters']);
-            if(!empty($OutData['filters'])) {
-                $sum = 'filtered: ';
-                $report->cf_report_header('', 9);
-                foreach($OutData['filters'] as $Field=>$Value) {
-                    if(!empty($Config['_FieldTitle'][$Field])) {
-                        $FieldTitle = $Config['_FieldTitle'][$Field];
-                    }else {
-                        $FieldTitle = $Field;
+                if(!empty($_GET['limit'])) {
+                    $limit = $_GET['limit'];
+                }
+                
+                $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', $limit );
+                $CountStat = array();
+                
+                //vardump($OutData['filters']);
+
+                if(is_array($OutData)){
+                    if($key > 0){
+                        $report->addPage();
                     }
-                    //if($Field
-                    $fieldset = array();
-                    $index=0;
-                    if(is_array($Value)){
-                    foreach($Value as $fil) {
-                        $fieldset[] = $fil;
-                        $index++;
-                    }}else{
-                        $fieldset[] = $Value;
+
+                // outdata - Headings
+
+                    $report->cf_report_headersMain($OutData, $Config);
+
+                    if(!empty($OutData['Totals'])) {
+                        foreach($OutData['Totals'] as $Field=>$Value) {
+                            sort($fieldset);
+                            $totalData[$Field] = $Value;
+                        }
+                        $report->cf_report_datagrid($totalData, 7);
+                        unset($OutData['Totals']);
                     }
-                    sort($fieldset);
-                    if(strpos($Config['_Field'][$Field], 'date_') !== false) {
-                        $filterData[$FieldTitle] = $fieldset[0].' to '.$fieldset[count($fieldset)-1];
-                    }else {
-                        $filterData[$FieldTitle] = implode(', ',$fieldset);
                     }
-                }
-                $report->cf_report_datagrid($filterData);
-                //$report->cf_report_summary("");
-                unset($OutData['filters']);
-            }
-            if(!empty($OutData['Totals'])) {
-                //$report->cf_report_header('Totals:', 9);
-                foreach($OutData['Totals'] as $Field=>$Value) {
-                    sort($fieldset);
-                    $totalData[$Field] = $Value;
-                }
-                $report->cf_report_datagrid($totalData);
-                //$report->cf_report_summary("");
-                unset($OutData['Totals']);
-            }
+                    $report->cf_report_spacer();
+                    $Headers = array();
+                    if(!empty($OutData[0])){
+                        foreach($OutData[0] as $Header=>$v) {
+                            if(strpos($Config['_IndexType'][$Header], 'hide') === false){
+                                if(!empty($Config['_FieldTitle'][$Header])) {
+                                    $Headers[] = $Config['_FieldTitle'][$Header];
+                                }else{
+                                    $Headers[] = $Header;
+                                }
+                            }
+                        }
 
-            $report->cf_report_spacer();        
+                        $Total = count($OutData)-2;
+                        $Body = array();
+                        $Counter = 1;
+                        for($i = 0; $i<= $Total; $i++) {
+                            foreach($OutData[$i] as $Field=>$v){
+                                if(strpos($Config['_IndexType'][$Field], 'hide') === false){
+                                    $Body[$i][] = str_replace('&nbsp;','',html_entity_decode($v));
+                                }
+                            }
+                        }
+                    }
+                    if(!empty($Config['_chartMode'])){
+                        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/charts/chartImage_'.$Media['ID'].'.jpg')){
+                            $report->cf_report_image(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/charts/chartImage_'.$Media['ID'].'.jpg');
+                        }
+                    }
 
-            // headers//
-            if(!empty($OutData[0])){
-            foreach($OutData[0] as $Header=>$v) {
-                if(!empty($Config['_FieldTitle'][$Header])) {
-                    $Headers[] = $Config['_FieldTitle'][$Header];
-                }else {
-                    $Headers[] = $Header;
+                    $options["width"] = "100%";
+                    $report->cf_report_data_col_grid($Headers, $Body, $OutData, $Config);
+                    $report->cf_report_spacer();
+
+
+                //break;
                 }
-            }
-            $Total = count($OutData)-1;
-            // Data
-            for($i = 0; $i<= $Total; $i++) {
-                foreach($OutData[$i] as $v) {
-                    $Body[$i][] = $v;
-                }
-            }
-
-            $options["width"] = "100%";
-
-            $report->cf_report_data_col_grid($Headers, $Body, $options, "");
             }
             $report->cf_report_generate_output();
             mysql_close();
@@ -1067,14 +1095,127 @@ add_filter('widget_text', 'do_shortcode');
 add_action('wp_head', 'dt_headers');
 add_action('wp_print_styles', 'dt_styles');
 add_action('wp_print_scripts', 'dt_scripts');
-
 add_action('wp_footer', 'dt_footers');
 add_action('wp_dashboard_setup', 'dt_dashboard_widgets' );
-
-
-
 add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
 
+add_action('admin_init', 'dt_admin_init');
+function dt_admin_init(){
+	if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {
+		if ( in_array(basename($_SERVER['PHP_SELF']), array('post-new.php', 'page-new.php', 'post.php', 'page.php') ) ) {
+			add_filter('mce_buttons', 'dt_mce_button');
+			add_filter('mce_external_plugins', 'dt_mce_plugin');
+			//add_action('admin_head','add_simple_buttons');
+			add_action('edit_form_advanced', 'dt_advanced_buttons');
+			add_action('edit_page_form', 'dt_advanced_buttons');
+		}
+	}
+}
+
+function dt_mce_button($buttons) {
+	array_push( $buttons, '|', 'db_toolkitInterface');
+
+	return $buttons;
+}
+
+function dt_mce_plugin($plugins) {
+	$plugins['db_toolkit'] = WP_PLUGIN_URL. '/db-toolkit/libs/editor_plugin.js';
+
+	return $plugins;
+}
+
+
+function dt_advanced_buttons(){ ?>
+	<script type="text/javascript">            
+		var defaultSettings = {},
+			outputOptions = '',
+			selected ='',
+			content = '';
+
+		defaultSettings['toolkitInterface'] = {
+			caption: {
+				name: 'Caption',
+				defaultvalue: 'Caption goes here',
+				description: 'Caption title goes here',
+				type: 'text'
+			},
+			state: {
+				name: 'State',
+				defaultvalue: 'close',
+				description: 'Select between expanded and closed state',
+				type: 'select',
+				options: 'open|close'
+			},
+			content: {
+				name: 'Content',
+				defaultvalue: 'Content goes here',
+				description: 'Content text or html',
+				type: 'textarea'
+			}
+		};
+
+
+                function ajaxCall() {
+                    var vars = { action : 'dt_ajaxCall',func: ajaxCall.arguments[0]};
+                    for(i=1;ajaxCall.arguments.length-1>i; i++) {
+                        vars['FARGS[' + i + ']'] = ajaxCall.arguments[i];
+                    }
+                    var callBack = ajaxCall.arguments[ajaxCall.arguments.length-1];
+                    jQuery.post(ajaxurl,vars, function(data){
+                        callBack(data);
+                    });
+                }
+
+
+		function insertInterface(tag){
+
+			tbWidth = 500;
+			tbHeight = 104;
+                        if(jQuery('#db_tookitInsertInterface_Panel').length == 0){
+                            var tbOptions = "<div id='db_tookitInsertInterface_Panel'>";
+                            tbOptions += '<div id="dbToolkitInterfaceApps">Loading Apps</div>';
+                            tbOptions += '<div style="clear:both;"></div>';
+                            tbOptions += '</div>';                        
+
+                            var form = jQuery(tbOptions);
+                            var table = form.find('table');
+                            form.appendTo('body').hide();
+                        }else{
+                            tb_show( 'Insert Interface', '#TB_inline?inlineId=db_tookitInsertInterface_Panel' );
+                            return;
+                        }
+
+                    tb_show( 'Insert Interface', '#TB_inline?inlineId=db_tookitInsertInterface_Panel' );
+                    
+                    ajaxCall('dt_listApps', function(d){
+                        if(d.app.length >0){
+                            dtLoadApp(d.app);
+                        }
+                        jQuery('#dbToolkitInterfaceApps').html(d.html);
+                        jQuery('#dbtoolkit_AppList').change(function(){
+                            jQuery('#dbtoolkit_InterfaceList').html('<h3>Loading....</h3>');
+                            dtLoadApp(this.value);
+                        });
+                    });                    
+		}
+
+                function dtLoadApp(app){
+                    ajaxCall('dt_listInterfaces', app, function(i){
+                        jQuery('#dbtoolkit_InterfaceList').html(i);
+                        jQuery('.interfaceInserter').click(function(){
+                            //alert(this.value);
+                            tinyMCE.activeEditor.execCommand('mceInsertContent', 0, ' [interface id="'+this.id+'"] ');
+                            tb_remove();
+                        });
+                    });
+                }
+		jQuery(document).ready(function(){
+
+                   // alert('pong');
+
+                });
+	</script>
+<?php }
 
 function dt_publicReg($a, $b, $c){
     global $current_user;

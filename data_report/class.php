@@ -984,8 +984,8 @@ return $Selects;
 }
 
 function dr_exportChartImage($chartData){
-
-define ('BATIK_PATH', 'system/dais/plugins/data_report/chartexport/batik-rasterizer.jar');
+    
+define ('BATIK_PATH', WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/batik-rasterizer.jar');
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -1022,7 +1022,10 @@ if ($type == 'image/png') {
 } elseif ($type == 'image/svg+xml') {
 	$ext = 'svg';
 }
-$outfile = "temp/$tempName.$ext";
+if(!file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/charts')){
+    mkdir(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/charts');
+}
+$outfile = WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/charts/'.$tempName.'.'.$ext;
 
 if (isset($typeString)) {
 
@@ -1039,12 +1042,14 @@ if (isset($typeString)) {
 	}
 
 	// do the conversion
-	$output = shell_exec("java -jar ". BATIK_PATH ." $typeString -d $outfile $width $tempName.svg");
+        
+	$output = shell_exec("java -jar ". BATIK_PATH ." ".$typeString." -d ".$outfile." ".$width." ".$tempName.".svg");
 
 	// catch error
 	if (!is_file($outfile) || filesize($outfile) < 10) {
 		echo "<pre>$output</pre>";
 		echo "Error while converting SVG";
+                die;
 	}
 
 	// stream it
@@ -1052,10 +1057,9 @@ if (isset($typeString)) {
 		//header("Content-Disposition: attachment; filename=$filename.$ext");
 		//header("Content-Type: $type");
 		//echo file_get_contents($outfile);
-                if(!file_exists('system/dais/plugins/data_report/chartexport/charts')){
-                    mkdir('system/dais/plugins/data_report/chartexport/charts');
-                }
-                $file = fopen('system/dais/plugins/data_report/chartexport/charts/'.$filename.'.'.$ext, 'w+');
+
+
+                $file = fopen(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartexport/charts/'.$filename.'.'.$ext, 'w+');
                 fwrite($file, file_get_contents($outfile));
                 fclose($file);
 
@@ -1065,7 +1069,7 @@ if (isset($typeString)) {
 	unlink($tempName.".svg");
 	unlink($outfile);
 
-    $files[] = 'system/dais/plugins/data_report/chartexport/charts/'.$filename.'.'.$ext;
+    $files[] = WP_PLUGIN_URL.'/db-toolkit/data_report/chartexport/charts/'.$filename.'.'.$ext;
 
     // SVG can be streamed directly back
     }
@@ -1470,6 +1474,7 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
         $Config['_Items_Per_Page'] = $limitOveride;
     }
     
+    if(!empty($Config['_Items_Per_Page'])){
     $TotalPages = ceil($Count['Total']/$Config['_Items_Per_Page']);
     $Start = ($Page*$Config['_Items_Per_Page'])-$Config['_Items_Per_Page'];
     $Offset = $Config['_Items_Per_Page'];
@@ -1483,7 +1488,8 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
         }
         $queryLimit = " LIMIT ".$Start.", ".$Offset." ";
         //$Limit = "";
-    }    
+    }
+    }
     if(strtolower($Format) == 'pdf' && $limitOveride != false) {
         if($limitOveride = 'full') {
             $queryLimit = '';
@@ -1500,23 +1506,101 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
        // echo $Field.' = '.$FieldValue.'<br />';
     //   $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
     //}
+    if(!empty($Config['_UseCustomQuery']) && !empty($Config['_ManualQuery'])){
+        $Query = $Config['_ManualQuery'];
+
+        preg_match('/(LIMIT [ 0-9]+,[ 0-9]+)/', $Query, $Limits);
+        if(!empty($Limits[0])){
+            $Query = str_replace($Limits[0], $queryLimit, $Query);
+        }else{
+            $Query .= $queryLimit;
+        }
+
+    }
+    //echo $Query;
+
+    $QueryHash = md5($Query);
+    $_SESSION['queries'][$EID] = $Query;
+    if(!empty($Queries[$QueryHash])){
+        $Result = $Queries[$QueryHash];
+        mysql_data_seek($Result, 0);
+    }else{
+        $Result = mysql_query($Query);
+        $Queries[$QueryHash] = $Result;
+    }
+
     
     $_SESSION['queries'][$EID] = $Query;
-
+    //vardump($Config);
+    //$Config['_chartMode'] = true;
     if(!empty($Config['_chartMode']) && empty($Format)) {
-        $chartRes = mysql_query($Query);
-        //dump($Config);
+
+
+        $chartRes = $Result;
         $x = array();
         $y = array();
+        $xStart = '';
+        $xInterval = '';
+        //echo $Config['_xaxis'].'<br />';
+
         while($chartData=mysql_fetch_assoc($chartRes)) {
-            // dump($chartData);
+            //vardump($chartData);
+            //echo '-'.$chartData[$Config['_xaxis']].'<br>';
             $XValue = $chartData[$Config['_xaxis']];
+            if($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($xStart) && empty($Config['_disableDateTime'])){
+
+                $dateString = str_replace('-', ',', $chartData[$Config['_xaxis']]);
+                $dateString = str_replace(':', ',', $dateString);
+                $dateString = str_replace(' ', ',', $dateString);
+                $dateString = explode(',', $dateString);
+                $dateString[1] = $dateString[1]-1;
+
+                //dump($dateString);
+
+                switch($Config['_xAxisTimeFrame']){
+                    case 'sec':
+                       $xInterval = $Config['_xAxisIntervalNum']*1000;
+                        $dateFormat = 'Y-m-d H:i:s';
+                        break;
+                    case 'min':
+                        $xInterval = $Config['_xAxisIntervalNum']*60000;
+                        $dateFormat = 'Y-m-d H:i';
+                        break;
+                    case 'hour':
+                        $xInterval = $Config['_xAxisIntervalNum']*3600000;
+                        $dateFormat = 'Y-m-d H:i';
+                        break;
+                    case 'day':
+                        $xInterval = 86400000*$Config['_xAxisIntervalNum'];
+                        $dateFormat = 'Y-m-d';
+                        break;
+                    case 'mon':
+                        $xInterval = ((24 * 3600 * 1000)*30)*$Config['_xAxisIntervalNum'];
+                        $dateFormat = 'Y-m';
+                        unset($dateString[2]);
+                        break;
+                    case 'year':
+                        $xInterval = ((24 * 3600 * 1000)*365.242199)*$Config['_xAxisIntervalNum'];
+                        $dateFormat = 'Y';
+                        unset($dateString[2]);
+                        unset($dateString[1]);
+                        break;
+                }
+                $xStart = 'pointStart: Date.UTC('.implode(',', $dateString).'), ';
+                $xStartDate = date($dateFormat, strtotime($chartData[$Config['_xaxis']]));
+                $xInterval = "pointInterval: ".$xInterval.",";
+            }
+            if($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])){
+                // preX
+                $xEndDate = date($dateFormat, strtotime($chartData[$Config['_xaxis']]));
+                $preX[] = date($dateFormat, strtotime($chartData[$Config['_xaxis']]));
+            }
+
             if(function_exists($Config['_Field'][$Config['_xaxis']][0].'_processValue')) {
                 $processFunc = $Config['_Field'][$Config['_xaxis']][0].'_processValue';
                 $XValue = '"'.$processFunc($XValue, $Config['_Field'][$Config['_xaxis']][1], $Config['_xaxis'], $Config, $EID, $chartData, 'internal').'"';
-
             }
-            $x[] = trim($XValue, '"');
+            $x[] = addslashes(trim($XValue, '"'));
             foreach($Config['_chartValue'] as $ChartLine => $on) {
 
                 $YValue = $chartData[$ChartLine];
@@ -1525,13 +1609,69 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
                     $YValue = $processFunc($chartData[$ChartLine], $Config['_Field'][$ChartLine][1], $ChartLine, $Config, $EID, $chartData, 'internal');
 
                 }else{
-                    echo 'no process for '.$Config['_Field'][$ChartLine][0].'_processValue<br>';
+                    //echo 'no process for '.$Config['_Field'][$ChartLine][0].'_processValue<br>';
                 }
 
                 $y[$ChartLine][] = $YValue;
-
                 //$y[$ChartLine][] = "['".$XValue."', ".$YValue."]";
             }
+        }
+
+        /// Build PrePoulated Dataset and convert current series into the prepoulated set
+        /// no idea how to do it yet.
+        //dump($x);
+        if($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])){
+        //echo $xStartDate.'<br>-------------<br> '.$xEndDate.'<br> =-----------======-<br><br> ';
+        $end = false;
+        $nowTime = $xStartDate;
+        $index = 0;
+        //dump($y);
+
+        while($end === false){
+            // pre populate a dataset
+            $tickTime = date($dateFormat, strtotime($nowTime));
+            //dump($preX);
+            foreach($y as $ChartLine=>$yValues){
+                //echo $tickTime;
+                $key=array_search($tickTime, $preX);
+                //echo $yValues[$key].' - ';
+                if(is_int($key)){
+                    $newY[$ChartLine][] = $yValues[$key];
+                }else{
+                    $newY[$ChartLine][] = 'null';
+                }
+                //echo $key;
+                //echo $yValues[]
+            }
+            $nowTime = $nowTime.' +'.$Config['_xAxisIntervalNum'].' '.$Config['_xAxisTimeFrame'];
+            //echo $tickTime;
+            //dump($preX);
+
+            if($tickTime == $xEndDate || $index == 100){
+                $end = true;
+            }
+            $index++;
+        }
+        //dump($newY);
+        //$y = $newY;
+        }
+        //dump($y);
+
+
+
+
+
+
+
+
+
+
+
+        if($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])){
+
+            $xType = 'type: \'datetime\'';
+        }else{
+            $xType = "categories: ['".implode('\',\'', $x)."']";
         }
         mysql_data_seek($chartRes, 0);
 
@@ -1646,7 +1786,7 @@ var ".$ChartID." = new Highcharts.Chart({
    exporting:{
     buttons: {
         printButton: {
-            enabled: false
+            enabled: true
         }
     },
     enabled: true,
@@ -1680,7 +1820,7 @@ var ".$ChartID." = new Highcharts.Chart({
 
    },
    xAxis: {
-      categories: ['".implode('\',\'', $x)."'],
+      ".$xType.",
       labels: {
          rotation: $xAngle,
          align: '$xAlign',
@@ -1738,11 +1878,16 @@ var ".$ChartID." = new Highcharts.Chart({
 
         $_SESSION['dataform']['OutScripts'] .= "
    ],
+    ";
+   if(empty($xInterval)){
+   $_SESSION['dataform']['OutScripts'] .= "
    tooltip: {
       formatter: function() {
             return '$toolTipTemplate';
       }
-   },
+   },";
+    }
+   $_SESSION['dataform']['OutScripts'] .= "
    plotOptions: {
         ";
     if(!empty($Config['_yShowDataLables'])){
@@ -1808,10 +1953,13 @@ var ".$ChartID." = new Highcharts.Chart({
       backgroundColor: '#ffffff'
    },
 
-   series: [";
+   series: [
+    ";
+
         $Chart = array();
         $index = 0;
         foreach($y as $Key=>$Series) {
+            
             $SeriesData = implode(', ', $Series);
             if($Config['_chartType'][$Key] == 'pie'){
                 $SeriesData = '';
@@ -1821,6 +1969,10 @@ var ".$ChartID." = new Highcharts.Chart({
                 $SeriesData = implode(',', $SeriesData);
             }
             $Line = '{';
+            // datetime stuff
+
+            $Line .= $xStart."\r\n";
+            $Line .= $xInterval."\r\n";
             $Line .= 'name: "'.$Config['_FieldTitle'][$Key].'", ';
             $Line .= 'data: ['.$SeriesData.']';
             $Line .= ', type: \''.$Config['_chartType'][$Key].'\' ';
@@ -1844,6 +1996,9 @@ var ".$ChartID." = new Highcharts.Chart({
         //TODO : make the interface remember its in sqlmode;
 
         $ReportReturn = '<div id="chart_'.$ChartID.'" style="height:'.$height.'px;"></div>'.$ReportReturn;
+
+    
+
 
     }
 
@@ -1981,7 +2136,7 @@ var ".$ChartID." = new Highcharts.Chart({
                 if(!empty($Config['_Show_View']) || !empty($Config['_Show_Edit'])) {
                     $ViewLink = '';
                     if(!empty($Config['_Show_View'])) {
-                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(".$row['_return_'.$Config['_ReturnFields'][0]].", ".$EID.", ".$isModal."); return false;\"><img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(\"".$row['_return_'.$Config['_ReturnFields'][0]]."\", \"".$EID."\", \"".$isModal."\"); return false;\"><img src=\"".WP_PLUGIN_URL."/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
                         if(!empty($Config['_ItemViewPage'])) {
                                 $ReportVars = array();
                             foreach($Config['_ReturnFields'] as $ReportReturnField) {
@@ -2004,7 +2159,7 @@ var ".$ChartID." = new Highcharts.Chart({
                         if($ViewLink != '') {
                             $ViewLink .= " ";
                         }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm('.$EID.', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', \''.$row['_return_'.$Config['_ReturnFields'][0]].'\');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                     }
                     $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn);//'Edit | View';
                     $PreReturn = str_replace('{{_ViewLink}}', getdocument($Config['_ItemViewPage'])."?".$ReportReturnString, $PreReturn);//'Edit | View';
@@ -2243,12 +2398,12 @@ var ".$ChartID." = new Highcharts.Chart({
                                         if(!empty($Config['_Show_Edit'])) {
                                             $ActionWidth = $ActionWidth+16;
 
-                                            $ViewLink['edit'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');">Edit</span></a>';
+                                            $ViewLink['edit'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', \''.$row['_return_'.$Config['_ReturnFields'][0]].'\');">Edit</span></a>';
                                         }
                                         if(!empty($Config['_Show_Delete_action'])) {
                                             $ActionWidth = $ActionWidth+16;
 
-                                            $ViewLink['delete'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" class="delete" onclick="dr_deleteItem(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');">Delete</span></a>';
+                                            $ViewLink['delete'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" class="delete" onclick="dr_deleteItem(\''.$EID.'\', \''.$row['_return_'.$Config['_ReturnFields'][0]].'\');">Delete</span></a>';
                                         }
                                         //vardump($Config);
 
@@ -2313,14 +2468,14 @@ var ".$ChartID." = new Highcharts.Chart({
                     if($ViewLink != '') {
                         $ViewLink .= " ";
                     }
-                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\''.$EID.'\', \''.$row['_return_'.$Config['_ReturnFields'][0]].'\');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
                     if(!empty($Config['_Show_Delete_action'])) {
                         $ActionWidth = $ActionWidth+16;
                         if($ViewLink != '') {
                             $ViewLink .= " ";
                         }
-                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\''.$EID.'\', '.$row['_return_'.$Config['_ReturnFields'][0]].');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
+                        $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\''.$EID.'\', \''.$row['_return_'.$Config['_ReturnFields'][0]].'\');"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
                     }
                     //vardump($Config);
 
@@ -2561,12 +2716,15 @@ var ".$ChartID." = new Highcharts.Chart({
         $header .= '<div style="clear:both;"></div></div>';
         $footer .= '<div style="clear:both;"></div></div>';
     }
-
-    if($hcount >= 1) {
-        $header = str_replace('{{width_header}}', (100/$hcount-3), $header);
+    if(!empty($hcount)){
+        if($hcount >= 1) {
+            $header = str_replace('{{width_header}}', (100/$hcount-3), $header);
+        }
     }
+    if(!empty($fcount)){
     if($fcount >= 1) {
         $footer = str_replace('{{width_footer}}', (100/$fcount-3), $footer);
+    }
     }
 // Run Final Totals Functions on return data
     if(!empty($GLOBALS['Totals'][$EID])) {
@@ -3089,5 +3247,87 @@ function dr_cancelImport($EID){
     return true;
 }
 
+
+
+function dt_listApps(){
+    
+    $default = '';
+    if(!empty($_SESSION['activeApp'])){
+        $default = $_SESSION['activeApp'];
+    }
+
+    $appList = get_option('dt_int_Apps');
+    
+    $Return = '<div style="float:left; width: 25%;">';
+    $Return .= '<h3>Application</h3>';
+        $Return .= '<select id="dbtoolkit_AppList">';
+        $Return .= '<option value=""></option>';
+        foreach($appList as $app=>$state){
+            $Sel = '';
+            if($default == $app)
+                $Sel = 'selected="selected"';
+
+            if($state == 'open')
+                $Return .= '<option value="'.$app.'" '.$Sel.'>'.ucwords($app).'</option>';
+        }
+        $Return .= '</select>';
+    $Return .= '</div>';
+    $Return .= '<div style="float:left; width: 60%; padding-left:10px;" id="dbtoolkit_InterfaceList"></div>';
+    //$Return .= '<div style="float:left; width: 30%;" id="dbtoolkit_ClusterList"></div>';
+
+    $Out['html'] = $Return;
+    if(!empty($default)){
+        $Out['app'] = $default;
+    }
+
+    return $Out;
+
+}
+
+function dt_listInterfaces($App){
+    global $wpdb;
+    $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+
+    $Return = '<h3>'.$App.'</h3>';
+    
+    foreach($interfaces as $interface){
+        $dta = get_option($interface['option_name']);
+        if($dta['_Application'] == $App){
+            if(empty($dta['_ItemGroup'])){
+                $Group = '<em>ungrouped</em>';
+            }else{
+                $Group = $dta['_ItemGroup'];
+            }
+            $interfaceGroups[$Group][] = $dta;
+        }
+    }
+    if(empty($interfaceGroups)){
+        $Return .= '<div style="padding:3px;" class="highlight">No interfaces</div>';
+        return $Return;
+    }
+    foreach($interfaceGroups as $group=>$Interface){
+
+        $Return .= '<div style="padding:3px;" class="highlight">'.$group.'</div>';
+        foreach($Interface as $dta){
+            if($dta['_Application'] == $App){
+
+                if($GroupRun != $group){
+
+                    $GroupRun = $group;
+                }
+
+                $Return .= '<div style="padding:5px;">';
+                    $Return .= '<span class="interfaceInserter" style="cursor:pointer;" id="'.$dta['ID'].'">'.$dta['_ReportDescription'].'</span>';
+                    if(!empty($dta['_ReportExtendedDescription'])){
+                        $Return .= '<div><span class="description interfaceInserter" style="cursor:pointer;" id="'.$dta['ID'].'">'.$dta['_ReportExtendedDescription'].'</span></div>';
+                    }
+                $Return .= '</div>';
+            }
+        }
+    }
+    return $Return;
+
+    
+}
 
 ?>
