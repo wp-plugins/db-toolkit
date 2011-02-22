@@ -42,7 +42,7 @@
     </div>
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>New Features in This Version (0.2.2.4)</span></h3>
+            <h3><span>New Features in This Version (0.2.2.7)</span></h3>
             <div style="margin: 10px;">
                 
                 <p><strong>Insert Interface Editor Button</strong>: You can now insert an interface Shortcode using the Insert Interface button on the text editor toolbar.</p>
