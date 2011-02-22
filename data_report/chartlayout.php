@@ -8,6 +8,13 @@
                     //echo dais_customfield('checkbox', 'Show Chart', '_chartMode', '_chartMode', 'list_row1' , 1 , $Sel);
 
                     $Sel = '';
+                    if(!empty($Element['Content']['_chartMode'])) {
+                        $Sel = 'checked="checked"';
+                    }
+
+                    echo dais_customfield('checkbox', 'Enable Charts', '_chartMode', '_chartMode', 'list_row1' , 1 , $Sel);
+
+                    $Sel = '';
                     if(!empty($Element['Content']['_chartOnly'])) {
                         $Sel = 'checked="checked"';
                     }

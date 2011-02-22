@@ -231,6 +231,7 @@
                     if(!empty($Element['Content']['_HideFrame'])) {
                         $Sel = 'checked="checked"';
                     }
+
                     echo dais_customfield('checkbox', 'Hide Frame', '_HideFrame', '_HideFrame', 'list_row1' , 1 , $Sel);
                     echo dais_customfield('text', 'New Item Title', '_New_Item_Title', '_New_Item_Title', 'list_row1' , $Element['Content']['_New_Item_Title'], '');
                     $Sel = '';
