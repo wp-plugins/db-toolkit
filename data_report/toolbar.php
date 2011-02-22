@@ -52,7 +52,7 @@
 
         if(!empty($Config['_Show_Export'])) {
             echo '<div class="btnseparator"></div>';
-            echo '<div class="fbutton"><div class="button"><a href="?format_'.$Media['ID'].'=pdf" target="_blank"><span class="export" style="padding-left: 20px;">Export PDF</span></a></div></div>';
+            echo '<div class="fbutton"><div class="button" onclick="dr_exportReport(\'?format_'.$Media['ID'].'=pdf\', \''.$Media['ID'].'\',\''.$Global.'\');"><span class="export" style="padding-left: 20px;">Export PDF</span></div></div>';
 
 
 

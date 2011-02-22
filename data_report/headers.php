@@ -18,7 +18,7 @@ if(is_admin()){
 }
 ?>
 <?php
-if(file_exists('styles/themes/'.themeDir.'/toolbar.css')){
+if(file_exists('styles/themes/'.$themeDir.'/toolbar.css')){
 ?>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $themeURL; ?>/toolbar.css" />
 <?php

@@ -7,8 +7,9 @@
 * Author:  Olivier PLATHEY                                                     *
 *******************************************************************************/
 
-define('FPDF_FONTPATH','pdffont/');
-
+define('FPDF_FONTPATH', WP_PLUGIN_DIR.'/db-toolkit/libs/pdffont/');
+//echo FPDF_FONTPATH;
+//die;
 define('FPDF_VERSION','1.6');
 
 class FPDF
@@ -66,6 +67,7 @@ var $subject;            //subject
 var $author;             //author
 var $keywords;           //keywords
 var $creator;            //creator
+var $producer;           //producer
 var $AliasNbPages;       //alias for total number of pages
 var $PDFVersion;         //PDF version number
 
@@ -253,6 +255,13 @@ function SetKeywords($keywords, $isUTF8=false)
 	$this->keywords=$keywords;
 }
 
+function SetProducer($producer, $isUTF8=false)
+{
+	//Creator of document
+	if($isUTF8)
+		$producer=$this->_UTF8toUTF16($creator);
+	$this->producer=$producer;
+}
 function SetCreator($creator, $isUTF8=false)
 {
 	//Creator of document
@@ -1641,7 +1650,7 @@ function _putresources()
 
 function _putinfo()
 {
-	$this->_out('/Producer '.$this->_textstring('FPDF '.FPDF_VERSION));
+	$this->_out('/Producer '.$this->_textstring($this->producer));
 	if(!empty($this->title))
 		$this->_out('/Title '.$this->_textstring($this->title));
 	if(!empty($this->subject))

@@ -1,5 +1,29 @@
 //<script>
 
+    function dr_exportReport(url, eid, isGlobal){
+       
+        jQuery('.export').addClass('active');
+        jQuery('.export').removeClass('export');
+        if(isGlobal){
+            chartData = jQuery('.chartData').serializeArray();
+        }else{
+            chartData = jQuery('#chartData_'+eid).serializeArray();
+        }
+
+        if(chartData.length > 0){
+            ajaxCall('dr_exportChartImage',chartData, function(d){
+                jQuery('.active').addClass('export');
+                jQuery('.active').removeClass('active');
+                window.location.replace(url);
+            })
+        }else{
+                jQuery('.active').addClass('export');
+                jQuery('.active').removeClass('active');
+                window.location.replace(url);
+        }
+        return;
+    }
+
     function df_addPRocess(process){
         table = jQuery('#_main_table').val();
         ajaxCall('df_addProcess', process, table, function(p){

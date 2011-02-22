@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.4
-Stable tag: 0.2.2.3
+Stable tag: 0.2.2.4
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,15 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.2.2.4
+    - Fixed a bug the prevented Charts to show- sorry i didnt pick this up sooner.
+    - PDF Export update to include templates
+    - Import Button to allow importing CSV data into interfaces created
+    - Insert Interface button for wordpress visual editor
+    - Preperations for dynamic table and field creation.
+    - Minor bug fixes.
+
 
 = 0.2.2.3
     - Added a dashboard menu item which has feeds from support forums, blog, a donate link and a new features box.
