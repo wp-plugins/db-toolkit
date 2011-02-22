@@ -1,7 +1,7 @@
 //<script>
 
     function dr_exportReport(url, eid, isGlobal){
-       
+
         jQuery('.export').addClass('active');
         jQuery('.export').removeClass('export');
         if(isGlobal){
@@ -35,7 +35,7 @@
         ajaxCall('dais_addJSLibrary', function(i){
             jQuery('#addonLibrary').append(i);
         })
-        
+
     }
     function dt_addCSSLibrary(){
         ajaxCall('dais_addCSSLibrary', function(i){
@@ -55,10 +55,10 @@
             buttons: {
                 'Close': function() {jQuery(this).dialog("close"); },
                 'Save': function() {
-                    
+
                     ajaxCall('dt_saveFilterLock', EID, jQuery('#ui-jsDialog-filterlock form').serializeArray(), function(c){
                         if(c == true){
-                            
+
                             jQuery('#setFilters_'+EID).submit();
                         }else{
                             jQuery("#ui-jsDialog-filterlock").html('<form>'+c+'</form>');
@@ -66,7 +66,7 @@
                             df_loadOutScripts();
                         }
                     });
-                    
+
                 }
             },
 
@@ -102,7 +102,7 @@
     function dt_iconChooser(icon){
         src = jQuery('#interfaceIconPreview').attr('src');
         parts = src.split('/');
-        
+
 	jQuery('body').prepend('<div id="ui-jsDialog-iconchooser" title="Loading"><p>Loading Icons</p></div>');
 	jQuery("#ui-jsDialog-iconchooser").dialog({
             position: 'center',
@@ -117,20 +117,20 @@
                     jQuery('#interfaceIconPreview').attr("src", newIcon);
                     iconparts = newIcon.split('/');
                     jQuery('#_Application_Icon').val(iconparts[iconparts.length-1]);
-                    jQuery(this).dialog("close");                    
+                    jQuery(this).dialog("close");
                 }
             },
-    
+
             open: function(event, ui) {
                 ajaxCall('dt_iconSelector',parts[parts.length-1], function(c){
-                    jQuery("#ui-jsDialog-iconchooser").html(c);                    
+                    jQuery("#ui-jsDialog-iconchooser").html(c);
                     jQuery("#ui-jsDialog-iconchooser").dialog('option', 'position', 'center');
                     df_loadOutScripts();
                 });
             },
             close: function(event, ui) {
                 jQuery("#ui-jsDialog-iconchooser").remove();
-            }										
+            }
         });
     }
 
@@ -305,13 +305,13 @@
     }
 
     function df_fetchreportSetp(table, eid){
-	jQuery('#FieldList_Main').html('Loading Fields');									 
-	jQuery('#Return_FieldSelect').html('Loading Fields');									 
-	jQuery('#sortFieldSelect').html('Loading Fields');									 
+	jQuery('#FieldList_Main').html('Loading Fields');
+	jQuery('#Return_FieldSelect').html('Loading Fields');
+	jQuery('#sortFieldSelect').html('Loading Fields');
 	ajaxCall('df_tableReportSetup',table, eid, function(c){
             jQuery('#FieldList_Main').html(c);
             dr_sorter();
-	});	
+	});
 	ajaxCall('df_loadReturnFields',table, function(r){
             jQuery('#Return_FieldSelect').html(r);
 	});
@@ -370,7 +370,9 @@
 	//});
     }
 
-    function df_loadEntry(id, eid, ismodal){
+    function df_loadEntry(rid, eid, ismodal){
+
+        id = Math.floor(Math.random()*9999999);
 
 	if(jQuery("#ui-jsDialog-"+id+"-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
@@ -386,7 +388,7 @@
             },
 
             open: function(event, ui) {
-                ajaxCall('di_showItem', eid, id, function(c){
+                ajaxCall('di_showItem', eid, rid, function(c){
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'title', c.title);
                     if(c.edit == true){
                         jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'buttons', {
@@ -422,8 +424,9 @@
         });
     }
 
-    function dr_BuildUpDateForm(eid, id){
+    function dr_BuildUpDateForm(eid, rid){
 
+        id = Math.floor(Math.random()*9999999);
 
 	if(jQuery("#ui-jsDialog-"+id+"-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
@@ -439,7 +442,7 @@
                 jQuery(".formError").remove();
             },
             open: function(event, ui) {
-                ajaxCall('dr_BuildUpDateForm',eid, id, function(c){
+                ajaxCall('dr_BuildUpDateForm',eid, rid, function(c){
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'title', c.title);
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'buttons', {
                         'Close': function() {
@@ -514,7 +517,7 @@
                 jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style="-moz-user-select: none; float:left;">close</span>'+x+'</div></div>');
                 setTimeout('dr_goToPage(\''+EID+'\', jQuery(\'#pageJump_'+EID+'\').val())', 2000);
                 //df_dialog(x);
-            });  
+            });
         }
     }
 
@@ -541,7 +544,7 @@
 
 
     function toggle(foo) {
-	jQuery("#"+foo).animate({"height": "toggle"}, {"duration": 200});				   
+	jQuery("#"+foo).animate({"height": "toggle"}, {"duration": 200});
     }
 
 
