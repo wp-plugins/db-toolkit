@@ -63,7 +63,7 @@
 	margin: 0;
 }
 .tools_widgets ul a {
-
+    color: #fff;
 }
 .tools_widgets li:hover > a {
 	color:#fff;
