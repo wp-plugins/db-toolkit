@@ -1,14 +1,14 @@
-<div id="tabs-2b">
-    <div id="viewtabs">
+<div id="tabs-2b" class="setupTab">
+    <div id="viewtabs" class="dbtools_tabs">
         <ul class="content-box-tabs">
             <li><a href="#gridview">Grid View</a></li>
             <li><a href="#templateview">Template</a></li>
         </ul>
-        <div id="gridview">
+        <div id="gridview" class="setupTab">
             <?php
             InfoBox('View Layout');
             ?>
-            <div style="margin-top: 20px; padding: 5px;" class="ui-state-highlight ui-corner-all">
+            <div class="ui-state-highlight ui-corner-all">
                 <input type="button" class="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
                 <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
                 <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
@@ -127,7 +127,7 @@
                        echo 'disabled="disabled"';
                    } ?>" />
         </div>
-        <div id="templateview">
+        <div id="templateview" class="setupTab">
 
             <?php
 

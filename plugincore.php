@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.8
+Version: 0.2.2.9
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
@@ -147,11 +147,15 @@ function dt_styles() {
 
     }
 
-
-    wp_register_style('jqueryUI-base-internal', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+    //if(count($_GET) > 1){
+        //if(empty($_GET['interface'])){
+            wp_register_style('jqueryUI-base-internal', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+        //}
+    //}
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
     wp_enqueue_style('jqueryUI-base-internal');
+
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
 
@@ -346,8 +350,10 @@ function dt_menus() {
 
         //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
-
+        
+            
             add_action('admin_print_styles-'.$adminPage, 'dt_styles');
+            
             add_action('admin_head-'.$adminPage, 'dt_headers');
             add_action('admin_print_scripts-'.$adminPage, 'dt_scripts');
             add_action('admin_footer-'.$adminPage, 'dt_footers');

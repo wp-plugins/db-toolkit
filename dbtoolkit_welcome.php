@@ -42,10 +42,11 @@
     </div>
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>New Features in Version 0.2.2.7 - 0.2.2.8</span></h3>
+            <h3><span>New Features</span></h3>
             <div style="margin: 10px;">
                 
                 <p><strong>Logo Change</strong>: DB-Toolkit now has a logo.</p>
+                <p><strong>Preparations</strong>: Made preparations for Interface Clusters.</p>
                 <p><strong>Insert Interface Editor Button</strong>: You can now insert an interface Shortcode using the Insert Interface button on the text editor toolbar.</p>
                 <p><strong>PDF Exporting Update</strong>: Added PDF Templates. Currently not customisable but will be in next release</p>
                 <p><strong>Charting</strong>: Fixed a bug that prevented Charting from being enabled. in the Charting Tab, you can enable charting..</p>

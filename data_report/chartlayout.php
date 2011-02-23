@@ -1,4 +1,4 @@
-<div id="tabs-2c">
+<div id="tabs-2c" class="setupTab">
 <?php
                     //$Sel = '';
                     //if(!empty($Element['Content']['_chartMode'])) {

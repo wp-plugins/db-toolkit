@@ -1,35 +1,10 @@
 <style type="text/css">
-    .column {
-        width: 170px;
-        float: left;
-        padding-bottom: 100px;
-    }
-    .formportlet, .viewportlet {
-        margin: 3px;
-    }
-    .formportlet-header, .viewportlet-header {
-        margin: 0.3em;
-        padding: 5px;
-        padding-left: 0.2em;
-    }
-    .formportlet-header .ui-icon, .viewportlet-header .ui-icon {
-        float: right;
-    }
-    .formportlet-content, .viewportlet-content {
-        padding: 0.4em;
-    }
-    .ui-sortable-placeholder {
-        border: 1px dotted black;
-        visibility: visible !important;
-        height: 50px !important;
-    }
-    .ui-sortable-placeholder * {
-        visibility: hidden;
-    }
+
+
 </style>
 <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/arrow_out.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" /> <img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/tag.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
 <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
-<div id="dbtools_tabs">
+<div id="dbtools_tabs" class="dbtools_tabs">
     <ul class="content-box-tabs">
         <li><a href="#tabs-1">Field Setup</a></li>
         <li><a href="#tabs-2">Form Layout</a></li>
@@ -40,7 +15,7 @@
         <li><a href="#tabs-4">List Template</a></li>
         <li><a href="#tabs-5">Custom Scripts</a></li>
     </ul>
-    <div id="tabs-1">
+    <div class="setupTab" id="tabs-1">
     <?php
     
     if(!empty($Element['_Application'])){
@@ -194,7 +169,7 @@
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/chartlayout.php');
 
     ?>
-    <div id="tabs-3">
+    <div id="tabs-3" class="setupTab">
         <table width="100%" border="0" cellspacing="1" cellpadding="1">
             <tr>
                 <td width="50%" valign="top" style="padding-right:15px;"><?php
@@ -416,12 +391,12 @@
                     <?php
                     InfoBox('Redirects');
                     ?>
-                    <div id="redirectTabs">
+                    <div id="redirectTabs" class="dbtools_tabs">
                         <ul class="content-box-tabs">
                             <li><a href="#publicRedirect">Public</a></li>
                             <li><a href="#adminRedirect">Admin</a></li>
                         </ul>
-                        <div id="publicRedirect">
+                        <div class="setupTab" id="publicRedirect">
                             <?php
                             InfoBox('Page');
                             $Sel = '';
@@ -434,7 +409,7 @@
                             EndInfoBox();
                             ?>
                         </div>
-                        <div id="adminRedirect">
+                        <div class="setupTab" id="adminRedirect">
                             <?php
                             InfoBox('Interface');
 
@@ -500,7 +475,7 @@
             </tr>
         </table>
     </div>
-    <div id="tabs-4">
+    <div id="tabs-4" class="setupTab">
         <?php
         $Sel = '';
         if(!empty($Element['Content']['_UseListViewTemplate'])) {
@@ -567,7 +542,7 @@ if(!empty($Element['Content']['_FieldTitle'])){
         
         ?>
     </div>
-    <div id="tabs-5">
+    <div id="tabs-5" class="setupTab">
         <?php
         echo dais_customfield('textarea', 'Footer Scripts', '_customFooterJavaScript', '_customFooterJavaScript', 'list_row1' , $Element['Content']['_customFooterJavaScript'], 'style="height:300px;"');
         ?>

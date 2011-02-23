@@ -1,4 +1,4 @@
-  <div id="tabs-2">
+  <div id="tabs-2" class="setupTab">
 	<?php
 	InfoBox('Form Layout');
 	?>

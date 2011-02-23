@@ -1,4 +1,4 @@
-<div id="tabs-formprocess">
+<div id="tabs-formprocess" class="setupTab">
 
     <div class="stuffbox">
         <h3>Form Processors</h3>

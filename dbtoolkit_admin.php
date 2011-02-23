@@ -308,7 +308,7 @@ if(!empty($_POST['Data'])) {
                         echo '<input type="submit" class="button-primary action" id="doaction" name="deleteApp" value="Delete Application" onClick="return confirm(\'This will delete all interfaces in this Application. Data will remain intact. This cannot be undone. Continue?\');" >';
                     }
                     ?>
-                </div>
+                </div></div>
             </form>
             <?php
             /*
@@ -326,6 +326,21 @@ if(!empty($_POST['Data'])) {
             
 
             ?>
+
+                <script>
+                    
+                jQuery(document).ready(function($) {
+                        jQuery("#dbToolkit_Tabs").tabs();
+                });
+
+            </script>
+            <div id="dbToolkit_Tabs" class="dbtools_tabs">
+              <ul>
+                            <li><a href="#tab1"><span>Interfaces</span></a></li>
+                            <li><a href="#tab2"><span>Clusters</span></a></li>
+              </ul>
+            
+            <div id="tab1" class="setupTab">
             <table width="100%" border="0" cellspacing="2" cellpadding="2" class="widefat">
                 <thead>
                     <tr>
@@ -456,4 +471,9 @@ if(!empty($_POST['Data'])) {
                 }
                 ?>
             </table>
+            </div>
+            <div id="tab2" class="setupTab">
+                Coming Soon!
+            </div>
+        </div>
         </div>
