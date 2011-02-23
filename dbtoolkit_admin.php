@@ -157,6 +157,7 @@ if(!empty($_POST['Data'])) {
     $newCFG['_ReportExtendedDescription'] = $_POST['Data']['Content']['_ReportExtendedDescription'];
     $newCFG['_ItemGroup'] = $_POST['Data']['Content']['_ItemGroup'];
     $newCFG['_menuAccess'] = $_POST['Data']['Content']['_menuAccess'];
+    $newCFG['_SetAdminMenu'] = $_POST['Data']['Content']['_SetAdminMenu'];
     $newCFG['_Icon'] = $_POST['Data']['Content']['_Icon'];
 
 

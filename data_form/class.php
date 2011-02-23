@@ -395,6 +395,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $_SESSION['processKey'] = uniqid(rand(100, 999).'_processKey_');
     }
     $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
+    $Hidden .= '<input type="hidden" name="action" id="action" value="true" />';
     $Hidden .= '<input type="hidden" name="dataForm['.$Element['ID'].'][_control_'.uniqid().']" id="processKey" value="'.$_SESSION['processKey'].'" />';
 
 

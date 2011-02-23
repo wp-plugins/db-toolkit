@@ -424,3 +424,9 @@ blockquote .boxtitle{
 .ui-tabs-nav.ui-widget-header{
     background-color: #dedede !important;
 }
+.ui-widget-content a{
+    color: #21759B;
+}
+.ui-widget-content a:hover{
+    color: #D54E21;
+}

@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.9
+Version: 0.2.2.10
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
@@ -382,8 +382,6 @@ function dt_menus() {
 
 
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
-
-
     if(!empty($interfaces)) {
         foreach($interfaces as $interface) {
 
@@ -431,6 +429,62 @@ function dt_menus() {
         }
     }
 }
+
+function dt_adminMenus() {
+    global $wp_admin_bar, $wpdb;
+
+    if (!is_admin_bar_showing() )
+    return;
+
+    $user = wp_get_current_user();
+    //vardump($user);
+
+
+
+    $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+    if(!empty($interfaces)) {
+        foreach($interfaces as $interface) {
+
+            $cfg = get_option($interface['option_name']);
+             if($cfg['_menuAccess'] == 'null'){
+                $cfg['_menuAccess'] = 'read';
+            }
+
+            if(!empty($user->allcaps[$cfg['_menuAccess']])){
+                if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
+                    $Groups[$cfg['_ItemGroup']][] = $cfg;
+                }
+
+            }
+
+        }
+        if(empty($Groups)){
+            return;
+        }
+        foreach($Groups as $Group=>$Interfaces){
+
+            // check capability
+            if(current_user_can($Interfaces[0]['_menuAccess']) && !empty($cfg['_SetAdminMenu'])){
+                // group link
+                //$groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
+                //add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                //echo $Group.' - ';
+                //vardump($Interfaces);
+                    
+                $wp_admin_bar->add_menu( array( 'id' => $Interfaces[0]['ID'], 'title' => $Group, 'href' => get_admin_url().'admin.php?page='.$Interfaces[0]['ID'] ) );
+
+                for($i = 0; $i <= count($Interfaces)-1; $i++){
+                    if(current_user_can($Interfaces[$i]['_menuAccess']) && !empty($cfg['_SetAdminMenu'])){
+                        $wp_admin_bar->add_menu( array( 'parent' => $Interfaces[0]['ID'], 'title' => $Interfaces[$i]['_interfaceName'], 'href' => get_admin_url().'admin.php?page='.$Interfaces[0]['ID'] ) );
+                    }
+                }
+            }
+        }
+    }
+    
+}
+// admin menus ! :D
+add_action( 'admin_bar_menu', 'dt_adminMenus', 1000);
 
 //Footers
 function dt_footers() {
@@ -579,6 +633,7 @@ function dt_process() {
     }
 
     if(!empty($_POST['processKey'])) {
+    
     $_POST = stripslashes_deep($_POST);
         if($_POST['processKey'] == $_SESSION['processKey']) {
 

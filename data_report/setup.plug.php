@@ -70,6 +70,11 @@
         <?php
         */
         echo dais_customfield('text', 'Menu Group', '_ItemGroup', '_ItemGroup', 'list_row2' , $Element['_ItemGroup'] , '');
+        $Sel = '';
+        if(!empty($Element['Content']['_SetAdminMenu'])) {
+            $Sel = 'checked="checked"';
+        }
+        echo dais_customfield('checkbox', 'Admin Menu Item<div><span class="description">Requires a menu group</span></div>', '_SetAdminMenu', '_SetAdminMenu', 'list_row1' , 1 , $Sel);
         echo dais_customfield('text', 'Menu Label', '_ReportTitle', '_ReportTitle', 'list_row1' , $Element['_interfaceName'] , '');
         echo dais_customfield('text', 'Interface Title', '_ReportDescription', '_ReportDescription', 'list_row2' , $Element['_ReportDescription']  , '');
         echo dais_customfield('text', 'Interface Description', '_ReportExtendedDescription', '_ReportExtendedDescription', 'list_row1' , $Element['_ReportExtendedDescription']  , '');
@@ -77,7 +82,7 @@
         if(!empty($Element['Content']['_SetDashboard'])) {
             $Sel = 'checked="checked"';
         }
-        echo dais_customfield('checkbox', 'Set as Dashboard Item', '_SetDashboard', '_SetDashboard', 'list_row1' , 1 , $Sel);        
+        echo dais_customfield('checkbox', 'Set as Dashboard Item', '_SetDashboard', '_SetDashboard', 'list_row1' , 1 , $Sel);
         
         if(empty($Element['Content']['_menuAccess'])){
             $Element['Content']['_menuAccess'] = 'read';
