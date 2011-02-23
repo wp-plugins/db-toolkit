@@ -51,11 +51,11 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.2.2.8
+= 0.2.2.8 =
     - Visual Tweeks
     - Fixed a few bugs with grouping field type
 
-= 0.2.2.7
+= 0.2.2.7 =
     - Fixed a bug the prevented Charts to show- sorry i didnt pick this up sooner.
     - PDF Export update to include templates
     - Import Button to allow importing CSV data into interfaces created
@@ -64,51 +64,51 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
     - Minor bug fixes.
 
 
-= 0.2.2.3
+= 0.2.2.3 =
     - Added a dashboard menu item which has feeds from support forums, blog, a donate link and a new features box.
     - Added an import option
     - Preparations for upcoming features
     - Fixed the limitation problem with the PDF and CSV Export
 
-= 0.2.2.1
+= 0.2.2.1 =
     - Fixed search mode, to only show results once a search is performed.
 
-= 0.2.2.0
+= 0.2.2.0 =
     - Fixed the Export Application to include the content of tables so you can pre-populate your applications.
     - Added API changes to include limiting and paging of data.
     - Fixed Search Mode to actually show the results
     - Fixed a bug that prevented the capturing the selected item value in form mode.
     - wysiwyg editor still a little buggy - but will be fixed soon.
 
-= 0.2.1.8
+= 0.2.1.8 =
     - Added the wysiwyg using CKEditor.
     - Fixed the PDF export.
 
-= 0.2.1.7
+= 0.2.1.7 =
     - added a password fieldtype that converts the text to a MD5 hash.
 
-= 0.2.1.6
+= 0.2.1.6 =
     - Added the ability to add filters to shortcodes e.g itemid=56
 
-= 0.2.1.5
+= 0.2.1.5 =
     - Fixed a form processor bug that prevented the post process from working correctly.
     - Fixed a bug in multiply columns field type.
 
-= 0.2.1.4
+= 0.2.1.4 =
     - Fixed a bug in the UserID FieldType that prevented showing items in list view
 
-= 0.2.1.2
+= 0.2.1.2 =
     - Fixed __DIR__ which is only available in php5.3 now works with lower php versions.
 
-= 0.2.1.1
+= 0.2.1.1 =
     - added Form Processors to the interface builder. see http://dbtoolkit.digilab.co.za/form-processors/ for more.
 
-= 0.2.1.0
+= 0.2.1.0 =
     - Rebuilt the query builder to better allow cloned fields and multiple linking of tables.
     - Added Application export and import to easily share applications you build (will be exploring this more in later builds)
     - Cleaned up the PDF Export to prevent overlapping columns.
 
-= 0.2.0.4 =
+= 0.2.0.4 = 
 Made a massiv amount of changes on the structure + some exrea new features.
 see http://dbtoolkit.digilab.co.za/version-0-2-on-the-horizon/ for more.
 
