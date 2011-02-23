@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.7
+Version: 0.2.2.8
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
@@ -50,8 +50,8 @@ function dt_start() {
             $dupvar = get_option($_GET['duplicateinterface']);
             $oldOption = $dupvar;
 
-            $NewName = uniqid($oldOption['_interfaceName'].' ');
-            $oldOption['_interfaceName'] = $NewName;
+            $NewName = uniqid($oldOption['_ReportDescription'].' ');
+            $oldOption['_ReportDescription'] = $NewName;
             $newTitle = uniqid('dt_intfc');
             $oldOption['ID'] = $newTitle;
             $oldOption['ParentDocument'] = $newTitle;
@@ -148,15 +148,10 @@ function dt_styles() {
     }
 
 
-    //<link type="text/css" rel="stylesheet" href="" />
     wp_register_style('jqueryUI-base-internal', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
-    //wp_register_style('jqueryUI-base', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.3/themes/smoothness/jquery-ui.css');
-    //wp_register_style('jqueryUI-base-custom', WP_PLUGIN_URL . '/db-toolkit/jqueryui/custom-theme/jquery-ui-1.7.3.custom.css');
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
     wp_enqueue_style('jqueryUI-base-internal');
-    //wp_enqueue_style('jqueryUI-base');
-    //wp_enqueue_style('jqueryUI-base-custom');
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
 
@@ -258,13 +253,13 @@ function dt_scripts() {
     wp_enqueue_script('highcharts');
     wp_enqueue_script('highcharts-exporting');
 
-        $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
+        /*$Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
 		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php')){
-                    wp_register_script('fieldType_'.$Type[1], WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php', false, false, true);
-                        wp_enqueue_script('fieldType_'.$Type[1]);
+                        //wp_register_script('fieldType_'.$Type[1], WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php', false, false, true);
+                        //wp_enqueue_script('fieldType_'.$Type[1]);
                 }
-	}
+	}*/
 
     // load interface specifics
     
@@ -683,6 +678,9 @@ function dt_process() {
         $Element = getelement($_POST['importInterface']);
         $_SESSION['import_'.$_POST['importInterface']]['import']['table'] = $Element['Content']['_main_table'];
         $_SESSION['import_'.$_POST['importInterface']]['import']['delimiter'] = $_POST['importDelimeter'];
+        if(!empty($_POST['importSkipFirst'])){
+            $_SESSION['import_'.$_POST['importInterface']]['import']['importSkipFirst'] = $_POST['importSkipFirst'];
+        }
         $_SESSION['import_'.$_POST['importInterface']]['import']['map'] = $_POST['importMap'];
         $_SESSION['adminscripts'] .= "
             df_processImport('".$_POST['importInterface']."');
@@ -1092,13 +1090,14 @@ add_shortcode("visibility", "dt_publicReg");
 add_filter('widget_text', 'do_shortcode');
 
 // Add actions to front end
-add_action('wp_head', 'dt_headers');
-add_action('wp_print_styles', 'dt_styles');
-add_action('wp_print_scripts', 'dt_scripts');
-add_action('wp_footer', 'dt_footers');
-add_action('wp_dashboard_setup', 'dt_dashboard_widgets' );
-add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
-
+if(basename($_SERVER['PHP_SELF']) == 'index.php'){
+    add_action('wp_head', 'dt_headers');
+    add_action('wp_print_styles', 'dt_styles');
+    add_action('wp_print_scripts', 'dt_scripts');
+    add_action('wp_footer', 'dt_footers');
+    add_action('wp_dashboard_setup', 'dt_dashboard_widgets' );
+    add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
+}
 add_action('admin_init', 'dt_admin_init');
 function dt_admin_init(){
 	if ( current_user_can( 'edit_posts' ) && current_user_can( 'edit_pages' ) ) {

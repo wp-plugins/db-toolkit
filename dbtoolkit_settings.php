@@ -15,8 +15,9 @@ $Element['Content'] = $defaults;
 
 
 <div class="wrap ">
-    <div id="icon-tools" class="icon32"></div><h2><?php _e('DB-Toolkit Default Settings'); ?></h2>
-    Setup defaults for new Interfaces.
+    <img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />Default Settings
+    <br />
+    <span class="description">Setup defaults for new Interfaces.</span>
     <br class="clear" /><br />
     <?php
     if(!empty($_POST['Data'])) {

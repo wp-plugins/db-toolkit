@@ -16,7 +16,7 @@ if(!empty($_FILES['itfInstaller']['size'])){
 
 
 <div class="wrap ">
-    <div id="icon-tools" class="icon32"></div><h2><?php _e('Application Installer'); ?></h2>
+    <img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />Application Installer
    
     <br class="clear" /><br />
     <div id="poststuff">

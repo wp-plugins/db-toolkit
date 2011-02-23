@@ -168,7 +168,7 @@ if(!empty($_POST['Data'])) {
         if($_GET['page'] == 'Add_New'){
             ?>
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2>DB-Toolkit</h2>
+            <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />Create new Interface
             <div class="clear"></div>
                 <br />
             <div id="poststuff">
@@ -263,8 +263,10 @@ if(!empty($_POST['Data'])) {
         ?>
 
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2>DB-Toolkit <a href="admin.php?page=Add_New" class="button add-new-h2">New Interface</a></h2>
-            <br class="clear" /><br />
+            <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" /><a href="admin.php?page=Add_New" class="button add-new-h2">New Interface</a>
+                <br />
+                <span class="description">Manage Applications and Interfaces</span>
+                <br class="clear" /><br />
             <?php
             if(!empty($_POST['Data'])) {
                 echo '<div class="updated fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$_POST['Data']['ID'].'">'.$_POST['Data']['Content']['_ReportTitle'].'</a> Updated.</strong></p></div>';
@@ -396,8 +398,8 @@ if(!empty($_POST['Data'])) {
                     <td>
                         <strong><?php
                                     $titleName = 'Untitled Interface';
-                                    if(!empty($Interface['_interfaceName'])) {
-                                        $titleName = $Interface['_interfaceName'];
+                                    if(!empty($Interface['_ReportDescription'])) {
+                                        $titleName = $Interface['_ReportDescription'];
                                     }
                                     _e($titleName); ?></strong>
                         <div><?php echo $Desc; ?></div>

@@ -339,9 +339,12 @@ return false;
 }
 
 function set_iso($string) {
-
-    if(mb_detect_encoding($string, "UTF-8, ISO-8859-1") == "UTF-8"){
-        return utf8_decode($string);
+    if(function_exists('mb_detect_encoding')){
+        if(mb_detect_encoding($string, "UTF-8, ISO-8859-1") == "UTF-8"){
+            return utf8_decode($string);
+        }else{
+            return $string;
+        }
     }else{
         return $string;
     }

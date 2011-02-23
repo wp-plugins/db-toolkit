@@ -222,11 +222,11 @@ if(is_admin()) {
         if(!empty($Config['Content']['_Justify'][$Field])) {
             $Justify = $Config['Content']['_Justify'][$Field];
         }
-        $PreReturn[$Field] .= '<label>Lable</label>';
+        //$PreReturn[$Field] .= '<label><strong>Lable</strong></label>';
 
         $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="'.$Title.'" name="Data[Content][_FieldTitle]['.$Field.']" /> ';
         $PreReturn[$Field] .= 'Caption: <input type="text" value="'.$Caption.'" name="Data[Content][_FieldCaption]['.$Field.']" /></div>';
-        $PreReturn[$Field] .= '<label>Alignment</label>';
+        //$PreReturn[$Field] .= '<label><strong>Alignment</strong></label>';
         $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="'.$Width.'" name="Data[Content][_WidthOverride]['.$Field.']" /> ';
         $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify).'</div>';
 
@@ -240,8 +240,8 @@ if(is_admin()) {
             $chartValue = 'checked="checked"';
         }
         // Graphing x axis (single select)
-        $PreReturn[$Field] .= '<label>Charting</label>';
-        $PreReturn[$Field] .= '<div style="padding:3px;">X Axis: <input type="radio" name="Data[Content][_xaxis]" id="sortable_'.$Field.'" value="'.$Field.'" '.$XAxis.' />';
+        $PreReturn[$Field] .= '<label><strong>Charting</strong></label>';
+        $PreReturn[$Field] .= '<div style="padding:3px;">X Axis: <input type="radio" name="Data[Content][_xaxis]" id="sortable_'.$Field.'" value="'.$Field.'" '.$XAxis.' /><br />';
         // Graphing legend/charted value
         $PreReturn[$Field] .= ' Chart Item: <input type="checkbox" name="Data[Content][_chartValue]['.$Field.']" id="sortable_'.$Field.'" value="1" '.$chartValue.' />';
 
@@ -430,12 +430,12 @@ if(is_admin()) {
             $PreReturn[$Field] .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_'.$Field.'\').remove();" style="float:right; padding:5px;" />';
         $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="'.$Title.'" name="Data[Content][_FieldTitle]['.$Field.']" /> ';
         $PreReturn[$Field] .= 'Caption: <input type="text" value="'.$Caption.'" name="Data[Content][_FieldCaption]['.$Field.']" /></div>';
-        $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="'.$Width.'" name="Data[Content][_WidthOverride]['.$Field.']" />';
+        $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="'.$Width.'" name="Data[Content][_WidthOverride]['.$Field.']" /> ';
         $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify).'</div>';
         //$PreReturn[$Field] .= '<div class="admin_list_row2">Unique: <input type="checkbox" name="Data[Content][_Unique]['.$Field.']" id="unique_'.$Field.'" '.$USel.' /></div>';
         //$PreReturn[$Field] .= '<div class="admin_list_row1">Reguired: </div>';
         //$PreReturn[$Field] .= '<div class="admin_list_row2">Sortable: </div>';
-        $PreReturn[$Field] .= '<div style="padding:3px;">Inline Editing: <input type="checkbox" name="Data[Content][_InlineEdit]['.$Field.']" id="sortable_'.$Field.'" '.$inlineSel.' /></div>';
+        //$PreReturn[$Field] .= '<div style="padding:3px;">Inline Editing: <input type="checkbox" name="Data[Content][_InlineEdit]['.$Field.']" id="sortable_'.$Field.'" '.$inlineSel.' /></div>';
         $PreReturn[$Field] .= '</div>';
 
 
@@ -1673,7 +1673,7 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
         }else{
             $xType = "categories: ['".implode('\',\'', $x)."']";
         }
-        mysql_data_seek($chartRes, 0);
+        @mysql_data_seek($chartRes, 0);
 
 
 
@@ -1873,8 +1873,9 @@ var ".$ChartID." = new Highcharts.Chart({
 
             $index++;
         }
-        $_SESSION['dataform']['OutScripts'] .= implode(',', $axis);
-
+        if(!empty($axis)){
+            $_SESSION['dataform']['OutScripts'] .= implode(',', $axis);
+        }
 
         $_SESSION['dataform']['OutScripts'] .= "
    ],
@@ -1983,6 +1984,9 @@ var ".$ChartID." = new Highcharts.Chart({
             $Line .= '}';
             $Graph[] = $Line;
             $index++;
+        }
+        if(empty($Graph)){
+            $Graph = array();
         }
         $_SESSION['dataform']['OutScripts'] .= implode(',', $Graph)."
    ]
@@ -3070,10 +3074,14 @@ function dr_prepairImport($EID){
         //fclose($handle);
         }*/
     if(empty($_SESSION['import_'.$EID]['startpoint'])){
-        $_SESSION['import_'.$EID]['startpoint'] = 2;
+        $start = 0;
+        if(!empty($_SESSION['import_'.$EID]['import']['importSkipFirst'])){
+            $start = 1;
+        }
+        $_SESSION['import_'.$EID]['startpoint'] = $start;
     }
 
-    $html .= '<div id="textImportResult"><span id="import_processedCount">0</span> of '.count(file($_SESSION['import_'.$EID]['import']['file'])).' entries imported.</div>';
+    $html .= '<div id="textImportResult">Starting at: '.$_SESSION['import_'.$EID]['startpoint'].': <span id="import_processedCount">0</span> of '.(count(file($_SESSION['import_'.$EID]['import']['file']))-$start).' entries imported.</div>';
     $html .= '<div id="'.$EID.'_importProgress"></div>';
     //$html .= filesize($_SESSION['import_'.$EID]['import']['file']);
 
@@ -3085,7 +3093,7 @@ function dr_prepairImport($EID){
 }
 
 function dr_processImport($EID){
-
+    
     $PreCount = file($_SESSION['import_'.$EID]['import']['file']);
     $Total = count($PreCount);
     unset($PreCount);
@@ -3094,11 +3102,18 @@ function dr_processImport($EID){
         $_SESSION['importKey'] = uniqid(rand(100, 999).'_importKey_');        
 
 
-        $Row = 2;
+        $Row = 0;
         $Processed = 1;
+        //if(!empty($data)){
+        $Query = '';
+        //}
+        
         while($data = fgetcsv($handle, 0, $_SESSION['import_'.$EID]['import']['delimiter'])){
+
             if($Row == $_SESSION['import_'.$EID]['startpoint']){
-                $Query = 'INSERT INTO `'.$_SESSION['import_'.$EID]['import']['table'].'`';
+                if(empty($First)){
+                    $Query .= 'INSERT INTO `'.$_SESSION['import_'.$EID]['import']['table'].'`';
+                }
                 $Fields = array();
                 $Values = array();
                 foreach($_SESSION['import_'.$EID]['import']['map'] as $Field=>$Value){
@@ -3107,22 +3122,30 @@ function dr_processImport($EID){
                         $Values[] = "'".mysql_real_escape_string($data[$Value])."'";
                     }
                 }
-                $Query .= '('.implode(',', $Fields).') VALUES ';
-                $Query .= '('.implode(',', $Values).');';
-                mysql_query($Query);
+                if(empty($First)){
+                    $Query .= '('.implode(',', $Fields).') VALUES ';
+                    $First = true;
+                }
+                $QueryValues[] = "(".implode(',', $Values).")";
+                $_SESSION['import_'.$EID]['startpoint']++;
                 if($Processed == 25 || $_SESSION['import_'.$EID]['startpoint'] >= $Total){
                     break;
                 }
                 $Processed++;
-                $_SESSION['import_'.$EID]['startpoint']++;
+                
             }
             $Row++;
         }
         fclose($handle);
     }
-
-    $out[p] = round(($_SESSION['import_'.$EID]['startpoint']/$Total)*100, 2);
-    $out[d] = $_SESSION['import_'.$EID]['startpoint'];
+    $Query = $Query.implode(',', $QueryValues);
+    mysql_query($Query);
+    //vardump($Query);
+    //echo mysql_error();
+    $out['error'] = mysql_error();
+    $out['query'] = $Query;
+    $out['p'] = round(($_SESSION['import_'.$EID]['startpoint']/$Total)*100, 2);
+    $out['d'] = $_SESSION['import_'.$EID]['startpoint'];
     if($_SESSION['import_'.$EID]['startpoint'] == $Total){
         if(file_exists($_SESSION['import_'.$EID]['import']['file'])){
             unlink($_SESSION['import_'.$EID]['import']['file']);
@@ -3143,7 +3166,7 @@ function dr_buildImportManager($EID, $delim = ','){
         $head = array();
         $body = array();
         $titles = array();
-        while($data = fgetcsv($handle, 0, $delim)){
+        while($data = fgetcsv($handle, 1000, $delim)){
             //vardump($data);
             if($Row == 1){
                 foreach($data as $field){
@@ -3166,13 +3189,13 @@ function dr_buildImportManager($EID, $delim = ','){
         $Out['html'] = 'Could not import. Please try again.';
         $Out['width'] = 250;
     }
-
+    //vardump($data);
     // setup selector
     $Selector = '';
     foreach($titles as $csvField=>$column){
         $Selector .= '<option value="'.$csvField.'">'.$column.'</option>';
     }
-
+    //vardump($titles);
     //vardump($head);
     //vardump($body);
     //ob_start();
@@ -3183,8 +3206,8 @@ function dr_buildImportManager($EID, $delim = ','){
     $html .= '<input type="hidden" name="importPrepairKey" id="importPrepairKey" value="'.$_SESSION['importKey'].'" />';
 
     $html .= '<h3>';
-    
         $html .= 'Delimiter: <input type="text" name="importDelimeter" id="importDelimeter" value="'.stripslashes_deep($delim).'" style="width: 20px;" onkeyup="dr_reloadImport(\''.$EID.'\', this.value);" /> ';
+        $html .= '&nbsp;Skip First Row : <input type="checkbox" name="importSkipFirst" id="importSkipFirst" value="1" checked="checked" /> ';
     $html .= '</h3>';
     
     $html .= '<div style="width:780px; overflow:auto">';
@@ -3210,7 +3233,7 @@ function dr_buildImportManager($EID, $delim = ','){
     $html .= '<h3>Field Mapping</h3>';
 
     $Element = getelement($EID);
-
+    //vardump($Element);
     foreach($Element['Content']['_Field'] as $Field=>$Type){
 
         $html .= '<div style="float: left; overflow: hidden; width: 22.5%;">';

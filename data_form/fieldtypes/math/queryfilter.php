@@ -15,11 +15,16 @@ if($Config['_mathMysqlFunc'][$Field] == 'sumtotal'){
 }
 $fieldSett = $Field;
 if(!empty($Config['_CloneField'][$Field])){
-    $fieldSett = dr_findCloneParent($Field, $Config['_CloneField'], $querySelects);
+    if(!empty($Config['_CloneField'][$Config['_CloneField'][$Field]['Master']])){
+        $fieldSett = dr_findCloneParent($Field, $Config['_CloneField'], $querySelects);
+    }else{
+        $fieldSett = $Config['_CloneField'][$Field]['Master'];
+    }
     if(strpos($fieldSett, '.') === false){
        $fieldSett = 'prim.`'.$fieldSett.'`';
     }
 }
 $querySelects[$Field] = $type.'('.$fieldSett.')';
 }
+
 ?>

@@ -1,8 +1,8 @@
 <div class="wrap dbtoolkit">
-<div id="icon-themes" class="icon32"></div><h2>DB-Toolkit
-<a class="button add-new-h2" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted" target="_blank">Donate</a>
-</h2>
-
+    <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" /><a class="button add-new-h2" href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted" target="_blank">Donate</a></div>
+    <br />
+    <span class="description"></span>
+    <div style="clear:both;"></div>
 <div class="postbox-container" style="width:32.6%">
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
@@ -42,9 +42,10 @@
     </div>
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>New Features in This Version (0.2.2.7)</span></h3>
+            <h3><span>New Features in Version 0.2.2.7 - 0.2.2.8</span></h3>
             <div style="margin: 10px;">
                 
+                <p><strong>Logo Change</strong>: DB-Toolkit now has a logo.</p>
                 <p><strong>Insert Interface Editor Button</strong>: You can now insert an interface Shortcode using the Insert Interface button on the text editor toolbar.</p>
                 <p><strong>PDF Exporting Update</strong>: Added PDF Templates. Currently not customisable but will be in next release</p>
                 <p><strong>Charting</strong>: Fixed a bug that prevented Charting from being enabled. in the Charting Tab, you can enable charting..</p>

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.0.4
-Stable tag: 0.2.2.7
+Stable tag: 0.2.2.8
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -50,6 +50,10 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 5. modal dialog input forms
 
 == Changelog ==
+
+= 0.2.2.8
+    - Visual Tweeks
+    - Fixed a few bugs with grouping field type
 
 = 0.2.2.7
     - Fixed a bug the prevented Charts to show- sorry i didnt pick this up sooner.
