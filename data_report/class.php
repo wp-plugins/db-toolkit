@@ -623,6 +623,61 @@ function dr_unlockFilters($EID) {
 
 }
 
+function dr_buildInterfaceList(){
+    
+    global $wpdb;
+    $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+    $apps = get_option('dt_int_Apps');
+    $appGroups = array();
+    $Return = '';
+    foreach($interfaces as $interface){
+        $cfg = get_option($interface['option_name']);
+        $appGroups[$cfg['_Application']][] = $cfg;
+    }
+    //vardump($appGroups);
+    foreach($apps as $app=>$state){
+        //vardump($app);
+        $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
+        $Return .= '<li><a class="child"><img src="'.$Icon.'" align="absmiddle" /> '.$app.'</a>';
+
+        if(!empty($appGroups[$app])){
+            $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
+            $Return .= "<li class=\"title\"><h2>".$app."</h2></li>";
+                foreach($appGroups[$app] as $interface){
+                    //vardump($interface);
+                    $IIcon = WP_PLUGIN_URL . '/db-toolkit/data_report/plus-button.png';
+                    $Return .= '<li><a onclick="formSetup_InsertInterface(\''.$interface['ID'].'\');"><img src="'.$IIcon.'" align="absmiddle" /> '.$interface['_ReportDescription'].'</a>';
+                }
+            $Return .= '</ul>';
+        }
+
+        $Return .= '</li>';
+    }
+
+    
+    return $Return;
+}
+
+function dr_loadInsertInterfaceBox($EID){
+    
+    $cfg = get_option($EID);
+    if(empty($cfg))
+        return 'Not Found';
+
+    $Return = '';
+
+    $Return .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$EID.'"><div class="formportlet-header ui-widget-header ui-corner-all">'.$cfg['_ReportDescription'].'<input class="layOutform positioning" type="hidden" name="'.$EID.'" id="interface_'.$EID.'" value="1"/><span class="ui-icon ui-icon-close"></span></div></div>';
+    $_SESSION['dataform']['OutScripts'] .= "
+        jQuery('.formportlet-header .ui-icon').click(function() {
+                jQuery(this).toggleClass(\"ui-icon-minusthick\");
+                jQuery(this).parents(\".formportlet:first\").remove();
+        });
+    ";
+
+    return $Return;
+    
+}
+
 function df_buildSetProcessors($Config){
     
     if(empty($Config['_FormProcessors'])){

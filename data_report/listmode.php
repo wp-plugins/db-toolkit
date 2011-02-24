@@ -100,9 +100,7 @@ $_SESSION['dataform']['OutScripts'] .= "
 
 }
 echo '</div>';
-if(empty($Config['_HideFrame'])) {
-    endinfobox();
-}
+
 if(is_admin()) {
     //$SharedSecret = md5($Media['ID']).md5(serialize($Config));
     //echo '<div class="list_row1">API Key: <input type="text" value="'.$SharedSecret.'" style="width:98%;" onclick="jQuery(this).select();" onchange="jQuery(this).val(\''.$SharedSecret.'\');" /></div>';

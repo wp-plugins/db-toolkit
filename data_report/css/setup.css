@@ -39,7 +39,7 @@
 	margin:0;
 	padding:8px 18px 8px 10px;
 	color:#FFF;
-	text-shadow:0 1px 0 #333333;
+	text-shadow:0 1px 0 #000;
 	text-decoration:none;
 	cursor: pointer;
 }
@@ -54,7 +54,7 @@
 	top:34px;
 	margin:0;
 	padding:0;
-	background:#333;
+	background:#58585a;
 	width:200px;
 	z-index:60;
 	font-size:11px
@@ -69,7 +69,11 @@
 	color:#fff;
 }
 .tools_widgets li:hover > a.parent {
-	background-color:#F30;
+	background-color:#ef4036;
+	text-shadow:0 1px 0 #333333;
+}
+.tools_widgets li:hover > a.child {
+	background-color:#000;
 	text-shadow:0 1px 0 #333333;
 }
 .tools_widgets ul ul {
@@ -88,12 +92,16 @@
 }
 
 .tools_widgets .title h2{
-	font-size:16px;
-	background-color:#F30;
+	font-size:12px !important;
+        font-weight: bold;
+        font-family: Arial,Helvetica,sans-serif;
+        font-style: normal;
+	background-color:#ef4036;
 	color:#fff;
-	padding:8px 5px;
-	margin:0;
+	padding:0px 5px 0px 28px !important;
+	margin:0 !important;
 	text-shadow:0 1px 0 #333333;
+        line-height: 32px;
 }
 .dbtoolkit li{
     margin-bottom: 10px;

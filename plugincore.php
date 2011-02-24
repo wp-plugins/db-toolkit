@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.10
+Version: 0.2.2.11
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
@@ -46,18 +46,26 @@ function dt_start() {
 
     // dumplicate interface hack
     if(is_admin()) {
-        if(!empty($_GET['duplicateinterface'])) {
+        if(!empty($_GET['duplicateinterface'])){
             $dupvar = get_option($_GET['duplicateinterface']);
-            $oldOption = $dupvar;
-
-            $NewName = uniqid($oldOption['_ReportDescription'].' ');
-            $oldOption['_ReportDescription'] = $NewName;
-            $newTitle = uniqid('dt_intfc');
+            $oldOption = $dupvar;            
+                        
+            if($oldOption['Type'] == 'Cluster'){                
+                $NewName = uniqid($oldOption['_ClusterTitle'].' ');
+                $oldOption['_ClusterTitle'] = $NewName;
+                $newTitle = uniqid('dt_clstr');
+                $hash = '&r=y#clusters';
+            }else{
+                $NewName = uniqid($oldOption['_ReportDescription'].' ');
+                $oldOption['_ReportDescription'] = $NewName;
+                $newTitle = uniqid('dt_intfc');
+                $hash = '';
+            }
             $oldOption['ID'] = $newTitle;
             $oldOption['ParentDocument'] = $newTitle;
             //vardump($oldOption);
             add_option($newTitle, $oldOption, NULL, 'No');
-            header( 'Location: '.$_SERVER['HTTP_REFERER']);
+            header( 'Location: '.$_SERVER['HTTP_REFERER'].$hash);
             die;
         }
     }
@@ -80,15 +88,18 @@ function dt_headers() {
     }else {
         ?>
 
-            function dt_deleteInterface(interfaceID){
-
+            function dt_deleteInterface(interfaceID, type){
+                hash = '';
+                if(type == 'cluster'){
+                    hash = '&r=y#clusters';
+                }
                 if(confirm('Are you sure you want to delete this interface?')){
 
                     ajaxCall('dt_removeInterface', interfaceID, function(x){
                         if(x == true){
                             jQuery('#'+interfaceID).fadeOut('slow', function(){
                                 jQuery(this).remove();
-                                window.location = '<?php echo $_SERVER['REQUEST_URI']; ?>';
+                                window.location = '<?php echo $_SERVER['REQUEST_URI']; ?>'+hash;
                             });
                         }else{
                             alert('strange, that should have worked '+x);
@@ -342,7 +353,8 @@ function dt_menus() {
 	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
         $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
-        $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Add New Interface', 'Add New', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
+        $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
+        $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/new-text.png" align="absmiddle" style="float:right;"> New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
@@ -352,11 +364,15 @@ function dt_menus() {
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
         
             
-            add_action('admin_print_styles-'.$adminPage, 'dt_styles');
-            
+            add_action('admin_print_styles-'.$adminPage, 'dt_styles');            
             add_action('admin_head-'.$adminPage, 'dt_headers');
             add_action('admin_print_scripts-'.$adminPage, 'dt_scripts');
             add_action('admin_footer-'.$adminPage, 'dt_footers');
+
+            add_action('admin_print_styles-'.$NewCluster, 'dt_styles');
+            add_action('admin_head-'.$NewCluster, 'dt_headers');
+            add_action('admin_print_scripts-'.$NewCluster, 'dt_scripts');
+            add_action('admin_footer-'.$NewCluster, 'dt_footers');
 
             add_action('admin_print_styles-'.$addNew, 'dt_styles');
             add_action('admin_head-'.$addNew, 'dt_headers');
@@ -536,6 +552,11 @@ function dt_ajaxCall() {
 function dbtoolkit_admin() {
     global $user_ID;
     include_once('dbtoolkit_admin.php');
+}
+
+function dbtoolkit_cluster() {
+    global $user_ID;
+    include_once('dbtoolkit_cluster.php');
 }
 
 function dbtoolkit_dashboard() {
@@ -1079,10 +1100,10 @@ function dt_renderInterface($interface) {
 
 
     ob_start();
-    include('data_report/element.def.php');
+        include('data_report/element.def.php');
         if(empty($Config['_HideFrame']) && $Config['_ViewMode'] != 'search'){
             //$InfoBox()
-            InfoBox($Config['_ReportTitle']);
+            InfoBox($Config['_ReportDescription']);
         }
     $Return .= ob_get_clean();
 

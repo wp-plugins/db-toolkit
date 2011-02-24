@@ -11,8 +11,45 @@ notes:
 
 if(!empty($_GET['renderinterface'])){
     $Interface = get_option($_GET['renderinterface']);
-    //$cfg = unserialize(base64_decode($Interface['Content']));
-    //vardump($cfg);
+    if($Interface['Type'] == 'Cluster'){
+        $cfg = unserialize(base64_decode($Interface['Content']));
+        parse_str($cfg['_clusterLayout'], $layout);
+        //vardump($cfg);
+        //vardump($layout);
+        // Build Layout Array First...
+        echo '<div class="wrap">';
+            echo '<div id="poststuff">';
+            foreach($cfg['_grid'] as $row=>$cols){
+
+                echo '<div id="'.$row.'" style="width:100%; overflow:hidden;" class="formRow">';
+                    
+                    foreach($cols as $col=>$width){
+
+                        echo '<div class="column" id="row1_col1" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
+                            $content = array_keys($layout, $row.'_'.$col);
+                            if(!empty($content)){
+                                $output = '';
+                                foreach($content as $render){
+                                    $output .= dt_renderInterface($render);
+                                }
+                                echo $output;
+                            }else{
+                                echo '&nbsp;';
+                            }
+
+                        echo '</div>';
+
+                    }
+
+                echo '<div style="clear:both;"></div>';
+                echo '</div>';
+
+            }
+            echo '</div>';
+        echo '</div>';
+
+        return;
+    }
     $Title = $Interface['_interfaceName'];
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];
@@ -103,7 +140,12 @@ if(!empty($_POST['Data'])) {
         $newCFG = get_option($optionTitle);
         //vardump($newCFG);
     }else{
+
         $optionTitle = uniqid('dt_intfc');
+        if(isset($_POST['Data']['Content']['_clusterLayout'])){
+            $optionTitle = uniqid('dt_clstr');
+        }
+
         $newOption = array();
         $newCFG['ID'] = $optionTitle;
         $newCFG['_interfaceName'] = $_POST['dt_newInterface'];
@@ -114,8 +156,7 @@ if(!empty($_POST['Data'])) {
         //$newCFG['Content'] = base64_encode(serialize(array()));
         $newCFG['ParentDocument'] = $optionTitle;
         $newCFG['Position'] = 0;
-        $newCFG['Column'] = 0;
-        $newCFG['Type'] = 'Plugin';
+        $newCFG['Column'] = 0;        
         $newCFG['Row'] = 0;
     }
     //vardump($_POST);
@@ -134,7 +175,7 @@ if(!empty($_POST['Data'])) {
         $newCFG['_Application'] = 'Base';
     }
     $Apps = get_option('dt_int_Apps');
-    if(!empty($Apps[$newCFG['_Application']])){
+    if(!empty($Apps[$newCFG['_Application']])){        
         $Apps[$newCFG['_Application']] = 'open';
         update_option('dt_int_Apps', $Apps);
     }else{
@@ -153,15 +194,22 @@ if(!empty($_POST['Data'])) {
     }else {
         $newCFG['_Dashboard'] = false;
     }
-    $newCFG['_ReportDescription'] = $_POST['Data']['Content']['_ReportDescription'];
-    $newCFG['_ReportExtendedDescription'] = $_POST['Data']['Content']['_ReportExtendedDescription'];
+    if(!isset($_POST['Data']['Content']['_clusterLayout'])){
+        $newCFG['_ReportDescription'] = $_POST['Data']['Content']['_ReportDescription'];
+        $newCFG['_ReportExtendedDescription'] = $_POST['Data']['Content']['_ReportExtendedDescription'];
+        $newCFG['Type'] = 'Plugin';
+    }else{
+        $newCFG['_ClusterTitle'] = $_POST['Data']['Content']['_ClusterTitle'];
+        $newCFG['_ClusterDescription'] = $_POST['Data']['Content']['_ClusterDescription'];
+        $newCFG['Type'] = 'Cluster';
+    }
+
+    
     $newCFG['_ItemGroup'] = $_POST['Data']['Content']['_ItemGroup'];
     $newCFG['_menuAccess'] = $_POST['Data']['Content']['_menuAccess'];
     $newCFG['_SetAdminMenu'] = $_POST['Data']['Content']['_SetAdminMenu'];
     $newCFG['_Icon'] = $_POST['Data']['Content']['_Icon'];
 
-
-    //vardump($newCFG);
 
     update_option($optionTitle, $newCFG);
 }
@@ -211,18 +259,45 @@ if(!empty($_POST['Data'])) {
             return;
         }
 
-        if(!empty($_GET['interface'])) {
-            $Element = get_option($_GET['interface']);
+        if(!empty($_GET['interface']) || !empty($_GET['cluster'])) {
+
+            if(!empty($_GET['interface'])){
+                $Element = get_option($_GET['interface']);
+            }else{
+                $Element = get_option($_GET['cluster']);
+            }
             $Element['Content'] = unserialize(base64_decode($Element['Content']));
             
             ?>
         <div class="wrap">
-            <div id="icon-tools" class="icon32"></div><h2><?php _e('Interface: '.$Element['_interfaceName']); ?></h2>
+            <img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />
+            <?php
+            
+                if(!empty($Element['_ReportDescription'])){
+                    echo 'Editing: '.$Element['_ReportDescription'];
+                }
+
+                if(!empty($Element['_ClusterTitle'])){
+                    echo 'Editing: '.$Element['_ClusterTitle'];
+                }
+
+
+            ; ?>
             <br class="clear" /><br />
             <div id="poststuff">
-                <form name="newInterfaceForm" method="post" action="<?php echo str_replace('&interface='.$Element['ID'], '', $_SERVER['REQUEST_URI']); ?>">
+                <?php
+
+                    $URL = str_replace('&interface='.$Element['ID'], '', $_SERVER['REQUEST_URI']);
+                    $URL = str_replace('&cluster='.$Element['ID'], '#clusters', $URL);
+
+                ?>
+                <form name="newInterfaceForm" method="post" action="<?php echo $URL; ?>">
                         <?php
-                        include('data_report/setup.plug.php');
+                        if(!empty($_GET['interface'])){
+                            include('data_report/setup.plug.php');
+                        }else{
+                            include('data_report/cluster.plug.php');
+                        }
                         ?>
                     <input type="hidden" value="<?php echo $Element['ID']; ?>" name="Data[interfaceTitle]" />
                 </form>
@@ -261,6 +336,7 @@ if(!empty($_POST['Data'])) {
             $_SESSION['activeApp'] = 'Base';
         }
         $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+        $clusters = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_clstr%' ", ARRAY_A);
         ?>
 
         <div class="wrap">
@@ -270,7 +346,20 @@ if(!empty($_POST['Data'])) {
                 <br class="clear" /><br />
             <?php
             if(!empty($_POST['Data'])) {
-                echo '<div class="updated fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$_POST['Data']['ID'].'">'.$_POST['Data']['Content']['_ReportTitle'].'</a> Updated.</strong></p></div>';
+
+
+                if(empty($_POST['Data']['ID'])){
+                    $LinkID = $optionTitle;
+                }else{
+                    $LinkID = $_POST['Data']['ID'];
+                }
+                if(isset($newCFG['_ReportDescription'])){
+                    $Title = $newCFG['_ReportDescription'];
+                }else{
+                    $Title = $newCFG['_ClusterTitle'];
+                }
+                
+                echo '<div class="updated fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
             }
             ?>
             <form method="post" action="" id="application-switcher">
@@ -337,11 +426,11 @@ if(!empty($_POST['Data'])) {
             </script>
             <div id="dbToolkit_Tabs" class="dbtools_tabs">
               <ul>
-                            <li><a href="#tab1"><span>Interfaces</span></a></li>
-                            <li><a href="#tab2"><span>Clusters</span></a></li>
+                            <li><a href="#interfaces"><span>Interfaces</span></a></li>
+                            <li><a href="#clusters"><span>Clusters</span></a></li>
               </ul>
             
-            <div id="tab1" class="setupTab">
+            <div id="interfaces" class="setupTab">
             <table width="100%" border="0" cellspacing="2" cellpadding="2" class="widefat">
                 <thead>
                     <tr>
@@ -473,8 +562,96 @@ if(!empty($_POST['Data'])) {
                 ?>
             </table>
             </div>
-            <div id="tab2" class="setupTab">
-                Coming Soon!
+            <div id="clusters" class="setupTab">
+
+
+<table width="100%" border="0" cellspacing="2" cellpadding="2" class="widefat">
+                <thead>
+                    <tr>
+                        <th scope="col" class="manage-column" id="interface-spacer-top"></th>
+                        <th scope="col" class="manage-column" id="interface-name-top">Cluster Name</th>
+                        <th scope="col" class="manage-column" id="interface-table-top">Interfaces</th>
+                        <th scope="col" class="manage-column" id="interface-date-top">Short Code</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th scope="col" class="manage-column" id="interface-spacer-bottom"></th>
+                        <th scope="col" class="manage-column" id="interface-name-bottom">Cluster Name</th>
+                        <th scope="col" class="manage-column" id="interface-table-bottom">Interfaces</th>
+                        <th scope="col" class="manage-column" id="interface-date-bottom">Short Code</th>                        
+                    </tr>
+                </tfoot>
+                <?php
+                if(!empty($clusters)) {
+                    $Groups = array();
+                    foreach($clusters as $cluster) {
+                        //vardump($interface);
+
+                        $Iname = $cluster['option_name'];
+                        $cfg = get_option($Iname);
+                        if(empty($cfg['_Application'])){
+                            $cfg['_Application'] = 'Base';
+                        }
+                        if($cfg['_Application'] == $_SESSION['activeApp']){
+                            $GroupName = '__Ungrouped';
+                            if(!empty($cfg['_ItemGroup'])){
+                                $GroupName = $cfg['_ItemGroup'];
+                            }
+                            $Groups[$GroupName][] = $cfg;
+                        }
+                    }
+                    ksort($Groups);
+                    foreach($Groups as $Group=>$Clusters){
+
+                        if($Group == '__Ungrouped'){
+                            $Group = '<em>Ungrouped</em>';
+                        }
+                        ?>
+                        <tr>
+                            <th scope="row" colspan="5" class="highlight"><?php echo $Group; ?></th>
+                        </tr>
+                        <?php
+
+
+
+
+                        foreach($Clusters as $Cluster){
+
+                        $Config = unserialize(base64_decode($Cluster['Content']));
+                        //vardump($cfg);
+                        $API = str_replace('dt_intfc', '', $Cluster['ID']).'_'.md5(serialize($Config));
+
+                        $Desc = '';
+                        if(!empty($Config['_ClusterDescription'])) {
+                           $Desc = $Config['_ClusterDescription'];
+                        }
+
+                        ?>
+
+                <tr id="<?php echo $Cluster['ID']; ?>">
+                    <td></td>
+                    <td>
+                        <strong><?php
+                                    $titleName = 'Untitled Cluster';
+                                    if(!empty($Cluster['_ClusterTitle'])) {
+                                        $titleName = $Cluster['_ClusterTitle'];
+                                    }
+                                    _e($titleName); ?></strong>
+                        <div><?php echo $Desc; ?></div>
+                        <div class="row-actions"><a href="<?php echo $_SERVER['REQUEST_URI']; ?>&cluster=<?php echo $Cluster['ID']; ?>">Edit</a> | <a href="<?php echo $_SERVER['REQUEST_URI']; ?>&renderinterface=<?php echo $Cluster['ID']; ?>">View</a> | <a href="<?php echo $_SERVER['REQUEST_URI']; ?>&duplicateinterface=<?php echo $Cluster['ID']; ?>">Duplicate</a> | <a href="#" onclick="dt_deleteInterface('<?php echo $Cluster['ID']; ?>', 'cluster'); return false;">Delete</a></div></div>
+                    </td>
+                    <td><?php echo $Config['_main_table']; ?></td>
+                    <td>[interface id="<?php echo $Cluster['ID']; ?>"]</td>
+                </tr>
+                        <?php
+                    }
+                   }
+                }
+                ?>
+            </table>
+
+
             </div>
         </div>
         </div>
