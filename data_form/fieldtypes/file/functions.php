@@ -105,8 +105,11 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
                                 if(!empty($Config['_URLOnly'][$Field])){
                                     return UseImage($Image, 7, $Config['_ImageSizeI'][$Field]);
                                 }
-                                
-				return UseImage($Image, 6, $Config['_ImageSizeI'][$Field], 10, $Config['_ClassName'][$Field]);
+                                $Class = '';
+                                if(!empty($Config['_ClassName'][$Field])){
+                                    $Class = $Config['_ClassName'][$Field];
+                                }
+				return UseImage($Image, 6, $Config['_ImageSizeI'][$Field], 10, $Class);
 		 		break;
 			case 'mp3';
 					$File = explode('|', $Value);

@@ -147,10 +147,12 @@
         <?php
         InfoBox('Passback Field');
         ?>
-        <div style="padding3px;">
-            <input type="button" name="button" id="button" class="button" value="Add Passback Field" onclick="dr_addPassbackField();"/>
-            (First one is primary)</div>
-        <div id="PassBack_FieldSelect"><?php echo dr_loadPassbackFields($Element['Content']['_main_table'], $Element['Content']['_ReturnFields'], $Element['Content']); ?></div>
+        <div style="padding:3px;">
+            <input type="button" name="button" id="button" class="button" value="Add Passback Field" onclick="dr_addPassbackField();"/></div>
+        <div id="PassBack_FieldSelect">
+            <?php
+                echo dr_loadPassbackFields($Element['Content']['_main_table'], $Element['Content']['_ReturnFields'], $Element['Content']);
+             ?></div>
         <?php
         EndInfobox();
         InfoBox('Sort Field');

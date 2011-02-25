@@ -46,7 +46,7 @@ function df_cleanArray($Array) {
 if(is_admin()) {
     // Admin Functiuons
 
-    function dr_loadPassbackFields($Table, $Defaults = 'none', $Config = false) {
+    function dr_loadPassbackFields($Table, $Defaults = 'none', $Config = false, $remove = true) {
 
         if(empty($Table)) {
             return;
@@ -73,13 +73,18 @@ if(is_admin()) {
                 }
             }
         }
-        if($Defaults == 'none') {
-            $Return = '<div style="padding:3px;" class="list_row3" id="ReturnFields_'.$ID.'_wrap">';
+        if($Defaults == 'none') {            
             $ID = uniqid(rand(100, 99999));
-            $Return .= 'Return Field: <select name="Data[Content][_ReturnFields][]" id="ReturnFields_'.$ID.'">';
+            $Return = '<div style="padding:3px;" class="list_row3" id="ReturnFields_'.$ID.'_wrap">';
+            $Return .= 'Return Field: <select class="passBackField" name="Data[Content][_ReturnFields][]" id="ReturnFields_'.$ID.'">';
             $Return .= $TotalsField;
             $Return .= '</select>&nbsp;';
-            $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a></div>';
+                if(!empty($remove)){
+                    $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a>';
+                }else{
+                    $Return .= '<em>Primary</em>';
+                }
+            $Return .= '</div>';
             foreach($FieldsClearer as $Clear) {
                 $Return = str_replace('{{'.$Clear.'}}', '', $Return);
             }
@@ -87,13 +92,19 @@ if(is_admin()) {
         }else {
             //dump($Defaults);
             if(is_array($Defaults)) {
+                $first = false;
                 foreach($Defaults as $Default) {
                     $ID = uniqid(rand(100, 99999));
                     $Return = '<div style="padding:3px;" class="list_row3" id="ReturnFields_'.$ID.'_wrap">';
-                    $Return .= 'Return Field: <select name="Data[Content][_ReturnFields][]" id="ReturnFields_'.$ID.'">';
+                    $Return .= 'Return Field: <select class="passBackField" name="Data[Content][_ReturnFields][]" id="ReturnFields_'.$ID.'">';
                     $Return .= $TotalsField;
                     $Return .= '</select>&nbsp;';
-                    $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a>';
+                    if(empty($remove)){
+                        $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a>';
+                        $remove = true;
+                    }else{
+                        $Return .= '<em>Primary</em>';
+                    }
                     $Return .= '</div>';
                     $out[] = str_replace('{{'.$Default.'}}', 'selected="selected"', $Return);
                 }
@@ -666,7 +677,7 @@ function dr_loadInsertInterfaceBox($EID){
 
     $Return = '';
 
-    $Return .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$EID.'"><div class="formportlet-header ui-widget-header ui-corner-all">'.$cfg['_ReportDescription'].'<input class="layOutform positioning" type="hidden" name="'.$EID.'" id="interface_'.$EID.'" value="1"/><span class="ui-icon ui-icon-close"></span></div></div>';
+    $Return .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$EID.'"><div class="formportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><div><strong>'.$cfg['_ReportDescription'].'</strong></div><span class="description">'.$cfg['_ReportExtendedDescription'].'</span><input class="layOutform positioning" type="hidden" name="'.$EID.'" id="interface_'.$EID.'" value="1"/></div></div>';
     $_SESSION['dataform']['OutScripts'] .= "
         jQuery('.formportlet-header .ui-icon').click(function() {
                 jQuery(this).toggleClass(\"ui-icon-minusthick\");

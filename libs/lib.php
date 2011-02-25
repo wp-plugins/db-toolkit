@@ -87,7 +87,13 @@ function dais_rowSwitch($a) {
 
 
 function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class = 'table1') {
-    if(!file_exists($ImageFile)){return false;}
+    if(is_admin ()){
+        if(!file_exists(dirname(WP_CONTENT_DIR).$ImageFile)){return false;}
+    }else{
+        if(!file_exists(dirname(WP_CONTENT_DIR).$ImageFile)){return false;}
+    }
+
+
     $fileLoc = str_replace(get_bloginfo('url'), '', $ImageFile);
 
     $Quality = (!empty($Quality) ? $Quality : $Quality);

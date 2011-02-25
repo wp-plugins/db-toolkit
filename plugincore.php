@@ -459,12 +459,12 @@ function dt_adminMenus() {
 
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
     if(!empty($interfaces)) {
-        foreach($interfaces as $interface) {
+        foreach($interfaces as $interface) {            
 
             $cfg = get_option($interface['option_name']);
              if($cfg['_menuAccess'] == 'null'){
                 $cfg['_menuAccess'] = 'read';
-            }
+             }
 
             if(!empty($user->allcaps[$cfg['_menuAccess']])){
                 if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
@@ -473,14 +473,14 @@ function dt_adminMenus() {
 
             }
 
-        }
+        }        
         if(empty($Groups)){
             return;
         }
         foreach($Groups as $Group=>$Interfaces){
-
+            
             // check capability
-            if(current_user_can($Interfaces[0]['_menuAccess']) && !empty($cfg['_SetAdminMenu'])){
+            if(current_user_can($Interfaces[0]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
                 // group link
                 //$groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
                 //add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
@@ -490,7 +490,7 @@ function dt_adminMenus() {
                 $wp_admin_bar->add_menu( array( 'id' => $Interfaces[0]['ID'], 'title' => $Group, 'href' => get_admin_url().'admin.php?page='.$Interfaces[0]['ID'] ) );
 
                 for($i = 0; $i <= count($Interfaces)-1; $i++){
-                    if(current_user_can($Interfaces[$i]['_menuAccess']) && !empty($cfg['_SetAdminMenu'])){
+                    if(current_user_can($Interfaces[$i]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
                         $wp_admin_bar->add_menu( array( 'parent' => $Interfaces[0]['ID'], 'title' => $Interfaces[$i]['_interfaceName'], 'href' => get_admin_url().'admin.php?page='.$Interfaces[0]['ID'] ) );
                     }
                 }
@@ -1062,10 +1062,52 @@ function dt_listApplications($Application){
 
 }
 
+
+
+function dt_rendercluster($cluster){
+    $Interface = get_option($cluster);
+    $cfg = unserialize(base64_decode($Interface['Content']));
+    parse_str($cfg['_clusterLayout'], $layout);
+
+    // Build Layout Array First...
+    echo '<div class="wrap">';
+        echo '<div id="poststuff">';
+        foreach($cfg['_grid'] as $row=>$cols){
+
+            echo '<div id="'.$row.'" style="width:100%; overflow:hidden;" class="formRow">';
+
+                foreach($cols as $col=>$width){
+
+                    echo '<div class="column" id="row1_col1" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
+                        $content = array_keys($layout, $row.'_'.$col);
+                        if(!empty($content)){
+                            $output = '';
+                            foreach($content as $render){
+                                $output .= dt_renderInterface($render);
+                            }
+                            echo $output;
+                        }else{
+                            echo '&nbsp;';
+                        }
+
+                    echo '</div>';
+
+                }
+
+            echo '<div style="clear:both;"></div>';
+            echo '</div>';
+
+        }
+        echo '</div>';
+    echo '</div>';
+
+    return;
+}
+
+
+
 // Render interface from shortcode to front end and view
-function dt_renderInterface($interface) {
-    
-    //vardump($interface);
+function dt_renderInterface($interface) {       
 
     if(is_array($interface)) {
         
@@ -1082,9 +1124,18 @@ function dt_renderInterface($interface) {
         $ID = $interface;
     }
     $Media = get_option($ID);
+    
     if(empty($Media)) {
         return;
     }
+    
+    if($Media['Type'] == 'Cluster'){
+        ob_start();
+        dt_rendercluster($ID);
+        $Return = ob_get_clean();
+        return do_shortcode($Return);
+    }
+
     //echo $Media['_Icon'];
     if($Media['_menuAccess'] != 'null'){
         $user = wp_get_current_user();
@@ -1101,7 +1152,7 @@ function dt_renderInterface($interface) {
 
     ob_start();
         include('data_report/element.def.php');
-        if(empty($Config['_HideFrame']) && $Config['_ViewMode'] != 'search'){
+        if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
             //$InfoBox()
             InfoBox($Config['_ReportDescription']);
         }
@@ -1144,14 +1195,14 @@ function dt_renderInterface($interface) {
             break;
     }
 
-    if(empty($Config['_HideFrame']) && $Config['_ViewMode'] != 'search'){
+    if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
         //$InfoBox()
         ob_start();
         EndInfoBox();
         $Return .= ob_get_clean();
     }
 
-    return $Return;
+    return do_shortcode($Return);
 
 }
 

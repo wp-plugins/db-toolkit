@@ -29,24 +29,25 @@
         
 
         if(!empty($cfg['_grid'])){
+            $newRow = 1;
             foreach($cfg['_grid'] as $row=>$cols){
                 echo '<div class="rowWrapperForm">';
 
-                    echo '<div id="'.$row.'" class="formRow" style="clear: both; width: 90%; float: left;">';
-
+                    echo '<div id="row'.$newRow.'" class="formRow" style="clear: both; width: 90%; float: left;">';
+                        $newCol = 1;
                         foreach($cols as $col=>$width){
 
-                            echo '<div class="column" id="'.$row.'_'.$col.'" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
+                            echo '<div class="column" id="row'.$newRow.'_col'.$newCol.'" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
 
-                                echo '<input type="hidden" value="50%" name="Data[Content][_grid]['.$row.']['.$col.']" class="'.$row.'_control" id="'.$row.'_'.$col.'_control">';
+                                echo '<input type="hidden" value="'.$width.'" name="Data[Content][_grid][row'.$newRow.'][col'.$newCol.']" class="row'.$newRow.'_control" id="row'.$newRow.'_col'.$newCol.'_control">';//row'.$newRow.'_col'.$newCol.'';
                                 echo '<div style="padding: 10px; margin: 10px; -moz-user-select: none;" class="ui-state-error formGridform formColumn ui-sortable" unselectable="on">';
 
                                 $content = array_keys($layout, $row.'_'.$col);
                                 if(!empty($content)){
                                     $output = '';
                                     foreach($content as $render){
-                                        $dta = get_option($render);
-                                        $output .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$dta['ID'].'"><div class="formportlet-header ui-widget-header ui-corner-all">'.$dta['_ReportDescription'].'<input class="layOutform positioning" type="hidden" name="'.$dta['ID'].'" id="interface_'.$dta['ID'].'" value="1"/><span class="ui-icon ui-icon-close"></span></div></div>';
+                                        $dta = get_option($render);                                        
+                                        $output .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$dta['ID'].'"><div class="formportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><div><strong>'.$dta['_ReportDescription'].'</strong></div><span class="description">'.$dta['_ReportExtendedDescription'].'</span><input class="layOutform positioning" type="text" name="'.$dta['ID'].'" id="interface_'.$dta['ID'].'" value="row'.$newRow.'_col'.$newCol.'"/></div></div>';
                                         $_SESSION['dataform']['OutScripts'] .= "
                                             jQuery('.formportlet-header .ui-icon').click(function() {
                                                     jQuery(this).toggleClass(\"ui-icon-minusthick\");
@@ -64,19 +65,20 @@
                                 echo '</div>';
 
                             echo '</div>';
-
+                        $newCol++;
                         }
 
                     echo '</div>';
 
                     echo '<div id="row1Control" class="formRow" style="width: 10%; padding-top: 12px; float: left;">';
-                        echo '<img height="16" width="16" onclick="formSetupColumns(\''.$row.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/cog.png">';
-                        echo '<img height="16" width="16" onclick="formAddColumn(\''.$row.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/add.png">';
-                        echo '<img height="16" width="16" onclick="formSubtractColumn(\''.$row.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/delete.png">';
-                        echo '<img height="16" width="16" onclick="formRemoveColumns(\''.$row.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/no.png">';
+                        echo '<img height="16" width="16" onclick="formSetupColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/cog.png">';
+                        echo '<img height="16" width="16" onclick="formAddColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/add.png">';
+                        echo '<img height="16" width="16" onclick="formSubtractColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/delete.png">';
+                        echo '<img height="16" width="16" onclick="formRemoveColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/no.png">';
                     echo '</div>';
 
                 echo '</div>';
+            $newRow++;
             }
         }
 
@@ -138,7 +140,7 @@ $_SESSION['dataform']['OutScripts'] .= "
 			}
 		
 		});
-			jQuery(".formportlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all").find(".formportlet-header").addClass("ui-widget-header ui-corner-all");
+			jQuery(".formportlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all").find(".formportlet-header").addClass("ui-corner-all");
 			jQuery(".formportlet-header .ui-icon").click(function() {
 				jQuery(this).toggleClass("ui-icon-minusthick");
 				jQuery(this).parents(".formportlet:first").remove();

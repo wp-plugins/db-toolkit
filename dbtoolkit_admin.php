@@ -12,42 +12,7 @@ notes:
 if(!empty($_GET['renderinterface'])){
     $Interface = get_option($_GET['renderinterface']);
     if($Interface['Type'] == 'Cluster'){
-        $cfg = unserialize(base64_decode($Interface['Content']));
-        parse_str($cfg['_clusterLayout'], $layout);
-        //vardump($cfg);
-        //vardump($layout);
-        // Build Layout Array First...
-        echo '<div class="wrap">';
-            echo '<div id="poststuff">';
-            foreach($cfg['_grid'] as $row=>$cols){
-
-                echo '<div id="'.$row.'" style="width:100%; overflow:hidden;" class="formRow">';
-                    
-                    foreach($cols as $col=>$width){
-
-                        echo '<div class="column" id="row1_col1" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
-                            $content = array_keys($layout, $row.'_'.$col);
-                            if(!empty($content)){
-                                $output = '';
-                                foreach($content as $render){
-                                    $output .= dt_renderInterface($render);
-                                }
-                                echo $output;
-                            }else{
-                                echo '&nbsp;';
-                            }
-
-                        echo '</div>';
-
-                    }
-
-                echo '<div style="clear:both;"></div>';
-                echo '</div>';
-
-            }
-            echo '</div>';
-        echo '</div>';
-
+        dt_renderCluster($_GET['renderinterface']);
         return;
     }
     $Title = $Interface['_interfaceName'];

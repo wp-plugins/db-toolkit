@@ -230,7 +230,12 @@
     }
     function dr_addPassbackField(){
 	table = jQuery('#_main_table').val();
-	ajaxCall('dr_loadPassbackFields',table, function(c){
+        remove = 0;
+        if(jQuery('.passBackField').length >= 1){
+            remove = 1;
+        }
+        
+	ajaxCall('dr_loadPassbackFields', table, 'none', 0, remove, function(c){
             jQuery('#PassBack_FieldSelect').append(c);
 	});
     }
@@ -297,7 +302,7 @@
             if(v == false){
                 jQuery('#referenceSetup').html('');
                 df_fetchreportSetp(table, false);
-                dr_addPassbackField(table);
+                dr_addPassbackField();
             }else{
                 jQuery('#referenceSetup').html(v);
             }
