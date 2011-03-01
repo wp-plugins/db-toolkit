@@ -1,33 +1,15 @@
 <?php
-
 switch($Types[1]) {
     case 'image':
-        if(!empty($Data[$Field])) {
-
-            $Image = explode('|', $Data[$Field]);
-            $Image[1] = strtok($Image[1], '.');
-
-            $path = wp_upload_dir();
-
-            if(!file_exists(str_replace($path['url'], $path['path'], $Image[0]))) {
-                $Image[0] = WP_PLUGIN_URL.'/db-toolkit/data_report/nopic.jpg';
-                $Image[1] = 'image unavailable';
-            }
-        }else {
-            $Image[0] = WP_PLUGIN_URL.'/db-toolkit/data_report/nopic.jpg';
-            $Image[1] = 'image unavailable';
+        if(empty($Data[$Field])){
+            $Data[$Field] = WP_PLUGIN_URL.'/db-toolkit/data_report/nopic.jpg';
         }
-        $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Image[0]).'_img_'.$Field.'">';
+
         
-        if(!empty($Config['_ImageSquareM'][$Field])) {
-            $Out .= useimage($Image[0], 0, $Config['_ImageSizeM'][$Field]).'</a></div>';
-        }else {
-            $Out .= useimage($Image[0], 6, $Config['_ImageSizeM'][$Field]).'</a></div>';
-        }
-        $Out .= '<div class="caption">'.df_parsecamelcase($Image[1]).'</div>';
+        $file = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $Data[$Field]);
 
-        $ImageHeight = GetImageDimentions ($Image[0], 'h');
-        $ImageWidth = GetImageDimentions ($Image[0], 'w');
+        $ImageHeight = GetImageDimentions ($file, 'h');
+        $ImageWidth = GetImageDimentions ($file, 'w');
         if ( $ImageHeight > $ImageWidth ) {
             if($ImageHeight < $Config['_ImageSizeF'][$Field]) {
                 $Config['_ImageSizeF'][$Field] = $ImageHeight;
@@ -47,16 +29,31 @@ switch($Types[1]) {
 						width: 'auto'
 						";
         }
+        
+
+        if(!empty($Config['_ImageSquareM'][$Field])) {
+            $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Data[$Field]).'_img_'.$Field.'" style="height:'.$Config['_ImageSquareM'][$Field].'px;">';
+            $Out .= useimage($Data[$Field], 0, $Config['_ImageSizeM'][$Field]).'</div>';
+        }else {
+            $preHeight = $ImageHeight * ( $Config['_ImageSizeM'][$Field] / $ImageWidth );
+            $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Data[$Field]).'_img_'.$Field.'" style="height:'.$preHeight.'px;">';
+            $Out .= useimage($Data[$Field], 6, $Config['_ImageSizeM'][$Field]).'</div>';
+        }
+        // need to do a caption thing
+        // 
+        //$Out .= '<div class="caption">'.df_parsecamelcase($Image[1]).'</div>';
+
+
 
         $_SESSION['dataform']['OutScripts'] .= "
-				jQuery('#".md5($Image[0])."_img_".$Field."').click(function(){
+				jQuery('#".md5($Data[$Field])."_img_".$Field."').click(function(){
 					//$.facebox('<h2>".$Image[1]."</h2><img src=\"".$Image[0]."\" />');
-					//var Dialog = new Boxy('".useimage($Image[0], 6, $Config['_ImageSizeF'][$Field])."', {title: '".$Image[1]."', modal: false, unloadOnHide: true});
-					if(jQuery(\"#ui-dialog-".md5($Image[0])."\").length == 1){
-						jQuery(\"#ui-dialog-".md5($Image[0])."\").remove();
+					//var Dialog = new Boxy('".useimage($Data[$Field], 6, $Config['_ImageSizeF'][$Field])."', {title: '".$Image[1]."', modal: false, unloadOnHide: true});
+					if(jQuery(\"#ui-dialog-".md5($Data[$Field])."\").length == 1){
+						jQuery(\"#ui-dialog-".md5($Data[$Field])."\").remove();
 					}
-					jQuery('body').append('<div id=\"ui-dialog-".md5($Image[0])."\" title=\"".$Image[1]."\"><div style=\"height:".$new_height."px;\">".useimage($Image[0], 6, $Config['_ImageSizeF'][$Field])."</p></div>');
-					jQuery(\"#ui-dialog-".md5($Image[0])."\").dialog({
+					jQuery('body').append('<div id=\"ui-dialog-".md5($Data[$Field])."\" title=\"".basename($Data[$Field])."\"><div style=\"height:".$new_height."px;\">".useimage($Data[$Field], 6, $Config['_ImageSizeF'][$Field])."</p></div>');
+					jQuery(\"#ui-dialog-".md5($Data[$Field])."\").dialog({
 						position: 'center',
 						buttons: {
 							'Close': function() {

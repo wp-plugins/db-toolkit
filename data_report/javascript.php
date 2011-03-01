@@ -181,7 +181,7 @@
 
         // number = jQuery('.sectionBreak').length;
 	number=Math.floor(Math.random()*99999);
-	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter sectionBreak '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak_SectionBreak'+number+'"><div class="'+area+'portlet-header ui-widget-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style="-moz-user-select: none;"/>&nbsp;<input type="text" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><div style="padding:3px;">Caption: <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Caption]" /></div><input class="layOut'+area+' positioning" type="hidden" name="_SectionBreak'+number+'" id="section_'+number+'" value="1"/></div>');
+	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter sectionBreak '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak_SectionBreak'+number+'"><div class="'+area+'portlet-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style="-moz-user-select: none;"/><strong>Title:</strong><input type="text" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><div style="padding:3px;"><strong>Caption:</strong> <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Caption]" /></div><input class="layOut'+area+' positioning" type="hidden" name="_SectionBreak'+number+'" id="section_'+number+'" value="1"/></div>');
 	jQuery("."+area+"portlet-header .ui-icon").click(function() {
             jQuery(this).toggleClass("ui-icon-minusthick");
             jQuery(this).parents("."+area+"portlet:first").remove();
@@ -190,7 +190,7 @@
 	jQuery("."+area+"Grid"+area).sortable({
             connectWith: '.'+area+'Grid'+area,
             update: function(event, ui){
-                jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id')+'_'+jQuery(this).parent().css('width'));
+                jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                 formSetup_columSave();
                 viewSetup_columSave();
             }

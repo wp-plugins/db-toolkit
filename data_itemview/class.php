@@ -18,7 +18,7 @@ function di_referenceSetup($id, $DefaultFilter = false,  $DefaultTitle = false) 
 
 
 function di_showItem($EID, $Item, $Setup = false) {
-    //return 'pingoo';
+    
     $Element = getelement($EID);
     $Config = $Element['Content'];
     $queryJoin = '';
@@ -144,13 +144,15 @@ function di_showItem($EID, $Item, $Setup = false) {
     //   $Query = str_replace($Field, '`'.$Field.'`', $Query);
     //}
     // Query Results
-    $Res = mysql_query($Query);
+    //$Res = mysql_query($Query);
     //echo $Query.'<br /><br /><br />';
-    echo mysql_error();
+    //echo mysql_error();
 
+    //vardump($Config['_ReturnFields']);
 
-
-    $Data = mysql_fetch_assoc($Res);
+    //$Data = mysql_fetch_assoc($Res);
+    
+    $Data = dr_BuildReportGrid($EID, false, false, false, 'data', false, array($Config['_ReturnFields'][0]=>$Item));
 
     if(!empty($Config['_UseViewTemplate'])) {
         //dump($Config);
@@ -203,104 +205,79 @@ function di_showItem($EID, $Item, $Setup = false) {
     $LeftColumn = '';
     $RightColumn = '';
     $FarRightColumn = '';
+    //vardump($Config);
     //dump($Config['_Field']);
-    if(!empty($Config['_gridLayoutView'])) {
-        $Config['_gridLayoutView'] = str_replace('=viewrow', '=row', $Config['_gridLayoutView']);
-        parse_str($Config['_gridLayoutView'], $Layout);
-
+    if(!empty($Config['_gridViewLayout'])) {
+        //$Config['_gridViewLayout'] = str_replace('=viewrow', '=row', $Config['_gridLayoutView']);
+        parse_str($Config['_gridViewLayout'], $Layout);
+        //vardump($Config['_gridView']);
+        //vardump($Layout);
         $Form = '';
         $CurrRow = '0';
         $CurrCol = '0';
         $Index = 0;
-        foreach($Layout as $LayoutField => $Grid) {
-            $Grid = explode('_', $Grid);
-            if(substr($Grid[0],0,3) == 'row') {
-                $Setup[$Grid[0]][$Grid[1]]['Fields'][]['Name'] = str_replace('Field_','',$LayoutField);
-                $Setup[$Grid[0]][$Grid[1]]['Row'] = $Grid[2];
-                $Index++;
-            }else {
-                $Setup[$Grid[0]][] = $LayoutField;
-            }
-        }
+
         $newTitle = 'View Item';
         if(!empty($Config['_ViewFormText'])) {
             $newTitle = $Config['_ViewFormText'];
         }
         //dump($Setup);
-        foreach($Setup as $Row=>$ColSets) {
-            //vardump($ColSets);
-            if(substr($Row,0,3) == 'row') {
-                $Form .= '<div id="pg'.$_GET['Page']['ID'].'-view-'.$Row.'" class="view-gen-row" style="clear:both;">';
-                foreach($ColSets as $Col=>$FieldSet) {
-                    $Form .= '<div style="float: left; overflow: hidden; width: '.$FieldSet['Row'].';">';
-                    $Form .= '<div id="pg'.$_GET['Page']['ID'].'-view-'.$Row.'-'.$Col.'" class="view-gen-row view-gen-col view-col-'.$Col.'">';
-                    foreach($FieldSet['Fields'] as $Fields) {
-                        $Field = $Fields['Name'];
-                        $FieldSet = $Config['_Field'][$Field];
-                        //$FieldSet = explode('_',$FieldDet);
-                        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
-                            if(!empty($Config['_FieldTitle'][$Field])) {
-                                $name = $Config['_FieldTitle'][$Field];
-                            }else {
-                                $name = df_parseCamelCase($Field);
-                            }
-                            //echo $Field;
-                            $Form .= '<div id="view-field-'.$Field.'" class="view-gen-field-wrapper">';
-                            $Form .= '<label id="lable_'.$Element['ID'].'_'.$Field.'" for="entry_'.$Element['ID'].'_'.$Field.'" class="view-gen-lable '.$FieldSet[1].'">'.$name.'</label>';
-                            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
-                            $Val = '';
-                            if(!empty($Data[$Field])) {
-                                $Val = stripslashes($Data[$Field]);
-                            }
-                            if(!empty($FieldTypes[$FieldSet[1]]['visible'])) {
-                                $Types = $FieldSet;
-                                $Out = false;
-                                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/output.php');
-                                $Form .= '<div id="view-field-'.$Field.'-data" class="view-gen-field-data-wrapper">'.$Out.'</div>';
-                                if(empty($FieldTypes[$FieldSet[1]]['captionsOff'])) {
-                                    $Form .= '<div class="caption">';
-                                    if(!empty($Config['_FieldCaption'][$Field])) {
-                                        $Form .= $Config['_FieldCaption'][$Field];
-                                    }else {
-                                        $Form .= '&nbsp;';
+        foreach($Config['_gridView'] as $row=>$cols){
+            $Form .= "<div style=\"clear: both;\" class=\"view-gen-row\" id=\"pg-view-".$row."\">\n";
+                foreach($cols as $col=>$width){
+                    $Form .= "<div class=\"view-".$row."-".$col."\" style=\"float: left; overflow: hidden; width: ".$width.";\">\n";
+                        $Form .= "<div id=\"pg-view-".$row."-".$col."\" class=\"view-gen-row view-gen-col view-col-".$col."\">\n";
+
+                            // check for section breaks
+                            $contentKeys = array_keys($Layout, $row.'_'.$col);
+                            foreach($contentKeys as $Field){
+                                $Field = str_replace('View_Field_', '', $Field);
+                                $FieldSet = $Config['_Field'][$Field];
+                                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                                    if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
+                                        // Check if is visible or not
+                                        $Out = false;
+                                        $Type = $FieldSet[1];
+                                        $Types = $FieldSet;
+                                        $Form .= "<label class=\"view-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$Config['_FieldTitle'][$Field]."</label>\n";
+                                        $Form .= "<div class=\"view-gen-field-data-wrapper\" id=\"view-data-".$Field."\">\n";
+                                        //$Val = $Defaults[$Field];]
+                                        include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/output.php');
+                                        //$Form = str_replace('{{'.$Field.'}}', $Out, $Form);
+                                        $Form .= $Out;
+                                        $Form .= "&nbsp;</div>\n";
+                                        $Form .= "<span class=\"description\" id=\"caption_".$Element['ID']."_".$Field."\">\n";
+                                        $Form .= $Config['_FieldCaption'][$Field].'&nbsp';
+                                        $Form .= "</span>\n";
+                                    }else{
+                                        if(empty($FieldTypes[$FieldSet[1]]['visible'])){
+                                            ob_start();
+                                            $Val = $Defaults[$Field];
+                                            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                                            $Hidden .= ob_get_clean();
+                                        }
                                     }
-                                    $Form .= '</div>';
+
+                                }else{
+                                    if(!empty($Config['_SectionBreak'][$Field])){
+                                        $Form .= "<div class=\"sectionbreak\">\n";
+                                        $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
+                                        if(!empty($Config['_SectionBreak'][$Field]['Caption'])){
+                                            $Form .= "<span class=\"description\">".$Config['_SectionBreak'][$Field]['Caption']."</span>\n";
+                                        }
+                                        $Form .= "</div>\n";
+                                    }
+                                    $Form .= '&nbsp;';
                                 }
-                                $Form .= '<div style="clear:left;"></div>';
-                                $Form .= '</div>';
                             }
-                        }else {
-                            // check for Sectionbreak;
-                            if(!empty($Config['_SectionBreak'][$Fields['Name']])) {
-                                // Section Break
-                                $Form .= '<div class="sectionbreak">';
-                                $Form .= '<h3>'.$Config['_SectionBreak'][$Fields['Name']]['Title'].'</h3>';
-                                if(!empty($Config['_SectionBreak'][$Fields['Name']]['Caption'])) {
-                                    $Form .= '<div class="caption">'.$Config['_SectionBreak'][$Fields['Name']]['Caption'].'</div>';
-                                }
-                                $Form .= '</div>';
+                            if(empty($contentKeys)){
+                                $Form .= '&nbsp;';
                             }
-                        }
-                        //ob_start();
-                        if(!empty($Config['_ViewFormText'])) {
-                            //dump($Data);
-                            if(!empty($Data['_outvalue'][$Field])) {
-                                $newTitle = str_replace('{{'.$Field.'}}', $Data['_outvalue'][$Field], $newTitle);
-                            }else {
-                                $newTitle = str_replace('{{'.$Field.'}}', $Data[$Field], $newTitle);
-                            }
-                            $Output['title'] = $newTitle;
-                        }else {
-                            $Output['title'] = 'View Item';
-                        }
-                        
-                    }
-                    $Form .= '</div>';
-                    $Form .= '</div></div>';
+                        $Form .= "</div>\n";
+                    $Form .= "</div>\n";
                 }
-                $Form .= '<div style="clear:left;"></div>';
-                $Form .= '</div>';
-            }
+            $Form .= "</div>\n";
         }
         $Form .= '<div style="clear:left;"></div>';
         $Shown = '';
@@ -314,12 +291,14 @@ function di_showItem($EID, $Item, $Setup = false) {
             }
             $Output['title'] = $newTitle;
         }
-        $Output['width'] = $Config['_popupWidthview'];
+        $Output['width'] = '420';
+        if(!empty($Config['_popupWidthview'])){
+            $Output['width'] = $Config['_popupWidthview'];
+        }
         $Output['html'] = '<div class="formular">'.$Form.'</div>';
         if(!empty($Config['_Show_Edit'])) {
             $OutPut['edit'] = true;
         }
-
         return $Output;
     }
 

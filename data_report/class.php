@@ -1144,7 +1144,7 @@ return $files;
 
 }
 
-function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false) {
+function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false){
 
 
 //Filters will be picked up via Session value
@@ -1259,7 +1259,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // Start Table
     // Check for template
     if(empty($Config['_UseListViewTemplate'])) {
-        $tableClass = '';
+        $tableClass = 'class="data_report_Table"';
         if(is_admin()) {
             $tableClass = 'class="widefat"';
         }
@@ -1282,7 +1282,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if(!empty($Config['_TotalsFields'][$Field]['Location'])) {
             $Location = $Config['_TotalsFields'][$Field]['Location'];
         }
-        if($Config['_IndexType'][$Field][1] == 'show' && ($Location == 'inline' || $Location == 'headerinline' || $Location == 'footerinline')) {
+        if($Config['_IndexType'][$Field][1] == 'show' && ($Location == 'inline' || $Location == 'headerinline' || $Location == 'footerinline') && empty($wherePush)) {            
             //Set Widths
             $Direction = 'ASC';
             if($_SESSION['report_'.$EID]['SortDir'] == 'ASC') {
@@ -1333,6 +1333,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $AvrageWidth[$Field] = array();
             $AvrageWidth[$Field][] = $minWidth[$Field];
 
+        }
+        if(!empty($wherePush)){
+            $querySelects[$Field] = 'prim.`'.$Field.'`';
         }
     }
 
@@ -1431,7 +1434,16 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
     if(!empty($preWhere)) {
         $queryWhere[] = '('.implode(' OR ', $preWhere).')';
     }
+    if(!empty($wherePush)){
+        if($WhereTag == '') {
+            $WhereTag = " WHERE ";
+        }
+        foreach($wherePush as $wField=>$wVal){
+            $queryWhere[] = 'prim.`'.$wField.'` = \''.$wVal.'\'';
+        }
 
+
+    }
     // create Query Selects and Where clause string
     //dump($querySelects);
     $querySelects = dr_processQuery($Config, $querySelects);
@@ -1572,6 +1584,10 @@ if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
        // echo $Field.' = '.$FieldValue.'<br />';
     //   $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
     //}
+    if(strtolower($Format) == 'data'){
+        $dtaRes = mysql_query($Query);        
+        return mysql_fetch_assoc($dtaRes);
+    }
     if(!empty($Config['_UseCustomQuery']) && !empty($Config['_ManualQuery'])){
         $Query = $Config['_ManualQuery'];
 

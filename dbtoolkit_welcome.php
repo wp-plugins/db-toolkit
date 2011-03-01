@@ -44,17 +44,17 @@
         <div id="dashboard_right_now" class="postbox">
             <h3><span>New Features</span></h3>
             <div style="margin: 10px;">
-                
+
+                <p><strong>Interface Clusters</strong>: A new feature allows you to build clusters of interfaces. This allows you to layout an series of interfaces and have that series inserted in a page or post with a single short code. There will be some tutorials coming soon to demo the feature.</p>
+                <p><strong>Layout Builders</strong>: Totally rebuilt the form and view Layout Builders.</p>
+                <p><strong>Bug Fixes</strong>: Made a few bug fixes to aid in stability.</p>
+
                 <p><strong>Logo Change</strong>: DB-Toolkit now has a logo.</p>
                 <p><strong>Preparations</strong>: Made preparations for Interface Clusters.</p>
                 <p><strong>Insert Interface Editor Button</strong>: You can now insert an interface Shortcode using the Insert Interface button on the text editor toolbar.</p>
                 <p><strong>PDF Exporting Update</strong>: Added PDF Templates. Currently not customisable but will be in next release</p>
                 <p><strong>Charting</strong>: Fixed a bug that prevented Charting from being enabled. in the Charting Tab, you can enable charting..</p>
                 <p><strong>Import Button</strong>: when creating an interface, in the settings tab, check the "<strong>Show Import</strong>" Button to enable the import feature.</p>
-                <p><strong>Dashboard</strong>: This page right here. in the next release i will show stats on the interfaces and application in db-toolkit.</p>
-                <p><strong>Access Control</strong>: Preparation have been made for access control mechanism that will allow you to make pages and interfaces be shown only to users with qualifying access rights.</p>
-                <p><strong>Marketplace</strong>: Preparation have been made for interface publishing to the db-toolkit marketplace. Here you'll be able to share and download ready made interfaces and applications.</p>
-                <p><strong>BugFixes</strong>: The all important bug fixes, mostly minor.</p>
                 
             </div>
         </div>

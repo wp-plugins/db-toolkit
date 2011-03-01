@@ -87,18 +87,16 @@ function dais_rowSwitch($a) {
 
 
 function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class = 'table1') {
-    if(is_admin ()){
-        if(!file_exists(dirname(WP_CONTENT_DIR).$ImageFile)){return false;}
-    }else{
-        if(!file_exists(dirname(WP_CONTENT_DIR).$ImageFile)){return false;}
-    }
 
+        $File = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $ImageFile);
+        if(!file_exists($File))
+        return '<em> image Unavailable</em>';
 
     $fileLoc = str_replace(get_bloginfo('url'), '', $ImageFile);
 
     $Quality = (!empty($Quality) ? $Quality : $Quality);
     $TDir = $ImageFile;
-    $Dir = __DIR__.'/../../../..'.$fileLoc;
+    $Dir = $File;
     if ($Size == '0') {
         $Size = 100;
     }

@@ -94,7 +94,7 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 		switch ($Type){
 			case 'image';
                                 
-				$Image = str_replace(get_bloginfo('url'), '', $Value);
+				$Image = $Value;// str_replace(get_bloginfo('url'), '', $Value);
                                 
 				if(!empty($Config['_ImageSquareI'][$Field])){
                                     if(!empty($Config['_URLOnly'][$Field])){

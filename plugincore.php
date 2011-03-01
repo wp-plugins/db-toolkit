@@ -82,12 +82,13 @@ function dt_headers() {
     include_once('data_report/headers.php');
     ?>
 <script type="text/javascript" >
+
     <?php
     if(!is_admin()) {
-        echo 'var ajaxurl = \'./\';';
+        echo 'var ajaxurl_dbt = \'./index.php?dbtoolkit\';';
     }else {
         ?>
-
+        ajaxurl_dbt = ajaxurl;
             function dt_deleteInterface(interfaceID, type){
                 hash = '';
                 if(type == 'cluster'){
@@ -121,18 +122,19 @@ function dt_headers() {
         ?>
                 var vars = { action : 'dt_ajaxCall',func: ajaxCall.arguments[0]};
         <?php
-    }else {
-        ?>
+    }else {        
+        ?>        
                 var vars = { action : 'wp_dt_ajaxCall',func: ajaxCall.arguments[0]};
         <?php
     }
     ?>
-
+    
             for(i=1;ajaxCall.arguments.length-1>i; i++) {
                 vars['FARGS[' + i + ']'] = ajaxCall.arguments[i];
             }
+            
             var callBack = ajaxCall.arguments[ajaxCall.arguments.length-1];
-            jQuery.post(ajaxurl,vars, function(data){
+            jQuery.post(ajaxurl_dbt,vars, function(data){
                 callBack(data);
             });
         }
@@ -203,6 +205,10 @@ function dt_styles() {
             }
         }
     }else{
+        
+        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');
+        wp_enqueue_style('interface_table_styles');
+
         if(!empty($preIs)){
             foreach($preIs as $interface){
                $preInterface = get_option($interface);
@@ -351,7 +357,7 @@ function dt_menus() {
 
         add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
-        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
+        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces & Clusters', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/new-text.png" align="absmiddle" style="float:right;"> New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
@@ -1070,15 +1076,25 @@ function dt_rendercluster($cluster){
     parse_str($cfg['_clusterLayout'], $layout);
 
     // Build Layout Array First...
+    
+    if(is_admin ()){
     echo '<div class="wrap">';
+    echo '<div class="icon32" id="icon-themes"></div><h2>'.$cfg['_ClusterTitle'].'<a href="admin.php?page=Database_Toolkit&amp;cluster='.$cluster.'" class="button add-new-h2">Edit</a></h2>';
+    if(!empty($cfg['_ClusterDescription'])){
+        echo '<span class="description">'.$cfg['_ClusterDescription'].'</span>';
+    }
+    echo '<div class="clear"></div>';
+    
         echo '<div id="poststuff">';
+        echo '<div class="metabox-holder">';
+    }
         foreach($cfg['_grid'] as $row=>$cols){
 
-            echo '<div id="'.$row.'" style="width:100%; overflow:hidden;" class="formRow">';
+            echo '<div id="clusterRow cluster-'.$row.'" style="width:100%; overflow:hidden;" class="formRow">';
 
                 foreach($cols as $col=>$width){
 
-                    echo '<div class="column" id="row1_col1" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
+                    echo '<div class="clusterColumn cluster-'.$row.'-'.$col.'" id="'.$row.'_'.$col.'" style="width: '.$width.'; float: left;">';
                         $content = array_keys($layout, $row.'_'.$col);
                         if(!empty($content)){
                             $output = '';
@@ -1098,8 +1114,11 @@ function dt_rendercluster($cluster){
             echo '</div>';
 
         }
+    if(is_admin ()){
+            echo '</div>';
         echo '</div>';
     echo '</div>';
+    }
 
     return;
 }
@@ -1293,7 +1312,7 @@ function dt_advanced_buttons(){ ?>
                         vars['FARGS[' + i + ']'] = ajaxCall.arguments[i];
                     }
                     var callBack = ajaxCall.arguments[ajaxCall.arguments.length-1];
-                    jQuery.post(ajaxurl,vars, function(data){
+                    jQuery.post(ajaxurl_dbt,vars, function(data){
                         callBack(data);
                     });
                 }

@@ -305,7 +305,9 @@ if(!empty($_POST['Data'])) {
         ?>
 
         <div class="wrap">
-            <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" /><a href="admin.php?page=Add_New" class="button add-new-h2">New Interface</a>
+            <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />
+                <a href="admin.php?page=Add_New" class="button">New Interface</a>&nbsp;
+                <a href="admin.php?page=New_Cluster" class="button">New Cluster</a>
                 <br />
                 <span class="description">Manage Applications and Interfaces</span>
                 <br class="clear" /><br />

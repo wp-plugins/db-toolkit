@@ -1,8 +1,8 @@
 <?php
 
 function linked_processValue($Value, $Type, $Field, $Config, $EID, $Data){
-	//dump($Data);
-	if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
+
+        if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 	
 		$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
 		$outList = array();
