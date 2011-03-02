@@ -20,7 +20,7 @@ There was a big problem with V0.2.2.6 - please use a version higher than this.
 
 Features include:
 
-*   Visual forms and reports builder
+*   Rebuilt Visual forms and reports builder
 *   Templates for output
 *   Field Specific configuration
 *   Application Export and Import
