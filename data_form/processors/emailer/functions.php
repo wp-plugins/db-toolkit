@@ -48,7 +48,8 @@ return $Data;
 //}
 
 function config_emailer($ProcessID, $Table, $Config = false){
-
+    global $wpdb;
+    
     $rval = '';
     if(!empty($Config['_FormProcessors'][$ProcessID]['_recipient'])){
         $rval = $Config['_FormProcessors'][$ProcessID]['_recipient'];
@@ -58,8 +59,24 @@ function config_emailer($ProcessID, $Table, $Config = false){
         $sval = $Config['_FormProcessors'][$ProcessID]['_subject'];
     }
 
-    $Return = 'Email Address: <input type="text" value="'.$rval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_recipient]" />';
-    $Return .= ' Email Subject: <input type="text" value="'.$sval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_subject]" />';
+    $Return = '<p>Email Address: <input type="text" value="'.$rval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_recipient]" /></p>';
+    $Return .= '<p>Email Subject: <input type="text" value="'.$sval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_subject]" /></p>';
+
+    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
+    $Sender = '<option value="self">Self</option>';
+
+    
+    foreach($Fields as $FieldData){
+        
+        $Sel = '';
+        if($Config['_FormProcessors'][$ProcessID]['_SenderEmail'] == $FieldData[0]){
+            $Sel = 'selected="selected"';
+        }
+        $Sender .= '<option value="'.$FieldData[0].'" '.$Sel.'>'.$FieldData[0].'</option>';
+
+    }
+
+    $Return .= '<p>Sender Field: <select name="Data[Content][_FormProcessors]['.$ProcessID.'][_SenderEmail]">'.$Sender.'</select></p>';
 
 
     return $Return;
