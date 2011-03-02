@@ -414,7 +414,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     $Form = '';
     if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
         parse_str($Config['_gridLayout'], $Layout);
-        vardump($Config['_grid']);
+        
         foreach($Config['_grid'] as $row=>$cols){
             $Form .= "<div style=\"clear: both;\" class=\"form-gen-row\" id=\"pg-form-".$row."\">\n";
                 foreach($cols as $col=>$width){
