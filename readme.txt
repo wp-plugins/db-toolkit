@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.2.11b
+Stable tag: 0.2.2.12
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,7 +52,7 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Changelog ==
 
-= 0.2.2.11b =
+= 0.2.2.12 =
     - left a small bit of debug code in, which is now removed. Sorry.
 
 = 0.2.2.11 =
