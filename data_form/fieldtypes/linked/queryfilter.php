@@ -4,8 +4,8 @@
 
 
                         $joinIndexSet = $joinIndex;
-                        if(!empty($queryJoins[$Config['_Linkedfields'][$Field]['Table']])){
-                            $joinIndexSet = $queryJoins[$Config['_Linkedfields'][$Field]['Table']];
+                        if(!empty($queryJoins[$joinIndex])){
+                            $joinIndexSet = $queryJoins[$joinIndex];
                         }
 
 			// replace primary table field with linked table field as primary table field name
@@ -70,7 +70,8 @@
                                 }
                                 if(empty($queryJoins[$Config['_Linkedfields'][$Field]['Table']])){
                                     $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
-                                    $queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
+                                    //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
+                                    $queryJoins[$joinIndex] = $joinIndex;
                                 }
                         //New Join Methods
                             //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
@@ -129,11 +130,11 @@
 
 			// left Join linked table
 				 //JoinType
-                        if(empty($queryJoins[$Config['_Linkedfilterfields'][$Field]['Table']])){
+                        if(empty($queryJoins[$joinIndex])){
                         $Primary = 'prim.'.$Field;
 			$queryJoin .= " ".$Config['_Linkedfilterfields'][$Field]['JoinType']." `".$Config['_Linkedfilterfields'][$Field]['Table']."` AS ".$joinIndex." on (".$Primary." = ".$joinIndex.".".$Config['_Linkedfilterfields'][$Field]['Ref'].") \n";
 
-                        $queryJoins[$Config['_Linkedfilterfields'][$Field]['Table']] = $joinIndex;
+                        $queryJoins[$joinIndex] = $joinIndex;
 
                         }
 

@@ -236,7 +236,7 @@ function formSetupColumns(row){
 				jQuery("#ui-jsDialog-"+row+"").dialog('option', 'title', row);
 				jQuery("#ui-jsDialog-"+row+"").html('');
 				jQuery('#'+row+' .column').each(function(){
-					jQuery("#ui-jsDialog-"+row+"").append('<div><input type="hidden" class="setting_'+row+'" ref="'+this.id+'" id="column234234" value="'+document.getElementById(jQuery(this).attr('id')).style.width+'" /></div>');
+					jQuery("#ui-jsDialog-"+row+"").append('<div><input type="text" class="setting_'+row+'" ref="'+this.id+'" id="column234234" value="'+document.getElementById(jQuery(this).attr('id')).style.width+'" /></div>');
 				});
 			},
 			close: function(event, ui) {
