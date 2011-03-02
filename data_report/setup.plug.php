@@ -150,7 +150,7 @@
         <div style="padding:3px;">
             <input type="button" name="button" id="button" class="button" value="Add Passback Field" onclick="dr_addPassbackField();"/></div>
         <div id="PassBack_FieldSelect">
-            <?php
+            <?php            
                 echo dr_loadPassbackFields($Element['Content']['_main_table'], $Element['Content']['_ReturnFields'], $Element['Content']);
              ?></div>
         <?php

@@ -83,6 +83,7 @@ if(is_admin()) {
                     $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a>';
                 }else{
                     $Return .= '<em>Primary</em>';
+                    $remove = true;
                 }
             $Return .= '</div>';
             foreach($FieldsClearer as $Clear) {
@@ -100,10 +101,10 @@ if(is_admin()) {
                     $Return .= $TotalsField;
                     $Return .= '</select>&nbsp;';
                     if(empty($remove)){
-                        $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a>';
-                        $remove = true;
+                        $Return .= '<a href="#" onclick="jQuery(\'#ReturnFields_'.$ID.'_wrap\').remove(); return false;">remove</a>';                        
                     }else{
                         $Return .= '<em>Primary</em>';
+                        $remove = false;
                     }
                     $Return .= '</div>';
                     $out[] = str_replace('{{'.$Default.'}}', 'selected="selected"', $Return);
