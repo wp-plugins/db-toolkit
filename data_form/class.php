@@ -634,7 +634,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
 
     $Shown .= '</table>';
-    if(!empty($Config['_FormMode'])) {
+    
+    if(!empty($Config['_FormMode']) || empty($Config['_grid'])) {
         $ButtonText = 'Submit';
         if(!empty($Config['_SubmitButtonText'])) {
             $ButtonText = $Config['_SubmitButtonText'];
