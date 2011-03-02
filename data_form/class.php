@@ -352,6 +352,8 @@ function set_iso($string) {
 
 function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
+    global $wpdb;
+
     $Config = $Element['Content'];
     //vardump($Config);
     if(!empty($Config['_FormLayout'])) {
@@ -376,11 +378,15 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     */   
     if(!empty($Defaults) && !empty($Config['_Show_Edit'])) {
         $EditID = $Defaults;
-        $defRes = mysql_query("SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."';");        
+        $defRes = mysql_query("SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."';");
+        $Query = "SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."';";
         if(mysql_num_rows($defRes) == 0) {
             return "Invalid Entry";
         }
-        $Defaults = mysql_fetch_assoc($defRes);        
+        //$Defaults = mysql_fetch_assoc($defRes);
+        $Defaults = $wpdb->get_results($Query, ARRAY_A);
+        $Defaults = $Defaults[0];
+        
     }else {
         unset($Defaults);
     }
@@ -450,7 +456,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         $Form .= "<div class=\"form-gen-field-wrapper\" id=\"form-field-".$Field."\">\n";
                                         $Form .= "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$Config['_FieldTitle'][$Field]."</label>\n";
                                             ob_start();
-                                            $Val = $Defaults[$Field];
+                                            $Val = esc_attr($Defaults[$Field]);
                                             if(!empty($Config['_readOnly'][$Field])){
                                                 $func = $FieldSet[0].'_processValue';
                                                 if(function_exists($func)){
@@ -467,7 +473,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     }else{
                                         if(empty($FieldTypes[$FieldSet[1]]['visible'])){
                                             ob_start();
-                                            $Val = $Defaults[$Field];
+                                            $Val = esc_attr($Defaults[$Field]);
                                             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                             $Hidden .= ob_get_clean();
                                         }
@@ -494,7 +500,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $Form .= '<div style="clear:left;"></div>';
         $Shown = '';
         
-        if(!empty($Config['_FormMode']) || $Config['_ViewMode'] == 'form') {
+        if(!empty($Config['_FormMode']) || ($Config['_ViewMode'] == 'form' || empty($Config['_grid']))) {
             $ButtonText = 'Submit';
             if(!empty($Config['_SubmitButtonText'])) {
                 $ButtonText = $Config['_SubmitButtonText'];
@@ -651,7 +657,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
     $Shown .= '</table>';
     
-    if(!empty($Config['_FormMode']) || empty($Config['_grid'])) {
+    if(!empty($Config['_FormMode'])) {
         $ButtonText = 'Submit';
         if(!empty($Config['_SubmitButtonText'])) {
             $ButtonText = $Config['_SubmitButtonText'];

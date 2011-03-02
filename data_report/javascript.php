@@ -430,8 +430,9 @@
     }
 
     function dr_BuildUpDateForm(eid, rid){
+		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
 
-        id = Math.floor(Math.random()*9999999);
+        id = rid;//Math.floor(Math.random()*9999999);
 
 	if(jQuery("#ui-jsDialog-"+id+"-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
@@ -439,7 +440,7 @@
 	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'-'+eid+'" title="Loading"><p>Loading Entry</p></div>');
 	jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog({
             autoResize: true,
-            modal: true,
+            //modal: true,
             buttons: {
                 'Cancel': function() {jQuery(this).dialog("close"); }
             },
