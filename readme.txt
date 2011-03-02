@@ -16,7 +16,6 @@ Build custom databased application for managing data from simple data entries to
 I'm running a tutorial series to explain the fundermentals on using the system and will be building documentation as i go.
 Tutorials will be on up on http://dbtoolkit.digilab.co.za
 
-There was a big problem with V0.2.2.6 - please use a version higher than this.
 
 Features include:
 

@@ -26,6 +26,9 @@ function post_process_emailer($Data, $Setup, $Config){
 
     $Body = "Submitted Data from ".date("r")."\r\n";
     $Body .= "=============================\r\n";
+    if(empty($Data)){
+        return false;
+    }
     foreach($Data as $FieldKey=>$FieldValue){
         if(strpos($FieldKey, '_control_') === false){
             $Body .= $FieldKey.": ".$FieldValue."\r\n";

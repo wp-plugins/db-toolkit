@@ -428,7 +428,23 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                 
                                 $FieldSet = explode('_', $Config['_Field'][$Field]);
                                 if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
-                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');                                    
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+
+                                    // Validation Check
+                                    $Req = false;
+                                    if(!empty($Config['_Required'][$Field])){
+                                            $name = $name.' <em>(required)</em>';
+                                            $Req = 'validate[required]';
+                                    }
+                                    if(!empty($Config['_Unique'][$Field])){
+                                            if(!empty($Req)){
+                                                    $Req = 'validate[required, ajax[ajaxUnique]]';
+                                            }else{
+                                                    $Req = 'validate[optional, ajax[ajaxUnique]]';
+                                            }
+                                    }
+
+
                                     if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
                                         // Check if is visible or not
                                         $Form .= "<div class=\"form-gen-field-wrapper\" id=\"form-field-".$Field."\">\n";
