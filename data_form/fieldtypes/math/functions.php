@@ -42,7 +42,15 @@ function math_processValue($Value, $Type, $Field, $Config, $EID, $Data, $Caller 
 	if($Type == 'multiply'){
             //dump($Data);
             //dump($Config['_multiply']);
-            return $Data[$Config['_multiply'][$Field]['A']]*$Data[$Config['_multiply'][$Field]['B']];
+                $Opp = '*';
+                if(!empty($Config['_multiply'][$Field]['opperator'])){
+                    $Opp = $Config['_multiply'][$Field]['opperator'];
+                }
+
+            $mathString = $Data[$Config['_multiply'][$Field]['A']].$Opp.$Data[$Config['_multiply'][$Field]['B']];
+            $DoCalc = create_function("", "return (" . $mathString . ");" );
+            return number_format($DoCalc(true));
+
             //return $Value;
 	}
 	if($Type == 'datediff'){
@@ -73,7 +81,14 @@ function math_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){
 }
 function math_handleInput($Field, $Input, $FieldType, $Config, $Data){
 	if($FieldType == 'multiply'){
-		$Value = number_format($Data[$Config['Content']['_multiply'][$Field]['A']]*$Data[$Config['Content']['_multiply'][$Field]['B']], 2);
+                $Opp = '*';
+                if(!empty($Config['Content']['_multiply'][$Field]['opperator'])){
+                    $Opp = $Config['Content']['_multiply'][$Field]['opperator'];
+                }
+		$mathString = $Data[$Config['Content']['_multiply'][$Field]['A']].$Opp.$Data[$Config['Content']['_multiply'][$Field]['B']];
+                $DoCalc = create_function("", "return (" . $mathString . ");" );
+                return number_format($DoCalc(true));
+
 		//return 'pi';//$Value;
 	}
 	if($FieldType == 'datediff'){
@@ -84,7 +99,11 @@ function math_handleInput($Field, $Input, $FieldType, $Config, $Data){
 
 // Args = $Field, $table, ElementConfig
 function math_multiplysetup($Field, $Table, $ElementConfig = false){
-		$Return .= math_loadfields($Table, $Field, false, $ElementConfig);
+        $Defaults = false;
+        if(!empty($ElementConfig)){
+                $Defaults = $ElementConfig['Content']['_multiply'][$Field];
+            }
+		$Return .= math_loadfields($Table, $Field, $Defaults, $ElementConfig);
 	return $Return;
 }
 function math_datesetup($Field, $Table, $ElementConfig = false){
@@ -94,20 +113,22 @@ function math_datesetup($Field, $Table, $ElementConfig = false){
 
 function math_loadfields($Table, $Field, $Defaults = false, $Media = false){
 
+        
         $Config = $Media['Content'];       
 	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
 			$Sel = '';
-			if(!empty($Defaults[$Field]['Value'])){
-				if($Defaults[$Field]['Value'][0] == $row['Field']){
-					$Sel = 'selected="selected"';
+                        
+			if(!empty($Defaults['A'])){
+				if($Defaults['A'] == $row['Field']){
+					$Sel = 'selected="selected"';                                        
 				}
 			}
 			$ValueReturn .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
 			$Sel = '';
-			if(!empty($Defaults[$Field]['ID'])){
-				if($Defaults[$Field]['ID'] == $row['Field']){
+			if(!empty($Defaults['B'])){
+				if($Defaults['B'] == $row['Field']){
 					$Sel = 'selected="selected"';
 				}
 			}
@@ -122,18 +143,61 @@ function math_loadfields($Table, $Field, $Defaults = false, $Media = false){
                         $IReturn .= '<optgroup label="Cloned Fields">';
                         foreach ($Config['_CloneField'] as $FieldKey=>$Array) {
                             $Sel = '';
-                            if($Defaults[$Field]['ID'] == $FieldKey) {
+                            if($Defaults['A'] == $FieldKey) {
                                 $Sel = 'selected="selected"';
                             }
                             if($FieldKey != $Field){
                                 $IReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['_FieldTitle'][$FieldKey].'</option>';
                             }
                         }
+                        foreach ($Config['_CloneField'] as $FieldKey=>$Array) {
+                            $Sel = '';
+                            if($Defaults['B'] == $FieldKey) {
+                                $Sel = 'selected="selected"';
+                            }
+                            if($FieldKey != $Field){
+                                $VReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['_FieldTitle'][$FieldKey].'</option>';
+                            }
+                        }
 
                     }
                 }
 
-	$IReturn .= '</select> X ';
+	$IReturn .= '</select>';
+
+        $VReturn .= '<select name="Data[Content][_multiply]['.$Field.'][opperator]" id="Ref_'.$Table.'">';
+
+            $sel = '';
+            if(!empty($Defaults['opperator'])){
+                if($Defaults['opperator'] == '+'){
+                    $sel = 'selected="selected"';
+                }
+            }
+            $VReturn .= '<option value="+" '.$sel.'>+</option>';
+            $sel = '';
+            if(!empty($Defaults['opperator'])){
+                if($Defaults['opperator'] == '-'){
+                    $sel = 'selected="selected"';
+                }
+            }
+            $VReturn .= '<option value="-" '.$sel.'>-</option>';
+            $sel = '';
+            if(!empty($Defaults['opperator'])){
+                if($Defaults['opperator'] == '*'){
+                    $sel = 'selected="selected"';
+                }
+            }
+            $VReturn .= '<option value="*" '.$sel.'>*</option>';
+            $sel = '';
+            if(!empty($Defaults['opperator'])){
+                if($Defaults['opperator'] == '/'){
+                    $sel = 'selected="selected"';
+                }
+            }
+            $VReturn .= '<option value="/" '.$sel.'>/</option>';
+
+        $VReturn .= '</select>';
+
 	$VReturn .= '<select name="Data[Content][_multiply]['.$Field.'][B]" id="Ref_'.$Table.'">';
 		$VReturn .= $ValueReturn;
 

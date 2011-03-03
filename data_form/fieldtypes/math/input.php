@@ -1,19 +1,21 @@
 <?php
+/*
 if($FieldSet[1] == 'multiply'){
 	
 //	dump();
-	echo '<h2 id="'.$Field.'_mult">'.$Val.'</h2>';
+	echo '<span id="'.$Field.'_mult">'.$Val.'</span>';
 	
 	$_SESSION['dataform']['OutScripts'] .="
 	
-	$('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').unbind();
-	$('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').bind('change', function(){
+	jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').unbind();
+	jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').bind('keyup', function(){
 		aval = this.value;
-		bval = $('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['A']."').val();
+		bval = jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['A']."').val();
 		newval = math_CurrencyFormatted(aval*bval);
-		$('#".$Field."_mult').html(newval);
+		jQuery('#".$Field."_mult').html(newval);
 	});
 	
 	";
 }
+*/
 ?>

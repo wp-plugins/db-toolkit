@@ -19,9 +19,16 @@ function post_process_emailer($Data, $Setup, $Config){
     $default_headers = array(
         'Version' => 'Version'
     );
+    $Sender = $Setup['_recipient'];
+    if(!empty($Setup['_SenderEmail'])){
+        if(!empty($Data[$Setup['_SenderEmail']])){
+            $Sender = $Data[$Setup['_SenderEmail']];
+        }
+    }
+
     $version = get_file_data(WP_PLUGIN_DIR.'/db-toolkit/plugincore.php', $default_headers, 'db-toolkit-fieldtype');
-    $Headers = 'From: '.$Setup['_recipient'] . "\r\n" .
-               'Reply-To: '.$Setup['_recipient'] . "\r\n" .
+    $Headers = 'From: '.$Sender . "\r\n" .
+               'Reply-To: '.$Sender . "\r\n" .
                'X-Mailer: DB-Toolkit/'.$version['Version'];
 
     $Body = "Submitted Data from ".date("r")."\r\n";
@@ -63,7 +70,7 @@ function config_emailer($ProcessID, $Table, $Config = false){
     $Return .= '<p>Email Subject: <input type="text" value="'.$sval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_subject]" /></p>';
 
     $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
-    $Sender = '<option value="self">Self</option>';
+    $Sender = '<option value="">Self</option>';
 
     
     foreach($Fields as $FieldData){

@@ -482,73 +482,9 @@
             </tr>
         </table>
     </div>
-    <div id="tabs-4" class="setupTab">
-        <?php
-        $Sel = '';
-        if(!empty($Element['Content']['_UseListViewTemplate'])) {
-            $Sel = 'checked="checked"';
-        }
-        echo dais_customfield('checkbox', 'Use Template', '_UseListViewTemplate', '_UseListViewTemplate', 'list_row1' , 1, $Sel);
-
-        echo dais_customfield('textarea', 'Pre Header', '_ListViewTemplatePreHeader', '_ListViewTemplatePreHeader', 'list_row2' , $Element['Content']['_ListViewTemplatePreHeader'], '');
-        echo dais_customfield('textarea', 'Header', '_ListViewTemplateHeader', '_ListViewTemplateHeader', 'list_row1' , $Element['Content']['_ListViewTemplateHeader'], '');
-        echo dais_customfield('textarea', 'Post Header', '_ListViewTemplatePostHeader', '_ListViewTemplatePostHeader', 'list_row2' , $Element['Content']['_ListViewTemplatePostHeader'], '');
-
-        echo dais_customfield('textarea', 'Content Wrapper Start', '_ListViewTemplateContentWrapperStart', '_ListViewTemplateContentWrapperStart', 'list_row2' , $Element['Content']['_ListViewTemplateContentWrapperStart'], '');
-        echo dais_customfield('textarea', 'PreContent', '_ListViewTemplatePreContent', '_ListViewTemplatePreContent', 'list_row2' , $Element['Content']['_ListViewTemplatePreContent'], '');
-        echo dais_customfield('textarea', 'Content', '_ListViewTemplateContent', '_ListViewTemplateContent', 'list_row2' , $Element['Content']['_ListViewTemplateContent'], '');
-        InfoBox('Useable Keys');
-        ?>
-        <pre>
-{{_ViewEdit}}	: View and Edit Icons
-{{_ViewLink}}	: View Item Link
-{{_RowClass}}	: Row Class
-{{_RowIndex}}	: Row Index
-{{_UID}}	: Unique Row ID
-{{_PageID}}	: Page ID
-{{_PageName}}	: Page Name
-{{_EID}}	: Element ID
-{{<i><b>Fieldname</b></i>}}	: Field Data
-{{_<i>Fieldname</i>_name}}	: Field Name
-{{_return_<i><b>Fieldname</b></i>}}	: Return Field
-{{<i>Fieldname</i>|<i>substr value</i>}}	: Field Data | substring value
-
-Field Keys:
-<?php
-if(!empty($Element['Content']['_FieldTitle'])){
-    foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val){
-        echo $Val.' = {{'.$FieldKey.'}}<br />';
-    }
-}else{
-        echo 'Save and edit to see available fields';
-    }
-?>
-
-        </pre>
-        to enable selection and deleting:
-        id="row_{{_EID}}_{{_RowIndex}}"  ref="{{_return_<em><strong>Fieldname</strong></em>}} highlight" class="itemRow_{{_EID}}  report_entry"
-        <?php
-        EndInfoBox();
-        echo dais_customfield('textarea', 'PostContent', '_ListViewTemplatePostContent', '_ListViewTemplatePostContent', 'list_row2' , $Element['Content']['_ListViewTemplatePostContent'], '');
-        echo dais_customfield('textarea', 'Content Wrapper End', '_ListViewTemplateContentWrapperEnd', '_ListViewTemplateContentWrapperEnd', 'list_row2' , $Element['Content']['_ListViewTemplateContentWrapperEnd'], '');
-        echo dais_customfield('textarea', 'Pre Footer', '_ListViewTemplatePreFooter', '_ListViewTemplatePreFooter', 'list_row2' , $Element['Content']['_ListViewTemplatePreFooter'], '');
-        echo dais_customfield('textarea', 'Footer', '_ListViewTemplateFooter', '_ListViewTemplateFooter', 'list_row1' , $Element['Content']['_ListViewTemplateFooter'], '');
-        InfoBox('Footer Codes');
-        ?>
-        <pre>
-{{_footer_prev}}        : Previous Page/Entries
-{{_footer_next}}        : Next Page/Entries
-{{_footer_page_jump}}   : Page Index Input Box (page __ of 20)
-{{_footer_item_count}}  : Number of items found and displayed (1 - 10 of 200 items)
-{{_footer_no_entries}}  : No results
-
-        </pre>
-        <?php
-        EndInfoBox();
-        echo dais_customfield('textarea', 'Post Footer', '_ListViewTemplatePostFooter', '_ListViewTemplatePostFooter', 'list_row2' , $Element['Content']['_ListViewTemplatePostFooter'], '');
-        
-        ?>
-    </div>
+    <?php
+        include(WP_PLUGIN_DIR.'/db-toolkit/data_report/listtemplate.php');
+    ?>
     <div id="tabs-5" class="setupTab">
         <?php
         echo dais_customfield('textarea', 'Footer Scripts', '_customFooterJavaScript', '_customFooterJavaScript', 'list_row1' , $Element['Content']['_customFooterJavaScript'], 'style="height:300px;"');
