@@ -2931,6 +2931,15 @@ function df_processupdate($Data, $EID) {
     // process update processess
     if (!empty($Config['_FormProcessors'])) {
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
+            if(empty($updateData)){
+                if(empty($Config['_InsertFail'])) {
+                    $Return['Message'] = 'Entry Update Failed';
+                }else {
+                    $Return['Message'] = $Config['_UpdateFail'];
+                }
+                return $Return;
+            }
+
             if (!empty($Setup['_onUpdate'])) {
                 if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $Setup['_process'] . '/functions.php')) {
                     include_once WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $Setup['_process'] . '/functions.php';
@@ -2983,6 +2992,15 @@ function df_processupdate($Data, $EID) {
     if (!empty($Config['_FormProcessors'])) {
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
             if (!empty($Setup['_onUpdate'])) {
+                if(empty($updateData)){
+                    if(empty($Config['_InsertFail'])) {
+                        $Return['Message'] = 'Entry Update Failed';
+                    }else {
+                        $Return['Message'] = $Config['_UpdateFail'];
+                    }
+                    return $Return;
+                }
+
                 if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $Setup['_process'] . '/functions.php')) {
                     include_once WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $Setup['_process'] . '/functions.php';
                     $func = 'post_process_' . $Setup['_process'];
