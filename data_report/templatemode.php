@@ -62,6 +62,8 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
     }
     echo $preHeader;
 
+    $preContent = '';
+
     foreach($Data as $row){
         $SelectedRow = '';
         if (!empty($Config['_ReturnFields'][0])) {
@@ -77,18 +79,22 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
         $Row = grid_rowswitch($Row);
         
         $PreReturn = $Config['_layoutTemplate']['_Content']['_content'][$key];
+
+        // Run first with processing values and wrapping them in thier template.
         foreach($row as $Field=>$Value){
             if(!empty($Config['_Field'][$Field])){
                 $Types = $Config['_Field'][$Field];
                 $func = $Types[0].'_processValue';
                 if(function_exists($func)){
-
                     $Value = $func($Value, $Types[1], $Field, $Config, $Media['ID'], $row);
-                    // Wrap Value in Field Template
-                    // Check value for cases.
-
                 }
             }
+            // Wrap Fields in template
+            if(!empty($Config['_layoutTemplate']['_Fields'][$Field])){
+                $Value = $Config['_layoutTemplate']['_Fields'][$Field]['_before'].$Value.$Config['_layoutTemplate']['_Fields'][$Field]['_after'];
+            }
+            
+            $row[$Field] = $Value;
 
             if (!empty($Config['_FieldTitle'][$Field])) {
                 $name = $Config['_FieldTitle'][$Field];
@@ -174,10 +180,106 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
             // data
             //$row[$Field]
         }
-        echo $PreReturn;
+        $preContent = $PreReturn;
         //vardump($row);
+    
+
+    $PreReturn = $preContent;
+    $outContent = '';
+    // loop through again to change any missing ones
+    foreach($row as $Field=>$Value){
+
+            if (!empty($Config['_FieldTitle'][$Field])) {
+                $name = $Config['_FieldTitle'][$Field];
+            } else {
+                $name = df_parseCamelCase($Field);
+            }
+
+
+            preg_match("/\{\{([A-Za-z0-9]+)\|([0-9]+)(,)([0-9]+)\}\}/", $PreReturn, $returnMatches);
+           // vardump($returnMatches);
+            if (!empty($returnMatches)) {
+                $start = $returnMatches[2];
+                $end = $returnMatches[4];
+                $PreReturn = str_replace($returnMatches[0], substr(strip_tags($row[$returnMatches[1]]), $start, $end), $PreReturn);
+            }
+            preg_match("/\{\{([A-Za-z0-9]+)\|([0-9]+)\}\}/", $PreReturn, $returnMatches);
+           // vardump($returnMatches);
+            if (!empty($returnMatches)) {
+                $start = 0;
+                $end = $returnMatches[2];
+                $PreReturn = str_replace($returnMatches[0], substr(strip_tags($row[$returnMatches[1]]), $start, $end), $PreReturn);
+            }
+
+            preg_match("/\{\{([A-Za-z0-9]+)\|([A-Za-z0-9_\-]+)\}\}/", $PreReturn, $returnMatches);
+            if (!empty($returnMatches)) {
+                //vardump($returnMatches);
+                $subFunc = $returnMatches[2];
+                if(function_exists($subFunc)){
+                    $PreReturn = str_replace($returnMatches[0], $subFunc($row[$returnMatches[1]]), $PreReturn);
+                }else{
+                    $PreReturn = str_replace($returnMatches[0], $row[$returnMatches[1]], $PreReturn);
+                }
+            }
+
+
+            $PreReturn = str_replace('{{_' . $Field . '_name}}', $name, $PreReturn);
+            $PreReturn = str_replace('{{_' . $Field . '}}', $Field, $PreReturn);
+            $PreReturn = str_replace('{{' . $Field . '}}', $Value, $PreReturn);
+            $PreReturn = str_replace('{{_RowClass}}', $Row, $PreReturn);
+            $PreReturn = str_replace('{{_SelectedClass}}', $SelectedRow, $PreReturn);
+            $PreReturn = str_replace('{{_RowIndex}}', $rowIndex, $PreReturn);
+            $PreReturn = str_replace('{{_UID}}', uniqid(), $PreReturn);
+            $PreReturn = str_replace('{{_PageID}}', $Media['ParentDocument'], $PreReturn);
+            $PreReturn = str_replace('{{_PageName}}', getdocument($Media['ParentDocument']), $PreReturn);
+            $PreReturn = str_replace('{{_EID}}', $Media['ID'], $PreReturn);
+
+            // View Edit links
+            if (!empty($Config['_Show_View']) || !empty($Config['_Show_Edit'])) {
+                $ViewLink = '';
+                if (!empty($Config['_Show_View'])) {
+                    $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(\"" . $row['_return_' . $Config['_ReturnFields'][0]] . "\", \"" . $Media['ID'] . "\", \"false\"); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                    if (!empty($Config['_ItemViewPage'])) {
+                        $ReportVars = array();
+                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                        }
+                        // Get permalink
+                        $PageLink = get_permalink($Config['_ItemViewPage']);
+                        $Location = parse_url($PageLink);
+                        if (!empty($Location['query'])) {
+                            $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
+                            parse_str($Location['query'], $gets);
+                            $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
+                        } else {
+                            $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
+                        }
+                        $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
+                    }
+                }
+                if (!empty($Config['_Show_Edit'])) {
+                    if ($ViewLink != '') {
+                        $ViewLink .= " ";
+                    }
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                }
+                $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn); //'Edit | View';
+                $PreReturn = str_replace('{{_ViewLink}}', getdocument($Config['_ItemViewPage']) . "?" . $ReportReturnString, $PreReturn); //'Edit | View';
+            }
+
+
+            // Add data to template
+            //echo $Config['_layoutTemplate']['_Content']['_content'][$key];
+            // data
+            //$row[$Field]
+
+            $outContent = $PreReturn;
 
     }
+
+    echo $outContent;
+    }
+    
     $preFooter = $Config['_layoutTemplate']['_Content']['_after'][$key];
 
     foreach($Config['_Field'] as $footField=>$type){

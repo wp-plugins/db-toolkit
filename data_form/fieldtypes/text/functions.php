@@ -39,8 +39,10 @@ switch ($Type){
 		}
 }
 
-function text_postProcess($Field, $Input, $Type, $Element, $Data){
+function text_postProcess($Field, $Input, $Type, $Element, $Data, $ReturnField){
     if($Type == 'emailaddress'){
+
+        
 
         if(!empty($Element['Content']['_forwardResult'][$Field])){
 

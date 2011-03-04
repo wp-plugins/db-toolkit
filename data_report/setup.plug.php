@@ -12,7 +12,8 @@
         <li><a href="#tabs-2b">View Layout</a></li>
         <li><a href="#tabs-2c">Chart</a></li>
         <li><a href="#tabs-3">Settings</a></li>
-        <li><a href="#tabs-4">List Template</a></li>
+        <li><a href="#tabs-4">New List Template</a></li>
+        <li><a href="#legacy">Legacy List Template</a></li>
         <li><a href="#tabs-5">Custom Scripts</a></li>
     </ul>
     <div class="setupTab" id="tabs-1">
@@ -485,6 +486,82 @@
     <?php
         include(WP_PLUGIN_DIR.'/db-toolkit/data_report/listtemplate.php');
     ?>
+
+
+
+
+
+
+
+
+
+    <?php
+    // Legacy Templates
+    ?>
+<div id="legacy">
+    <h3>This tab will be removed in 0.3.0.0 So start converting to the the new list templates.</h3>
+
+        <?php
+        $Sel = '';
+if(!empty($Element['Content']['_UseListViewTemplate'])) {
+                $Sel = 'checked="checked"';
+            }
+            echo dais_customfield('checkbox', 'Use Template', '_UseListViewTemplate', '_UseListViewTemplate', 'list_row1' , 1, $Sel);
+
+            echo dais_customfield('textarea', 'Pre Header', '_ListViewTemplatePreHeader', '_ListViewTemplatePreHeader', 'list_row2' , $Element['Content']['_ListViewTemplatePreHeader'], '');
+            echo dais_customfield('textarea', 'Header', '_ListViewTemplateHeader', '_ListViewTemplateHeader', 'list_row1' , $Element['Content']['_ListViewTemplateHeader'], '');
+            echo dais_customfield('textarea', 'Post Header', '_ListViewTemplatePostHeader', '_ListViewTemplatePostHeader', 'list_row2' , $Element['Content']['_ListViewTemplatePostHeader'], '');
+
+            echo dais_customfield('textarea', 'Content Wrapper Start', '_ListViewTemplateContentWrapperStart', '_ListViewTemplateContentWrapperStart', 'list_row2' , $Element['Content']['_ListViewTemplateContentWrapperStart'], '');
+            echo dais_customfield('textarea', 'PreContent', '_ListViewTemplatePreContent', '_ListViewTemplatePreContent', 'list_row2' , $Element['Content']['_ListViewTemplatePreContent'], '');
+            echo dais_customfield('textarea', 'Content', '_ListViewTemplateContent', '_ListViewTemplateContent', 'list_row2' , $Element['Content']['_ListViewTemplateContent'], '');
+InfoBox('Useable Keys');
+?>
+        <pre>
+{{_ViewEdit}}	: View and Edit Icons
+{{_ViewLink}}	: View Item Link
+{{_RowClass}}	: Row Class
+{{_SelectedClass}}: Highlight if Selected
+{{_RowIndex}}	: Row Index
+{{_UID}}	: Unique Row ID
+{{_PageID}}	: Page ID
+{{_PageName}}	: Page Name
+{{_EID}}	: Element ID
+{{<i><b>Fieldname</b></i>}}	: Field Data
+{{_<i>Fieldname</i>_name}}	: Field Name
+{{_return_<i><b>Fieldname</b></i>}}	: Return Field
+        </pre>
+        to enable selection and deleting:
+        id="row_{{_EID}}_{{_RowIndex}}"  ref="{{_return_<em><strong>Fieldname</strong></em>}} highlight" class="itemRow_{{_EID}}  report_entry"
+
+<?php
+EndInfoBox();
+echo dais_customfield('textarea', 'PostContent', '_ListViewTemplatePostContent', '_ListViewTemplatePostContent', 'list_row2' , $Element['Content']['_ListViewTemplatePostContent'], '');
+echo dais_customfield('textarea', 'Content Wrapper End', '_ListViewTemplateContentWrapperEnd', '_ListViewTemplateContentWrapperEnd', 'list_row2' , $Element['Content']['_ListViewTemplateContentWrapperEnd'], '');
+echo dais_customfield('textarea', 'Pre Footer', '_ListViewTemplatePreFooter', '_ListViewTemplatePreFooter', 'list_row2' , $Element['Content']['_ListViewTemplatePreFooter'], '');
+echo dais_customfield('textarea', 'Footer', '_ListViewTemplateFooter', '_ListViewTemplateFooter', 'list_row1' , $Element['Content']['_ListViewTemplateFooter'], '');
+echo dais_customfield('textarea', 'Post Footer', '_ListViewTemplatePostFooter', '_ListViewTemplatePostFooter', 'list_row2' , $Element['Content']['_ListViewTemplatePostFooter'], '');
+
+
+
+?>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div id="tabs-5" class="setupTab">
         <?php
         echo dais_customfield('textarea', 'Footer Scripts', '_customFooterJavaScript', '_customFooterJavaScript', 'list_row1' , $Element['Content']['_customFooterJavaScript'], 'style="height:300px;"');

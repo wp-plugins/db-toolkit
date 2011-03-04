@@ -9,6 +9,15 @@
         
     }
 
+    function dr_addListFieldTemplate(field){
+        
+        ajaxCall('dr_addListFieldTemplate', field, function(f){
+             jQuery('#fieldTemplateHolder').append(f);
+        })
+             
+        
+    }
+
 
     function dr_exportReport(url, eid, isGlobal){
 

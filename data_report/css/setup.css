@@ -38,6 +38,11 @@
 .tools_widgets li a.parent.hasSubs{
         background: url(images/downarrow.png) center right no-repeat;
 }
+
+.tools_widgets .tabBox{
+    border: 1px solid #ccc;
+    border-bottom: 0;
+}
 .tools_widgets a {
 	display:block;
 	margin:0;
@@ -454,23 +459,17 @@ blockquote .boxtitle{
 #layoutHeaderTemplate, #layoutFooterTemplate{
     clear: both;
     height: 150px;
-    padding: 5px;
-    border: 1px solid #ccc;
+    padding: 5px;   
 }
-#layoutContentTemplate{
-    min-height: 300px;
-    float: left;
-    width: 48%;
-    border-left: 1px solid #ccc;
+#rowTemplateHolder{
+    border: 1px #ccc solid;
+    min-height: 300px !important;
     padding: 5px;
 }
-#layoutFieldTemplate{
-    min-height: 300px;
-    float: right;
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    width: 48%;
+#fieldTemplateHolder{
+    min-height: 300px !important;
     padding: 5px;
+    border: 1px #ccc solid;
 }
 /* text areas */
 .headerFooterTemplate{

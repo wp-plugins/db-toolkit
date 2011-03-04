@@ -2965,8 +2965,7 @@ function df_processupdate($Data, $EID) {
     //dump($Return);
     //die;
     //$Return['Value'] = $Data[$Config['_ReturnFields'][0]];
-    $PreDta = mysql_query($Query);
-
+    
     // Post Process
     foreach ($Config['_Field'] as $Field => $Type) {
         $typeSet = explode('_', $Type);
@@ -2974,7 +2973,7 @@ function df_processupdate($Data, $EID) {
             if (function_exists($typeSet[0] . '_postProcess')) {
                 $Func = $typeSet[0] . '_postProcess';
                 $Element['_ActiveProcess'] = 'update';
-                $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $PreData, $Data[$Config['_ReturnFields'][0]]);
+                $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $Data[$EID], $Data[$Config['_ReturnFields'][0]]);
             }
         }
     }
@@ -3463,6 +3462,62 @@ ob_start();
                     <div style="clear:both"></div>
                 </div>
             
+<?php
+
+return ob_get_clean();
+
+}
+
+function dr_addListFieldTemplate($Field, $Default = false){
+
+
+
+
+ob_start();
+
+    $fieldTemplateID = uniqid('Field-');
+    $Name = $rowTemplateID;
+
+    $show = 'block';
+    if(!empty($Default)){
+        $show = 'none';
+    }
+    $before = '';
+    $after = '';
+
+    if(!empty($Default['_before'])){
+        $before = $Default['_before'];
+    }
+    if(!empty($Default['_after'])){
+        $after = $Default['_after'];
+    }
+    
+
+?>
+
+    <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $fieldTemplateID; ?>">
+        <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $fieldTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
+        <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $fieldTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">
+        <h3><?php echo $Field; ?></h3>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $fieldTemplateID; ?>"></div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $fieldTemplateID; ?>"><strong>Before</strong></div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $fieldTemplateID; ?>">
+            <textarea class="layoutTextArea" name="Data[Content][_layoutTemplate][_Fields][<?php echo $Field; ?>][_before]" id="<?php echo $fieldTemplateID; ?>_before" ><?php echo $before; ?></textarea>
+            <a href="#" onclick="jQuery('#<?php echo $fieldTemplateID; ?>_before').height('400px'); return false;">Larger</a> |
+            <a href="#" onclick="jQuery('#<?php echo $fieldTemplateID; ?>_before').height('80px'); return false;">Smaller</a>
+        </div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $fieldTemplateID; ?>"><strong>After</strong></div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $fieldTemplateID; ?>">
+            <textarea class="layoutTextArea" name="Data[Content][_layoutTemplate][_Fields][<?php echo $Field; ?>][_after]" id="<?php echo $fieldTemplateID; ?>_after" ><?php echo $after; ?></textarea>
+            <a href="#" onclick="jQuery('#<?php echo $fieldTemplateID; ?>_after').height('400px'); return false;">Larger</a> |
+            <a href="#" onclick="jQuery('#<?php echo $fieldTemplateID; ?>_after').height('80px'); return false;">Smaller</a>
+
+        </div>
+        <div style="clear:both"></div>
+    </div>
+
+
+
 <?php
 
 return ob_get_clean();
