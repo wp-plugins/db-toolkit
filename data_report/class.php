@@ -1130,7 +1130,6 @@ function dr_exportChartImage($chartData) {
 
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false) {
 
-
 //Filters will be picked up via Session value
 // Set Vars
     if (!empty($Format)) {
@@ -1168,6 +1167,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     $countSelect = '';
     $countLimit = 'LIMIT 1';
     $isModal = 'false';
+
+
     if (!empty($Config['_popupTypeView'])) {
         if ($Config['_popupTypeView'] == 'modal') {
             $isModal = true;
@@ -1552,6 +1553,15 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
     // Select Query
     //$Query = "SELECT count(b.Country) as TotalCountry, ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n GROUP BY b.Country \n ".$orderStr." \n ".$queryLimit.";"
+
+    if(!empty($Config['_useListTemplate']) && empty($Format)){
+        $Media = $Element;
+        ob_start();
+        $Query = dr_BuildReportGrid($EID, $Page, $SortField, $SortDir, 'sql', $limitOveride, $wherePush);
+        include('templatemode.php');
+        return ob_get_clean();
+    }
+
     $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";
     // Wrap fields with ``
     //foreach($querySelects as $Field=>$FieldValue){
@@ -3378,5 +3388,79 @@ function dt_listInterfaces($App) {
     }
     return $Return;
 }
+
+
+function dr_addListRowTemplate($Default = false){
+
+
+
+ob_start();
+                $show = 'block';
+                if(!empty($Default)){
+                    $show = 'none';
+                }
+                $rowTemplateID = uniqid('Template-');
+                $Name = $rowTemplateID;
+                if(!empty($Default['_name'])){
+                    $Name = $Default['_name'];
+                }
+                $Header = '';
+                if(!empty($Default['_before'])){
+                    $Header = $Default['_before'];
+                }
+                $Content = '';
+                if(!empty($Default['_content'])){
+                    $Content = $Default['_content'];
+                }
+                $Footer = '';
+                if(!empty($Default['_after'])){
+                    $Footer = $Default['_after'];
+                }
+
+            ?>
+            
+                <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $rowTemplateID; ?>">
+                    <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $rowTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
+                    <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $rowTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">                    
+                    <h3><?php echo $Name; ?></h3>
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+                        <strong>Template Name:</strong> <input type="text" name="Data[Content][_layoutTemplate][_Content][_name][]" value="<?php echo $Name; ?>" />
+                    </div>
+
+
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+                        <strong>Before</strong> <span class="description">Placed before the content loop.</span>
+                    </div>
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
+                        <textarea class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_before][]"><?php echo $Header; ?></textarea>
+                    </div>
+
+
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+                        <strong>Content</strong>
+                        <span class="description">Repeated with every row/entry.</span>
+                    </div>
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
+                        <textarea class="layoutTextAreaLarge" name="Data[Content][_layoutTemplate][_Content][_content][]"><?php echo $Content; ?></textarea>
+                    </div>
+
+
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+                        <strong>After</strong> <span class="description">Placed after the content loop.</span>
+                    </div>
+                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
+                        <textarea class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_after][]"><?php echo $Footer; ?></textarea>
+                    </div>
+
+
+                    <div style="clear:both"></div>
+                </div>
+            
+<?php
+
+return ob_get_clean();
+
+}
+
 
 ?>

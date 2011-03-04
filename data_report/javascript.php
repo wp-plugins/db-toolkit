@@ -1,5 +1,15 @@
 //<script>
 
+    function addRowTemplate(){
+
+        // add notification
+        ajaxCall('dr_addListRowTemplate', function(t){
+            jQuery('#rowTemplateHolder').append(t);
+        })
+        
+    }
+
+
     function dr_exportReport(url, eid, isGlobal){
 
         jQuery('.export').addClass('active');

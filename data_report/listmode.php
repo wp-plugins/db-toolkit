@@ -46,7 +46,10 @@ if(!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMod
     if(!empty($_GET['_pg'])) {
         $gotTo = $_GET['_pg'];
     }
+    
     echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir']);
+
+
     if(!empty($Config['_autoPolling'])) {
         $Rate = $Config['_autoPolling']*1000;
 

@@ -863,9 +863,7 @@ function dt_process() {
                 }
                 
                 $OutData = dr_BuildReportGrid($Media['ID'], false, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'], 'pdf', $limit );
-                $CountStat = array();
-                
-                //vardump($OutData['filters']);
+                $CountStat = array();                               
 
                 if(is_array($OutData)){
                     if($key > 0){

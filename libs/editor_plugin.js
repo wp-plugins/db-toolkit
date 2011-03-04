@@ -12,7 +12,7 @@
 		init : function(ed, url) {                    
 			ed.addButton('db_toolkitInterface', {
 				title : 'Insert Interface',
-				image : url + '/../images/cog.png',
+				image : url + '/../images/toolbaricon.png',
 				onclick : function() {
 					insertInterface('toolkitInterface');
 				}

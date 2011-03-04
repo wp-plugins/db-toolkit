@@ -4,7 +4,7 @@
         <h3>Form Processors</h3>
         <div class="admin_config_toolbar">
             <ul class="tools_widgets">
-                <li class="root_item"><a class="parent"><strong>Processors</strong></a>
+                <li class="root_item"><a class="parent hasSubs"><strong>Processors</strong></a>
                     <ul id="" style="visibility: hidden; display: block;">
 
                         <?php
