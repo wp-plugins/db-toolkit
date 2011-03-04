@@ -43,11 +43,12 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 
 == Screenshots ==
 
-1. List of already created interfaces and reports
-2. report/manager interface created against table
-3. Field setup on an interface
-4. Easy form building for input/capture forms
-5. modal dialog input forms
+1. Build Database Management Interfaces and Viewers.
+2. Interface and Application Management Screen.
+3. An Interface built in DB-Toolkit to manage data.
+4. Interface Config Screen (Lots of Options!).
+5. Database Table data represented in Chart Mode.
+6. Data Importer Dialog.
 
 == Changelog ==
 

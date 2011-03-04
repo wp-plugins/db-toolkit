@@ -734,6 +734,7 @@ function dt_process() {
     }
     //vardump($_POST);
     if(!empty($_POST['importKey'])) {
+        
         $_POST = stripslashes_deep($_POST);
         $_SESSION['adminscripts'] .= "
           //df_buildImportManager(eid);

@@ -3102,7 +3102,7 @@ function dr_importer($EID) {
 
 
     $Data = getelement($EID);
-    $html = '<form enctype="multipart/form-data" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="formular" id="import_form_' . $EID . '" >';
+    $html = '<form enctype="multipart/form-data" method="post" action="' . $_SERVER['HTTP_REFERER'] . '" class="formular" id="import_form_' . $EID . '" >';
     $html .= '<input type="hidden" name="importInterface" id="importInterface" value="' . $EID . '" />';
     $html .= '<input type="hidden" name="importKey" id="importKey" value="' . $_SESSION['importKey'] . '" />';
 
@@ -3259,7 +3259,7 @@ function dr_buildImportManager($EID, $delim = ',') {
     //vardump($body);
     //ob_start();
     //vardump($_SESSION['import_'.$EID]);
-    $html = '<form enctype="multipart/form-data" method="post" action="' . $_SERVER['REQUEST_URI'] . '" class="formular" id="import_form_' . $EID . '" >';
+    $html = '<form enctype="multipart/form-data" method="post" action="' . $_SERVER['HTTP_REFERER'] . '" class="formular" id="import_form_' . $EID . '" >';
 
     $html .= '<input type="hidden" name="importInterface" id="importInterface" value="' . $EID . '" />';
     $html .= '<input type="hidden" name="importPrepairKey" id="importPrepairKey" value="' . $_SESSION['importKey'] . '" />';
