@@ -716,6 +716,14 @@ function df_processInsert($EID, $Data) {
     }
     if(!empty($Config['_FormProcessors'])){
         foreach($Config['_FormProcessors'] as $processID=>$Setup){
+            if(empty($Data)){                
+                if(empty($Config['_InsertFail'])) {
+                    $Return['Message'] = 'Entry Insert Failed';
+                }else {
+                    $Return['Message'] = $Config['_InsertFail'];
+                }
+                return $Return;
+            }
             if(!empty($Setup['_onInsert'])){
                 if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
                     include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
@@ -815,6 +823,14 @@ function df_processInsert($EID, $Data) {
         //post processors        
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
+                if(empty($Data)){
+                    if(empty($Config['_InsertFail'])) {
+                        $Return['Message'] = 'Entry Insert Failed';
+                    }else {
+                        $Return['Message'] = $Config['_InsertFail'];
+                    }
+                    return $Return;
+                }
                 if(!empty($Setup['_onInsert'])){
                     if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
                         include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
