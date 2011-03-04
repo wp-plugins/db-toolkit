@@ -1,12 +1,6 @@
 <?php
 
 
-
-
-
-
-
-
 $test = array();
 $Render = true;
 $TitleNotice = '';

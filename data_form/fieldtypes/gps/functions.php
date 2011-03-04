@@ -2,15 +2,15 @@
 // Functions
 function gps_handleInput($Field, $Input, $FieldType, $Config){
 	if(is_array($Input)){
-		return implode('|',$Input);
+		return implode(',',$Input);
 	}else{
 		$Out = unserialize($Input);	
-		return implode('|',$Out);
+		return implode(',',$Out);
 	}
 }
 function gps_processValue($Value, $Type, $Field, $Config, $EID){
 	if(!empty($Value)){
-		$Out = explode('|', $Value);
+		$Out = explode(',', $Value);
 		$Out['Lat'] = $Out[0];
 		$Out['Lon'] = $Out[1];
 		$marker = '';

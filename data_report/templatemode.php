@@ -83,7 +83,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                 $func = $Types[0].'_processValue';
                 if(function_exists($func)){
 
-                    $Value = $func($Value, $Types[1], $Field, $Config, $Media['ID']);
+                    $Value = $func($Value, $Types[1], $Field, $Config, $Media['ID'], $row);
                     // Wrap Value in Field Template
                     // Check value for cases.
 
@@ -94,7 +94,36 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                 $name = $Config['_FieldTitle'][$Field];
             } else {
                 $name = df_parseCamelCase($Field);
-            }                
+            }
+
+
+            preg_match("/\{\{([A-Za-z0-9]+)\|([0-9]+)(,)([0-9]+)\}\}/", $PreReturn, $returnMatches);
+           // vardump($returnMatches);
+            if (!empty($returnMatches)) {
+                $start = $returnMatches[2];
+                $end = $returnMatches[4];
+                $PreReturn = str_replace($returnMatches[0], substr(strip_tags($row[$returnMatches[1]]), $start, $end), $PreReturn);
+            }
+            preg_match("/\{\{([A-Za-z0-9]+)\|([0-9]+)\}\}/", $PreReturn, $returnMatches);
+           // vardump($returnMatches);
+            if (!empty($returnMatches)) {
+                $start = 0;
+                $end = $returnMatches[2];
+                $PreReturn = str_replace($returnMatches[0], substr(strip_tags($row[$returnMatches[1]]), $start, $end), $PreReturn);
+            }
+
+            preg_match("/\{\{([A-Za-z0-9]+)\|([A-Za-z0-9_\-]+)\}\}/", $PreReturn, $returnMatches);            
+            if (!empty($returnMatches)) {
+                //vardump($returnMatches);
+                $subFunc = $returnMatches[2];
+                if(function_exists($subFunc)){
+                    $PreReturn = str_replace($returnMatches[0], $subFunc($row[$returnMatches[1]]), $PreReturn);
+                }else{
+                    $PreReturn = str_replace($returnMatches[0], $row[$returnMatches[1]], $PreReturn);
+                }
+            }
+            
+
             $PreReturn = str_replace('{{_' . $Field . '_name}}', $name, $PreReturn);
             $PreReturn = str_replace('{{_' . $Field . '}}', $Field, $PreReturn);
             $PreReturn = str_replace('{{' . $Field . '}}', $Value, $PreReturn);

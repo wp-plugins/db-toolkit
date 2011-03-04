@@ -71,19 +71,10 @@
             <div style="clear:both;"></div>
 
             <!-- Content Template Panel -->
-                    <div style="display: none;" class="admin_config_panel row_helpPanel">
-
+                    <div style="display: none; background-color: #fff; border: 1px solid #666666;" class="admin_config_panel row_helpPanel">
+                        <div><strong>I will reformat this into a proper help dialog when I finialise the codes.</strong></div>
 <strong>Dynamic Template Codes</strong> <span class="description">Can be used in all template boxes.</span>
 <pre>
-{{_footer_prev}}        : Previous Page/Entries
-{{_footer_next}}        : Next Page/Entries
-{{_footer_page_jump}}   :
-Page Index Input Box (page __ of 20)
-
-{{_footer_item_count}}  :
-Number of items found and displayed (1 - 10 of 200 items)
-
-{{_footer_no_entries}}  : No results
 {{_ViewEdit}}           : View and Edit Icons
 {{_ViewLink}}           : View Item Link
 {{_RowClass}}           : Row Class
@@ -95,7 +86,13 @@ Number of items found and displayed (1 - 10 of 200 items)
 {{<i><b>Fieldname</b></i>}}           : Field Data
 {{_<i>Fieldname</i>_name}}     : Field Name
 {{_return_<i><b>Fieldname</b></i>}}   : Return Field
-{{<i>Fieldname</i>|<i>substr value</i>}} : Field Data | substring value
+
+{{<i>Fieldname</i>|<i>substr value</i> [, substring char count]}}
+Formats substr(Value, 0, num)
+if "," and second num is added:substr(Value, first num, second num)
+
+{{<i>Fieldname</i>|<i>php formatting function</i>}}
+Field Data | php formatting function eg: add_slashes, urlencode, htmlentities etc...
 
 Field Keys:
 <?php
@@ -107,6 +104,16 @@ Field Keys:
         echo 'Save and edit to see available fields';
     }
 ?>
+</pre>
+<strong>Dynamic Footer Codes</strong> <span class="description">Can only be used in AFTER template boxes.</span>
+<pre>
+{{_footer_prev}}        : Previous Page/Entries
+{{_footer_next}}        : Next Page/Entries
+{{_footer_page_jump}}   :
+Page Index Input Box (page __ of 20)
+
+{{_footer_item_count}}  :
+Number of items found and displayed (1 - 10 of 200 items)
 
 </pre>
 To enable selection and deleting:<br/>

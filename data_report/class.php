@@ -3432,7 +3432,9 @@ ob_start();
                         <strong>Before</strong> <span class="description">Placed before the content loop.</span>
                     </div>
                     <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
-                        <textarea class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_before][]"><?php echo $Header; ?></textarea>
+                        <textarea id="<?php echo $rowTemplateID; ?>_before" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_before][]"><?php echo $Header; ?></textarea>
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('400px'); return false;">Larger</a> | 
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('80px'); return false;">Smaller</a>
                     </div>
 
 
@@ -3441,7 +3443,9 @@ ob_start();
                         <span class="description">Repeated with every row/entry.</span>
                     </div>
                     <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
-                        <textarea class="layoutTextAreaLarge" name="Data[Content][_layoutTemplate][_Content][_content][]"><?php echo $Content; ?></textarea>
+                        <textarea id="<?php echo $rowTemplateID; ?>_content" class="layoutTextAreaLarge" name="Data[Content][_layoutTemplate][_Content][_content][]"><?php echo $Content; ?></textarea>
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_content').height('600px'); return false;">Larger</a> |
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_content').height('180px'); return false;">Smaller</a>
                     </div>
 
 
@@ -3449,7 +3453,10 @@ ob_start();
                         <strong>After</strong> <span class="description">Placed after the content loop.</span>
                     </div>
                     <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
-                        <textarea class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_after][]"><?php echo $Footer; ?></textarea>
+                        <textarea id="<?php echo $rowTemplateID; ?>_after" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_after][]"><?php echo $Footer; ?></textarea>
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_after').height('400px'); return false;">Larger</a> |
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_after').height('80px'); return false;">Smaller</a>
+
                     </div>
 
 

@@ -35,6 +35,10 @@ function dt_start() {
         if(empty($_SESSION['adminscripts'])) {
             $_SESSION['adminscripts'] = "";
         }
+    }  else {
+        if(empty($_SESSION['dataform']['OutScripts'])){
+            $_SESSION['dataform']['OutScripts'] = '';
+        }
     }
     
     include_once('libs/lib.php');
@@ -1029,6 +1033,12 @@ function dt_process() {
 		}
 
 
+                if($exportFormat == 'template'){
+                    echo dt_renderInterface($Media['ID']);
+                    die;
+                }
+
+
         if($exportFormat != 'pdf') {
             $Element = getelement($Media['ID']);
             $Config = $Element['Content'];
@@ -1217,6 +1227,15 @@ function dt_renderInterface($interface) {
         ob_start();
         EndInfoBox();
         $Return .= ob_get_clean();
+    }
+
+    if(!empty($Config['_customFooterJavaScript'])){
+        
+        if(is_admin ()){
+            $_SESSION['adminscripts'] .= $Config['_customFooterJavaScript'];
+        }else{
+            $_SESSION['dataform']['OutScripts'] .= $Config['_customFooterJavaScript'];;
+        }
     }
 
     return do_shortcode($Return);
