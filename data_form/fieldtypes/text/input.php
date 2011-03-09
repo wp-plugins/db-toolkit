@@ -4,8 +4,9 @@
 
 if($FieldSet[1] == 'singletext'){
 	$WidthOverride = '';
+        
 	if(!empty($Config['_FieldLength'][$Field])){
-		$Config['_FieldLength'][$Field] = 'style="width:'.$Config['_FieldLength'][$Field].';"';
+		$WidthOverride = 'style="width:'.$Config['_FieldLength'][$Field].';"';
 	}
 	echo $Config['_Prefix'][$Field].'<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />'.$Config['_Suffix'][$Field];
 }

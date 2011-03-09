@@ -17,7 +17,8 @@ function getelement($optionTitle) {
 
 function InfoBox($Title) {
     if (is_admin()) {
-        echo '<div class="metabox-holder"><div id="' . md5($Title) . '" class="stuffbox" >';
+        //echo '<div class="metabox-holder">
+            echo '<div id="' . md5($Title) . '" class="stuffbox" >';
         echo '<h3><span>' . $Title . '</span></h3>';
         echo '<div class="inside">';
         return;
@@ -27,7 +28,7 @@ function InfoBox($Title) {
 
 function EndInfoBox() {
     if (is_admin()) {
-        echo '</div>';
+       // echo '</div>';
         echo '</div></div>';
     }
     echo '<div class="clear;"></div>';

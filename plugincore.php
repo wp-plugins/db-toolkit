@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.15
+Version: 0.2.2.16
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
@@ -1095,7 +1095,7 @@ function dt_rendercluster($cluster){
     echo '<div class="clear"></div>';
     
         echo '<div id="poststuff">';
-        echo '<div class="metabox-holder">';
+        //echo '<div class="metabox-holder">';
     }
         foreach($cfg['_grid'] as $row=>$cols){
 
@@ -1124,7 +1124,7 @@ function dt_rendercluster($cluster){
 
         }
     if(is_admin ()){
-            echo '</div>';
+            //echo '</div>';
         echo '</div>';
     echo '</div>';
     }
