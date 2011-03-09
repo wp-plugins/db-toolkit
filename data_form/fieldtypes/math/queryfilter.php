@@ -8,6 +8,11 @@
 //dump($querySelects);
 if($Type[1] == 'mysqlfunc'){
 $type = $Config['_mathMysqlFunc'][$Field];
+if($type == '_custom'){
+    if(!empty($Config['_mathMysqlCustomFunc'][$Field])){
+        $type = str_replace('()', '', $Config['_mathMysqlCustomFunc'][$Field]);
+    }
+}
 //dump($_SERVER['fieldMath'][$Field]);
 if($Config['_mathMysqlFunc'][$Field] == 'sumtotal'){
     $type = 'count';
@@ -24,7 +29,13 @@ if(!empty($Config['_CloneField'][$Field])){
        $fieldSett = 'prim.`'.$fieldSett.'`';
     }
 }
-$querySelects[$Field] = $type.'('.$fieldSett.')';
+if($type != '_custom'){
+    $querySelects[$Field] = $type.'(prim.`'.$fieldSett.'`)';
+}else{
+    $querySelects[$Field] = $fieldSett;
+}
+
+
 }
 
 ?>

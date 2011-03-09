@@ -90,7 +90,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                 }
             }
             // Wrap Fields in template
-            if(!empty($Config['_layoutTemplate']['_Fields'][$Field])){
+            if(!empty($Config['_layoutTemplate']['_Fields'][$Field]) && strlen($Value) > 0){
                 $Value = $Config['_layoutTemplate']['_Fields'][$Field]['_before'].$Value.$Config['_layoutTemplate']['_Fields'][$Field]['_after'];
             }
             

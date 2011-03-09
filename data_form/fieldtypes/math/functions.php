@@ -337,8 +337,6 @@ function math_timeDuration($date1, $date2, $pre = '', $suf = '')
 
 function math_mysqlfunc($Field, $Table, $ElementConfig = false){
 
-
-
         $Return = 'Function: <select name="Data[Content][_mathMysqlFunc]['.$Field.']" id="" >';
 	$sel = '';
         if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == 'sum'){
@@ -360,8 +358,24 @@ function math_mysqlfunc($Field, $Table, $ElementConfig = false){
 		$sel = 'selected="selected"';
 	}
         $Return .= '<option value="avg" '.$sel.'>avg()</option>';
+
+        $sel = '';
+        if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == '_custom'){
+		$sel = 'selected="selected"';
+	}
+        $Return .= '<option value="_custom" '.$sel.'>Custom</option>';
+
         $Return .= '</select>';
 
+
+
+        $custom = '';
+        
+	if(!empty($ElementConfig['Content']['_mathMysqlCustomFunc'][$Field])){
+		$custom = $ElementConfig['Content']['_mathMysqlCustomFunc'][$Field];
+	}
+        $Return .= '<div style="padding:3px;"><strong>If custom:</strong></div>';
+        $Return .= '<br />Custom Function: <input type="text" name="Data[Content][_mathMysqlCustomFunc]['.$Field.']" value="'.$custom.'" class="textfield" /> e.g. myfunc() or myfunc &nbsp;<br /> Make sure you have spelled the function name correctly and that it does exists. If the funciton does now exists, no results will be returnd.';
 
 return $Return;
 
