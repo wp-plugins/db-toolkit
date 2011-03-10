@@ -47,7 +47,7 @@
                                     $output = '';
                                     foreach($content as $render){
                                         $dta = get_option($render);                                        
-                                        $output .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$dta['ID'].'"><div class="formportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><div><strong>'.$dta['_ReportDescription'].'</strong></div><span class="description">'.$dta['_ReportExtendedDescription'].'</span><input class="layOutform positioning" type="text" name="'.$dta['ID'].'" id="interface_'.$dta['ID'].'" value="row'.$newRow.'_col'.$newCol.'"/></div></div>';
+                                        $output .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$dta['ID'].'"><div class="formportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><div><strong>'.$dta['_ReportDescription'].'</strong></div><span class="description">'.$dta['_ReportExtendedDescription'].'</span><input class="layOutform positioning" type="hidden" name="'.$dta['ID'].'" id="interface_'.$dta['ID'].'" value="row'.$newRow.'_col'.$newCol.'"/></div></div>';
                                         $_SESSION['dataform']['OutScripts'] .= "
                                             jQuery('.formportlet-header .ui-icon').click(function() {
                                                     jQuery(this).toggleClass(\"ui-icon-minusthick\");

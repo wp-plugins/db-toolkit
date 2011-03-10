@@ -11,9 +11,9 @@ if(!empty($_SESSION['dr_filters'][$_GET['PageData']['ID']])) {
     $Defaults = df_cleanArray($_SESSION['dr_filters'][$_GET['PageData']['ID']]);
     $FilterVisiable = 'block';
 }
-if(empty($Config['_HideFrame'])){
-echo '<div id="reportPanel_'.$Media['ID'].'">';
-}
+//if(empty($Config['_HideFrame'])){
+echo '<span id="reportPanel_'.$Media['ID'].'">';
+//}
 //($EID, $Page = 1, $SortField = false, $SortDir = false)
 
 if(empty($_SESSION['report_'.$Media['ID']]['SortField'])) {
@@ -104,9 +104,9 @@ $_SESSION['dataform']['OutScripts'] .= "
     */
 
 }
-if(empty($Config['_HideFrame'])){
-    echo '</div>';
-}
+//if(empty($Config['_HideFrame'])){
+    echo '</span>';
+//}
 
 if(is_admin()) {
     //$SharedSecret = md5($Media['ID']).md5(serialize($Config));

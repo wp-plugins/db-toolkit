@@ -34,7 +34,7 @@ function includeinterface_processValue($Value, $Type, $Field, $Config, $EID, $Da
             $_GET[$Key] = $Gets;
         }
     }
-    
+    //vardump($_GET);
     return dt_renderInterface($Config['_includeInterface'][$Field]);
     //return $Value;
 }
@@ -60,7 +60,7 @@ function includeinterface_setup($Field, $Table, $Config = false){
                 $Sel = 'selected="selected"';
             }
         }
-        $Return .= '<option value="'.$Interface['option_name'].'" '.$Sel.'>'.$Data['_interfaceName'].'</option>';
+        $Return .= '<option value="'.$Interface['option_name'].'" '.$Sel.'>'.$Data['_ReportDescription'].'</option>';
 
         //vardump($Data);
     }

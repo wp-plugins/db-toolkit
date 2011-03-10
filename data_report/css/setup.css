@@ -319,16 +319,6 @@ admin_toolbar td a:hover, admin_toolbar tr a:active{
 .highlight{
 }
 
-blockquote{
-	margin:0 0 0 10px;
-	padding:5px;
-	border-left:5px solid #bb0000;
-	border-bottom:1px solid #bb0000;
-	background-color:#fff;
-}
-blockquote:hover{
-	background-color:#fff;
-}
 .boxbody .boxtitle{
 	padding:1px;
 	margin:0;

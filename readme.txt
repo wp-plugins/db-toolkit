@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.2.16
+Stable tag: 0.2.2.17
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -51,6 +51,15 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.2.17 =
+    - Fixed a bug with form redirections
+    - Added clusters to the redirection panel and added application panels within
+    - Added view item for calculator field
+    - Additional bug fixes
+    - Fixed a CSS problem with Blockquotes
+    - Added the new forums feed to welcome page.
+    - Made way for the possibility of Premium Support (still undecided but put stuff in)
 
 = 0.2.2.16 =
     - Bug fixes with layout of forms.

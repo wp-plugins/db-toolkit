@@ -4,7 +4,7 @@ Plugin Name: Database Interface Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.16
+Version: 0.2.2.17
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
@@ -155,7 +155,7 @@ function dt_styles() {
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);        
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
-                $preIs[] = substr(trim($preInterface, '"'), 5);
+                $preIs[] = shortcode_parse_atts($preInterface);
             }
         }
         }
@@ -215,7 +215,7 @@ function dt_styles() {
 
         if(!empty($preIs)){
             foreach($preIs as $interface){
-               $preInterface = get_option($interface);
+               $preInterface = get_option($interface['id']);
                if(!empty($preInterface['_CustomCSSSource'])){
                    // load scripts
                    // setup scripts and styles
@@ -244,9 +244,8 @@ function dt_scripts() {
         //vardump($matches);
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
-                $preIs[] = substr(trim($preInterface, '"'), 5);
-                
-            }
+                $preIs[] = shortcode_parse_atts($preInterface);
+            }            
         }
     }
 
@@ -318,10 +317,10 @@ function dt_scripts() {
             }
         }
     }else{
-       
+       //vardump($preIs);
         if(!empty($preIs)){
             foreach($preIs as $interface){
-               $preInterface = get_option($interface);
+               $preInterface = get_option($interface['id']);
                if(!empty($preInterface['_CustomJSLibraries'])){
                    // load scripts
                    // setup scripts and styles
@@ -329,7 +328,7 @@ function dt_scripts() {
                        $in_footer = false;
                        if($script['location'] == 'foot'){
                            $in_footer = true;
-                       }
+                       }                       
                        wp_register_script($handle, $script['source'], false, false, $in_footer);
                        wp_enqueue_script($handle);
                    }
@@ -482,8 +481,8 @@ function dt_adminMenus() {
                 }
 
             }
-
-        }        
+        }
+        
         if(empty($Groups)){
             return;
         }
@@ -501,7 +500,7 @@ function dt_adminMenus() {
 
                 for($i = 0; $i <= count($Interfaces)-1; $i++){
                     if(current_user_can($Interfaces[$i]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
-                        $wp_admin_bar->add_menu( array( 'parent' => $Interfaces[0]['ID'], 'title' => $Interfaces[$i]['_interfaceName'], 'href' => get_admin_url().'admin.php?page='.$Interfaces[0]['ID'] ) );
+                        $wp_admin_bar->add_menu( array( 'parent' => $Interfaces[0]['ID'], 'title' => $Interfaces[$i]['_interfaceName'], 'href' => get_admin_url().'admin.php?page='.$Interfaces[$i]['ID'] ) );
                     }
                 }
             }
@@ -703,12 +702,22 @@ function dt_process() {
             if(!empty($Return['Value'])) {
                 $ReturnValue = $Return['Value'];
             }
-            if(!empty($Setup['Content']['_ItemViewPage'])) {
-                $Location = get_permalink($Setup['Content']['_ItemViewPage']);
-            }else {
-                $location = $_SERVER['HTTP_REFERER'];
+            if(is_admin()){
+
+                if(!empty($Setup['Content']['_ItemViewInterface'])) {
+                    $Location = 'admin.php?page=Database_Toolkit';
+                }else{
+                    $Location = $_SERVER['HTTP_REFERER'];
+                }
+            }else{
+                if(!empty($Setup['Content']['_ItemViewPage'])) {
+                    $Location = get_permalink($Setup['Content']['_ItemViewPage']);
+                }else{
+                    $Location = $_SERVER['HTTP_REFERER'];
+                }
             }
-           
+            //echo $Location;
+            //die;
             if(!empty($ReturnValue)) {
                 $url = parse_url($_SERVER['HTTP_REFERER']);
                 $returntoken = '?';
@@ -717,17 +726,25 @@ function dt_process() {
                     if(empty($Setup['Content']['_ItemViewPage'])) {
                         $Location = str_replace('?'.$url['query'], '', $_SERVER['HTTP_REFERER']);
                     }
+                    
                     parse_str($url['query'], $gets);
                     parse_str($ReturnValue, $returngets);
                     if(!empty($Setup['Content']['_ItemViewInterface'])){
-                       $gets['page'] = $Setup['Content']['_ItemViewInterface'];
+                       $RedirInterface = get_option($Setup['Content']['_ItemViewInterface']);
+                       if(!empty($RedirInterface['_ItemGroup'])){
+                            $gets['page'] = $Setup['Content']['_ItemViewInterface'];
+                       }else{
+                           $gets['page'] = 'Database_Toolkit';
+                           $gets['renderinterface'] = $Setup['Content']['_ItemViewInterface'];
+                       }
                     }
                     $ReturnValue = htmlspecialchars_decode(http_build_query(array_merge($gets, $returngets)));
                 }
                 
                 $Redirect = $Location.$returntoken.$ReturnValue;
             }
-
+            //echo $Redirect;
+            //die;
             header('Location: '.$Redirect);
             die;
         }
@@ -1088,12 +1105,6 @@ function dt_rendercluster($cluster){
     
     if(is_admin ()){
     echo '<div class="wrap">';
-    echo '<div class="icon32" id="icon-themes"></div><h2>'.$cfg['_ClusterTitle'].'<a href="admin.php?page=Database_Toolkit&amp;cluster='.$cluster.'" class="button add-new-h2">Edit</a></h2>';
-    if(!empty($cfg['_ClusterDescription'])){
-        echo '<span class="description">'.$cfg['_ClusterDescription'].'</span>';
-    }
-    echo '<div class="clear"></div>';
-    
         echo '<div id="poststuff">';
         //echo '<div class="metabox-holder">';
     }
@@ -1104,6 +1115,7 @@ function dt_rendercluster($cluster){
                 foreach($cols as $col=>$width){
 
                     echo '<div class="clusterColumn cluster-'.$row.'-'.$col.'" id="'.$row.'_'.$col.'" style="width: '.$width.'; float: left;">';
+                    echo '<div class="clusterItem">';
                         $content = array_keys($layout, $row.'_'.$col);
                         if(!empty($content)){
                             $output = '';
@@ -1115,6 +1127,7 @@ function dt_rendercluster($cluster){
                             echo '&nbsp;';
                         }
 
+                    echo '</div>';
                     echo '</div>';
 
                 }
@@ -1176,7 +1189,13 @@ function dt_renderInterface($interface) {
     $Return = '';
 
 
+        if(empty($_SESSION['report_'.$Media['ID']]['limitOveride'])){
+            $_SESSION['report_'.$Media['ID']]['limitOveride'] = false;
+        }
 
+        if(!empty($_GET['limit'])){
+            $_SESSION['report_'.$Media['ID']]['limitOveride'] = floatval($_GET['limit']);
+        }
 
     ob_start();
         include('data_report/element.def.php');
@@ -1201,6 +1220,8 @@ function dt_renderInterface($interface) {
     }
 
     switch ($Config['_ViewMode']){
+
+
         case 'list':
             ob_start();
                 include('data_report/listmode.php');
@@ -1583,8 +1604,8 @@ function core_loadSupportFeed($url){
         <li>
             <a class="rsswidget" href='<?php echo $item->get_permalink(); ?>'
             title='<?php echo 'Posted '.$item->get_date('j F Y | g:i a'); ?>'>
-            <?php echo $item->get_title(); ?></a><span class="rss-date"><?php echo $item->get_date('j F Y | g:i a'); ?></span>
-            <?php echo $item->get_description(); ?>
+            <?php echo $item->get_title(); ?></a><span class="rss-date"><?php echo $item->get_date('j F Y | g:i a'); ?></span><br />
+            <?php echo str_replace('<hr />' , '<br />', $item->get_description()); ?>
         </li>
         <?php endforeach; ?>
     </ul>

@@ -1,5 +1,5 @@
 <?php
-/*
+
 if($FieldSet[1] == 'multiply'){
 	
 //	dump();
@@ -14,8 +14,14 @@ if($FieldSet[1] == 'multiply'){
 		newval = math_CurrencyFormatted(aval*bval);
 		jQuery('#".$Field."_mult').html(newval);
 	});
+	jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['A']."').bind('keyup', function(){
+		aval = this.value;
+		bval = jQuery('#entry_".$Element['ID']."_".$Config['_multiply'][$Field]['B']."').val();
+		newval = math_CurrencyFormatted(aval*bval);
+		jQuery('#".$Field."_mult').html(newval);
+	});
 	
 	";
 }
-*/
+
 ?>

@@ -5,12 +5,24 @@
     <div style="clear:both;"></div>
 <div class="postbox-container" style="width:32.6%">
     <div class="metabox-holder">
+
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>From the DB-Toolkit Blog</span></h3>
-            <div id="dbtoolkitBlogFeed" style="margin: 10px;">
-            Loading....
+            <h3><span>Updates in this version</span></h3>
+            <div style="margin: 10px;">
+
+    <p>- Fixed a bug with form redirections</p>
+    <p>- Added clusters to the redirection panel and added application panels within</p>
+    <p>- Added view item for calculator field</p>
+    <p>- Additional bug fixes</p>
+    <p>- Fixed a CSS problem with Blockquotes</p>
+    <p>- Added the new forums feed to welcome page.</p>
+    <p>- Made preparations for the FieldType Manager.</p>
+    <p>- Made way for the possibility of Premium Support (still undecided but put stuff in)</p>
+
             </div>
         </div>
+
+
     </div>
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
@@ -42,20 +54,9 @@
     </div>
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>New Features</span></h3>
-            <div style="margin: 10px;">
-
-                <p><strong>Interface Clusters</strong>: A new feature allows you to build clusters of interfaces. This allows you to layout an series of interfaces and have that series inserted in a page or post with a single short code. There will be some tutorials coming soon to demo the feature.</p>
-                <p><strong>Layout Builders</strong>: Totally rebuilt the form and view Layout Builders.</p>
-                <p><strong>Bug Fixes</strong>: Made a few bug fixes to aid in stability.</p>
-
-                <p><strong>Logo Change</strong>: DB-Toolkit now has a logo.</p>
-                <p><strong>Preparations</strong>: Made preparations for Interface Clusters.</p>
-                <p><strong>Insert Interface Editor Button</strong>: You can now insert an interface Shortcode using the Insert Interface button on the text editor toolbar.</p>
-                <p><strong>PDF Exporting Update</strong>: Added PDF Templates. Currently not customisable but will be in next release</p>
-                <p><strong>Charting</strong>: Fixed a bug that prevented Charting from being enabled. in the Charting Tab, you can enable charting..</p>
-                <p><strong>Import Button</strong>: when creating an interface, in the settings tab, check the "<strong>Show Import</strong>" Button to enable the import feature.</p>
-                
+            <h3><span>From the DB-Toolkit Blog</span></h3>
+            <div id="dbtoolkitBlogFeed" style="margin: 10px;">
+            Loading....
             </div>
         </div>
     </div>
@@ -67,7 +68,7 @@
 
 jQuery(document).ready(function($) {
 
-    ajaxCall('core_loadSupportFeed','http://dbtoolkit.digilab.co.za/forum/rss/', function(o){
+    ajaxCall('core_loadSupportFeed','http://dbtoolkit.digilab.co.za/forum/feed.php', function(o){
        jQuery('#dbtoolkitSupportFeed').html(o);
     });
 

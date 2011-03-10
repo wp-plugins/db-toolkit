@@ -438,6 +438,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
                                     // Validation Check
                                     $Req = false;
+                                    $name = $Config['_FieldTitle'][$Field];
                                     if(!empty($Config['_Required'][$Field])){
                                             $name = $name.' <em>(required)</em>';
                                             $Req = 'validate[required]';
@@ -454,7 +455,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
                                         // Check if is visible or not
                                         $Form .= "<div class=\"form-gen-field-wrapper\" id=\"form-field-".$Field."\">\n";
-                                        $Form .= "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$Config['_FieldTitle'][$Field]."</label>\n";
+                                        $Form .= "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>\n";
                                             ob_start();
                                             $Val = esc_attr($Defaults[$Field]);
                                             if(!empty($Config['_readOnly'][$Field])){
@@ -482,7 +483,9 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                 }else{
                                     if(!empty($Config['_SectionBreak'][$Field])){
                                         $Form .= "<div class=\"sectionbreak\">\n";
-                                        $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
+                                        if(!empty($Config['_SectionBreak'][$Field]['Title'])){
+                                            $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
+                                        }
                                         if(!empty($Config['_SectionBreak'][$Field]['Caption'])){
                                             $Form .= "<span class=\"description\">".$Config['_SectionBreak'][$Field]['Caption']."</span>\n";
                                         }

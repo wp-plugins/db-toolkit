@@ -1527,6 +1527,10 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $Config['_Items_Per_Page'] = $limitOveride;
     }
 
+    if(!empty($_SESSION['report_'.$EID]['limitOveride'])){        
+            $Config['_Items_Per_Page'] = floatval($_SESSION['report_'.$EID]['limitOveride']);
+    }
+
     if (!empty($Config['_Items_Per_Page'])) {
         $TotalPages = ceil($Count['Total'] / $Config['_Items_Per_Page']);
         $Start = ($Page * $Config['_Items_Per_Page']) - $Config['_Items_Per_Page'];
@@ -1548,6 +1552,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $queryLimit = '';
         }
     }
+
+
     if (empty($Config['_Items_Per_Page'])) {
         $queryLimit = '';
     }
@@ -1562,7 +1568,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         return ob_get_clean();
     }
 
-    $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";
+    $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";   
+    
     // Wrap fields with ``
     //foreach($querySelects as $Field=>$FieldValue){
     // echo $Field.' = '.$FieldValue.'<br />';

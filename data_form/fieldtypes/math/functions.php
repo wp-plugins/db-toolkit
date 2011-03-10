@@ -43,12 +43,13 @@ function math_processValue($Value, $Type, $Field, $Config, $EID, $Data, $Caller 
             //dump($Data);
             //dump($Config['_multiply']);
                 $Opp = '*';
+                
                 if(!empty($Config['_multiply'][$Field]['opperator'])){
                     $Opp = $Config['_multiply'][$Field]['opperator'];
                 }
-
+                
             $mathString = $Data[$Config['_multiply'][$Field]['A']].$Opp.$Data[$Config['_multiply'][$Field]['B']];
-            $DoCalc = create_function("", "return (" . $mathString . ");" );
+            $DoCalc = create_function("", "return " . $mathString . ";" );
             return number_format($DoCalc(true));
 
             //return $Value;

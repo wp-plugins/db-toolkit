@@ -419,7 +419,7 @@
                         </div>
                         <div class="setupTab" id="adminRedirect">
                             <?php
-                            InfoBox('Interface');
+                            InfoBox('Applications');
 
                             $Sel = '';
                             if(empty($Element['Content']['_ItemViewInterface'])) {
@@ -428,43 +428,140 @@
                             echo dais_customfield('radio', 'No Redirect', '_ItemViewInterface', '_ItemViewInterface', 'list_row1' , 0, $Sel);
                             global $wpdb;
                             $Interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
-                            if(!empty($Interfaces)) {
-                                $Groups = array();
+                            $Clusters = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_clstr%' ", ARRAY_A);
+                            $Interfaces = array_merge($Interfaces, $Clusters);
+                            if(!empty($Interfaces) || !empty($Clusters)) {
+                                // group by App
+                                $Apps = array();
                                 foreach($Interfaces as $Interface) {                                    
                                         $option = get_option($Interface['option_name']);
-                                        if(empty($option['_ItemGroup'])){
-                                            $option['_ItemGroup'] = '__Ungrouped';
-                                        }
-                                        $Groups[$option['_ItemGroup']][] = $option;
+                                        //if(empty($option['_ItemGroup'])){
+                                        //    $option['_ItemGroup'] = '__Ungrouped';
+                                        //}                                        
+                                        $Apps[$option['_Application']][$option['Type']][] = $option;
+                                }
+                                ksort($Apps);
+
+                                
+
+                                foreach($Apps as $App=>$PrimInterfaces){                                    
+                                    $appID = uniqid('rowapp_');
+
+                                echo '<div class="admin_list_row3 postbdox">';
+                                    echo '<img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery(\'#'.$appID.'\').toggle();" src="'.WP_PLUGIN_URL.'/db-toolkit/images/cog.png">';
+                                    echo '<h3>'.ucwords($App).'</h3>';
+
+                                    // set visibility if redirect is in this app.
+
+                                    $Show = 'none';
                                     
-                                }
-                                ksort($Groups);
-                                foreach($Groups as $Group=>$Interfaces){
-                                    if($Group == '__Ungrouped'){
-                                        $Group = '<em>Ungrouped</em>';
-                                    }
-                                    echo '<div style="padding:5px 3px 3px;"><strong>'.$Group.'</strong></div>';
-                                    foreach($Interfaces as $Interface){
-                                        
-                                        $Dis = '';
-                                        $Cls = '';
-                                        $Sel = '';
-                                        if($Interface['ID'] == $_GET['interface']){
-                                            $Dis = 'disabled="disabled"';
-                                            $Cls = 'highlight';
-                                        }
-                                       if($Interface['ID'] == $Element['Content']['_ItemViewInterface']){
-                                            $Sel = 'checked="checked"';
-                                       }
-                                      
-                                        //echo dais_customfield('radio', $Interface['_interfaceName'], '_ItemViewInterface', '_ItemViewInterface', 'list_row1' , 0, $Sel);
-                                        echo '<div class="list_row4 '.$Cls.'" style="padding: 3px 3px 3px 12px;">';
-                                        echo '<label for="_ItemViewInterface_'.$Interface['ID'].'">';
-                                            echo '<img width="16" height="16" border="0" align="absmiddle" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/table.png">';
-                                            echo '<input type="radio" value="'.$Interface['ID'].'" id="_ItemViewInterface_'.$Interface['ID'].'" name="Data[Content][_ItemViewInterface]" '.$Sel.' '.$Dis.'> '.$Interface['_interfaceName'].'<div style="padding: 3px 3px 3px 18px;" class="description">'.$Interface['_ReportDescription'].'</div></label>';
-                                        echo '</div>';
-                                    }
-                                }
+
+                                            $Plugins = array();
+                                            $Clusters = array();
+                                            foreach($PrimInterfaces['Plugin'] as $PrimInterface) {
+                                                if(empty($PrimInterface['_ItemGroup'])){
+                                                    $PrimInterface['_ItemGroup'] = '__Ungrouped';
+                                                }
+                                                $Plugins[$PrimInterface['_ItemGroup']][] = $PrimInterface;
+                                                if(!empty($Element['Content']['_ItemViewInterface'])){
+                                                    if($Element['Content']['_ItemViewInterface'] == $PrimInterface['ID']){
+                                                        $Show = 'block';
+                                                    }
+                                                }
+                                            }
+                                            foreach($PrimInterfaces['Cluster'] as $PrimInterface) {
+                                                if(empty($PrimInterface['_ItemGroup'])){
+                                                    $PrimInterface['_ItemGroup'] = '__Ungrouped';
+                                                }
+                                                $Clusters   [$PrimInterface['_ItemGroup']][] = $PrimInterface;
+                                                if(!empty($Element['Content']['_ItemViewInterface'])){
+                                                    if($Element['Content']['_ItemViewInterface'] == $PrimInterface['ID']){
+                                                        $Show = 'block';
+                                                    }
+                                                }
+                                            }
+                                            
+                                            echo '<div style="display: '.$Show.'; clear:both;" class="admin_config_panel" id="'.$appID.'">';
+                                            // left colum for interfaces
+                                            echo '<div style="float:left; width:49%;">';
+
+                                            echo '<div id="'.$appID.'_interfaces" class="widefat">';
+                                            echo '<h3>Interfaces</h3>';
+                                            echo '<div class="">';
+                                            foreach($Plugins as $Plugin=>$Interfaces){
+                                                if($Plugin == '__Ungrouped'){
+                                                    $Plugin = '<em>Ungrouped</em>';
+                                                }
+                                                echo '<div style="padding:5px 3px 3px;"><strong>'.$Plugin.'</strong></div>';
+
+                                                foreach($Interfaces as $Interface){
+
+                                                    $Dis = '';
+                                                    $Cls = '';
+                                                    $Sel = '';
+                                                    if($Interface['ID'] == $_GET['interface']){
+                                                        $Dis = 'disabled="disabled"';
+                                                        $Cls = 'highlight';
+                                                    }
+                                                   if($Interface['ID'] == $Element['Content']['_ItemViewInterface']){
+                                                        $Sel = 'checked="checked"';
+                                                   }
+
+                                                    //echo dais_customfield('radio', $Interface['_interfaceName'], '_ItemViewInterface', '_ItemViewInterface', 'list_row1' , 0, $Sel);
+                                                    echo '<div class="list_row4 '.$Cls.'" style="padding: 3px 3px 3px 12px;">';
+                                                    echo '<label for="_ItemViewInterface_'.$Interface['ID'].'">';
+                                                        echo '<img width="16" height="16" border="0" align="absmiddle" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/table.png">';
+                                                        echo '<input type="radio" value="'.$Interface['ID'].'" id="_ItemViewInterface_'.$Interface['ID'].'" name="Data[Content][_ItemViewInterface]" '.$Sel.' '.$Dis.'> '.$Interface['_ReportDescription'].'<div style="padding: 3px 3px 3px 18px;" class="description">'.$Interface['_ReportExtendedDescription'].'</div></label>';
+                                                    echo '</div>';
+                                                }
+                                            }
+                                            echo '</div>';
+                                            echo '</div>';
+                                            echo '</div>';
+
+                                            echo '<div style="float:right; width:49%;">';
+
+                                            echo '<div id="'.$appID.'_clusters" class="widefat">';
+                                            echo '<h3>Clusters</h3>';
+                                            echo '<div class="">';
+                                            
+                                            foreach($Clusters as $Cluster=>$Interfaces){                                                
+                                                if($Cluster == '__Ungrouped'){
+                                                    $Cluster = '<em>Ungrouped</em>';
+                                                }
+                                                echo '<div style="padding:5px 3px 3px;"><strong>'.$Cluster.'</strong></div>';
+
+                                                foreach($Interfaces as $Interface){
+                                                
+                                                    $Dis = '';
+                                                    $Cls = '';
+                                                    $Sel = '';
+                                                    if($Interface['ID'] == $_GET['interface']){
+                                                        $Dis = 'disabled="disabled"';
+                                                        $Cls = 'highlight';
+                                                    }
+                                                   if($Interface['ID'] == $Element['Content']['_ItemViewInterface']){
+                                                        $Sel = 'checked="checked"';
+                                                   }
+
+                                                    //echo dais_customfield('radio', $Interface['_interfaceName'], '_ItemViewInterface', '_ItemViewInterface', 'list_row1' , 0, $Sel);
+                                                    echo '<div class="list_row4 '.$Cls.'" style="padding: 3px 3px 3px 12px;">';
+                                                    echo '<label for="_ItemViewInterface_'.$Interface['ID'].'">';
+                                                        echo '<img width="16" height="16" border="0" align="absmiddle" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/table.png">';
+                                                        echo '<input type="radio" value="'.$Interface['ID'].'" id="_ItemViewInterface_'.$Interface['ID'].'" name="Data[Content][_ItemViewInterface]" '.$Sel.' '.$Dis.'> '.$Interface['_ClusterTitle'].'<div style="padding: 3px 3px 3px 18px;" class="description">'.$Interface['_ClusterDescription'].'</div></label>';
+                                                    echo '</div>';
+                                                }
+                                            }
+                                            echo '</div>';
+                                            echo '</div>';
+                                            echo '</div>';
+                                            echo '<div style="clear:both;"></div>';
+
+                                    echo '</div>';
+                                echo '</div>';
+
+                                }                                
+
                             }
 
                             EndInfoBox();
