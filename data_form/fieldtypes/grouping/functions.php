@@ -54,10 +54,20 @@ function grouping_setup($Field, $Table, $Config=false){
         $Sel = 'selected="selected"';
     }
     $Return .= '<option value="count" '.$Sel.'>Count</option>';
+
+    if($Config['Content']['_GroupingFields'][$Field]['Action'] == 'concat'){
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="concat" '.$Sel.'>Group Concat Fields</option>';
     //foreach($Fields as $FieldData){
         //vardump($FieldData);
         //$Return .= '<option value="'.$FieldData[0].'" >'.$FieldData[0].'</option>';
     //}
+
+
+
+
+
     $Return .= '</select>';
     $Return .= '</div>';
     
@@ -71,7 +81,27 @@ function grouping_setup($Field, $Table, $Config=false){
         }
 
         $Return .= '<option value="'.$FieldData[0].'" '.$Sel.'>'.$FieldData[0].'</option>';
+
     }
+    // add Clones
+        if(!empty($Config)) {
+            if(!empty ($Config['Content']['_CloneField'])) {
+                $Return .= '<optgroup label="Cloned Fields">';
+                foreach ($Config['Content']['_CloneField'] as $FieldKey=>$Array) {
+                    $Sel = '';
+                    if($Config['Content']['_GroupingFields'][$Field]['Field'] == $FieldKey) {
+                        $Sel = 'selected="selected"';
+                    }
+                    if($FieldKey != $Field){
+                        $Return .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['Content']['_FieldTitle'][$FieldKey].'</option>';
+                    }
+                }
+
+            }
+        }
+
+
+
     $Return .= '</select>';
     $Return .= '</div>';
 

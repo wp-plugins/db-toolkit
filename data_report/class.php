@@ -1008,8 +1008,10 @@ function dr_processQuery($Config, $querySelects) {
         $preSelect = $Select;
         $copySelectes = $querySelects;
         if (!empty($matches[0])) {
-            unset($copySelectes[$Field]);
-            $Select = dr_findCloneParent($matches[0], $Config['_CloneField'], $copySelectes);
+            unset($copySelectes[$Field]);            
+            $PreSelect = dr_findCloneParent($matches[0], $Config['_CloneField'], $copySelectes);
+            $Select = str_replace($matches[0], $PreSelect, $Select);
+            
         }
         preg_match('/[a-zA-Z0-9]+\(`(.*)`\)/s', $preSelect, $brackMatch);
         if (!empty($brackMatch[0]) && !empty($matches[0])) {
@@ -1423,7 +1425,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // create Query Selects and Where clause string
     //dump($querySelects);
     $querySelects = dr_processQuery($Config, $querySelects);
-    //dump($querySelects);
+    //vardump($querySelects);
     $preSelects = array();
     foreach ($querySelects as $AS => $selectField) {
         $preSelects[] = $selectField . ' AS ' . $AS;
@@ -1466,7 +1468,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $countSelect = ',' . implode(',', $countSelect);
         }
     }
-
+    
     // Build WHERES - prim.clones
     $pattern = 'prim.`(__[a-zA-Z0-9]+)`';
     preg_match_all('/' . $pattern . '/s', $queryWhere, $matches);
@@ -1569,7 +1571,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
     $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";   
-    
+
     // Wrap fields with ``
     //foreach($querySelects as $Field=>$FieldValue){
     // echo $Field.' = '.$FieldValue.'<br />';

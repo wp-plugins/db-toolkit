@@ -18,6 +18,12 @@ variables avaiable
 */
 $groupBy[$Config['_CloneField'][$Field]['Master']] = '`'.$Config['_CloneField'][$Field]['Master'].'`';
 //dump($Config['_GroupingFields']);
-$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
+
+if($Config['_GroupingFields'][$Field]['Action'] == 'concat'){
+    //$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
+    $querySelects[$Field] = 'GROUP_CONCAT('.$Config['_GroupingFields'][$Field]['Field'].', \' \')';
+}else{
+    $querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'('.$Config['_GroupingFields'][$Field]['Field'].')';
+}
 //dump($querySelects);
 ?>
