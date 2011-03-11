@@ -20,7 +20,7 @@
                                     }else{
                                         $outList[] = "' '";
                                     }
-					$outList[] = $joinIndexSet.'.'.$outValue;
+					$outList[] = $joinIndexSet.'.`'.$outValue.'`';
                                     if(!empty($Config['_Linkedfields'][$Field]['Suffix'][$Key])){
                                         $outList[] = "'".$Config['_Linkedfields'][$Field]['Suffix'][$Key]."'";
                                     }else{
@@ -30,7 +30,7 @@
 
                                     $outString = 'CONCAT('.implode(',',$outList).')';
                                 }else{
-                                    $outString = $joinIndexSet.'.'.$Config['_Linkedfields'][$Field]['Value'][0];
+                                    $outString = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['Value'][0].'`';
                                 }
                                 $querySelects[$Field] = $outString;
 
@@ -47,7 +47,7 @@
 				}
 			}
 
-			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.'.$Config['_Linkedfields'][$Field]['ID'];
+			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['ID'].'`';
 
 			// left Join linked table
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
@@ -64,12 +64,16 @@
 			}else{
 
                                 $Primary = 'prim.`'.$Field.'`';
-                                if(!empty($Config['_CloneField'][$Field]['Master'])){
-                                    $Primary = 'prim.`'.$Config['_CloneField'][$Field]['Master'].'`';
+                                
+                                if(!empty($Config['_CloneField'][$Field])){
+                                    $Primary = dr_findCloneParent($Field, $Config['_CloneField'], $querySelects);
+                                    if(strpos($Primary , '.') <= 0){
+                                        $Primary = 'prim.`'.$Primary.'`';
+                                    }
 
                                 }
                                 if(empty($queryJoins[$Config['_Linkedfields'][$Field]['Table']])){
-                                    $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
+                                    $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
                                     $queryJoins[$joinIndex] = $joinIndex;
                                 }
@@ -126,13 +130,25 @@
 					$querySelects['_URL_Link_'.$Field] = $joinIndex.'.'.$Config['_Linkedfilterfields'][$Field]['URL'];
 				}
 			}
-			$querySelects['_sourceid_'.$Field] = $joinIndex.'.'.$Config['_Linkedfilterfields'][$Field]['ID'];
+			$querySelects['_sourceid_'.$Field] = $joinIndex.'.`'.$Config['_Linkedfilterfields'][$Field]['ID'].'`';
 
 			// left Join linked table
 				 //JoinType
+                        
                         if(empty($queryJoins[$joinIndex])){
-                        $Primary = 'prim.'.$Field;
-			$queryJoin .= " ".$Config['_Linkedfilterfields'][$Field]['JoinType']." `".$Config['_Linkedfilterfields'][$Field]['Table']."` AS ".$joinIndex." on (".$Primary." = ".$joinIndex.".".$Config['_Linkedfilterfields'][$Field]['Ref'].") \n";
+
+                                $Primary = 'prim.`'.$Field.'`';
+                                
+                                if(!empty($Config['_CloneField'][$Field])){
+                                    $Primary = dr_findCloneParent($Field, $Config['_CloneField'], $querySelects);
+                                    if(strpos($Primary , '.') <= 0){
+                                        $Primary = 'prim.`'.$Primary.'`';
+                                    }
+
+                                }
+
+
+			$queryJoin .= " ".$Config['_Linkedfilterfields'][$Field]['JoinType']." `".$Config['_Linkedfilterfields'][$Field]['Table']."` AS ".$joinIndex." on (".$Primary." = ".$joinIndex.".`".$Config['_Linkedfilterfields'][$Field]['Ref']."`) \n";
 
                         $queryJoins[$joinIndex] = $joinIndex;
 

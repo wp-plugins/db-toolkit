@@ -30,7 +30,7 @@ switch ($Type[1]) {
         //}
         break;
 }
-if ($Type[0] == 'hidden') {
+if ($Type[0] == 'hidden') {    
     $queryWhere[] = "prim.`" . $Field . "` = '" . $_SESSION['reportFilters'][$EID][$Field] . "'";
 }
 ?>

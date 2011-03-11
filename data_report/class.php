@@ -975,7 +975,7 @@ function dr_cloneFindMater($Field, $Clones) {
     return $Field;
 }
 
-function dr_findCloneParent($Clone, $Clones, $querySelects) {
+function olddr_findCloneParent($Clone, $Clones, $querySelects) {
     // Clear out _Return_
     $preParent = $Clones[$Clone]['Master'];
     //echo $Clone.' - '.$preParent.'<br>';
@@ -992,7 +992,75 @@ function dr_findCloneParent($Clone, $Clones, $querySelects) {
     return $preParent;
 }
 
+
+function dr_findCloneParent($Clone, $Clones, $querySelects){
+    //echo $Clone.' - ';
+    if(!empty($Clones[$Clone]['Master'])){
+        //echo $Clones[$Clone]['Master'].' - ';
+        $Clone = $querySelects[$Clones[$Clone]['Master']];
+        //echo '|'.$Clone.'|';
+        if(!empty($Clones[$Clone])){
+            $Clone = dr_findCloneParent($Clone, $Clones, $querySelects);
+        }
+    }
+    //echo $Clone.'<br />';
+return $Clone;
+}
+
 function dr_processQuery($Config, $querySelects) {
+
+    
+    //vardump($querySelects);
+    //vardump($Config['_CloneField']);
+    
+    //may need a for loop rather than a foreach.
+    //return $querySelects;
+    foreach ($querySelects as $Field => $preSelect) {
+        //$CloneOf = $querySelects[$Field];
+        $Select = $preSelect;
+        $pattern = '__[a-zA-Z0-9]+';
+        preg_match('/' . $pattern . '/s', $Select, $matches);
+        if(!empty($matches[0])){
+            //vardump($matches);
+            //echo $Select.' -> ';
+            $Select = $matches[0];
+            //echo $Select.' <br /> ';
+        }
+        if(!empty($Config['_CloneField'][$Select])){
+            //$CloneOf = $querySelects[$Select];
+            //echo '++++ '.$Select.' ++++<br />';
+            $Select = dr_findCloneParent($Config['_CloneField'][$Select]['Master'], $Config['_CloneField'], $querySelects);
+        }
+        
+
+        if(!empty($matches[0])){
+            //echo $Select.' - ';
+            //echo $matches[0].'<br />';
+            $Select = str_replace($matches[0], $Select, $preSelect);
+            //echo $Select.'<br /><br />';
+        }
+        if(strpos($Select , '.') <= 0){
+            $pattern = '\(([a-zA-Z0-9]+)\)';
+            preg_match('/' . $pattern . '/s', $Select, $matches);
+            if(!empty($matches[1])){              
+                $Select = str_replace($matches[1], 'prim.`'.$matches[1].'`', $Select);
+            }else{
+                $Select = 'prim.`'.$Select.'`';
+            }
+        }
+        $Processed[$Field] = $Select;
+        //echo $Field.' - '.$Select.'<br />';
+
+
+    }
+
+
+
+
+
+    return $Processed;
+
+
 
     $pattern = '__[a-zA-Z0-9]+';
     $Selects = array();
@@ -1010,7 +1078,9 @@ function dr_processQuery($Config, $querySelects) {
         if (!empty($matches[0])) {
             unset($copySelectes[$Field]);            
             $PreSelect = dr_findCloneParent($matches[0], $Config['_CloneField'], $copySelectes);
-            $Select = str_replace($matches[0], $PreSelect, $Select);
+            if(strstr('prim.') === false){
+                $Select = str_replace($matches[0], $PreSelect, $Select);
+            }
             
         }
         preg_match('/[a-zA-Z0-9]+\(`(.*)`\)/s', $preSelect, $brackMatch);
@@ -1232,11 +1302,16 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
 //setup Field Types
+    
     foreach ($Config['_Field'] as $Field => $Type) {
+        if(empty($Type)){
+            $querySelects[$Field] = $Field;
+        }
         // explodes to:
         // [0] = Field plugin dir
         // [1] = Field plugin type
         $Config['_Field'][$Field] = explode('_', $Type);
+
     }
 
 //SetupHeaders
@@ -1311,14 +1386,14 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $ReportReturn .= '</th>';
             }
             // Preset the selects from query
-            $querySelects[$Field] = 'prim.`' . $Field . '`';
+            $querySelects[$Field] = $Field;// 'prim.`' . $Field . '`';
             // Set average width and min width
             $minWidth[$Field] = strlen($fieldTitle) * 8;
             $AvrageWidth[$Field] = array();
             $AvrageWidth[$Field][] = $minWidth[$Field];
         }
         if (!empty($wherePush)) {
-            $querySelects[$Field] = 'prim.`' . $Field . '`';
+            $querySelects[$Field] = $Field; //'prim.`' . $Field . '`';
         }
     }
 
@@ -1327,7 +1402,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         //$querySelects[$Config['_ReturnFields'][0]] = 'prim.'.$Config['_ReturnFields'][0];
         foreach ($Config['_ReturnFields'] as $Field) {
             $newField = '_return_' . $Field;
-            $querySelects[$newField] = 'prim.`' . $Field . '`';
+            $querySelects[$newField] = $Field;//'prim.`' . $Field . '`';
         }
     }
     if (empty($Config['_Show_popup'])) {
@@ -1366,7 +1441,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     foreach ($Config['_Field'] as $Field => $Type) {
 
         //set filter for auto values
-        if ($Type[0] == 'hidden') {
+        if ($Type[0] == 'hidden') {            
             if (!empty($_SESSION['reportFilters'][$EID][$Field])) {
                 if ($WhereTag == '') {
                     $WhereTag = " WHERE ";
@@ -1423,9 +1498,10 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
     }
     // create Query Selects and Where clause string
-    //dump($querySelects);
+    
     $querySelects = dr_processQuery($Config, $querySelects);
-    //vardump($querySelects);
+    
+    //vardump($Config['_CloneField']);    //vardump($querySelects);
     $preSelects = array();
     foreach ($querySelects as $AS => $selectField) {
         $preSelects[] = $selectField . ' AS ' . $AS;
@@ -1571,7 +1647,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
     $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";   
-
+    //vardump($Query);
     // Wrap fields with ``
     //foreach($querySelects as $Field=>$FieldValue){
     // echo $Field.' = '.$FieldValue.'<br />';
