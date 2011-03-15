@@ -30,7 +30,7 @@ if(!empty($Config['_CloneField'][$Field])){
     }
 }
 if($type != '_custom'){
-    $querySelects[$Field] = $type.'(prim.`'.$fieldSett.'`)';
+    $querySelects[$Field] = $type.'(`'.$fieldSett.'`)';
 }else{
     $querySelects[$Field] = $fieldSett;
 }
