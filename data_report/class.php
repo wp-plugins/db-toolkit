@@ -975,144 +975,65 @@ function dr_cloneFindMater($Field, $Clones) {
     return $Field;
 }
 
-function dr_findCloneParent($Clone, $Clones, $querySelects) {
+function dr_findCloneParent($Clone, $Clones, $querySelects){
     // Clear out _Return_
     $preParent = $Clones[$Clone]['Master'];
     //echo $Clone.' - '.$preParent.'<br>';
-    if (!empty($querySelects[$Clone])) {
+    if(!empty($querySelects[$Clone])){
         $preParent = $querySelects[$Clone];
-    } elseif (!empty($querySelects[$preParent])) {
+    }elseif(!empty($querySelects[$preParent])){
         $preParent = $querySelects[$preParent];
     }
     $pattern = '__[a-zA-Z0-9]+';
-    preg_match('/' . $pattern . '/s', $preParent, $matches);
-    if (!empty($matches)) {
+    preg_match('/'.$pattern.'/s', $preParent, $matches);
+    if(!empty($matches)){
         $preParent = dr_findCloneParent($preParent, $Clones, $querySelects);
     }
     return $preParent;
 }
 
-
-function newdr_findCloneParent($Clone, $Clones, $querySelects){
-    //echo $Clone.' - ';
-    //vardump($Clones);
-    
-    if(!empty($Clones[$Clone]['Master'])){
-        //echo $Clones[$Clone]['Master'].' - ';
-        $Clone = $querySelects[$Clones[$Clone]['Master']];
-        //echo '|'.$Clone.'|';
-        if(!empty($Clones[$Clone])){
-            $Clone = dr_findCloneParent($Clone, $Clones, $querySelects);
-        }
-    }
-    //echo $Clone.'<br />';
-return $Clone;
-}
-
-function dr_processQuery($Config, $querySelects) {
-
-    /*
-    //vardump($querySelects);
-    //vardump($Config['_CloneField']);
-    
-    //may need a for loop rather than a foreach.
-    //return $querySelects;
-    foreach ($querySelects as $Field => $preSelect) {
-        //$CloneOf = $querySelects[$Field];
-        $Select = $preSelect;
-        $pattern = '__[a-zA-Z0-9]+';
-        preg_match('/' . $pattern . '/s', $Select, $matches);
-        if(!empty($matches[0])){
-            //vardump($matches);
-            //echo $Select.' -> ';
-            $Select = $matches[0];
-            //echo $Select.' <br /> ';
-        }
-        if(!empty($Config['_CloneField'][$Select])){
-            $CloneOf = $querySelects[$Select];
-            if(!empty($Config['_CloneField'][$CloneOf])){
-            //echo '++++ '.$Select.' ++++<br />';
-            $Select = dr_findCloneParent($Config['_CloneField'][$Select]['Master'], $Config['_CloneField'], $querySelects);
-            }else{
-                $Select = $CloneOf;
-            }
-        }
-        
-
-        if(!empty($matches[0])){
-            //echo $Select.' - ';
-            //echo $matches[0].'<br />';
-            $Select = str_replace($matches[0], $Select, $preSelect);
-            //echo $Select.'<br /><br />';
-        }
-        if(strpos($Select , '.') <= 0){
-            $pattern = '\(([a-zA-Z0-9]+)\)';
-            preg_match('/' . $pattern . '/s', $Select, $matches);
-            if(!empty($matches[1])){
-                echo '+ '.$Select.'<br>';
-                $Select = str_replace($matches[1], 'prim.`'.$matches[1].'`', $Select);
-            }else{
-                $Select = 'prim.`'.$Select.'`';
-            }
-        }
-        $Processed[$Field] = $Select;
-        //echo $Field.' - '.$Select.'<br />';
-
-
-    }
-
-
-
-
-
-    return $Processed;
-
-    */
+function dr_processQuery($Config, $querySelects){
 
     $pattern = '__[a-zA-Z0-9]+';
     $Selects = array();
-    foreach ($querySelects as $Field => $Select) {
+    foreach($querySelects as $Field=>$Select){
         $returnPrefix = '';
-        if (strpos($Field, '_return_') !== false) {
+        if(strpos($Field, '_return_') !== false){
             $subField = str_replace('_return_', '', $Field);
-            if (!empty($querySelects[$subField])) {
+            if(!empty($querySelects[$subField])){
                 $Select = $querySelects[$subField];
             }
         }
-        preg_match('/' . $pattern . '/s', $Select, $matches);
+        preg_match('/'.$pattern.'/s', $Select, $matches);
         $preSelect = $Select;
         $copySelectes = $querySelects;
-        if (!empty($matches[0])) {
-            unset($copySelectes[$Field]);            
-            $PreSelect = dr_findCloneParent($matches[0], $Config['_CloneField'], $copySelectes);
-            if(strstr($PreSelect, 'prim.') === false){
-                $Select = str_replace($matches[0], $PreSelect, $Select);
-            }
-            
+        if(!empty($matches[0])){
+            unset($copySelectes[$Field]);
+            $Select = dr_findCloneParent($matches[0], $Config['_CloneField'], $copySelectes);
         }
         preg_match('/[a-zA-Z0-9]+\(`(.*)`\)/s', $preSelect, $brackMatch);
-        if (!empty($brackMatch[0]) && !empty($matches[0])) {
-            if (strpos($Select, '.') === false) {
-                $Select = 'prim.`' . $Select . '`';
+        if(!empty($brackMatch[0]) && !empty($matches[0])){
+            if(strpos($Select, '.') === false){
+               $Select = 'prim.`'.$Select.'`';
             }
-            $Select = str_replace('`' . $brackMatch[1] . '`', $Select, $brackMatch[0]);
+          $Select = str_replace('`'.$brackMatch[1].'`', $Select, $brackMatch[0]);
         }
         preg_match('/[a-zA-Z0-9]+\(`(.*)`\)/s', $Select, $brackMatch);
-        if (!empty($brackMatch[0])) {
-            if (strpos($brackMatch[1], '.') === false) {
-                $pre = 'prim.`' . $brackMatch[1] . '`';
+        if(!empty($brackMatch[0])){
+            if(strpos($brackMatch[1], '.') === false){
+               $pre = 'prim.`'.$brackMatch[1].'`';
             }
-            $Select = str_replace('`' . $brackMatch[1] . '`', $pre, $brackMatch[0]);
+            $Select = str_replace('`'.$brackMatch[1].'`', $pre, $brackMatch[0]);
             //dump($brackMatch);
         }
-        if (strpos($Select, '.') === false) {
-            $Select = 'prim.`' . $Select . '`';
+        if(strpos($Select, '.') === false){
+           $Select = 'prim.`'.$Select.'`';
         }
         // Find anything with a bracket
 
         $Selects[$Field] = $Select;
     }
-    return $Selects;
+return $Selects;
 }
 
 function dr_exportChartImage($chartData) {
