@@ -511,7 +511,15 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 			$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';				
 		}
                 $SelectID = $EID.'-'.$Field;
-		$Res = mysql_query("SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ORDER BY `out_value` ASC;");
+                $queryWhere = '';
+                if(!empty($Config['_Linkedfields'][$Field]['_Filter']) && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
+                    
+                    $queryWhere = " WHERE `".$Config['_Linkedfields'][$Field]['_Filter']."` = '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
+                }
+
+
+
+		$Res = mysql_query("SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$queryWhere." ORDER BY `out_value` ASC;");
                 if($Res == false){
                     return;
                 }
