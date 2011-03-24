@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.2.21
+Stable tag: 0.2.2.22
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -51,6 +51,10 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.2.22 =
+    - Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/
+    - Added the option to be able to filter a join result buy a specified where.
 
 = 0.2.2.21 =
     - Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/

@@ -77,6 +77,14 @@
                             //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
 
 			}
+                        
+                        if(!empty($Config['_Linkedfields'][$Field]['_Filter']) && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
+                            if($WhereTag == ''){
+                                    $WhereTag = " WHERE ";
+                            }
+                            $queryWhere[] = $joinIndexSet.".".$Config['_Linkedfields'][$Field]['_Filter']." = '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
+                        }
+
 		}
 		if($Type[1] == 'linkedfiltered'){
 

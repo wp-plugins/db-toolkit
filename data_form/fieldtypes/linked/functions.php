@@ -113,6 +113,7 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 	$Return .= '<div id="'.$Field.'_configPanel_advanced" class="admin_list_row3" style="text-align: left; display: none;">';
 	$Return .= '<h3>Advanced Config</h3>';
 	$Return .= '<div class="admin_config_panel">';
+
 		// Content
 		//Join Type
 		$Return .= '<div class="list_row1"> Join Type: ';
@@ -220,6 +221,7 @@ return $Return;
 
 function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
         global $wpdb;
+        $WhereField .= '<option value=""></option>';
 	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
@@ -238,12 +240,13 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 			}
 			$IDReturn .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
 			$Sel = '';
-			if(!empty($Defaults[$Field]['URL'])){
-				if($Defaults[$Field]['URL'] == $row['Field']){
+			if(!empty($Defaults[$Field]['_Filter'])){
+				if($Defaults[$Field]['_Filter'] == $row['Field']){
 					$Sel = 'selected="selected"';
 				}
 			}
-			$URL .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+			$WhereField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+
 		}
 	}
 	$IReturn = '<div class="list_row1" style="padding:3px;">Reference Field: <select name="Data[Content][_Linkedfields]['.$Field.'][ID]" id="Ref_'.$Table.'">';
@@ -260,10 +263,24 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 			}
 		}
 	$VReturn .= '</div>';
-	//$URLField = '<div class="list_row1" style="padding:3px;">Linked URL:<select name="Data[Content][_Linkedfields]['.$Field.'][URL]" id="url_'.$Table.'" onchange="jQuery(\'#localurl_'.$Table.'\').val(\'\');">';
-	//	$URLField .= '<option>none</option>';
-	//	$URLField .= $URL;
-	//$URLField .= '</select></div>';
+
+
+                $VReturn .= '<div class="list_row1" style="padding:3px;"> Join WHERE: ';
+
+                $VReturn .= '<select name="Data[Content][_Linkedfields]['.$Field.'][_Filter]" id="linkedField_'.$Field.'_filter" >';
+                    $VReturn .= $WhereField;
+                $VReturn .= '</select> = ';
+                $value = '';
+                if(!empty($Defaults[$Field]['_FilterBy'])){
+                    $value = $Defaults[$Field]['_FilterBy'];
+                }
+                $VReturn .= '<input type="text" name="Data[Content][_Linkedfields]['.$Field.'][_FilterBy]" value="'.$value.'" class="textfield" size="15" />';
+
+                $VReturn .= '</div>';
+
+
+
+
 	$Types = '<div class="list_row1" style="padding:3px;">Select Type:<select name="Data[Content][_Linkedfields]['.$Field.'][Type]" id="Ref_'.$Table.'">';
 		$Sel = '';
 		if($Defaults[$Field]['Type'] == 'dropdown'){
@@ -289,25 +306,8 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 		if($Defaults[$Field]['Type'] == 'multiselect'){
 			$Sel = 'selected="selected"';	
 		}
-		//$Types .= '<option value="multiselect" '.$Sel.'>Multi-Select</option>';
 	$Types .= '</select></div>';
-	// Local URL Field
-	$result = mysql_query("SHOW COLUMNS FROM ".$MainTable);
-	if (@mysql_num_rows($result) > 0) {
-		while ($row = mysql_fetch_assoc($result)){
-			$Sel = '';
-			if(!empty($Defaults[$Field]['LocalURL'])){
-				if($Defaults[$Field]['LocalURL'] == $row['Field']){
-					$Sel = 'selected="selected"';
-				}
-			}
-			$LURL .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-		}
-	}
-	//$LocalURLField = '<div class="list_row1" style="padding:3px;">Local URL:<select name="Data[Content][_Linkedfields]['.$Field.'][LocalURL]" id="localurl_'.$Table.'" onchange="jQuery(\'#url_'.$Table.'\').val(\'\');">';
-	//	$LocalURLField .= '<option>none</option>';
-	//	$LocalURLField .= $LURL;
-	//$LocalURLField .= '</select></div>';
+
 	
 
 return $IReturn.$VReturn.$URLField.$Types.$LocalURLField;
