@@ -524,7 +524,9 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                     return;
                 }
                 $Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br /><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
-		$Return .= '<option>Select All</option>';
+		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
+                    $Return .= '<option>Select All</option>';
+                }
 		while($row = mysql_fetch_assoc($Res)){
 			$Sel = '';
 			if(!empty($Default[$Field])){
@@ -536,9 +538,14 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		}
 		$Return .= '</select>&nbsp;&nbsp;&nbsp;</div>';
 
+                $firstItem = 'true';
+                if(!empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
+                    $firstItem = 'false';
+                }
+
                 $_SESSION['dataform']['OutScripts'] .= "
                     //$(\"#".$SelectID."\").multiSelect();
-                    $(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: true});
+                    $(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
                 ";
 	}
 	if($Type == 'linkedfiltered'){
