@@ -660,7 +660,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
     $Shown .= '</table>';
     
-    if(!empty($Config['_FormMode'])) {
+    if($Config['_ViewMode'] == 'form') {
+        
         $ButtonText = 'Submit';
         if(!empty($Config['_SubmitButtonText'])) {
             $ButtonText = $Config['_SubmitButtonText'];
@@ -675,7 +676,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             $ButtonAlign = $Config['_SubmitAlignment'];
         }
 
-        $Shown .= '<div style="text-align: '.$ButtonAlign.';" class="list_row3"><input type="submit" name="captureEntry" id="button" value="'.$ButtonText.'" class="button" />';
+        $Shown .= '<div style="text-align: '.$ButtonAlign.';" class="buttonbar"><input type="submit" name="captureEntry" id="button" value="'.$ButtonText.'" class="button-primary" />';
         if(!empty($Config['_ShowReset'])) {
             $Shown .= '&nbsp;<input type="reset" name="Reset" id="reset" class="button"  value="Reset Form" />';
         }

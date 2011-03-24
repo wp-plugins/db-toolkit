@@ -145,7 +145,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
             if (!empty($Config['_Show_View']) || !empty($Config['_Show_Edit'])) {
                 $ViewLink = '';
                 if (!empty($Config['_Show_View'])) {
-                    $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(\"" . $row['_return_' . $Config['_ReturnFields'][0]] . "\", \"" . $Media['ID'] . "\", \"false\"); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                    $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('". $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $Media['ID'] . "', 'false'); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
                     if (!empty($Config['_ItemViewPage'])) {
                         $ReportVars = array();
                         foreach ($Config['_ReturnFields'] as $ReportReturnField) {

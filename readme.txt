@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.2.20
+Stable tag: 0.2.2.21
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -39,7 +39,7 @@ Q: Is there any Documentation?
 A: Not fully, but I am putting together a tutorial series and building the documentation as i go along. you can access these at http://dbtoolkit.digilab.co.za/
 
 Q: When will you have an RC release?
-A: When I am happy that all the major bugs are out. this may be as soon as December.
+A: Well you can technically use it now, however some things are still a little iffy (like cloned linking links) But it should mostly work on single level interfaces.
 
 == Screenshots ==
 
@@ -51,6 +51,10 @@ A: When I am happy that all the major bugs are out. this may be as soon as Decem
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.2.21 =
+    - Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/
+    - Added clusters to the redirection panel and added application panels within
 
 = 0.2.2.17 =
     - Fixed a bug with form redirections

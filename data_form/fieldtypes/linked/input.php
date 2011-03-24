@@ -166,7 +166,7 @@ if($FieldSet[1] == 'linkedfiltered'){
 			caption = jQuery('#caption_".$Element['ID']."_".$Field."').html();
 			jQuery('#caption_".$Element['ID']."_".$Field."').html('<img src=\"".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/linked/images/miniload.gif\" width=\"9\" height=\"9\" alt=\"Loading\" align=\"absmiddle\" /> loading data...');
 			jQuery('#entry_".$Element['ID']."_".$Field."').attr('disabled', 'disabled');
-		x_linked_makeFilterdLinkedField('".$Config['_Linkedfilterfields'][$Field]['Ref']."', 'CONCAT(".implode(",\' \',",$Config['_Linkedfilterfields'][$Field]['Value']).") AS _Value_Field','".$Config['_Linkedfilterfields'][$Field]['ID']."', this.value, '".$Config['_Linkedfilterfields'][$Field]['Table']."', function(x){
+		ajaxCall('linked_makeFilterdLinkedField', '".$Config['_Linkedfilterfields'][$Field]['Ref']."', 'CONCAT(".implode(",\' \',",$Config['_Linkedfilterfields'][$Field]['Value']).") AS _Value_Field','".$Config['_Linkedfilterfields'][$Field]['ID']."', this.value, '".$Config['_Linkedfilterfields'][$Field]['Table']."', function(x){
 			jQuery('#caption_".$Element['ID']."_".$Field."').html(caption);
 			jQuery('#entry_status_".$Element['ID']."_".$Field."').html('');
 			jQuery('#entry_".$Element['ID']."_".$Field."').html(x);

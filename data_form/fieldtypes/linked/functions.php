@@ -512,7 +512,10 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		}
                 $SelectID = $EID.'-'.$Field;
 		$Res = mysql_query("SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ORDER BY `out_value` ASC;");
-		$Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br /><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
+                if($Res == false){
+                    return;
+                }
+                $Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br /><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
 		$Return .= '<option>Select All</option>';
 		while($row = mysql_fetch_assoc($Res)){
 			$Sel = '';

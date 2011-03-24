@@ -458,25 +458,29 @@
 
                                             $Plugins = array();
                                             $Clusters = array();
-                                            foreach($PrimInterfaces['Plugin'] as $PrimInterface) {
-                                                if(empty($PrimInterface['_ItemGroup'])){
-                                                    $PrimInterface['_ItemGroup'] = '__Ungrouped';
-                                                }
-                                                $Plugins[$PrimInterface['_ItemGroup']][] = $PrimInterface;
-                                                if(!empty($Element['Content']['_ItemViewInterface'])){
-                                                    if($Element['Content']['_ItemViewInterface'] == $PrimInterface['ID']){
-                                                        $Show = 'block';
+                                            if(is_array($PrimInterfaces['Plugin'])){
+                                                foreach($PrimInterfaces['Plugin'] as $PrimInterface) {
+                                                    if(empty($PrimInterface['_ItemGroup'])){
+                                                        $PrimInterface['_ItemGroup'] = '__Ungrouped';
+                                                    }
+                                                    $Plugins[$PrimInterface['_ItemGroup']][] = $PrimInterface;
+                                                    if(!empty($Element['Content']['_ItemViewInterface'])){
+                                                        if($Element['Content']['_ItemViewInterface'] == $PrimInterface['ID']){
+                                                            $Show = 'block';
+                                                        }
                                                     }
                                                 }
                                             }
-                                            foreach($PrimInterfaces['Cluster'] as $PrimInterface) {
-                                                if(empty($PrimInterface['_ItemGroup'])){
-                                                    $PrimInterface['_ItemGroup'] = '__Ungrouped';
-                                                }
-                                                $Clusters   [$PrimInterface['_ItemGroup']][] = $PrimInterface;
-                                                if(!empty($Element['Content']['_ItemViewInterface'])){
-                                                    if($Element['Content']['_ItemViewInterface'] == $PrimInterface['ID']){
-                                                        $Show = 'block';
+                                            if(is_array($PrimInterfaces['Cluster'])){
+                                                foreach($PrimInterfaces['Cluster'] as $PrimInterface) {
+                                                    if(empty($PrimInterface['_ItemGroup'])){
+                                                        $PrimInterface['_ItemGroup'] = '__Ungrouped';
+                                                    }
+                                                    $Clusters   [$PrimInterface['_ItemGroup']][] = $PrimInterface;
+                                                    if(!empty($Element['Content']['_ItemViewInterface'])){
+                                                        if($Element['Content']['_ItemViewInterface'] == $PrimInterface['ID']){
+                                                            $Show = 'block';
+                                                        }
                                                     }
                                                 }
                                             }

@@ -48,5 +48,4 @@ if(!empty($FilterLocks)) {
     $_SESSION['lockedFilters'][$Media['ID']] = $FilterLocks;
     //vardump($_SESSION['reportFilters'][$Media['ID']]);
 }
-return;
 ?>

@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Database Interface Toolkit
+Plugin Name: DB-Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
@@ -1219,6 +1219,10 @@ function dt_renderInterface($interface) {
         $Config['_ViewMode'] = 'list';
     }
 
+    if(!empty($_GET['npage'])){
+        $newPage = floatval($_GET['npage']);
+        $_SESSION['report_'.$interface]['LastPage'] = $newPage;
+    }
     switch ($Config['_ViewMode']){
 
 

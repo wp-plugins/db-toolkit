@@ -1679,18 +1679,20 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $XValue = '"' . $processFunc($XValue, $Config['_Field'][$Config['_xaxis']][1], $Config['_xaxis'], $Config, $EID, $chartData, 'internal') . '"';
             }
             $x[] = addslashes(trim($XValue, '"'));
-            foreach ($Config['_chartValue'] as $ChartLine => $on) {
+            if(is_array($Config['_chartValue'])){
+                foreach ($Config['_chartValue'] as $ChartLine => $on) {
 
-                $YValue = $chartData[$ChartLine];
-                if (function_exists($Config['_Field'][$ChartLine][0] . '_processValue')) {
-                    $processFunc = $Config['_Field'][$ChartLine][0] . '_processValue';
-                    $YValue = $processFunc($chartData[$ChartLine], $Config['_Field'][$ChartLine][1], $ChartLine, $Config, $EID, $chartData, 'internal');
-                } else {
-                    //echo 'no process for '.$Config['_Field'][$ChartLine][0].'_processValue<br>';
+                    $YValue = $chartData[$ChartLine];
+                    if (function_exists($Config['_Field'][$ChartLine][0] . '_processValue')) {
+                        $processFunc = $Config['_Field'][$ChartLine][0] . '_processValue';
+                        $YValue = $processFunc($chartData[$ChartLine], $Config['_Field'][$ChartLine][1], $ChartLine, $Config, $EID, $chartData, 'internal');
+                    } else {
+                        //echo 'no process for '.$Config['_Field'][$ChartLine][0].'_processValue<br>';
+                    }
+
+                    $y[$ChartLine][] = $YValue;
+                    //$y[$ChartLine][] = "['".$XValue."', ".$YValue."]";
                 }
-
-                $y[$ChartLine][] = $YValue;
-                //$y[$ChartLine][] = "['".$XValue."', ".$YValue."]";
             }
         }
 
@@ -2432,7 +2434,8 @@ var " . $ChartID . " = new Highcharts.Chart({
                                     }
                                     $ReportReturn .= $PreReportReturn;
                                     if (!empty($Config['_Show_popup'])) {
-                                        if ($ColumnCounter === 0) {
+                                        
+                                        if ($ColumnCounter === 1) {
                                             // Add inline actions
                                             $ViewLink = '';
                                             $ActionWidth = 16;
