@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.2.23
+Stable tag: 0.2.2.24
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -26,6 +26,7 @@ Features include:
 *   Data importing via CSV files
 *   Report Exporting in PDF and CSV
 *   Multi Interface Layouts using clusters
+*   Userbase Access Control now Bundled
 
 == Installation ==
 
@@ -51,6 +52,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.2.22 =
+    - Included Userbase Access Control for better page access management.
 
 = 0.2.2.22 =
     - Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/

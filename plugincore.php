@@ -1790,7 +1790,9 @@ function core_populateApp($Installer){
 
 
 
-
+if(!function_exists('uac_assign')){
+    include_once('uacplugincore.php');
+}
 
 
 

@@ -16,14 +16,17 @@ variables avaiable
  $joinIndex is used only for joined tbles - the primary table that is being returned starts with "prim.{{fieldname}}"
 
 */
-$groupBy[$Config['_CloneField'][$Field]['Master']] = '`'.$Config['_CloneField'][$Field]['Master'].'`';
-//vardump($Config['_GroupingFields']);
-//vardump($querySelects);
+if(!empty($Config['_CloneField'][$Field]['Master'])){
+    $groupBy[$Config['_CloneField'][$Field]['Master']] = '`'.$Config['_CloneField'][$Field]['Master'].'`';
+}else{    
+    $groupBy['group_'.$Field] = 'prim.`'.$Field.'`';
+}
+
 if($Config['_GroupingFields'][$Field]['Action'] == 'concat'){
     //$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
     $querySelects[$Field] = 'GROUP_CONCAT('.$Config['_GroupingFields'][$Field]['Field'].')';
 }else{
-    $querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'('.$Config['_GroupingFields'][$Field]['Field'].')';
+    $querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(prim.`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
 }
 //dump($querySelects);
 ?>
