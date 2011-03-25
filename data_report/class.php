@@ -2126,7 +2126,7 @@ var " . $ChartID . " = new Highcharts.Chart({
 
         //while($row = mysql_fetch_assoc($Result)) {
         foreach ($Result as $row) {
-
+        
             // Switch Row Style
             //$Row = dais_rowswitch($Row);
             //$Row = report_rowswitch($Row);
@@ -2252,7 +2252,13 @@ var " . $ChartID . " = new Highcharts.Chart({
             } else {
                 if (empty($Config['_chartOnly'])) {
                     $ColumnCounter = 0;
-                    foreach ($row as $Field => $Data) {
+                    //vardump($Config);
+                    foreach($Config['_IndexType'] as $Field=>$Type){
+                    //foreach ($row as $Field => $Data) {
+                        if($Type[1] === 1)
+                            break;
+                        $Data = $row[$Field];
+
                         if (!empty($Config['_IndexType'][$Field][1])) {
                             if ($Config['_IndexType'][$Field][1] == 'show') {
                                 $outData = $Data;
@@ -2519,22 +2525,24 @@ var " . $ChartID . " = new Highcharts.Chart({
                         if (!empty($Config['_Show_View'])) {
                             $ActionWidth = $ActionWidth + 16;
                             $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
-                            if (!empty($Config['_ItemViewPage'])) {
-                                $ReportVars = array();
-                                foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                    $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                            if(!is_admin()){
+                                if (!empty($Config['_ItemViewPage'])) {
+                                    $ReportVars = array();
+                                    foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                        $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                    }
+                                    // Get permalink
+                                    $PageLink = get_permalink($Config['_ItemViewPage']);
+                                    $Location = parse_url($PageLink);
+                                    if (!empty($Location['query'])) {
+                                        $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
+                                        parse_str($Location['query'], $gets);
+                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
+                                    } else {
+                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                    }
+                                    $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
                                 }
-                                // Get permalink
-                                $PageLink = get_permalink($Config['_ItemViewPage']);
-                                $Location = parse_url($PageLink);
-                                if (!empty($Location['query'])) {
-                                    $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
-                                    parse_str($Location['query'], $gets);
-                                    $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
-                                } else {
-                                    $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                }
-                                $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
                             }
                         }
                         if (!empty($Config['_Show_Edit'])) {
@@ -2614,38 +2622,43 @@ var " . $ChartID . " = new Highcharts.Chart({
             $toPos = $Count['Total'];
         }
         if (empty($Config['_UseListViewTemplate'])) {
-            //$ReportReturn .= '<div style="padding:3px;" class="list_row3">';
-            $ReportReturn .= '<div style="padding:3px;" class="report_footer list_row3">';
-            //Total pages display
-            $ReportReturn .= '<div class="reportFooter_totals" style="float:left; width:47%;">';
-            //$ReportReturn .= '<div class="reportFooter_totals">';
-            if ($TotalPages > 1) {
-                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
-                $ReportReturn .= '<div class="fbutton" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
-                $ReportReturn .= '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_' . $EID . '" style="width:30px; font-size:11px;" value="' . $Page . '" onkeypress="dr_pageInput(\'' . $EID . '\', this.value);" /> of ' . $TotalPages . '</div>';
-                $ReportReturn .= '<div class="fbutton" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
-                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
+
+            $pageLink = '';
+            if(!empty($_SERVER['QUERY_STRING'])){
+                $pageLink = $_SERVER['QUERY_STRING'].'&';
             }
 
-
-            $ReportReturn .= '</div>';
-
-
-            $ReportReturn .= '<div class="reportFooter_pageIndex" style="text-align: right;">';
+            //$ReportReturn .= '<div style="padding:3px;" class="list_row3">';
+            $ReportReturn .= '<div style="padding:3px;" class="tablenav bottom">';
+            //Total pages display
+            $ReportReturn .= '<div class="tablenav-pages">';
             // Check if there are any entries
             if ($Count['Total'] == 0) {
                 $nothingFound = 'Nothing Found';
                 if (!empty($Config['_NoResultsText'])) {
                     $nothingFound = $Config['_NoResultsText'];
                 }
-                $ReportReturn .= '<div style="padding:3px" class="noresults">' . $nothingFound . '</div>';
+                $ReportReturn .= '<span class="displaying-num">' . $nothingFound . '</span>';
             } else {
-                $ReportReturn .= ( $Start + 1) . ' - ' . $toPos . ' of ' . $Count['Total'] . ' Items';
+                $ReportReturn .= '<span class="displaying-num">'.( $Start + 1) . ' - ' . $toPos . ' of ' . $Count['Total'] . ' Items</span>';
             }
+            //$ReportReturn .= '<div class="reportFooter_totals">';
+            if ($TotalPages > 1) {
+                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';                
+
+                $ReportReturn .= '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">«</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">‹</a>';
+                $ReportReturn .= '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">›</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
+                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
+            }
+
+
+            $ReportReturn .= '<br class="clear"></div>';
             $ReportReturn .= '</div>';
 
-            $ReportReturn .= '<div style="clear:both;"></div>';
-            $ReportReturn .= '</div>';
+            
         } else {
             if (!empty($Config['_ListViewTemplatePreFooter'])) {
                 $ReportReturn .= $Config['_ListViewTemplatePreFooter'];

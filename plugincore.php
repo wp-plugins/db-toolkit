@@ -4,11 +4,13 @@ Plugin Name: DB-Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.2.23
+Version: 0.2.2.24
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
 //init
+
+
 
 function interface_VersionCheck() {
         global $wpdb;
@@ -363,7 +365,7 @@ function dt_menus() {
         $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces & Clusters', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
-        $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/new-text.png" align="absmiddle" style="float:right;"> New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
+        $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
@@ -1221,7 +1223,11 @@ function dt_renderInterface($interface) {
 
     if(!empty($_GET['npage'])){
         $newPage = floatval($_GET['npage']);
-        $_SESSION['report_'.$interface]['LastPage'] = $newPage;
+        if(is_array($interface)){
+            $_SESSION['report_'.$interface['id']]['LastPage'] = $newPage;
+        }else{
+            $_SESSION['report_'.$interface]['LastPage'] = $newPage;
+        }        
     }
     switch ($Config['_ViewMode']){
 
@@ -1639,11 +1645,27 @@ function exportApp($app){
         //$file = fopen(__DIR__.'/libs/cache/'.$name.'.itf', 'w+');
         $tables = array();
         foreach($interfaces as $interface){
+            
             $cfg = unserialize($interface->option_value);
             $cfg = unserialize(base64_decode($cfg['Content']));
+            if(!empty($cfg['_Linkedfields'])){
+                foreach($cfg['_Linkedfields'] as $Field=>$Value){
+                    if(empty($tables[$Value['Table']])){
+                        $tables[$Value['Table']] = $Value['Table'];
+                    }
+                }
+            }
+            if(!empty($cfg['_Linkedfilterfields'])){
+                foreach($cfg['_Linkedfilterfields'] as $Field=>$Value){
+                    if(empty($tables[$Value['Table']])){
+                        $tables[$Value['Table']] = $Value['Table'];
+                    }
+                }
+            }
             array_walk_recursive($cfg, 'core_cleanSystemTables');
+            
             if($wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'") != $table_name){
-                $tables[] = $cfg['_main_table'];
+                $tables[$cfg['_main_table']] = $cfg['_main_table'];
             }
             //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
             $export['interfaces'][$interface->option_name] = base64_encode($interface->option_value);
@@ -1655,6 +1677,7 @@ function exportApp($app){
                 $tableCreates = $wpdb->get_row("SHOW CREATE TABLE ".$table, ARRAY_N);
                 $export['tables'][$tableCreates[0]] = base64_encode($tableCreates[1]);
 
+                //echo $tableCreates[1];
 
                 //export data
                 $result = $wpdb->get_results("SELECT * FROM ".$table, ARRAY_A);
