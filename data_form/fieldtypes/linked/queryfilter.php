@@ -30,7 +30,7 @@
 
                                     $outString = 'CONCAT('.implode(',',$outList).')';
                                 }else{
-                                    $outString = $joinIndexSet.'.'.$Config['_Linkedfields'][$Field]['Value'][0];
+                                    $outString = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['Value'][0].'`';
                                 }
                                 $querySelects[$Field] = $outString;
 
@@ -47,7 +47,7 @@
 				}
 			}
 
-			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.'.$Config['_Linkedfields'][$Field]['ID'];
+			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['ID'].'`';
 
 			// left Join linked table
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
@@ -68,8 +68,8 @@
                                     $Primary = 'prim.`'.$Config['_CloneField'][$Field]['Master'].'`';
 
                                 }
-                                if(empty($queryJoins[$joinIndex])){
-                                    $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
+                                if(empty($queryJoins[$joinIndex])){                                    
+                                    $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
                                     $queryJoins[$joinIndex] = $joinIndex;
                                 }
@@ -82,7 +82,7 @@
                             if($WhereTag == ''){
                                     $WhereTag = " WHERE ";
                             }
-                            $queryWhere[] = $joinIndexSet.".".$Config['_Linkedfields'][$Field]['_Filter']." = '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
+                            $queryWhere[] = $joinIndexSet.".`".$Config['_Linkedfields'][$Field]['_Filter']."` = '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
                         }
 
 		}

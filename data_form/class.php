@@ -58,7 +58,7 @@ if(is_admin()) {
         if(!empty($Config)) {
             $Defaults = $Config['Content']['_Field'];
         }
-        include('configs/upc.cfg.php');
+        //include('configs/upc.cfg.php');
         ob_start();
         echo '<span class="captions">Required</span>';
         $result = mysql_query("SHOW COLUMNS FROM ".$Table);

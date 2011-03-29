@@ -48,6 +48,8 @@ function pre_process_akismet($Data, $Setup, $Config){
     if(!empty($Setup['_SpamFlag']) && empty($Setup['_DeleteSpam'])){
         if(akismet_scan($Data, $Setup, $Config)){
             $Data[$Setup['_SpamFlag']] = 1;
+        }else{
+            return false;
         }
     }
     return $Data;

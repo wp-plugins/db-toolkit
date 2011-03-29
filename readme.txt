@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.2.24
+Stable tag: 0.2.3.0
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,12 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.3.0 =
+    - Cleaned up all the code in the core files and better arranged functions library.
+    - Bug fixes!
+    - Added filter= and by= to the shortcode to select a single record when the by is a selected item filter field type.
+    - added Userbase Access Control as part of DB-Toolkit. (enable it in General Settings. Be sure the UAC plugin is disabled.)
 
 = 0.2.2.22 =
     - Included Userbase Access Control for better page access management.

@@ -1,4 +1,5 @@
 <?php
+/*
 $_GET['debug'] = 'off';
 session_start();
 //ob_start();
@@ -15,4 +16,6 @@ if(file_exists('layer/ajaxcalls.php')){
 jqueryphp_run();
 echo ob_get_clean();
 @mysql_close();
+ * 
+ */
 ?>

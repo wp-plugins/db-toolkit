@@ -93,91 +93,7 @@ if(!empty($_GET['renderinterface'])){
  return;
 }
 
-if(!empty($_POST['Data'])) {
-    
 
-    $_POST = stripslashes_deep($_POST);
-    //vardump($_POST);
-    
-    if(!empty($_POST['Data']['ID'])){
-        $optionTitle = $_POST['Data']['ID'];
-
-        $newCFG = get_option($optionTitle);
-        //vardump($newCFG);
-    }else{
-
-        $optionTitle = uniqid('dt_intfc');
-        if(isset($_POST['Data']['Content']['_clusterLayout'])){
-            $optionTitle = uniqid('dt_clstr');
-        }
-
-        $newOption = array();
-        $newCFG['ID'] = $optionTitle;
-        $newCFG['_interfaceName'] = $_POST['dt_newInterface'];
-        $newCFG['_interfaceType'] = 'unconfigured';
-        $newCFG['_interfaceDate'] = date('Y-m-d H:i:s');
-        $newCFG['ID'] = $optionTitle;
-        $newCFG['Element'] = 'data_report';
-        //$newCFG['Content'] = base64_encode(serialize(array()));
-        $newCFG['ParentDocument'] = $optionTitle;
-        $newCFG['Position'] = 0;
-        $newCFG['Column'] = 0;        
-        $newCFG['Row'] = 0;
-    }
-    //vardump($_POST);
-    if(!empty($_POST['Data']['Content']['_customJSLibrary'])){
-        $newCFG['_CustomJSLibraries'] = $_POST['Data']['Content']['_customJSLibrary'];
-    }
-    if(!empty($_POST['Data']['Content']['_customCSSSource'])){        
-        $newCFG['_CustomCSSSource'] = $_POST['Data']['Content']['_customCSSSource'];
-    }
-
-    $newCFG['Content'] = base64_encode(serialize($_POST['Data']['Content']));
-    $newCFG['_interfaceType'] = 'Configured';
-    if(!empty($_POST['Data']['Content']['_Application'])){
-        $newCFG['_Application'] = $_POST['Data']['Content']['_Application'];
-    }else{
-        $newCFG['_Application'] = 'Base';
-    }
-    $Apps = get_option('dt_int_Apps');
-    if(!empty($Apps[$newCFG['_Application']])){        
-        $Apps[$newCFG['_Application']] = 'open';
-        update_option('dt_int_Apps', $Apps);
-    }else{
-        $Apps[$newCFG['_Application']] = 'open';
-        update_option('dt_int_Apps', $Apps);
-    }
-    $_SESSION['activeApp'] = $newCFG['_Application'];
-    $newCFG['_interfaceName'] = $_POST['Data']['Content']['_ReportTitle'];
-    if(!empty($_POST['Data']['Content']['_SetMenuItem'])) {
-        $newCFG['_isMenu'] = true;
-    }else {
-        $newCFG['_isMenu'] = false;
-    }
-    if(!empty($_POST['Data']['Content']['_SetDashboard'])) {
-        $newCFG['_Dashboard'] = true;
-    }else {
-        $newCFG['_Dashboard'] = false;
-    }
-    if(!isset($_POST['Data']['Content']['_clusterLayout'])){
-        $newCFG['_ReportDescription'] = $_POST['Data']['Content']['_ReportDescription'];
-        $newCFG['_ReportExtendedDescription'] = $_POST['Data']['Content']['_ReportExtendedDescription'];
-        $newCFG['Type'] = 'Plugin';
-    }else{
-        $newCFG['_ClusterTitle'] = $_POST['Data']['Content']['_ClusterTitle'];
-        $newCFG['_ClusterDescription'] = $_POST['Data']['Content']['_ClusterDescription'];
-        $newCFG['Type'] = 'Cluster';
-    }
-
-    
-    $newCFG['_ItemGroup'] = $_POST['Data']['Content']['_ItemGroup'];
-    $newCFG['_menuAccess'] = $_POST['Data']['Content']['_menuAccess'];
-    $newCFG['_SetAdminMenu'] = $_POST['Data']['Content']['_SetAdminMenu'];
-    $newCFG['_Icon'] = $_POST['Data']['Content']['_Icon'];
-
-
-    update_option($optionTitle, $newCFG);
-}
 
         if($_GET['page'] == 'Add_New'){
             ?>
@@ -312,8 +228,9 @@ if(!empty($_POST['Data'])) {
                 <span class="description">Manage Applications and Interfaces</span>
                 <br class="clear" /><br />
             <?php
-            if(!empty($_POST['Data'])) {
+            if(!empty($_POST['Data'])) {               
 
+                global $newCFG;
 
                 if(empty($_POST['Data']['ID'])){
                     $LinkID = $optionTitle;

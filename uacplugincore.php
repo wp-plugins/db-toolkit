@@ -6,7 +6,7 @@
         add_users_page("Userbase Access Control", "Access Control", 10, "access_control", "uac_admin");
     }
     function uac_admin(){
-        include('access_control.php');
+        include(DB_TOOLKIT.'access_control.php');
     }
     function uac_assign($post){
         global $wpdb;

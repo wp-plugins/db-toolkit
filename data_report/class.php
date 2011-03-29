@@ -975,7 +975,7 @@ function dr_cloneFindMater($Field, $Clones) {
     return $Field;
 }
 
-function dr_findCloneParent($Clone, $Clones, $querySelects){
+function olddr_findCloneParent($Clone, $Clones, $querySelects){
     // Clear out _Return_
     $preParent = $Clones[$Clone]['Master'];
     //echo $Clone.' - '.$preParent.'<br>';
@@ -992,7 +992,80 @@ function dr_findCloneParent($Clone, $Clones, $querySelects){
     return $preParent;
 }
 
-function dr_processQuery($Config, $querySelects){
+
+function dr_findCloneParent($Clone, $Clones, $querySelects){
+    //echo $Clone.' - ';
+    //vardump($Clones);
+
+    if(!empty($Clones[$Clone]['Master'])){
+        //echo $Clones[$Clone]['Master'].' - ';
+        $Clone = $querySelects[$Clones[$Clone]['Master']];
+        //echo '|'.$Clone.'|';
+        if(!empty($Clones[$Clone])){
+            $Clone = dr_findCloneParent($Clone, $Clones, $querySelects);
+        }
+    }
+    //echo $Clone.'<br />';
+return $Clone;
+}
+
+function dr_processQuery($Config, $querySelects) {
+
+
+    //vardump($querySelects);
+    //vardump($Config['_CloneField']);
+
+    //may need a for loop rather than a foreach.
+    //return $querySelects;
+    foreach ($querySelects as $Field => $preSelect) {
+        //$CloneOf = $querySelects[$Field];
+        $Select = $preSelect;
+        $pattern = '__[a-zA-Z0-9]+';
+        preg_match('/' . $pattern . '/s', $Select, $matches);
+        if(!empty($matches[0])){
+            //vardump($matches);
+            //echo $Select.' -> ';
+            $Select = $matches[0];
+            //echo $Select.' <br /> ';
+        }
+        if(!empty($Config['_CloneField'][$Select])){
+            $CloneOf = $querySelects[$Select];
+            if(!empty($Config['_CloneField'][$CloneOf])){
+            //echo '++++ '.$Select.' ++++<br />';
+            $Select = dr_findCloneParent($Config['_CloneField'][$Select]['Master'], $Config['_CloneField'], $querySelects);            
+            }else{               
+                $Select = $CloneOf;
+            }
+        }
+
+
+        if(!empty($matches[0])){
+            //echo $Select.' - ';
+            //echo $matches[0].'<br />';
+            $Select = str_replace($matches[0], $Select, $preSelect);
+            //echo $Select.'<br /><br />';
+        }
+        if(strpos($Select , '.') <= 0){
+            $pattern = '\(([a-zA-Z0-9]+)\)';
+            preg_match('/' . $pattern . '/s', $Select, $matches);
+            if(!empty($matches[1])){                
+                $Select = str_replace($matches[1], 'prim.`'.$matches[1].'`', $Select);
+            }else{                
+                $Select = 'prim.`'.$Select.'`';
+            }
+        }
+        $Processed[$Field] = $Select;
+        //echo $Field.' - '.$Select.'<br />';
+
+
+    }
+
+
+
+
+
+    return $Processed;
+
 
     $pattern = '__[a-zA-Z0-9]+';
     $Selects = array();

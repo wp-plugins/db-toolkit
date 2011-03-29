@@ -10,14 +10,12 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
+    <p>- Added in Userbase Access Control</p>
+    <p>- Fixed a bug with linking/joining tables to cloned fields</p>
+    <p>- Cleaned up the code organisation</p>
+    <p>- Corrected the Grouping FieldType</p>
     <p>- Fixed a bug with form redirections</p>
     <p>- Added clusters to the redirection panel and added application panels within</p>
-    <p>- Added view item for calculator field</p>
-    <p>- Additional bug fixes</p>
-    <p>- Fixed a CSS problem with Blockquotes</p>
-    <p>- Added the new forums feed to welcome page.</p>
-    <p>- Made preparations for the FieldType Manager.</p>
-    <p>- Made way for the possibility of Premium Support (still undecided but put stuff in)</p>
 
             </div>
         </div>

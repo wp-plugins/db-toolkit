@@ -15,6 +15,7 @@
         <li><a href="#tabs-4">New List Template</a></li>
         <li><a href="#legacy">Legacy List Template</a></li>
         <li><a href="#tabs-5">Custom Scripts</a></li>
+        <li><a href="#tabs-6">Import / Export</a></li>
     </ul>
     <div class="setupTab" id="tabs-1">
     <?php
@@ -696,6 +697,25 @@ echo dais_customfield('textarea', 'Post Footer', '_ListViewTemplatePostFooter', 
             ?>
         </div>
         
+    </div>
+    <div id="tabs-6" class="setupTab">
+        <?php
+        InfoBox('Import/Export');
+        ?>
+        <span class="description">This is a text version of the interface setup. you can copy and paste this into another interface to copy its configuration.</span><br /><br />
+        <textarea cols="2" rows="20" name="Data[_SerializedImport]"><?php
+        if(!empty($Element['ID'])){
+            echo base64_encode(serialize($Element));
+        }
+        ?></textarea>
+        <div class="list_row3" style="padding:5px;">
+        <?php
+            echo dais_customfield('checkbox', 'Porcess as Import', '_ProcessImport', '_ProcessImport', 'list_row1' , 1, '', 'Make sure the code is exact before importing.');
+        ?>
+        </div>
+        <?php
+        EndInfoBox();
+        ?>
     </div>
 </div><br />
 <?php

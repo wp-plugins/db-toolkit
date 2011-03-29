@@ -152,19 +152,27 @@ function dais_standardsetupbuttons($Element) {
 <input name="Data[Position]" type="hidden" id="Data[Position]" value="'.$Element['Position'].'">
 <input name="Data[Type]" type="hidden" id="Type" value="plugin">
 <input name="Save" type="submit" class="button-primary" id="Save" value="Save" />
+<input name="Apply" type="submit" class="button-primary" id="Apply" value="Apply" />
 <a class="button-primary" href="'.str_replace('&interface='.$Element['ID'], '', str_replace('&dt_newInterface=true', '', $_SERVER['REQUEST_URI'])).'">Close</a>';
 
 }
 
 
-function dais_customfield($Type, $Title, $Name, $ID = false, $Row = 'list_row1' , $Default = '', $Att = '') {
+function dais_customfield($Type, $Title, $Name, $ID = false, $Row = 'list_row1' , $Default = '', $Att = '', $Desc = '') {
     $Default = htmlentities($Default);
     if($ID === false) {
         $ID = $Name;
     }
     if($Type == 'textarea') {
         $Return = '<div style="padding:3px" class="'.$Row.'">';
-        $Return .= ''.$Title.':<br /> <textarea name="Data[Content]['.$Name.']" rows="8" id="'.$ID.'" '.$Att.' />'.$Default.'</textarea>';
+        $Return .= ''.$Title.':';
+
+            if(!empty($Desc)){
+                $Return .= ' <span class="description">'.$Desc.'</span>';
+            }
+
+
+        $Return .= '<br /> <textarea name="Data[Content]['.$Name.']" rows="8" id="'.$ID.'" '.$Att.' />'.$Default.'</textarea>';
         $Return .= '</div>';
     }else {
 
@@ -173,6 +181,12 @@ function dais_customfield($Type, $Title, $Name, $ID = false, $Row = 'list_row1' 
         $Return .= '<label for="'.$ID.'">'.$Title.'</label>';
         $Return .= '</td><td class="">';
         $Return .= '<input type="'.$Type.'" name="Data[Content]['.$Name.']" id="'.$ID.'" style="padding:5px;" value="'.$Default.'" '.$Att.' />';
+
+            if(!empty($Desc)){
+                $Return .= ' <span class="description">'.$Desc.'</span>';
+            }
+
+
         $Return .= '</td></tr></table>';
         $Return .= '</div>';
     }
