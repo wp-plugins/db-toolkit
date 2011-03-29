@@ -54,120 +54,120 @@ A: Well you can technically use it now, however some things are still a little i
 == Changelog ==
 
 = 0.2.3.0 =
-    - Cleaned up all the code in the core files and better arranged functions library.
-    - Bug fixes!
-    - Added filter= and by= to the shortcode to select a single record when the by is a selected item filter field type.
-    - added Userbase Access Control as part of DB-Toolkit. (enable it in General Settings. Be sure the UAC plugin is disabled.)
+Cleaned up all the code in the core files and better arranged functions library.
+Bug fixes!
+Added filter= and by= to the shortcode to select a single record when the by is a selected item filter field type.
+added Userbase Access Control as part of DB-Toolkit. (enable it in General Settings. Be sure the UAC plugin is disabled.)
 
 = 0.2.2.22 =
-    - Included Userbase Access Control for better page access management.
+Included Userbase Access Control for better page access management.
 
 = 0.2.2.22 =
-    - Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/
-    - Added the option to be able to filter a join result buy a specified where.
+Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/
+Added the option to be able to filter a join result buy a specified where.
 
 = 0.2.2.21 =
-    - Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/
-    - Added clusters to the redirection panel and added application panels within
+Mostly fixed bugs and problems that where posted to the forum http://dbtoolkit.digilab.co.za/forum/
+Added clusters to the redirection panel and added application panels within
 
 = 0.2.2.17 =
-    - Fixed a bug with form redirections
-    - Added clusters to the redirection panel and added application panels within
-    - Added view item for calculator field
-    - Additional bug fixes
-    - Fixed a CSS problem with Blockquotes
-    - Added the new forums feed to welcome page.
-    - Made way for the possibility of Premium Support (still undecided but put stuff in)
+Fixed a bug with form redirections
+Added clusters to the redirection panel and added application panels within
+Added view item for calculator field
+Additional bug fixes
+Fixed a CSS problem with Blockquotes
+Added the new forums feed to welcome page.
+Made way for the possibility of Premium Support (still undecided but put stuff in)
 
 = 0.2.2.16 =
-    - Bug fixes with layout of forms.
-    - Fixed the field templating to not render empty field templates if value is empty.
-    - Added custom mysql function to mysql field type.
+Bug fixes with layout of forms.
+Fixed the field templating to not render empty field templates if value is empty.
+Added custom mysql function to mysql field type.
 
 = 0.2.2.15 =
-    - Build in the new list template system.
-    - fixed the email fieldtype to send the new data on update and not the previous.
+Build in the new list template system.
+fixed the email fieldtype to send the new data on update and not the previous.
 
 = 0.2.2.14 =
-    - Fixed a joining problem that created duplicate fields if joining multiple fields to the same table.
+Fixed a joining problem that created duplicate fields if joining multiple fields to the same table.
 
 = 0.2.2.13 =
-    - Disabled Modal style Dialog due to a zindex javascript error that started in the plugin with Wordpress 3.1 I'll fix it and release an update with it later. for now - dialogs are standard.
+Disabled Modal style Dialog due to a zindex javascript error that started in the plugin with Wordpress 3.1 I'll fix it and release an update with it later. for now - dialogs are standard.
 
 = 0.2.2.12 =
-    - left a small bit of debug code in, which is now removed. Sorry.
+left a small bit of debug code in, which is now removed. Sorry.
 
 = 0.2.2.11 =
-    - Added Interface Clusters
-    - Rebuild layout Builders
-    - Made Preparations for V0.3.0.0 Clean Release
-    - Bug Fixes
+Added Interface Clusters
+Rebuild layout Builders
+Made Preparations for V0.3.0.0 Clean Release
+Bug Fixes
 
 = 0.2.2.10 =
-    - Wordpress 3.1 Compatibility fix
-    - Add interfaces to the new Admin Bar :)
+Wordpress 3.1 Compatibility fix
+Add interfaces to the new Admin Bar :)
 
 = 0.2.2.9 =
-    - Even more Visual Tweeks
-    - Fixed a few more bugs
-    - Preperations for Interface Clusters
+Even more Visual Tweeks
+Fixed a few more bugs
+Preperations for Interface Clusters
 
 = 0.2.2.8 =
-    - Visual Tweeks
-    - Fixed a few bugs with grouping field type
+Visual Tweeks
+Fixed a few bugs with grouping field type
 
 = 0.2.2.7 =
-    - Fixed a bug the prevented Charts to show- sorry i didnt pick this up sooner.
-    - PDF Export update to include templates
-    - Import Button to allow importing CSV data into interfaces created
-    - Insert Interface button for wordpress visual editor
-    - Preperations for dynamic table and field creation.
-    - Minor bug fixes.
+Fixed a bug the prevented Charts to show- sorry i didnt pick this up sooner.
+PDF Export update to include templates
+Import Button to allow importing CSV data into interfaces created
+Insert Interface button for wordpress visual editor
+Preperations for dynamic table and field creation.
+Minor bug fixes.
 
 
 = 0.2.2.3 =
-    - Added a dashboard menu item which has feeds from support forums, blog, a donate link and a new features box.
-    - Added an import option
-    - Preparations for upcoming features
-    - Fixed the limitation problem with the PDF and CSV Export
+Added a dashboard menu item which has feeds from support forums, blog, a donate link and a new features box.
+Added an import option
+Preparations for upcoming features
+Fixed the limitation problem with the PDF and CSV Export
 
 = 0.2.2.1 =
-    - Fixed search mode, to only show results once a search is performed.
+Fixed search mode, to only show results once a search is performed.
 
 = 0.2.2.0 =
-    - Fixed the Export Application to include the content of tables so you can pre-populate your applications.
-    - Added API changes to include limiting and paging of data.
-    - Fixed Search Mode to actually show the results
-    - Fixed a bug that prevented the capturing the selected item value in form mode.
-    - wysiwyg editor still a little buggy - but will be fixed soon.
+Fixed the Export Application to include the content of tables so you can pre-populate your applications.
+Added API changes to include limiting and paging of data.
+Fixed Search Mode to actually show the results
+Fixed a bug that prevented the capturing the selected item value in form mode.
+wysiwyg editor still a little buggy - but will be fixed soon.
 
 = 0.2.1.8 =
-    - Added the wysiwyg using CKEditor.
-    - Fixed the PDF export.
+Added the wysiwyg using CKEditor.
+Fixed the PDF export.
 
 = 0.2.1.7 =
-    - added a password fieldtype that converts the text to a MD5 hash.
+added a password fieldtype that converts the text to a MD5 hash.
 
 = 0.2.1.6 =
-    - Added the ability to add filters to shortcodes e.g itemid=56
+Added the ability to add filters to shortcodes e.g itemid=56
 
 = 0.2.1.5 =
-    - Fixed a form processor bug that prevented the post process from working correctly.
-    - Fixed a bug in multiply columns field type.
+Fixed a form processor bug that prevented the post process from working correctly.
+Fixed a bug in multiply columns field type.
 
 = 0.2.1.4 =
-    - Fixed a bug in the UserID FieldType that prevented showing items in list view
+Fixed a bug in the UserID FieldType that prevented showing items in list view
 
 = 0.2.1.2 =
-    - Fixed __DIR__ which is only available in php5.3 now works with lower php versions.
+Fixed __DIR__ which is only available in php5.3 now works with lower php versions.
 
 = 0.2.1.1 =
-    - added Form Processors to the interface builder. see http://dbtoolkit.digilab.co.za/form-processors/ for more.
+added Form Processors to the interface builder. see http://dbtoolkit.digilab.co.za/form-processors/ for more.
 
 = 0.2.1.0 =
-    - Rebuilt the query builder to better allow cloned fields and multiple linking of tables.
-    - Added Application export and import to easily share applications you build (will be exploring this more in later builds)
-    - Cleaned up the PDF Export to prevent overlapping columns.
+Rebuilt the query builder to better allow cloned fields and multiple linking of tables.
+Added Application export and import to easily share applications you build (will be exploring this more in later builds)
+Cleaned up the PDF Export to prevent overlapping columns.
 
 = 0.2.0.4 = 
 Made a massiv amount of changes on the structure + some exrea new features.
