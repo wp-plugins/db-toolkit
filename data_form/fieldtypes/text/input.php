@@ -27,7 +27,31 @@ if($FieldSet[1] == 'telephonenumber'){
 	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />';
 }
 if($FieldSet[1] == 'textarea'){
+        
 	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textbox ">'.htmlentities($Val).'</textarea>';
+
+        if(!empty($Config['_CharLength'][$Field])){
+        $_SESSION['dataform']['OutScripts'] .="
+
+            max = ".$Config['_CharLength'][$Field].";
+
+            len = jQuery('#entry_".$Element['ID']."_".$Field."').val().length;
+            jQuery('#entry_".$Element['ID']."_".$Field."').next().html(len+' Characters');
+
+            jQuery('#entry_".$Element['ID']."_".$Field."').bind('keyup', function(h){
+                len = jQuery('#entry_".$Element['ID']."_".$Field."').val().length;
+                if(len <= max){
+                    jQuery('#entry_".$Element['ID']."_".$Field."').next().html(len+' Characters');                    
+                }else{
+                    curr = jQuery('#entry_".$Element['ID']."_".$Field."').val().substr(0,max);
+                    jQuery('#entry_".$Element['ID']."_".$Field."').val(curr);
+                    jQuery('#entry_".$Element['ID']."_".$Field."').next().html(max+' Characters');
+                }
+            });
+            
+        ";
+        }
+
 }
 if($FieldSet[1] == 'textarealarge'){
 	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textboxlarge ">'.htmlentities($Val).'</textarea>';
@@ -61,18 +85,18 @@ if($FieldSet[1] == 'url'){
 if($FieldSet[1] == 'colourpicker'){
     	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />';
     $_SESSION['dataform']['OutScripts'] .="
-        $('#entry_".$Element['ID']."_".$Field."').ColorPicker({
+        jQuery('#entry_".$Element['ID']."_".$Field."').ColorPicker({
             onSubmit: function(hsb, hex, rgb, el) {
-                    $(el).val(hex);
-                    $(el).ColorPickerHide();
-                    $(el).css('background-color', '#'+hex);
+                    jQuery(el).val(hex);
+                    jQuery(el).ColorPickerHide();
+                    jQuery(el).css('background-color', '#'+hex);
             },
             onBeforeShow: function () {
                     $(this).ColorPickerSetColor(this.value);
             },
             onChange: function (hsb, hex, rgb) {
-                $('#entry_".$Element['ID']."_".$Field."').css('background-color', '#'+hex);
-                $('#entry_".$Element['ID']."_".$Field."').val(hex);
+                jQuery('#entry_".$Element['ID']."_".$Field."').css('background-color', '#'+hex);
+                jQuery('#entry_".$Element['ID']."_".$Field."').val(hex);
             }
 
         });

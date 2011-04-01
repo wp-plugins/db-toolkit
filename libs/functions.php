@@ -1138,21 +1138,20 @@ function dt_rendercluster($cluster){
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface) {
 
-//vardump($interface);
 
     if(is_array($interface)) {
         if(!empty($interface['id'])){
+            unset($_SESSION['viewitemFilter'][$interface['id']]);
             $ID = $interface['id'];
             unset($interface['id']);
         }
-
         if(!empty($interface['filter']) && !empty($interface['by'])){
             $_GET[$interface['filter']] = $interface['by'];
             unset($interface['filter']);
             unset($interface['by']);
         }
-
     }else {
+        unset($_SESSION['viewitemFilter'][$interface]);
         $ID = $interface;
     }
     $Media = get_option($ID);

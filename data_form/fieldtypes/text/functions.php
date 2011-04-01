@@ -97,6 +97,20 @@ function text_presuff($Field, $Table, $Config = false){
         
 return $Return;
 }
+function text_chartotal($Field, $Table, $Config = false){
+
+
+        $chars = '';
+
+        if(!empty($Config['Content']['_CharLength'][$Field])){
+		$chars = $Config['Content']['_CharLength'][$Field];
+	}
+
+        $Return = 'Max Length (Characters): <input type="text" name="Data[Content][_CharLength]['.$Field.']" value="'.$chars.'" class="textfield" size="5" />&nbsp;Leave blank for unlimited.';
+
+
+return $Return;
+}
 
 function text_preset($Field, $Table, $Config = false){
 	
