@@ -10,7 +10,8 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
-    <p>- Added in Userbase Access Control</p>
+    <p>- Added full Roles and capabilities permissions to interface setup.</p>
+    <p>- Removed Userbase Access Control: made support for Custom Roles :) way better!</p>
     <p>- Fixed a bug with linking/joining tables to cloned fields</p>
     <p>- Cleaned up the code organisation</p>
     <p>- Corrected the Grouping FieldType</p>

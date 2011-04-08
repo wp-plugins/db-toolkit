@@ -45,12 +45,7 @@ $Element['Content'] = $defaults;
                         <tr>
                             <td width="50%" valign="top"><?php
                                 InfoBox('General Settings');
-                                $Sel = '';
-                                if(!empty($Element['Content']['_EnableUAC'])) {
-                                    $Sel = 'checked="checked"';
-                                }
-                                echo dais_customfield('checkbox', 'Enable Access Control', '_EnableUAC', '_EnableUAC', 'list_row2' , 1 , $Sel, '! Be sure to disable "Userbase Access Control" Plugin if you have it installed.');
-
+                                
                                 $Sel = '';
                                 if(!empty($Element['Content']['_DisableDashboardDefaults'])) {
                                     $Sel = 'checked="checked"';
