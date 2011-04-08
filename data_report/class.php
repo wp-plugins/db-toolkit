@@ -1643,7 +1643,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $Media = $Element;
         ob_start();
         $Query = dr_BuildReportGrid($EID, $Page, $SortField, $SortDir, 'sql', $limitOveride, $wherePush);
+        echo '<div id="reportPanel_'.$Media['ID'].'" class="interfaceWrapper">';
         include('templatemode.php');
+        echo '</div>';
         return ob_get_clean();
     }
 

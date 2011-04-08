@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.3.1
+Stable tag: 0.2.3.2
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -15,6 +15,7 @@ Build custom databased application for managing data from simple data entries to
 
 I'm running a tutorial series to explain the fundermentals on using the system and will be building documentation as i go.
 Tutorials will be on up on http://dbtoolkit.digilab.co.za
+please note: this is still alpha, but works pretty well.
 
 
 Features include:
@@ -52,6 +53,12 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.3.2 =
+minor bug fixes on template system
+
+= 0.2.3.1 =
+bug fixes on stability
 
 = 0.2.3.0 =
 Cleaned up all the code in the core files and better arranged functions library.

@@ -710,7 +710,7 @@ echo dais_customfield('textarea', 'Post Footer', '_ListViewTemplatePostFooter', 
         ?></textarea>
         <div class="list_row3" style="padding:5px;">
         <?php
-            echo dais_customfield('checkbox', 'Porcess as Import', '_ProcessImport', '_ProcessImport', 'list_row1' , 1, '', 'Make sure the code is exact before importing.');
+            echo dais_customfield('checkbox', 'Process as Import', '_ProcessImport', '_ProcessImport', 'list_row1' , 1, '', 'Make sure the code is exact before importing.');
         ?>
         </div>
         <?php

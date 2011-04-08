@@ -304,6 +304,6 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
     }
     echo $preFooter;
 }
-
 echo $Config['_layoutTemplate']['_Footer'];
+//echo '</div>';
 ?>
