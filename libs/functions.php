@@ -152,8 +152,22 @@ function dt_styles() {
 
     if(!is_admin()){
         global $post;
-        if(!empty($post)){
         $pattern = get_shortcode_regex();
+
+        $texts = get_option('widget_text');
+        $preIs = array();
+        foreach($texts as $text){
+            //vardump($text['text']);
+            preg_match_all('/'.$pattern.'/s', $text['text'], $matches);
+            if(!empty($matches[3])){
+                foreach($matches[3] as $preInterface){
+                    $preIs[] = shortcode_parse_atts($preInterface);
+                }
+            }
+        }
+
+
+        if(!empty($post)){        
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
@@ -239,14 +253,28 @@ function dt_scripts() {
 
     if(!is_admin()){
         global $post;
-        //vardump($post);
+        //$te = wp_get_sidebars_widgets();
         $pattern = get_shortcode_regex();
+
+        $texts = get_option('widget_text');
+        $preIs = array();
+        foreach($texts as $text){
+            //vardump($text['text']);
+            preg_match_all('/'.$pattern.'/s', $text['text'], $matches);
+            if(!empty($matches[3])){
+                foreach($matches[3] as $preInterface){
+                    $preIs[] = shortcode_parse_atts($preInterface);
+                }
+            }
+        }
 
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         //vardump($matches);
+        
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
                 $preIs[] = shortcode_parse_atts($preInterface);
+                //vardump($_SERVER);
             }
         }
     }
@@ -319,14 +347,16 @@ function dt_scripts() {
             }
         }
     }else{
-       //vardump($preIs);
+       
         if(!empty($preIs)){
+
             foreach($preIs as $interface){
                $preInterface = get_option($interface['id']);
                if(!empty($preInterface['_CustomJSLibraries'])){
                    // load scripts
                    // setup scripts and styles
                    foreach($preInterface['_CustomJSLibraries'] as $handle=>$script){
+                       
                        $in_footer = false;
                        if($script['location'] == 'foot'){
                            $in_footer = true;
