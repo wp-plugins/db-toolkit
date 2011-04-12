@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.3.7
+Stable tag: 0.2.3.8
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,6 +53,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.3.8 =
+    Added the Gravatar FieldType
 
 = 0.2.3.7 =
     fixed a bug that duplicated the custom source and custom css inserts.

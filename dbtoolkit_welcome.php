@@ -10,6 +10,7 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
+    <p>- Added the new Gravatar FieldType.</p>
     <p>- minor bug fixes.</p>
     <p>- Removed legacy list template panel.</p>
     <p>- Bracketed field names if manually changed as not to loose their actual names.</p>
