@@ -93,7 +93,7 @@
         ?>
 
         <div id="menuPermissions" class="list_row2" style="padding: 3px;">Effective Capability Permission: <select name="Data[Content][_menuAccess]">
-                <option value="read" <?php if($Element['Content']['_menuAccess'] == 'read'){ echo 'selected="selected"'; } ?>>Public</option>               
+                <option value="null" <?php if($Element['Content']['_menuAccess'] == 'null'){ echo 'selected="selected"'; } ?>>Public</option>
                 <?php
 
                 foreach($wp_roles->roles as $key=>$role){
