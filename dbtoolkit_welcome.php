@@ -10,14 +10,12 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
+    <p>- minor bug fixes.</p>
+    <p>- Bracketed field names if manually changed as not to loose their actual names.</p>
+    <p>- Indented Cloned Fields.</p>
+    <p>- Fixed a bug in the single select filter. Now displays as a standard dropdown.</p>
+    <p>- Changed the FieldTypes Display and Indexing to icon based.</p>
     <p>- Added full Roles and capabilities permissions to interface setup.</p>
-    <p>- Removed Userbase Access Control: made support for Custom Roles :) way better!</p>
-    <p>- Fixed a bug with linking/joining tables to cloned fields</p>
-    <p>- Cleaned up the code organisation</p>
-    <p>- Corrected the Grouping FieldType</p>
-    <p>- Fixed a bug with form redirections</p>
-    <p>- Added clusters to the redirection panel and added application panels within</p>
-
             </div>
         </div>
 

@@ -140,6 +140,7 @@
 			placeholder: 'sortable-placeholder',
 			forcePlaceholderSize: true,
 			connectWith: '.columnSorter',
+                        handle: 'h3',
 			stop: function(p){
 				//alert(columns);
 				formSetup_columSave();

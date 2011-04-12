@@ -2,7 +2,7 @@
 
 
 // Control Buttons
-    if(empty($Config['_Hide_Toolbar'])) {
+    if(!empty($Config['_Hide_Toolbar'])) {
         echo '<div id="report_tools_'.$Media['ID'].'" class="report_tools list_row3">';
         if(empty($Config['_New_Item_Hide'])) {
             $ajaxSubmit = 'true';

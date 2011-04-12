@@ -41,8 +41,31 @@ if(!empty($_POST['Data'])) {
         $newCFG['Position'] = 0;
         $newCFG['Column'] = 0;
         $newCFG['Row'] = 0;
+    }    
+    // Setup Index_Show's
+    //echo '<br><br><br>';
+    
+    $Indexes = array();
+    if(!empty($_POST['Data']['Content']['_Field'])){
+        foreach($_POST['Data']['Content']['_Field'] as $Field=>$Value){
+            $Indexes[$Field]['Visibility'] = 'hide';
+            $Indexes[$Field]['Indexed'] = 'noindex';
+        }
+        if(!empty($_POST['Data']['Content']['_IndexType'])){
+            foreach($_POST['Data']['Content']['_IndexType'] as $Field=>$Setting){
+                if(!empty($Setting['Visibility'])){
+                    $Indexes[$Field]['Visibility'] = $Setting['Visibility'];
+                }
+                if(!empty($Setting['Indexed'])){
+                    $Indexes[$Field]['Indexed'] = $Setting['Indexed'];
+                }
+            }
+        }
+        foreach($_POST['Data']['Content']['_Field'] as $Field=>$Value){
+            $_POST['Data']['Content']['_IndexType'][$Field] = $Indexes[$Field]['Indexed'].'_'.$Indexes[$Field]['Visibility'];
+        }
     }
-    //vardump($_POST);
+    
     if(!empty($_POST['Data']['Content']['_customJSLibrary'])){
         $newCFG['_CustomJSLibraries'] = $_POST['Data']['Content']['_customJSLibrary'];
     }

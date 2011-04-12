@@ -127,23 +127,32 @@ if (is_admin ()) {
 
         $Table = $Config['Content']['_main_table'];
         $name = df_parseCamelCase($Field);
+        $addClass= '';
         if (!empty($Config['Content']['_FieldTitle'][$Field])) {
             if (substr($Field, 0, 2) == '__') {
-                $name = '<img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/copy.png" width="16" height="16" align="absmiddle" /> ' . $Config['Content']['_FieldTitle'][$Field];
+                $name = '<img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/copy.png" width="16" height="16" align="absmiddle" /> '.$Config['Content']['_FieldTitle'][$Field];
+                if($Config['Content']['_FieldTitle'][$Field] != $Field){
+                    $name .= ' ('.$Field.')';
+                }
+                $addClass = 'cloned';
             } else {
                 $name = $Config['Content']['_FieldTitle'][$Field];
+                if($Config['Content']['_FieldTitle'][$Field] != $Field){
+                    $name .= ' ('.$Field.')';
+                }
+
             }
         }
         //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
 
 
-        $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox" style="width:550px;">';
+        $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox '.$addClass.'" style="width:550px;">';
 
         $PreReturn[$Field] .= '<img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" />';
 
         $PreReturn[$Field] .= '<img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" />';
 
-        $PreReturn[$Field] .= '<h3>' . $name . '</h3>';
+        $PreReturn[$Field] .= '<h3 class="fieldTypeHandle">' . $name . '</h3>';
 
         // Linking Master
         if (substr($Field, 0, 2) == '__') {
@@ -312,14 +321,14 @@ if (is_admin ()) {
 
 
 
-        $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> ' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) . dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
+        $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) .'</div>'. dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
         // inline settings
         //class="button-highlighted"
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $UClass . '" id="unique_' . $Field . '" onclick="df_setToggle(\'unique_' . $Field . '\');" title="Unique"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $RClass . '" id="required_' . $Field . '" onclick="df_setToggle(\'required_' . $Field . '\');" title="Required"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $SClass . '" id="issortable_' . $Field . '" onclick="df_setToggle(\'issortable_' . $Field . '\');" title="Sortable"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
 
-        $PreReturn[$Field] .= '<div class="widefat" id="' . $Field . '_FieldTypePanel" style="display:none; text-align:left;"></div>';
+        $PreReturn[$Field] .= '<div class="widefat" id="' . $Field . '_FieldTypePanel" style="display:none; text-align:left; margin:10px 0;"></div>';
 
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Unique][' . $Field . ']" id="unique_' . $Field . '_check" ' . $USel . ' />';
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Required][' . $Field . ']" id="required_' . $Field . '_check" ' . $RSel . ' />';
@@ -370,8 +379,8 @@ if (is_admin ()) {
 
 
             $name = df_parseCamelCase($Field);
-            //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
-            $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox" style="width:550px;"><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" /><h3>' . df_parseCamelCase($Field) . '</h3>';
+            //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';            
+            $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox cloned" style="width:550px;"><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" /><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" /><h3>' . df_parseCamelCase($Field) . '</h3>';
             // Linking Master
             $PreReturn[$Field] .= '<div style="padding:5px;">';
 
@@ -435,8 +444,7 @@ if (is_admin ()) {
                 if (!empty($Config['Content']['_Justify'][$Field])) {
                     $Justify = $Config['Content']['_Justify'][$Field];
                 }
-            }
-            $PreReturn[$Field] .= '<img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" />';
+            }            
             $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="' . $Title . '" name="Data[Content][_FieldTitle][' . $Field . ']" /> ';
             $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" /></div>';
             $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
@@ -450,7 +458,7 @@ if (is_admin ()) {
 
 
 
-            $PreReturn[$Field] .= '<div class="admin_config_toolbar"> ' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) . dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
+            $PreReturn[$Field] .= '<div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) .'</div>'. dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
 
             $PreReturn[$Field] .= ' &nbsp;<span class="' . $UClass . '" id="unique_' . $Field . '" onclick="df_setToggle(\'unique_' . $Field . '\');" title="Unique"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
             $PreReturn[$Field] .= ' &nbsp;<span class="' . $RClass . '" id="required_' . $Field . '" onclick="df_setToggle(\'required_' . $Field . '\');" title="Required"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
@@ -578,21 +586,34 @@ if (is_admin ()) {
 
     function dr_reportListTypes($Field, $Default = false) {
 
-
+        
         $VClass = 'button';
         $IClass = 'button';
+        $VSel = '';
+        $ISel = '';
 
 
+        $Part = explode('_', $Default);
+        if($Part[1] == 'show'){
+            $VSel = 'checked="checked"';
+            $VClass = 'button-highlighted highlight';
+        }
+        if($Part[0] == 'index'){
+            $ISel = 'checked="checked"';
+            $IClass = 'button-highlighted highlight';
+        }
 
-        $Return = ' &nbsp;<span class="' . $VClass . '" id="displayType_' . $Field . '_show" onclick="" title="Visible"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/eye.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType][' . $Field . ']" id="unique_' . $Field . '_check" ' . $USel . ' />';
+        
+        $Return = ' &nbsp;<span class="' . $VClass . '" id="displayTypeV_' . $Field . '" onclick="df_setToggle(\'displayTypeV_' . $Field . '\');" title="Visible"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/eye.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType][' . $Field . '][Visibility]" value="show" id="displayTypeV_' . $Field . '_check" ' . $VSel . ' />';
 
-        $Return .= ' &nbsp;<span class="' . $IClass . '" id="displayType_' . $Field . '_show" onclick="" title="Searchable"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/indexed.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType][' . $Field . ']" id="unique_' . $Field . '_check" ' . $USel . ' />';
+        $Return .= ' &nbsp;<span class="' . $IClass . '" id="displayTypeI_' . $Field . '" onclick="df_setToggle(\'displayTypeI_' . $Field . '\');" title="Searchable"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/indexed.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType][' . $Field . '][Indexed]" value="index" id="displayTypeI_' . $Field . '_check" ' . $ISel . ' />';
 
-        // return $Return;
 
-        $Return = '<select name="Data[Content][_IndexType][' . $Field . ']" id="displayType_' . $Field . '">';
+        return $Return;
+
+        $Return .= '<select name="Data[Content][_IndexType][' . $Field . ']" id="displayType_' . $Field . '">';
         $Sel = '';
         if ($Default == 'index_show') {
             $Sel = 'selected="selected"';
@@ -875,7 +896,7 @@ function dr_BuildReportFilters($Config, $EID, $Defaults = false) {
             }
             $Return .= '<input type="text" name="reportFilter[' . $EID . '][_keywords]" id="keyWordFilter" class="filterSearch" value="' . $Keywords . '" />&nbsp;&nbsp;&nbsp;</div>';
         } else {
-            if (empty($Config['_Hide_FilterLock'])) {
+            if (!empty($Config['_Hide_FilterLock'])) {
                 $Return .= '<span class="highlight"><div style="float:left; padding:2px;">';
                 if (!empty($Config['_Keyword_Title'])) {
                     $Return .= '<strong>' . $Config['_Keyword_Title'] . '</strong><br />';
@@ -2904,21 +2925,22 @@ var " . $ChartID . " = new Highcharts.Chart({
     }
 
 // Set Auto Widths to Averages
-    foreach ($AvrageWidth as $Field => $Value) {
-        $Tmp = 0;
-        foreach ($Value as $Num) {
-            $Tmp = $Tmp + $Num;
-        }
-        $Av = ceil($Tmp / count($Value));
-        if (!empty($minWidth[$Field])) {
-            if ($Av < $minWidth[$Field]) {
-                $Av = $minWidth[$Field];
+    if(!empty($AvrageWidth)){
+        foreach ($AvrageWidth as $Field => $Value) {
+            $Tmp = 0;
+            foreach ($Value as $Num) {
+                $Tmp = $Tmp + $Num;
             }
+            $Av = ceil($Tmp / count($Value));
+            if (!empty($minWidth[$Field])) {
+                if ($Av < $minWidth[$Field]) {
+                    $Av = $minWidth[$Field];
+                }
+            }
+            $Av = '';
+            $ReportReturn = str_replace('width="{{width_' . $Field . '}}px"', $Av, $ReportReturn);
         }
-        $Av = '';
-        $ReportReturn = str_replace('width="{{width_' . $Field . '}}px"', $Av, $ReportReturn);
     }
-
 
 //dump($Config);
 //echo $Query;

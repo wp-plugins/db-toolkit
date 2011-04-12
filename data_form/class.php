@@ -156,7 +156,7 @@ if(is_admin()) {
         
         if($Defaults[$Field] == 'hidden' || empty($Defaults[$Field])){
             $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Auto</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Default Value</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
             return $Return;
         }
@@ -187,14 +187,17 @@ if(is_admin()) {
         //$Return .= '</optgroup>';
         $Return = '';
         
-        $Return .= '<div style="width:33.333333%; float:left;">';
-        $Return .= '<div style="padding:3px;" class="highlight">Default / Auto Increment</div>';
+        $Return .= '<div style="width:33.33333%; float:left;">';
+        //$Return .= '<div style="">';
+        $Return .= '<div style="padding:3px; cursor:default" class="admin_config_toolbar">Default / Auto Increment</div>';
+        $Return .= '<div style="" id="_default_'.$Field.'">';
             $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
             $Return .= '<div style="padding:3px;">';
-            $Return .= '<a href="#" id="'.$Field.'_hidden" onclick="return df_setOptions(\''.$Field.'\', \'null\', \'hidden\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Auto / Default</span></a>';
+            $Return .= '<a href="#" id="'.$Field.'_hidden" onclick="return df_setOptions(\''.$Field.'\', \'null\', \'hidden\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Default Value</span></a>';
             $Return .= '</div>';
         $Return .= '</div>';
-
+        $Return .= '</div>';
+        //sort($Types[0]);
         foreach($Types[0] as $Type) {
             
             if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php')) {
@@ -204,8 +207,11 @@ if(is_admin()) {
                 if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png')) {
                     $CIcon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png';
                 }
-                $Return .= '<div style="width:33.333333%; float:left;">';
-                $Return .= '<div style="padding:3px;" class="highlight"><span style="background: url('.$CIcon.') left center no-repeat; padding:5px 20px;"> '.$FieldTypeTitle.'</span></div>';
+                $Return .= '<div style="width:33.33333%; float:left;">';
+                //$Return .= '<div style="">';
+                $Return .= '<div style="padding:3px;  cursor:default;" class="admin_config_toolbar"><span style="background: url('.$CIcon.') left center no-repeat; padding:5px 20px;"> '.$FieldTypeTitle.'</span></div>';
+                $Return .= '<div id="folder_'.$Type[1].'_'.$Field.'" style="padding-left:5px;">';
+                ksort($FieldTypes);
                 foreach($FieldTypes as $Key=>$FieldSet) {
                     //$Return .= $FieldSet['name'].'<br />';
                     $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/insert.png';
@@ -217,6 +223,7 @@ if(is_admin()) {
                     $Return .= '</div>';
 
                 }
+                $Return .= '</div>';
                 $Return .= '</div>';
             }
         }

@@ -485,3 +485,7 @@ blockquote .boxtitle{
 .fieldBeforeAfter{
     
 }
+
+#FieldList_Main .cloned{
+    margin-left: 30px;
+}
