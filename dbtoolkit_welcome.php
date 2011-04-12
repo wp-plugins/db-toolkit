@@ -11,6 +11,7 @@
             <div style="margin: 10px;">
 
     <p>- minor bug fixes.</p>
+    <p>- Removed legacy list template panel.</p>
     <p>- Bracketed field names if manually changed as not to loose their actual names.</p>
     <p>- Indented Cloned Fields.</p>
     <p>- Fixed a bug in the single select filter. Now displays as a standard dropdown.</p>
