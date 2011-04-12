@@ -159,9 +159,9 @@ function dt_styles() {
         foreach($texts as $text){
             //vardump($text['text']);
             preg_match_all('/'.$pattern.'/s', $text['text'], $matches);
-            if(!empty($matches[3])){
+            if(!empty($matches[3])){                
                 foreach($matches[3] as $preInterface){
-                    $preIs[] = shortcode_parse_atts($preInterface);
+                    $preIs[] = shortcode_parse_atts($preInterface);                    
                 }
             }
         }
@@ -230,16 +230,20 @@ function dt_styles() {
         wp_enqueue_style('interface_table_styles');
 
         if(!empty($preIs)){
+            $stylesAdded = array();
             foreach($preIs as $interface){
-               $preInterface = get_option($interface['id']);
-               if(!empty($preInterface['_CustomCSSSource'])){
-                   // load scripts
-                   // setup scripts and styles
-                   foreach($preInterface['_CustomCSSSource'] as $handle=>$CSS){
-                       wp_register_style($handle, $CSS['source']);
-                       wp_enqueue_style($handle);
+                   $preInterface = get_option($interface['id']);
+                   if(!empty($preInterface['_CustomCSSSource'])){
+                       // load scripts
+                       // setup scripts and styles
+                       foreach($preInterface['_CustomCSSSource'] as $handle=>$CSS){
+                           if(array_search($CSS['source'], $stylesAdded) === false){
+                               wp_register_style($handle, $CSS['source']);
+                               wp_enqueue_style($handle);
+                               $stylesAdded[] = $CSS['source'];
+                           }
+                       }
                    }
-               }
             }
         }
     }
@@ -349,20 +353,22 @@ function dt_scripts() {
     }else{
        
         if(!empty($preIs)){
-
+            $scriptsAdded = array();
             foreach($preIs as $interface){
                $preInterface = get_option($interface['id']);
                if(!empty($preInterface['_CustomJSLibraries'])){
                    // load scripts
                    // setup scripts and styles
                    foreach($preInterface['_CustomJSLibraries'] as $handle=>$script){
-                       
-                       $in_footer = false;
-                       if($script['location'] == 'foot'){
-                           $in_footer = true;
+                       if(array_search($script['location'], $scriptsAdded) === false){
+                           $in_footer = false;
+                           if($script['location'] == 'foot'){
+                               $in_footer = true;
+                           }
+                           wp_register_script($handle, $script['source'], false, false, $in_footer);
+                           wp_enqueue_script($handle);
+                           $scriptsAdded[] = $script['location'];
                        }
-                       wp_register_script($handle, $script['source'], false, false, $in_footer);
-                       wp_enqueue_script($handle);
                    }
                }
             }
@@ -1197,14 +1203,13 @@ function dt_renderInterface($interface) {
         $Return = ob_get_clean();
         return do_shortcode($Return);
     }
-
-    //echo $Media['_Icon'];
+    //echo $Media['_Icon'];    
     if($Media['_menuAccess'] != 'null'){
         $user = wp_get_current_user();
         if(empty($user->allcaps[$Media['_menuAccess']])){
             return;
         }
-    }
+    }    
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
     $Return = '';

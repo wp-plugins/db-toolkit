@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1
-Stable tag: 0.2.3.5
+Stable tag: 0.2.3.7
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,6 +53,21 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.3.7 =
+    fixed a bug that duplicated the custom source and custom css inserts.
+
+= 0.2.3.6 =
+    fixed a bug that prevented "Public" interfaces from showing and reverted them to "read" access.
+
+= 0.2.3.5 =
+    minor bug fixes.
+    Removed legacy list template panel.
+    Bracketed field names if manually changed as not to loose their actual names.
+    Indented Cloned Fields.
+    Fixed a bug in the single select filter. Now displays as a standard dropdown.
+    Changed the FieldTypes Display and Indexing to icon based.
+    Added full Roles and capabilities permissions to interface setup.
 
 = 0.2.3.4 =
 Fixed a small bug with template mode not allowing custom scripts and css to be loaded for sidebar widgets.
