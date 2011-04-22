@@ -1356,6 +1356,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
     foreach ($Config['_IndexType'] as $Field => $Type) {
+        //echo 'ping';
         //Seperate Index/Display Types
         $Config['_IndexType'][$Field] = explode('_', $Type);
         // Totals Location check to see if field is inline or not.
@@ -2349,6 +2350,65 @@ var " . $ChartID . " = new Highcharts.Chart({
                 if (empty($Config['_chartOnly'])) {
                     $ColumnCounter = 0;
                     //vardump($Config);
+                    // action panels
+
+                    // Edit Functions if no popup
+                    $actionPanels = '';
+                    if (!empty($ShowActionPanel)) {
+                        $ViewLink = '';
+                        $ActionWidth = 16;
+                        if (!empty($Config['_Show_View'])) {
+                            $ActionWidth = $ActionWidth + 16;
+                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                            if(!is_admin()){
+                                if (!empty($Config['_ItemViewPage'])) {
+                                    $ReportVars = array();
+                                    foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                        $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                    }
+                                    // Get permalink
+                                    $PageLink = get_permalink($Config['_ItemViewPage']);
+                                    $Location = parse_url($PageLink);
+                                    if (!empty($Location['query'])) {
+                                        $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
+                                        parse_str($Location['query'], $gets);
+                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
+                                    } else {
+                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                    }
+                                    $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
+                                }
+                            }
+                        }
+                        if (!empty($Config['_Show_Edit'])) {
+                            $ActionWidth = $ActionWidth + 16;
+                            if ($ViewLink != '') {
+                                $ViewLink .= " ";
+                            }
+                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                        }
+                        if (!empty($Config['_Show_Delete_action'])) {
+                            $ActionWidth = $ActionWidth + 16;
+                            if ($ViewLink != '') {
+                                $ViewLink .= " ";
+                            }
+                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
+                        }
+                        //vardump($Config);
+
+                        $PreReportReturn = '<td class="' . $Row . ' action" width="' . $ActionWidth . '" scope="col" style="text-align:center;overflow:hidden;">';
+                        $PreReportReturn .= $ViewLink; //'Edit | View';
+                        $PreReportReturn .= '</td>';
+                        $actionPanels .= $PreReportReturn;
+                    }
+
+
+
+
+                    // Show Action Panels on left
+                    //$ReportReturn .= $actionPanels;
+
+
                     foreach($Config['_IndexType'] as $Field=>$Type){
                     //foreach ($row as $Field => $Data) {
                         if($Type[1] === 1)
@@ -2537,7 +2597,7 @@ var " . $ChartID . " = new Highcharts.Chart({
                                     $ReportReturn .= $PreReportReturn;
                                     if (!empty($Config['_Show_popup'])) {
                                         
-                                        if ($ColumnCounter === 1) {
+                                        if ($ColumnCounter === 0) {
                                             // Add inline actions
                                             $ViewLink = '';
                                             $ActionWidth = 16;
@@ -2614,54 +2674,8 @@ var " . $ChartID . " = new Highcharts.Chart({
                         }
                     }
 
-                    // Edit Functions if no popup
-                    if (!empty($ShowActionPanel)) {
-                        $ViewLink = '';
-                        $ActionWidth = 16;
-                        if (!empty($Config['_Show_View'])) {
-                            $ActionWidth = $ActionWidth + 16;
-                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
-                            if(!is_admin()){
-                                if (!empty($Config['_ItemViewPage'])) {
-                                    $ReportVars = array();
-                                    foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                        $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
-                                    }
-                                    // Get permalink
-                                    $PageLink = get_permalink($Config['_ItemViewPage']);
-                                    $Location = parse_url($PageLink);
-                                    if (!empty($Location['query'])) {
-                                        $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
-                                        parse_str($Location['query'], $gets);
-                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
-                                    } else {
-                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                    }
-                                    $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
-                                }
-                            }
-                        }
-                        if (!empty($Config['_Show_Edit'])) {
-                            $ActionWidth = $ActionWidth + 16;
-                            if ($ViewLink != '') {
-                                $ViewLink .= " ";
-                            }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
-                        }
-                        if (!empty($Config['_Show_Delete_action'])) {
-                            $ActionWidth = $ActionWidth + 16;
-                            if ($ViewLink != '') {
-                                $ViewLink .= " ";
-                            }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
-                        }
-                        //vardump($Config);
-
-                        $PreReportReturn = '<td class="' . $Row . ' action" width="' . $ActionWidth . '" scope="col" style="text-align:center;overflow:hidden;">';
-                        $PreReportReturn .= $ViewLink; //'Edit | View';
-                        $PreReportReturn .= '</td>';
-                        $ReportReturn .= $PreReportReturn;
-                    }
+                    // Show Action Panelson right
+                    $ReportReturn .= $actionPanels;
 
                     $ReportReturn .= '</tr>';
 

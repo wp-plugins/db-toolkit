@@ -7,6 +7,7 @@
 <div id="dbtools_tabs" class="dbtools_tabs">
     <ul class="content-box-tabs">
         <li><a href="#tabs-1">Field Setup</a></li>
+        <li><a href="#tabs-permissions">Permissions</a></li>
         <li><a href="#tabs-2">Form Layout</a></li>
         <li><a href="#tabs-formprocess">Form Processors</a></li>
         <li><a href="#tabs-2b">View Layout</a></li>
@@ -92,30 +93,6 @@
                 
         ?>
 
-        <div id="menuPermissions" class="list_row2" style="padding: 3px;">Effective Capability Permission: <select name="Data[Content][_menuAccess]">
-                <option value="null" <?php if($Element['Content']['_menuAccess'] == 'null'){ echo 'selected="selected"'; } ?>>Public</option>
-                <?php
-
-                foreach($wp_roles->roles as $key=>$role){
-
-                    echo '<optgroup label="'.$role['name'].'">';
-                    ksort($role['capabilities']);
-                    foreach($role['capabilities'] as $cap=>$null){
-                        $sel = '';
-                        if($Element['Content']['_menuAccess'] == $cap){
-                            $sel = 'selected="selected"';
-                        }
-
-
-                        echo '<option value="'.$cap.'" '.$sel.'>'.$cap.'</option>';
-                        
-                    }
-                }
-                ?>
-
-            </select>
-            <span class="description">This permission method is temporary. It will be replaced with a much better permissions manager.</span>
-        </div>
         <?php
         InfoBox('Table Selection');
         ?>
@@ -187,6 +164,7 @@
     </div>
     <?php
     //include(WP_PLUGIN_DIR.'/db-toolkit/data_report/validation.php');
+    include(WP_PLUGIN_DIR.'/db-toolkit/data_report/permissions.php');
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/formlayout.php');
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/process.php');
     include(WP_PLUGIN_DIR.'/db-toolkit/data_report/viewlayout.php');

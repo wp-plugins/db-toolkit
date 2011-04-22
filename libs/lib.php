@@ -89,9 +89,11 @@ function dais_rowSwitch($a) {
 
 function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class = 'table1') {
 
+        $ImageFile = strtok($ImageFile, '?');
         $File = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $ImageFile);
+
         if(!file_exists($File))
-        return '<em> image Unavailable</em>';
+        return $ImageFile;
 
     $fileLoc = str_replace(get_bloginfo('url'), '', $ImageFile);
 
@@ -109,7 +111,7 @@ function UseImage($ImageFile, $Option = '1', $Size = '0', $Quality = 10, $Class 
     $Vc = (($ImageWidth));
     $Hc = (($ImageHeight) / 2);
     //$FullSize = GetFileSize($Dir);
-    if ($Option == 0) {
+    if ($Option === 0) {
         return "<img src=\"".WP_PLUGIN_URL."/db-toolkit/libs/timthumb.php?src=" . $TDir . "&w=" . $Size . "&h=" . $Size . "&q=" . $Quality . "&zc=1\" class=\"" . $Class . "\" border=\"0\">";
     }
     if ($Option == 1) {

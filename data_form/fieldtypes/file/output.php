@@ -6,10 +6,13 @@ switch($Types[1]) {
         }
 
         
-        $file = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $Data[$Field]);
+        $file = $Data[$Field];//str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $Data[$Field]);
+        $file = explode('?', $file);
 
-        $ImageHeight = GetImageDimentions ($file, 'h');
-        $ImageWidth = GetImageDimentions ($file, 'w');
+        //vardump($file);
+
+        $ImageHeight = GetImageDimentions ($file[0], 'h');
+        $ImageWidth = GetImageDimentions ($file[0], 'w');
         if ( $ImageHeight > $ImageWidth ) {
             if($ImageHeight < $Config['_ImageSizeF'][$Field]) {
                 $Config['_ImageSizeF'][$Field] = $ImageHeight;
@@ -23,6 +26,7 @@ switch($Types[1]) {
             if($ImageWidth < $Config['_ImageSizeF'][$Field]) {
                 $Config['_ImageSizeF'][$Field] = $ImageWidth;
             }
+            //vardump($Config);
             $new_height = $ImageHeight * ( $Config['_ImageSizeF'][$Field] / $ImageWidth );
             $BoxSize = "
 						height: 'auto',
@@ -33,11 +37,11 @@ switch($Types[1]) {
 
         if(!empty($Config['_ImageSquareM'][$Field])) {
             $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Data[$Field]).'_img_'.$Field.'" style="height:'.$Config['_ImageSquareM'][$Field].'px;">';
-            $Out .= useimage($Data[$Field], 0, $Config['_ImageSizeM'][$Field]).'</div>';
+            $Out .= useimage($file[0], 0, $Config['_ImageSizeM'][$Field]).'</div>';
         }else {
             $preHeight = $ImageHeight * ( $Config['_ImageSizeM'][$Field] / $ImageWidth );
             $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Data[$Field]).'_img_'.$Field.'" style="height:'.$preHeight.'px;">';
-            $Out .= useimage($Data[$Field], 6, $Config['_ImageSizeM'][$Field]).'</div>';
+            $Out .= useimage($file[0], 6, $Config['_ImageSizeM'][$Field]).'</div>';
         }
         // need to do a caption thing
         // 
@@ -46,13 +50,11 @@ switch($Types[1]) {
 
 
         $_SESSION['dataform']['OutScripts'] .= "
-				jQuery('#".md5($Data[$Field])."_img_".$Field."').click(function(){
-					//$.facebox('<h2>".$Image[1]."</h2><img src=\"".$Image[0]."\" />');
-					//var Dialog = new Boxy('".useimage($Data[$Field], 6, $Config['_ImageSizeF'][$Field])."', {title: '".$Image[1]."', modal: false, unloadOnHide: true});
+				jQuery('#".md5($Data[$Field])."_img_".$Field."').click(function(){										
 					if(jQuery(\"#ui-dialog-".md5($Data[$Field])."\").length == 1){
 						jQuery(\"#ui-dialog-".md5($Data[$Field])."\").remove();
 					}
-					jQuery('body').append('<div id=\"ui-dialog-".md5($Data[$Field])."\" title=\"".basename($Data[$Field])."\"><div style=\"height:".$new_height."px;\">".useimage($Data[$Field], 6, $Config['_ImageSizeF'][$Field])."</p></div>');
+					jQuery('body').append('<div id=\"ui-dialog-".md5($Data[$Field])."\" title=\"".$file[1]."\"><div style=\"height:".$new_height."px;\">".useimage($Data[$Field], 6, $Config['_ImageSizeF'][$Field])."</p></div>');
 					jQuery(\"#ui-dialog-".md5($Data[$Field])."\").dialog({
 						position: 'center',
 						buttons: {
@@ -69,15 +71,21 @@ switch($Types[1]) {
         break;
     case 'file':
         if(!empty($Data[$Field])) {
-            $File = explode('|', $Data[$Field]);
-            $Dets = pathinfo($File[1]);
+            
+            $File = explode('?', $Data[$Field]);
+            
+            $Dets = pathinfo($File[1]);            
             $ext = strtolower($Dets['extension']);
-            if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')) {
-                $Icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" align="absmiddle" />&nbsp;';
-            }else {
-                $Icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" align="absmiddle" />&nbsp;';
+            if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
+                    $Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" align="absmiddle" />&nbsp;';
+            }else{
+                    $Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" align="absmiddle" />&nbsp;';
             }
-            $Size = return_bytes(filesize($File[0]));
+            //vardump($Data[$Field]);
+            $FileSrc = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $File[0]);
+            //echo filesize($File[0]);
+            $Size = file_return_bytes(filesize($FileSrc));
+            
             //$Out .= $Data[$Field];
             //$Out .= '<div class="captions">'.df_parsecamelcase($Image[1]).'</div>';
             $Out .= $Icon.'<a href="'.$File[0].'" target="_blank" >'.$File[1].'</a> ('.$Size.')';

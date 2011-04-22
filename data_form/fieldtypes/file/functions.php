@@ -52,7 +52,7 @@ function file_handleInput($Field, $Input, $FieldType, $Config, $predata){
 		return $Input;
 	}
 	if(!empty($_POST['deleteImage'][$Field])){
-		$FileInfo = explode('|', $predata[$Field]);
+		$FileInfo = explode('?', $predata[$Field]);
 		if(file_exists($FileInfo[0])){
 			unlink($FileInfo[0]);
 		}
@@ -78,7 +78,7 @@ function file_handleInput($Field, $Input, $FieldType, $Config, $predata){
 		
 	//return $newLoc;
         
-	return $upload['url'];//.'|'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
+	return $upload['url'].'?'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
 	}
 	
 }
@@ -93,8 +93,8 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 	//die;
 		switch ($Type){
 			case 'image';
-                                
-				$Image = $Value;// str_replace(get_bloginfo('url'), '', $Value);
+                                $Value = explode('?', $Value);
+				$Image = $Value[0];// str_replace(get_bloginfo('url'), '', $Value);
                                 
 				if(!empty($Config['_ImageSquareI'][$Field])){
                                     if(!empty($Config['_URLOnly'][$Field])){
@@ -108,11 +108,11 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
                                 $Class = '';
                                 if(!empty($Config['_ClassName'][$Field])){
                                     $Class = $Config['_ClassName'][$Field];
-                                }
+                                }                                
 				return UseImage($Image, 6, $Config['_ImageSizeI'][$Field], 10, $Class);
 		 		break;
 			case 'mp3';
-					$File = explode('|', $Value);
+					$File = explode('?', $Value);
 					$UniID = uniqid($EID.'_');
 				//$ReturnData = '<span id="'.$UniID.'">'.$File[1].'</span>';
                                 $ReturnData = '<audio id="'.$UniID.'" src="'.$File[0].'">unavailable</audio>';
@@ -140,7 +140,7 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 					$Values = $Data;
 					$Output = '';
 					foreach($Values as $Value){
-						$File = explode('|', $Value);
+						$File = explode('?', $Value);
 						$Dets = pathinfo($File[1]);
 						$ext = strtolower($Dets['extension']);
 						if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
@@ -152,7 +152,11 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 					}
 					return $Output;
 				}else{
-					$File = explode('|', $Value);
+                                    
+                                    if(empty($Value)){
+                                        return 'no file uploaded';
+                                    }
+					$File = explode('?', $Value);
 					$Dets = pathinfo($File[1]);
 					$ext = strtolower($Dets['extension']);
 					if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
@@ -256,7 +260,35 @@ return $Return;
 
 
 
+function file_return_bytes($FileSize) {
+   $val = trim($FileSize);
+   $last = strtolower($FileSize{strlen($FileSize)-1});
+   switch($last) {
+       // The 'G' modifier is available since PHP 5.1.0
+       case 'g':
+           $FileSize *= 1024;
+       case 'm':
+           $FileSize *= 1024;
+       case 'k':
+           $FileSize *= 1024;
+   }
 
+if($FileSize < 0 || $FileSize == ''){
+	$Pre = '0&nbsp;Bytes';
+}elseif($FileSize < 1024 AND $FileSize > 0){
+	$Pre = $FileSize.'&nbsp;Bytes';
+}elseif($FileSize >= 1024 AND $FileSize < 1048576 ){
+	$Pre = round(($FileSize/1024)).'&nbsp;KB';
+}elseif($FileSize >= 1048576 AND $FileSize < 1073741824){
+	$Pre = round(($FileSize/1048576),1).'&nbsp;MB';
+}elseif($FileSize >= 1073741824){
+	$Pre = round(($FileSize/1073741824),3).'&nbsp;GB';
+}elseif($FileSize >= 1073741824){
+	$Pre = round(($FileSize/1099511627776),3).'&nbsp;TB';
+}
+
+   return $Pre;
+}
 
 
 
