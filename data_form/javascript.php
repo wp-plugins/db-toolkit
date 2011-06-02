@@ -245,7 +245,7 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit){
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
 			position: 'center',
 			autoResize: true,
-			//modal: true,
+			modal: true,
 			buttons: {
 				'Cancel': function() {jQuery(this).dialog("close"); }
 			},

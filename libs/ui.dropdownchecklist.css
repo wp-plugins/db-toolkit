@@ -16,6 +16,7 @@
 	height: 20px;
 	line-height: 20px;
 	margin-right: 17px; /* background dropdown.png image */
+        padding-left: 6px;
 }
 
 .ui-dropdownchecklist-dropcontainer {
@@ -25,6 +26,8 @@
 
 .ui-dropdownchecklist-item {
 
+    padding: 3px 5px;
+    border-bottom: 1px dashed #cfcfcf;
 }
 
 .ui-dropdownchecklist-item-hover {
