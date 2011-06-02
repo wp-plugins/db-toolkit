@@ -180,15 +180,17 @@ function dt_styles() {
 
     }
 
-    //if(count($_GET) > 1){
-        //if(empty($_GET['interface'])){
-            wp_register_style('jqueryUI-base-internal', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
-        //}
-    //}
+    wp_register_style('jqueryUI-core', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+    //wp_register_style('jqueryUI-base', WP_PLUGIN_URL . '/db-toolkit/jqueryui/base/jquery.ui.all.css');
+    //wp_register_style('jqueryUI-blitzer', WP_PLUGIN_URL . '/db-toolkit/jqueryui/blitzer/jquery-ui-1.8.13.custom.css');
+    
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
-    wp_enqueue_style('jqueryUI-base-internal');
 
+    wp_enqueue_style('jqueryUI-core');
+    //wp_enqueue_style('jqueryUI-base');
+    //wp_enqueue_style('jqueryUI-blitzer');
+    
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
 
