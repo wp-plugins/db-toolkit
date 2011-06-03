@@ -1,6 +1,4 @@
 <?php
-
-
 // use filters
 $Defaults = false;
 $FilterVisiable = 'none';
@@ -42,7 +40,7 @@ if(!empty($Config['_IndexType'][$_SESSION['report_'.$Media['ID']]['SortField']])
 }
 
 if(!empty($Config['_Field'][$_SESSION['report_'.$Media['ID']]['SortDir']])) {
-    echo 'not';
+    //echo 'not';
 }
 
 if(!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMode'])) {

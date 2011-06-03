@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.0
+Stable tag: 0.2.4.1
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -27,7 +27,6 @@ Features include:
 *   Data importing via CSV files
 *   Report Exporting in PDF and CSV
 *   Multi Interface Layouts using clusters
-*   Userbase Access Control now Bundled
 
 == Installation ==
 
@@ -53,6 +52,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.4.1 =
+    Fixed a bug the made duplicate reports on pagination shift.
 
 = 0.2.4.0 =
     Fixed modal style dialogs

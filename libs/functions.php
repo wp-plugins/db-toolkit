@@ -1184,6 +1184,7 @@ function dt_rendercluster($cluster){
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface) {
 
+   
 
     if(is_array($interface)) {
         if(!empty($interface['id'])){
@@ -1262,9 +1263,9 @@ function dt_renderInterface($interface) {
             $_SESSION['report_'.$interface]['LastPage'] = $newPage;
         }
     }
+    
     switch ($Config['_ViewMode']){
-
-
+        
         case 'list':
             ob_start();
                 include(DB_TOOLKIT.'data_report/listmode.php');
@@ -1303,7 +1304,7 @@ function dt_renderInterface($interface) {
         }
     }
 
-    return do_shortcode($Return);
+    echo do_shortcode($Return);
 
 }
 
