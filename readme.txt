@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.1
+Stable tag: 0.2.4.2
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,15 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.4.2 =
+    Added {{_footer_pagination}}
+    Added {{_footer_first}}
+    Added {{_footer_last}}
+    Added {{_footer_pagecount}}
+    Fixed a bug that made the interface load before the widget on text shortcode usage.
+    Fixed a bug that prevented jquery from loading.
+    Fixed a bug the made duplicate reports on pagination shift.
 
 = 0.2.4.1 =
     Fixed a bug the made duplicate reports on pagination shift.

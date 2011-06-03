@@ -21,8 +21,8 @@
     }
 ?>
     <div style="padding: 3px;">
-        Setup Type: <input type="radio" id="permType-simple" name="Data[Content][_permissions][_permissionsType]" value="simple" <?php echo $selSi; ?> /> <label for="permType-simple">Simple</label>
-        <input type="radio" id="permType-advanced" name="Data[Content][_permissions][_permissionsType]" value="advanced" <?php echo $selAd; ?> /> <label for="permType-advanced">Advanced</label>
+        Setup Type: <input type="radio" id="permType-simple" name="Data[Content][_permissions][_permissionsType]" value="simple" <?php echo $selSi; ?> /> <label for="permType-simple">Simple</label> <span class="description">Still busy working in the advanced permissions setting' Sorry for the delay :)</span>
+        <?php /*<input type="radio" id="permType-advanced" name="Data[Content][_permissions][_permissionsType]" value="advanced" <?php echo $selAd; ?> /> <label for="permType-advanced">Advanced</label> */ ?>
     </div>
 
     <div id="permSetup-simple" style="padding: 5px; display: <?php echo $sibox; ?>;">

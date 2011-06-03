@@ -56,7 +56,6 @@ if(!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMod
         $Rate = $Config['_autoPolling']*1000;
 
         $_SESSION['dataform']['OutScripts'] .= "
-
                 setInterval('dr_reloadData(\'".$Media['ID']."\')', ".$Rate.");
         ";
 

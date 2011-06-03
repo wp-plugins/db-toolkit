@@ -40,10 +40,45 @@ if ($Count['Total'] == 0) {
     $itemcount = ($Start + 1) . ' - ' . $toPos . ' of ' . $Count['Total'] . ' Items';
 }
 
-$prevbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $Media['ID'] . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
+//$prevbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $Media['ID'] . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
+$firstpagebutton = '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">«</a>';
+$prevbutton = '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">‹</a>';
 $pagejump = '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_' . $Media['ID'] . '" style="width:30px; font-size:11px;" value="' . $Page . '" onkeypress="dr_pageInput(\'' . $Media['ID'] . '\', this.value);" /> of ' . $TotalPages . '</div>';
-$nextbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $Media['ID'] . '\', ' . $Next . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
+$nextbutton = '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">›</a>';
+$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
 
+$pagecount = '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
+
+$pagination = '';
+
+if(floatval($Page) > 10){
+    for($s=$Page-4; $s<=$Page; $s++){
+        $pagination .= '<a href="?'.$pageLink.'npage='.$s.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $s . '); return false;">'.$s.'</a>';
+    }
+    for($s=$Page+1; $s<=$Page+4; $s++){
+        $pagination .= '<a href="?'.$pageLink.'npage='.$s.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $s . '); return false;">'.$s.'</a>';
+    }
+
+}
+
+for($p=1; $p<=$TotalPages; $p++){
+    $class= '';
+    if($Page == $p){
+        $class= 'highlight';
+    }
+    if($p <= 10){
+        if($Page <=10){
+            $pagination .= '<a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">'.$p.'</a>';
+        }
+    }else{
+        if($p == $TotalPages && $Page < $TotalPages-4){
+            $pagination .= '&hellip;<a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">'.$p.'</a>';
+        }
+    }
+}
+
+
+//$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
 
 foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
     // placebefore Entry loop    
@@ -59,6 +94,22 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
 
         $preHeader = str_replace('{{_' . $headField . '_name}}', $name, $preHeader);
         $preHeader = str_replace('{{_' . $headField . '}}', $headField, $preHeader);
+
+
+        $preHeader = str_replace('{{_footer_first}}', $firstpagebutton, $preHeader);
+        $preHeader = str_replace('{{_footer_prev}}', $prevbutton, $preHeader);
+        $preHeader = str_replace('{{_footer_next}}', $nextbutton, $preHeader);
+        $preHeader = str_replace('{{_footer_last}}', $lastpagebutton, $preHeader);
+        $preHeader = str_replace('{{_footer_pagecount}}', $pagecount, $preHeader);
+
+
+        $preHeader = str_replace('{{_footer_pagination}}', $pagination, $preHeader);
+
+        $preHeader = str_replace('{{_footer_page_jump}}', $pagejump, $preHeader);
+        $preHeader = str_replace('{{_footer_item_count}}', $itemcount, $preHeader);
+        $preHeader = str_replace('{{_footer_no_entries}}', $noentries, $preHeader);
+
+
     }
     echo $preHeader;
 
@@ -294,13 +345,20 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
         $preFooter = str_replace('{{_' . $footField . '}}', $footField, $preFooter);
 
 
+        $preFooter = str_replace('{{_footer_first}}', $firstpagebutton, $preFooter);
         $preFooter = str_replace('{{_footer_prev}}', $prevbutton, $preFooter);
         $preFooter = str_replace('{{_footer_next}}', $nextbutton, $preFooter);
+        $preFooter = str_replace('{{_footer_last}}', $lastpagebutton, $preFooter);
+        $preFooter = str_replace('{{_footer_pagecount}}', $pagecount, $preFooter);
+
+
+        $preFooter = str_replace('{{_footer_pagination}}', $pagination, $preFooter);
+
         $preFooter = str_replace('{{_footer_page_jump}}', $pagejump, $preFooter);
         $preFooter = str_replace('{{_footer_item_count}}', $itemcount, $preFooter);
         $preFooter = str_replace('{{_footer_no_entries}}', $noentries, $preFooter);
 
-
+$preHeader = ';';
     }
     echo $preFooter;
 }

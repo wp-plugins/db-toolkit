@@ -77,10 +77,17 @@ Field Keys:
                             }
                             ?>
                         </pre>
-                        <strong>Dynamic Footer Codes</strong> <span class="description">Can only be used in AFTER template boxes.</span>
+                        <strong>Dynamic Footer Codes</strong> <span class="description">Can be used in BEFORE and AFTER code boxes.</span>
                         <pre>
+{{_footer_first}}       : Jump to first page
 {{_footer_prev}}        : Previous Page/Entries
 {{_footer_next}}        : Next Page/Entries
+{{_footer_last}}        : Jump to last page
+
+{{_footer_pagination}}  : Build pagination index
+
+{{_footer_pagecount}}   : Show page of count (3 of 5)
+
 {{_footer_page_jump}}   :
 Page Index Input Box (page __ of 20)
 

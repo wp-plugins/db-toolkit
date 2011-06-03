@@ -302,6 +302,7 @@ function dt_scripts() {
     wp_register_script('highcharts-exporting', WP_PLUGIN_URL . '/db-toolkit/data_report/js/exporting.src.js');
 
 
+    wp_enqueue_script("jquery");
     wp_enqueue_script("jquery-ui-custom");
     //wp_enqueue_script("jquery-ui-core");
     //wp_enqueue_script("jquery-ui-progressbar");
@@ -1182,7 +1183,7 @@ function dt_rendercluster($cluster){
 
 
 // Render interface from shortcode to front end and view
-function dt_renderInterface($interface) {
+function dt_renderInterface($interface){
 
    
 
@@ -1304,8 +1305,10 @@ function dt_renderInterface($interface) {
         }
     }
 
-    echo do_shortcode($Return);
-
+    $Return = do_shortcode($Return);
+    
+    return str_replace("\r\n", '', $Return);
+   
 }
 
 // delete interface
