@@ -1289,6 +1289,26 @@ function dt_renderInterface($interface){
             break;
     }
 
+
+    if($error = mysql_error()){
+        if(is_admin()){
+            
+            $InterfaceData = get_option($Media['ID']);
+            $InterfaceDataraw = base64_encode(serialize($InterfaceData));
+            
+            if(empty($_SESSION['errorReport'][$Media['ID']][md5($InterfaceDataraw)])){
+                ob_start();
+                echo '<h4>Error</h4>';
+                echo $error;
+                echo '<h4>Queries</h4>';
+                vardump($_SESSION['queries'][$Media['ID']]);
+                $error = ob_get_clean();
+                echo '<div id="interfaceError" class="error" style="padding:5px;">An error has been detected while building this interface. Would you like to submit an error report to the developer? <input type="button" class="button" value="Send Report" onclick="dbt_sendError(\''.$Media['ID'].'\', \''.  base64_encode($error).'\');" /></div>';
+            }
+        }
+    }
+
+
     if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
         //$InfoBox()
         ob_start();
@@ -1301,15 +1321,59 @@ function dt_renderInterface($interface){
         if(is_admin ()){
             $_SESSION['adminscripts'] .= $Config['_customFooterJavaScript'];
         }else{
-            $_SESSION['dataform']['OutScripts'] .= $Config['_customFooterJavaScript'];;
+            $_SESSION['dataform']['OutScripts'] .= $Config['_customFooterJavaScript'];
         }
     }
 
-    $Return = do_shortcode($Return);
-    
+    $Return = do_shortcode($Return);    
+
     return str_replace("\r\n", '', $Return);
    
 }
+
+function dbt_sendError($Interface, $ErrorData){
+    
+    global $current_user;
+    get_currentuserinfo();
+
+
+
+$InterfaceData = get_option($Interface);
+$InterfaceDataraw = base64_encode(serialize($InterfaceData));
+$InterfaceData['Content'] = unserialize(base64_decode($InterfaceData['Content']));
+
+    unset($_SESSION['errorReport'][$Interface]);
+    $_SESSION['errorReport'][$Interface][md5($InterfaceDataraw)] = true;
+
+    vardump($InterfaceData);
+   // die;
+
+
+$to = 'David Cramer <david@digilab.co.za>';
+$subject = 'DB-Toolkit Error Report';
+ob_start();
+echo "<h4>Wordpress Details</h4>";
+vardump('Site Name:'.get_bloginfo('name'));
+vardump('Site URL:'.get_bloginfo('siteurl'));
+vardump('Admin Email:'.get_bloginfo('admin_email'));
+vardump('Wordpress Version:'.get_bloginfo('version'));
+echo "<h4>Query Error</h4>";
+vardump(base64_decode($ErrorData));
+echo "<h4>Config</h4>";
+vardump($InterfaceData);
+echo '<h4>Raw Config</h4>';
+echo $InterfaceDataraw;
+
+$message = ob_get_clean();
+$headers = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+$headers .= 'From: '.$current_user->display_name.' <'.$current_user->user_email.'>' . "\r\n";
+
+
+return mail($to, $subject, $message, $headers);
+    
+}
+
 
 // delete interface
 function dt_removeInterface($Interface) {

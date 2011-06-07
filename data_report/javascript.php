@@ -1,5 +1,21 @@
 //<script>
 
+    function dbt_sendError(interface, errordata){
+        //alert(errordata);
+        ajaxCall('dbt_sendError', interface, errordata, function(i){
+
+            if(i){
+                alert('Error Report Sent!')
+                jQuery('#interfaceError').fadeOut('5000');
+            }else{
+
+                alert('Error sending report. Your server might not be configured to use PHP\'s mail() function. Sorry:)')
+                jQuery('#interfaceError').fadeOut('5000');
+            }
+
+        })
+    }
+
     function addRowTemplate(){
 
         // add notification

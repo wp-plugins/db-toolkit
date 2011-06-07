@@ -10,14 +10,20 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
-    <p>- Added the new Gravatar FieldType.</p>
-    <p>- minor bug fixes.</p>
-    <p>- Removed legacy list template panel.</p>
-    <p>- Bracketed field names if manually changed as not to loose their actual names.</p>
-    <p>- Indented Cloned Fields.</p>
-    <p>- Fixed a bug in the single select filter. Now displays as a standard dropdown.</p>
-    <p>- Changed the FieldTypes Display and Indexing to icon based.</p>
-    <p>- Added full Roles and capabilities permissions to interface setup.</p>
+    <p>Added Error Reporting: If a interface has errors, you get an error box asking to submit an error report.</p>
+    <p>This helps me to find query building bugs and fix them.</p>
+    <p>Data sent in this error report:</p>
+    <p>
+    <ul class="">
+        <li>- Site name</li>
+        <li>- Site URL</li>
+        <li>- Admin Email (Only used for me to email back to ask questions etc.)</li>
+        <li>- Wordpress Version</li>
+        <li>- Interface Configuration</li>
+        <li>- mysql query error</li>
+        <li>- mysql query generated.</li>
+    </ul>
+    </p>
             </div>
         </div>
 
