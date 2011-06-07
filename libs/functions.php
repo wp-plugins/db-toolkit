@@ -1349,7 +1349,7 @@ $InterfaceData['Content'] = unserialize(base64_decode($InterfaceData['Content'])
    // die;
 
 
-$to = 'David Cramer <david@digilab.co.za>';
+$to = 'DB-Toolkit Support <support@dbtoolkit.co.za>';
 $subject = 'DB-Toolkit Error Report';
 ob_start();
 echo "<h4>Wordpress Details</h4>";
