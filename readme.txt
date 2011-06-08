@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.3
+Stable tag: 0.2.4.4
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,6 +53,9 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
+= 0.2.4.4 =
+    - Fixed a bug that prevented the title of an enum fieldtype from displaying correctly.
+
 = 0.2.4.3 =
 Added Error Reporting. if a interface has errors, you get an error box asking to submit an error report. This helps me to find query building bugs and fix them.
 Data sent in this error report:
@@ -65,8 +68,6 @@ Data sent in this error report:
 - mysql query generated.
 
 It does not send any data from the table nor the table structure. juist information about the interface and the error.
-
-
 
 = 0.2.4.2 =
     Added {{_footer_pagination}}

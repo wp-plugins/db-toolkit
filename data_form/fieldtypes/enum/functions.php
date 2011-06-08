@@ -2,9 +2,9 @@
 // Functions - Args = $Field, $ELementConfig 
 
 function enum_showFilter($Field, $Type, $Default, $Config, $EID){
-	$FieldTitle = '';
+	$FieldTitle = df_parseCamelCase($Field);
 	if(!empty($Config['_FieldTitle'][$Field])){
-		$FieldTitle = df_parseCamelCase($Field);	
+		$FieldTitle = $Config['_FieldTitle'][$Field];
 	}
 
 	$Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />';
