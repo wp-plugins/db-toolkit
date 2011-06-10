@@ -159,38 +159,59 @@ function dais_standardsetupbuttons($Element) {
 
 
 function dais_customfield($Type, $Title, $Name, $ID = false, $Row = 'list_row1' , $Default = '', $Att = '', $Desc = '') {
-    $Default = htmlentities($Default);
+
+/*
+<div class="section">
+    <h3 class="heading">Title</h3>
+    <div class="option">
+        <div class="controls">
+            $Field
+            <div class="clear"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="explain">tooltip.</div>
+    </div>
+</div>
+ */
     if($ID === false) {
         $ID = $Name;
     }
-    if($Type == 'textarea') {
-        $Return = '<div style="padding:3px" class="'.$Row.'">';
-        $Return .= ''.$Title.':';
 
-            if(!empty($Desc)){
-                $Return .= ' <span class="description">'.$Desc.'</span>';
-            }
-
-
-        $Return .= '<br /> <textarea name="Data[Content]['.$Name.']" rows="8" id="'.$ID.'" '.$Att.' />'.$Default.'</textarea>';
-        $Return .= '</div>';
-    }else {
-
-        $Return = '<div style="padding:3px" class="'.$Row.'">';
-        $Return .="<table width=\"100%\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\"><tr><td width=\"150\" align=\"\" class=\"\">";
-        $Return .= '<label for="'.$ID.'">'.$Title.'</label>';
-        $Return .= '</td><td class="">';
-        $Return .= '<input type="'.$Type.'" name="Data[Content]['.$Name.']" id="'.$ID.'" style="padding:5px;" value="'.$Default.'" '.$Att.' />';
-
-            if(!empty($Desc)){
-                $Return .= ' <span class="description">'.$Desc.'</span>';
-            }
-
-
-        $Return .= '</td></tr></table>';
-        $Return .= '</div>';
+    switch ($Type){
+        case 'checkbox':
+            $class = 'section-checkbox';
+            break;
+        default :
+            $class = '';
     }
+
+    $Return = '<div class="section '.$class.'">';
+        $Return .= '<div class="option">';
+
+            $Return .= '<div class="title">';
+                $Return .= $Title;
+            $Return .= '</div>';
+            $Return .= '<div class="controls">';
+                $Default = htmlentities($Default);
+
+                if($Type == 'textarea') {
+                    $Return .= '<textarea name="Data[Content]['.$Name.']" rows="8" id="'.$ID.'" '.$Att.' />'.$Default.'</textarea>';
+                }else {
+                    $Return .= '<input type="'.$Type.'" class="'.$Type.'" name="Data[Content]['.$Name.']" id="'.$ID.'" value="'.$Default.'" '.$Att.' />';
+                }
+                
+                $Return .= '<div class="clear"></div>';
+                $Return .= '<div class="clear"></div>';
+            $Return .= '</div>';
+            if(!empty($Desc)){
+                $Return .= '<div class="explain">'.$Desc.'</div>';
+            }
+            $Return .= '<div class="clear"></div>';
+        $Return .= '</div>';
+    $Return .= '</div>';
+    $Return .= '<div class="clear"></div>';
     return $Return;
+    
 }
 
 function core_cleanArray($Array) {

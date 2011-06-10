@@ -18,9 +18,9 @@ function getelement($optionTitle) {
 function InfoBox($Title) {
     if (is_admin()) {
         //echo '<div class="metabox-holder">
-            echo '<div id="' . md5($Title) . '" class="stuffbox" >';
-        echo '<h3><span>' . $Title . '</span></h3>';
-        echo '<div class="inside">';
+        //echo '<div id="' . md5($Title) . '" class="stuffbox" >';
+        echo '<h2>' . $Title . '</h2>';
+        echo '<div class="option">';
         return;
     }
     echo '<h4>' . $Title . '</h4>';
@@ -28,8 +28,8 @@ function InfoBox($Title) {
 
 function EndInfoBox() {
     if (is_admin()) {
-       // echo '</div>';
-        echo '</div></div>';
+       echo '</div>';
+        //echo '</div></div>';
     }
     echo '<div class="clear;"></div>';
 }

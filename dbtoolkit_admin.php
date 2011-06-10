@@ -96,7 +96,7 @@ if(!empty($_GET['renderinterface'])){
 
 
         if($_GET['page'] == 'Add_New'){
-            ?>
+        /*    ?>
         <div class="wrap">
             <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />Create new Interface
             <div class="clear"></div>
@@ -127,16 +127,19 @@ if(!empty($_GET['renderinterface'])){
 
                     ?>
                 <form name="newInterfaceForm" method="post" action="admin.php?page=Database_Toolkit">
-                        <?php
+                        <?php */
                         $defaults = get_option('_dbtoolkit_defaultinterface');
                         
                         $Element['Content'] = $defaults;
                         include('data_report/setup.plug.php');
+                        /*
                         ?>
                 </form>
             </div>
         </div>
             <?php
+                         * 
+                         */
             return;
         }
 

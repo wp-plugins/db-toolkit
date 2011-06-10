@@ -1,3 +1,178 @@
+<div id="dbt_container" class="wrap poststuff">
+
+    <div class="dbt-save-popup" id="dbt-popup-save" style="top: 292px; left: 250px;">
+        <div class="dbt-save-save">Options Updated</div>
+    </div>
+    <div class="dbt-save-popup" id="dbt-popup-reset" style="top: 292px; left: 250px;">
+        <div class="dbt-save-reset">Options Reset</div>
+    </div>
+
+    <form id="ofform" enctype="multipart/form-data" action="">
+        <div id="header">
+            <div class="logo">
+                <h2>Create new Interface</h2>
+            </div>
+            <div class="icon-option"></div>
+            <div class="clear"></div>
+        </div>
+        <div id="main">
+            <?php
+            // Tabs
+            ?>
+            <div id="dbt-nav">
+                <ul>
+                <?php
+
+                // Dynamic Listing
+                $Tabs = array(
+                    'Field Setup'=>'fieldsetup.php',
+                    'Permissions'=>'permissions.php',
+                    'Form Layout'=>'formlayout.php',
+                    'Form Processors'=>'process.php',
+                    'View Layout'=>'viewlayout.php',
+                    'Chart Setup'=>'chartlayout.php',
+                    'View Settings'=>'viewsettings.php',
+                    'List Template'=>'listtemplate.php',
+                    'Custom Scripts'=>'customscripts.php',
+                    'Import & Export'=>'importexport.php'
+                );
+
+                $tabIndex = 1;
+                foreach($Tabs as $Title=>$File){
+                    $Class = '';
+                    if($_GET['ctb'] == $tabIndex){
+                        $Class = 'current';
+                    }
+                    echo '<li class="'.$Class.'">';
+                    echo '<a href="#dbt-option-'.$tabIndex++.'" title="'.$Title.'">'.$Title.'</a>';
+                    echo '</li>';
+
+                }
+
+                ?>
+                </ul>
+
+            </div>
+
+            <?php
+            // Option Tab Content Panels
+            ?>
+            <div id="content">
+
+                <?php
+                // Option Tab
+
+                $tabIndex = 1;
+                foreach($Tabs as $Title=>$File){
+                    $view = 'none';
+                    if(!empty($_GET['ctb'])){
+                        if($_GET['ctb'] == $tabIndex){
+                            $view = 'block';
+                        }
+                    }else{
+                        if($tabIndex == 1){
+                            $view = 'block';
+                        }
+                    }
+
+                    echo '<div id="dbt-option-'.$tabIndex.'" class="group" style="display: '.$view.';">';
+                        
+                        include(WP_PLUGIN_DIR.'/db-toolkit/data_report/'.$File);
+
+                    echo '</div>';
+                    
+                    $tabIndex++;
+                }
+
+
+
+                
+                /*
+                <div id="dbt-option-generalsettings" class="group" style="display: block;">
+                    <h2>General Settings</h2>
+                    <div class="section section-upload ">
+                        <h3 class="heading">Website Logo</h3>
+                        <div class="option">
+                            <div class="controls">
+
+                                <div class="clear"></div>
+                            </div>
+                            <div class="explain">Upload a custom logo for your Website.</div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                </div>
+                */
+            ?>
+
+
+            </div>
+            <div class="clear"></div>
+
+        </div>
+        <div class="save_bar_top">
+            <img alt="Working..." class="ajax-loading-img ajax-loading-img-bottom" src="http://localhost/wordpress/wp-content/themes/Karma/admin/images/loading-bottom.gif" style="display:none">
+            <input type="submit" class="button-primary" value="Save All Changes">
+
+            <form id="ofform-reset" style="display:inline" method="post" action="/wordpress/wp-admin/themes.php?page=siteoptions">
+                <span class="submit-footer-reset">
+                    <input type="submit" onclick="return confirm('CAUTION: Any and all settings will be lost! Click OK to reset.');" class="button submit-button reset-button" value="Reset Options" name="reset">
+                    <input type="hidden" value="reset" name="dbt_save">
+                </span>
+            </form>
+        </div>
+    </form>
+    <div style="clear:both;"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+			jQuery(document).ready(function(){
+
+                            var flip = 0;
+
+                            jQuery('#dbt-nav li a').click(function(){
+
+                                jQuery('#dbt-nav li').removeClass('current');
+                                jQuery('.group').hide();
+                                jQuery(''+jQuery(this).attr('href')+'').show();
+                                jQuery(this).parent().addClass('current');
+                                //alert(jQuery(this).attr('href'));
+
+                                return false;
+                            });
+			});
+		</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+
+
+// OLD SYSTEM
+return;
+?>
 <style type="text/css">
 
 
