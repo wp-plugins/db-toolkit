@@ -7,10 +7,27 @@
         <div class="dbt-save-reset">Options Reset</div>
     </div>
 
-    <form id="ofform" enctype="multipart/form-data" action="">
+    <?php
+    //<form id="ofform" enctype="multipart/form-data" action="">
+    ?>
+        <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
         <div id="header">
             <div class="logo">
+                <?php
+                if(!empty($_GET['interface'])){
+                    if(!empty($Element['_ReportDescription'])){
+                        echo '<h2>Editing: '.$Element['_ReportDescription'].'</h2>';
+                    }
+
+                    if(!empty($Element['_ClusterTitle'])){
+                        echo '<h2>Editing: '.$Element['_ClusterTitle'].'</h2>';
+                    }
+                }else{
+                ?>
                 <h2>Create new Interface</h2>
+                <?php
+                }
+                ?>
             </div>
             <div class="icon-option"></div>
             <div class="clear"></div>
@@ -26,12 +43,13 @@
                 // Dynamic Listing
                 $Tabs = array(
                     'Field Setup'=>'fieldsetup.php',
+                    'General Settings'=>'viewsettings.php',
                     'Permissions'=>'permissions.php',
                     'Form Layout'=>'formlayout.php',
                     'Form Processors'=>'process.php',
                     'View Layout'=>'viewlayout.php',
-                    'Chart Setup'=>'chartlayout.php',
-                    'View Settings'=>'viewsettings.php',
+                    'Chart Setup'=>'chartlayout.php',                    
+                    'Redirects' => 'redirects.php',
                     'List Template'=>'listtemplate.php',
                     'Custom Scripts'=>'customscripts.php',
                     'Import & Export'=>'importexport.php'
@@ -40,8 +58,14 @@
                 $tabIndex = 1;
                 foreach($Tabs as $Title=>$File){
                     $Class = '';
+                    if(!empty($_GET['ctb'])){
                     if($_GET['ctb'] == $tabIndex){
                         $Class = 'current';
+                    }
+                    }else{
+                        if($tabIndex == 1){
+                            $Class= 'current';
+                        }
                     }
                     echo '<li class="'.$Class.'">';
                     echo '<a href="#dbt-option-'.$tabIndex++.'" title="'.$Title.'">'.$Title.'</a>';
@@ -112,17 +136,15 @@
 
         </div>
         <div class="save_bar_top">
-            <img alt="Working..." class="ajax-loading-img ajax-loading-img-bottom" src="http://localhost/wordpress/wp-content/themes/Karma/admin/images/loading-bottom.gif" style="display:none">
-            <input type="submit" class="button-primary" value="Save All Changes">
 
-            <form id="ofform-reset" style="display:inline" method="post" action="/wordpress/wp-admin/themes.php?page=siteoptions">
                 <span class="submit-footer-reset">
-                    <input type="submit" onclick="return confirm('CAUTION: Any and all settings will be lost! Click OK to reset.');" class="button submit-button reset-button" value="Reset Options" name="reset">
-                    <input type="hidden" value="reset" name="dbt_save">
+                    <input type="button" onclick="return window.location='admin.php?page=Database_Toolkit';" class="button submit-button reset-button" value="Close" name="close">
+                    <?php echo dais_standardSetupbuttons($Element); ?>
                 </span>
-            </form>
         </div>
-    </form>
+    <?php
+    //</form>
+    ?>
     <div style="clear:both;"></div>
 </div>
 
@@ -139,18 +161,19 @@
 <script type="text/javascript">
 			jQuery(document).ready(function(){
 
-                            var flip = 0;
-
                             jQuery('#dbt-nav li a').click(function(){
-
                                 jQuery('#dbt-nav li').removeClass('current');
                                 jQuery('.group').hide();
                                 jQuery(''+jQuery(this).attr('href')+'').show();
                                 jQuery(this).parent().addClass('current');
                                 //alert(jQuery(this).attr('href'));
-
                                 return false;
                             });
+
+                            jQuery('#dbt_container .help').click(function(){
+                                jQuery(''+jQuery(this).attr('href')+'').toggle();
+                                return false;
+                            })
 			});
 		</script>
 

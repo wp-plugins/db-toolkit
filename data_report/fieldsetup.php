@@ -91,7 +91,7 @@ if (!empty($Element['_Application'])) {
 //echo df_tableReportSetup($Element['Content']['_main_table'], $Element, false, 'C');
             ?>
                     </div>
-        <?php EndInfoBox(); ?>
+        
 
                     </div>
     <?php

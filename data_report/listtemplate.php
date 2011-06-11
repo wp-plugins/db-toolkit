@@ -1,14 +1,12 @@
-<div id="tabs-4" class="setupTab">
-    <div id="layoutTemplateArea">
-        <div class="admin_config_toolbar">
+<h2>List Template</h2>
+<div id="layoutTemplateArea">
             <?php
             $Sel = '';
             if (!empty($Element['Content']['_useListTemplate'])) {
                 $Sel = 'checked="checked"';
             }
-            echo dais_customfield('checkbox', 'Enable List Templates', '_useListTemplate', '_useListTemplate', 'list_row1', 1, $Sel);
+            echo dais_customfield('checkbox', 'Use Templates', '_useListTemplate', '_useListTemplate', 'list_row1', 1, $Sel, 'Set this interface to use custom templates.');
             ?>
-        </div>
 
         <div id="templateTabs" class="dbtools_tabs">
             <ul class="content-box-tabs">
@@ -24,7 +22,7 @@
                 <div id="layoutContentTemplate">
 
                     <div id="layoutHeaderTemplate">
-                        <h3>Header Template <span class="description">Placed before the interface is rendered.</span></h3>
+                        <h2>Header Template <span class="description">Placed before the interface is rendered.</span></h2>
 <?php
             $HeaderTemplate = '';
             if (!empty($Element['Content']['_layoutTemplate']['_Header'])) {
@@ -123,7 +121,7 @@ Number of items found and displayed (1 - 10 of 200 items)
 
 
                         <div id="layoutFooterTemplate">
-                            <h3>Footer Template <span class="description">Placed before the interface is rendered.</span></h3>
+                            <h2>Footer Template <span class="description">Placed before the interface is rendered.</span></h2>
 
 <?php
                             $FooterTemplate = '';
@@ -188,7 +186,7 @@ Number of items found and displayed (1 - 10 of 200 items)
 
 
     </div>
-</div>
+
 
 <?php
                             /*

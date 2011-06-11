@@ -152,8 +152,8 @@ function dais_standardsetupbuttons($Element) {
 <input name="Data[Position]" type="hidden" id="Data[Position]" value="'.$Element['Position'].'">
 <input name="Data[Type]" type="hidden" id="Type" value="plugin">
 <input name="Save" type="submit" class="button-primary" id="Save" value="Save" />
-<input name="Apply" type="submit" class="button-primary" id="Apply" value="Apply" />
-<a class="button-primary" href="'.str_replace('&interface='.$Element['ID'], '', str_replace('&dt_newInterface=true', '', $_SERVER['REQUEST_URI'])).'">Close</a>';
+<input name="Apply" type="submit" class="button-primary" id="Apply" value="Apply" />';
+//<a class="button-primary" href="'.str_replace('&interface='.$Element['ID'], '', str_replace('&dt_newInterface=true', '', $_SERVER['REQUEST_URI'])).'">Close</a>';
 
 }
 
@@ -179,6 +179,7 @@ function dais_customfield($Type, $Title, $Name, $ID = false, $Row = 'list_row1' 
 
     switch ($Type){
         case 'checkbox':
+        case 'radio':
             $class = 'section-checkbox';
             break;
         default :

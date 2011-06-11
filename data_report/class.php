@@ -380,7 +380,7 @@ if (is_admin ()) {
 
             $name = df_parseCamelCase($Field);
             //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';            
-            $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox cloned" style="width:550px;"><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" /><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" /><h3>' . df_parseCamelCase($Field) . '</h3>';
+            $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox cloned" style="width:550px;"><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" /><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" /><h3 class="fieldTypeHandle">' . df_parseCamelCase($Field) . '</h3>';
             // Linking Master
             $PreReturn[$Field] .= '<div style="padding:5px;">';
 
@@ -852,7 +852,7 @@ function df_addProcess($processor, $table) {
         $Return .= '<div style="width: 550px; opacity: 1;" class="admin_list_row3 table_sorter postbox" id="' . $processID . '">';
         $Return .= '<input type="hidden" name="Data[Content][_FormProcessors][' . $processID . '][_process]" value="' . $processor . '" />';
         $Return .= '<img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery(\'#' . $processID . '\').remove();" src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png">';
-        $Return .= '<h3>' . $Title . '</h3>';
+        $Return .= '<h3 class="fieldTypeHandle">' . $Title . '</h3>';
         $Return .= '<div class="admin_config_toolbar">';
 
         $Return .= '<span style="float:right;"><p>' . $Icons . '</p></span>';
@@ -3579,7 +3579,7 @@ ob_start();
                 <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $rowTemplateID; ?>">
                     <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $rowTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
                     <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $rowTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">                    
-                    <h3><?php echo $Name; ?></h3>
+                    <h3 class="fieldTypeHandle"><?php echo $Name; ?></h3>
                     <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
                         <strong>Template Name:</strong> <input type="text" name="Data[Content][_layoutTemplate][_Content][_name][]" value="<?php echo $Name; ?>" />
                     </div>
@@ -3656,7 +3656,7 @@ ob_start();
     <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $fieldTemplateID; ?>">
         <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $fieldTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
         <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $fieldTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">
-        <h3><?php echo $Field; ?></h3>
+        <h3 class="fieldTypeHandle"><?php echo $Field; ?></h3>
         <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $fieldTemplateID; ?>"></div>
         <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $fieldTemplateID; ?>"><strong>Before</strong></div>
         <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $fieldTemplateID; ?>">

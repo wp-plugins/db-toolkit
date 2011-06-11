@@ -446,13 +446,9 @@ blockquote .boxtitle{
 
 
 /* Layout Templates Builder */
-#layoutTemplateArea{
-    max-width: 850px;
-    min-width: 690px;
-}
+
 #layoutHeaderTemplate, #layoutFooterTemplate{
     clear: both;
-    height: 150px;
     padding: 5px;   
 }
 #rowTemplateHolder{
@@ -637,7 +633,7 @@ h3.fieldTypeHandle{
 	font-size: 11px;
 	color: #999999;
 }
-#dbt_container #content .section-checkbox .controls {
+#dbt_container #content .section-checkbox .controls, #dbt_container #content .section-checkbox .controls {
 	width:25px
 }
 #dbt_container #content .section-checkbox .explain {
@@ -714,7 +710,7 @@ h3.fieldTypeHandle{
 #dbt_container input.checkbox {
 	width: 30px;
 }
-#dbt_container input.dbt-radio {
+#dbt_container input.radio {
 	width: 30px;
 }
 #dbt_container .controls .input-text-small {
@@ -780,8 +776,16 @@ h3.fieldTypeHandle{
 	border-bottom:1px solid #e7e7e7;
         padding: 8px 15px 0px 0;
         margin-bottom: 5px;
-
 }
+
+#dbt_container .redirect-help{
+    float: right;    
+    background: url(images/question.png) no-repeat;
+    width: 25px;
+    cursor: pointer;
+    
+}
+
 #dbt_container .controls input:focus, #dbt_container select:focus, #dbt_container textarea:focus {
 	background:#fff;
 }

@@ -7,7 +7,7 @@
     <input type="button" class="button" value="Insert Row" onclick="formSetup_AddRow();" />
     <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('form');" />
     <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('form');" />-->
-    Popup Form Width: <input type="text" id="_popupWidth" name="Data[Content][_popupWidth]" value="<?php if(!empty($Element['Content']['_popupWidth'])){ echo $Element['Content']['_popupWidth'];}else{ echo '450';} ?>" size="5" maxlength="4" />px
+    Dialog Width: <input type="text" id="_popupWidth" name="Data[Content][_popupWidth]" value="<?php if(!empty($Element['Content']['_popupWidth'])){ echo $Element['Content']['_popupWidth'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeForm]" value="modal" <?php if(!empty($Element['Content']['_popupTypeForm'])) {
                     echo 'checked="checked"';
                        } ?> /> <label for="_modalPopup">Modal</label>
@@ -35,7 +35,7 @@
             foreach($cfg['_grid'] as $row=>$cols){
                 echo '<div class="rowWrapperForm">';
 
-                    echo '<div id="row'.$newRow.'" class="formRow" style="clear: both; width: 90%; float: left;">';
+                    echo '<div id="row'.$newRow.'" class="formRow" style="clear: both; width: 85%; float: left;">';
                         $newCol = 1;
                         foreach($cols as $col=>$width){
 
@@ -87,7 +87,7 @@
 
                     echo '</div>';
 
-                    echo '<div id="row1Control" class="formRow" style="width: 10%; padding-top: 12px; float: left;">';
+                    echo '<div id="row1Control" class="formRow" style="width: 15%; padding-top: 12px; float: left;">';
                         echo '<img height="16" width="16" onclick="formSetupColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/cog.png">';
                         echo '<img height="16" width="16" onclick="formAddColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/add.png">';
                         echo '<img height="16" width="16" onclick="formSubtractColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/delete.png">';
@@ -211,7 +211,7 @@ function formSetup_AddRow(){
 	//});
 
 
-	jQuery('#formGridform').append('<div class="rowWrapperForm"><div style="clear:both; width:90%; float:left;" class="formRow" id="row'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="row'+rownum+'_col1" class="column"><input id="row'+rownum+'_col1_control" class="row'+rownum+'_control" name="Data[Content][_grid][row'+rownum+'][col1]" type="hidden" value="100%" /><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:10%; padding-top:12px; float:left;" class="formRow" id="row1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="formSetupColumns(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="formAddColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="formSubtractColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="formRemoveColumns(\'row'+rownum+'\');" /></div></div>');
+	jQuery('#formGridform').append('<div class="rowWrapperForm"><div style="clear:both; width:85%; float:left;" class="formRow" id="row'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="row'+rownum+'_col1" class="column"><input id="row'+rownum+'_col1_control" class="row'+rownum+'_control" name="Data[Content][_grid][row'+rownum+'][col1]" type="hidden" value="100%" /><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:15%; padding-top:12px; float:left;" class="formRow" id="row1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="formSetupColumns(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="formAddColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="formSubtractColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="formRemoveColumns(\'row'+rownum+'\');" /></div></div>');
 		jQuery(".formGridform").sortable({
 			connectWith: '.formGridform',
 			update: function(event, ui){

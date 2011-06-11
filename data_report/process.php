@@ -1,7 +1,5 @@
-<div id="tabs-formprocess" class="setupTab">
 
-    <div class="stuffbox">
-        <h3>Form Processors</h3>
+        <h2>Form Processors</h2>
         <div class="admin_config_toolbar">
             <ul class="tools_widgets">
                 <li class="root_item"><a class="parent hasSubs"><strong>Processors</strong></a>
@@ -25,8 +23,10 @@
                 ?>
             </div>
         </div>
-    </div>
-</div>
+
+
+
+
 <?php
 $_SESSION['dataform']['OutScripts'] .= "
 

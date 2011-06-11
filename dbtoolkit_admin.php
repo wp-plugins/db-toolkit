@@ -124,14 +124,17 @@ if(!empty($_GET['renderinterface'])){
 
 
 
-
+*/
                     ?>
                 <form name="newInterfaceForm" method="post" action="admin.php?page=Database_Toolkit">
-                        <?php */
+                        <?php 
                         $defaults = get_option('_dbtoolkit_defaultinterface');
                         
                         $Element['Content'] = $defaults;
                         include('data_report/setup.plug.php');
+                        ?>
+                </form>
+<?php
                         /*
                         ?>
                 </form>
@@ -152,24 +155,7 @@ if(!empty($_GET['renderinterface'])){
             }
             $Element['Content'] = unserialize(base64_decode($Element['Content']));
             
-            ?>
-        <div class="wrap">
-            <img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />
-            <?php
             
-                if(!empty($Element['_ReportDescription'])){
-                    echo 'Editing: '.$Element['_ReportDescription'];
-                }
-
-                if(!empty($Element['_ClusterTitle'])){
-                    echo 'Editing: '.$Element['_ClusterTitle'];
-                }
-
-
-            ; ?>
-            <br class="clear" /><br />
-            <div id="poststuff">
-                <?php
 
                     $URL = str_replace('&interface='.$Element['ID'], '', $_SERVER['REQUEST_URI']);
                     $URL = str_replace('&cluster='.$Element['ID'], '#clusters', $URL);
@@ -185,8 +171,7 @@ if(!empty($_GET['renderinterface'])){
                         ?>
                     <input type="hidden" value="<?php echo $Element['ID']; ?>" name="Data[interfaceTitle]" />
                 </form>
-            </div>
-        </div>
+
             <?php
             return;
         }

@@ -1,21 +1,11 @@
-<div id="tabs-2b" class="setupTab">
-    <div id="viewtabs" class="dbtools_tabs">
-        <ul class="content-box-tabs">
-            <li><a href="#gridview">Grid View</a></li>
-            <li><a href="#templateview">Template</a></li>
-        </ul>
-        <div id="gridview" class="setupTab">
+<h2>View Layout</h2>
 
-
-	<?php
-	InfoBox('View Layout');
-	?>
     <div style="margin-top: 20px; padding: 5px;" class="ui-state-highlight ui-corner-all">
     <input type="button" class="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
     <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
     <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
     <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('view');" />-->
-    Popup View Width: <input type="text" id="_popupWidthview" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])){ echo $Element['Content']['_popupWidthview'];}else{ echo '450';} ?>" size="5" maxlength="4" />px
+    Dialog Width: <input type="text" id="_popupWidthview" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])){ echo $Element['Content']['_popupWidthview'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeView]" value="modal" <?php if(!empty($Element['Content']['_popupTypeView'])) {
                     echo 'checked="checked"';
                        } ?> /> <label for="_modalPopup">Modal</label>
@@ -43,7 +33,7 @@
             foreach($cfg['_gridView'] as $row=>$cols){
                 echo '<div class="rowWrapperView">';
 
-                    echo '<div id="viewRow'.$newRow.'" class="viewRow" style="clear: both; width: 90%; float: left;">';
+                    echo '<div id="viewRow'.$newRow.'" class="viewRow" style="clear: both; width: 85%; float: left;">';
                         $newCol = 1;
                         foreach($cols as $col=>$width){
 
@@ -104,7 +94,7 @@
 
                     echo '</div>';
 
-                    echo '<div id="row1Control" class="viewRow" style="width: 10%; padding-top: 12px; float: left;">';
+                    echo '<div id="row1Control" class="viewRow" style="width: 15%; padding-top: 12px; float: left;">';
                         echo '<img height="16" width="16" onclick="viewSetupColumns(\'viewRow'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/cog.png">';
                         echo '<img height="16" width="16" onclick="viewAddColumn(\'viewRow'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/add.png">';
                         echo '<img height="16" width="16" onclick="viewSubtractColumn(\'viewRow'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/delete.png">';
@@ -121,66 +111,23 @@
 	</div>
 	<div style="clear:both; width:350px;"><br /><br />
 
-        <?php echo InfoBox('Available Fields'); ?>
+        <h2>Available Fields</h2>
         <div style="padding:10px;" class="viewGridview" id="fieldTrayview">
        <?php
         echo $Hidden;
        ?>
 		</div>
-        <?php
-		EndInfoBox();
-		?>
     </div>
-	<?php
-	EndInfoBox();
-	?>
+
     <input type="checkbox" name="Data[Content][_disableLayoutEngineview]" id="disableLayoutEngineview" <?php if(!empty($Element['Content']['_disableLayoutEngineview'])){ echo 'checked="checked"';} ?>/>
     <label for="disableLayoutEngineview"> Disable Layout Engine</label>
 	<input name="Data[Content][_gridViewLayout]" type="hidden" id="gridLayoutBoxView" value="<?php echo $cfg['_gridViewLayoutView']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengineview'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngineview'])){ echo 'disabled="disabled"';} ?>" />
 	
 
-        </div>
-        <div id="templateview" class="setupTab">
-
-            <?php
-
-            $Sel = '';
-            if(!empty($Element['Content']['_UseViewTemplate'])) {
-                $Sel = 'checked="checked"';
-            }
-            echo dais_customfield('checkbox', 'Use View Template', '_UseViewTemplate', '_UseViewTemplate', 'list_row1' , 1, $Sel);
-
-            echo dais_customfield('textarea', 'Content Wrapper Start', '_ViewTemplateContentWrapperStart', '_ViewTemplateContentWrapperStart', 'list_row2' , $Element['Content']['_ViewTemplateContentWrapperStart'], '');
-            echo dais_customfield('textarea', 'PreContent', '_ViewTemplatePreContent', '_ViewTemplatePreContent', 'list_row2' , $Element['Content']['_ViewTemplatePreContent'], '');
-            echo dais_customfield('textarea', 'Content', '_ViewTemplateContent', '_ViewTemplateContent', 'list_row2' , $Element['Content']['_ViewTemplateContent'], '');
-            InfoBox('Useable Keys');
-            ?>
-            <pre>
-{{_PageID}}		: Page ID
-{{_PageName}}		: Page Name
-{{_EID}}		: Element ID
-{{_<i>Fieldname</i>_name}}	: Field Title
-{{<i>Fieldname</i>}}		: Field Data
-{{_return_<i><b>Fieldname</b></i>}}	: Return Field
-            </pre>
-
-            Field Keys:
-            <?php
-            if(!empty($Element['Content']['_FieldTitle'])){
-                foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val) {
-                    echo $Val.' = {{'.$FieldKey.'}}<br />';
-                }
-            }
-            EndInfoBox();
-            echo dais_customfield('textarea', 'PostContent', '_ViewTemplatePostContent', '_ViewTemplatePostContent', 'list_row2' , $Element['Content']['_ViewTemplatePostContent'], '');
-            echo dais_customfield('textarea', 'Content Wrapper End', '_ViewTemplateContentWrapperEnd', '_ViewTemplateContentWrapperEnd', 'list_row2' , $Element['Content']['_ViewTemplateContentWrapperEnd'], '');
+        
+        
 
 
-
-            ?>
-        </div>
-    </div>
-</div>
 <script>
 	jQuery(function() {
                 jQuery("#viewtabs").tabs();
@@ -269,7 +216,7 @@ function viewSetup_AddRow(){
 	//});
 
 
-	jQuery('#viewGridview').append('<div class="rowWrapperView"><div style="clear:both; width:90%; float:left;" class="viewRow" id="viewRow'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="viewRow'+rownum+'_viewCol1" class="columnView"><input id="viewRow'+rownum+'_viewCol1_controlView" class="viewRow'+rownum+'_controlView" name="Data[Content][_gridView][viewRow'+rownum+'][viewCol1]" type="hidden" value="100%" /><div class="ui-state-error viewGridview viewColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:10%; padding-top:12px; float:left;" class="viewRow" id="viewRow1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="viewSetupColumns(\'viewRow'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="viewAddColumn(\'viewRow'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="viewSubtractColumn(\'viewRow'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="viewRemoveColumns(\'viewRow'+rownum+'\');" /></div></div>');
+	jQuery('#viewGridview').append('<div class="rowWrapperView"><div style="clear:both; width:85%; float:left;" class="viewRow" id="viewRow'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="viewRow'+rownum+'_viewCol1" class="columnView"><input id="viewRow'+rownum+'_viewCol1_controlView" class="viewRow'+rownum+'_controlView" name="Data[Content][_gridView][viewRow'+rownum+'][viewCol1]" type="hidden" value="100%" /><div class="ui-state-error viewGridview viewColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:15%; padding-top:12px; float:left;" class="viewRow" id="viewRow1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="viewSetupColumns(\'viewRow'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="viewAddColumn(\'viewRow'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="viewSubtractColumn(\'viewRow'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="viewRemoveColumns(\'viewRow'+rownum+'\');" /></div></div>');
 		jQuery(".viewGridview").sortable({
 			connectWith: '.viewGridview',
 			update: function(event, ui){
