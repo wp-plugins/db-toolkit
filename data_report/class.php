@@ -1527,7 +1527,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     //vardump($Config['_CloneField']);    //vardump($querySelects);
     $preSelects = array();
     foreach ($querySelects as $AS => $selectField) {
-        $preSelects[] = $selectField . ' AS ' . $AS;
+        $preSelects[] = $selectField . ' AS `'.$AS.'`';
     }
     $querySelect = implode(", \n", $preSelects);
     $queryWhere = implode(' AND ', $queryWhere);

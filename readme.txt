@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.5
+Stable tag: 0.2.4.6
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.4.6 =
+    - Fixed a bug that caused an interface to fail if a field has the same name as a mysql function i.e. interval, sum etc..
 
 = 0.2.4.5 =
     - Interface changes made to make the editing and creation of interfaces easier as a lot of the features get explained.

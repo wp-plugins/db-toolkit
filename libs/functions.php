@@ -1293,19 +1293,19 @@ function dt_renderInterface($interface){
 
 
     if($error = mysql_error()){
-        if(is_admin()){
-            
+        if(is_admin()){            
             $InterfaceData = get_option($Media['ID']);
             $InterfaceDataraw = base64_encode(serialize($InterfaceData));
             
             if(empty($_SESSION['errorReport'][$Media['ID']][md5($InterfaceDataraw)])){
+                
                 ob_start();
                 echo '<h4>Error</h4>';
                 echo $error;
                 echo '<h4>Queries</h4>';
                 vardump($_SESSION['queries'][$Media['ID']]);
                 $error = ob_get_clean();
-                echo '<div id="interfaceError" class="error" style="padding:5px;">An error has been detected while building this interface. Would you like to submit an error report to the developer? <input type="button" class="button" value="Send Report" onclick="dbt_sendError(\''.$Media['ID'].'\', \''.  base64_encode($error).'\');" /></div>';
+                echo '<div id="interfaceError" class="notice" style="padding:5px;">An error has been detected while building this interface. Would you like to submit an error report to the developer? <input type="button" class="button" value="Send Report" onclick="dbt_sendError(\''.$Media['ID'].'\', \''.  base64_encode($error).'\');" /></div>';
             }
         }
     }
