@@ -1,15 +1,5 @@
 <div id="dbt_container" class="wrap poststuff">
 
-    <div class="dbt-save-popup" id="dbt-popup-save" style="top: 292px; left: 250px;">
-        <div class="dbt-save-save">Options Updated</div>
-    </div>
-    <div class="dbt-save-popup" id="dbt-popup-reset" style="top: 292px; left: 250px;">
-        <div class="dbt-save-reset">Options Reset</div>
-    </div>
-
-    <?php
-    //<form id="ofform" enctype="multipart/form-data" action="">
-    ?>
         <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
         <div id="header">
             <div class="logo">
@@ -29,7 +19,7 @@
                 }
                 ?>
             </div>
-            <div class="icon-option"></div>
+
             <div class="clear"></div>
         </div>
         <div id="main">
@@ -78,9 +68,6 @@
 
             </div>
 
-            <?php
-            // Option Tab Content Panels
-            ?>
             <div id="content">
 
                 <?php
@@ -109,25 +96,6 @@
                 }
 
 
-
-                
-                /*
-                <div id="dbt-option-generalsettings" class="group" style="display: block;">
-                    <h2>General Settings</h2>
-                    <div class="section section-upload ">
-                        <h3 class="heading">Website Logo</h3>
-                        <div class="option">
-                            <div class="controls">
-
-                                <div class="clear"></div>
-                            </div>
-                            <div class="explain">Upload a custom logo for your Website.</div>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
-
-                </div>
-                */
             ?>
 
 
@@ -142,9 +110,7 @@
                     <?php echo dais_standardSetupbuttons($Element); ?>
                 </span>
         </div>
-    <?php
-    //</form>
-    ?>
+
     <div style="clear:both;"></div>
 </div>
 

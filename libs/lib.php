@@ -2,6 +2,127 @@
 
 // utility functions for datatoolkit
 
+/*
+ * dt_buildConfigPanel
+ *
+ * $Title - string. Setting for the title of the interface
+ * $Pages - content pages for the interface
+ *        - array('tab title'=>'file include');
+ * $Defaults - array of the default values from the wp option
+ *
+ */
+
+function dt_buildConfigPanel($Title, $Pages, $Defaults){
+    $Element = $Defaults;
+?>
+<div id="dbt_container" class="wrap poststuff">
+        <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
+        <div id="header">
+            <div class="logo">
+                <h2><?php echo $Title; ?></h2>
+            </div>
+            <div class="icon-option"></div>
+            <div class="clear"></div>
+        </div>
+        <div id="main">
+            <div id="dbt-nav">
+                <ul>
+                <?php
+                // Dynamic Listing
+
+
+                $tabIndex = 1;
+                foreach($Pages as $Title=>$File){
+                    $Class = '';
+                    if(!empty($_GET['ctb'])){
+                    if($_GET['ctb'] == $tabIndex){
+                        $Class = 'current';
+                    }
+                    }else{
+                        if($tabIndex == 1){
+                            $Class= 'current';
+                        }
+                    }
+                    echo '<li class="'.$Class.'">';
+                    echo '<a href="#dbt-option-'.$tabIndex++.'" title="'.$Title.'">'.$Title.'</a>';
+                    echo '</li>';
+
+                }
+
+                ?>
+                </ul>
+
+            </div>
+
+            <div id="content">
+
+                <?php
+                // Option Tab
+
+                $tabIndex = 1;
+                foreach($Pages as $Title=>$File){
+                    $view = 'none';
+                    if(!empty($_GET['ctb'])){
+                        if($_GET['ctb'] == $tabIndex){
+                            $view = 'block';
+                        }
+                    }else{
+                        if($tabIndex == 1){
+                            $view = 'block';
+                        }
+                    }
+
+                    echo '<div id="dbt-option-'.$tabIndex.'" class="group" style="display: '.$view.';">';
+
+
+                        include($File);
+                    
+
+                    echo '</div>';
+
+                    $tabIndex++;
+                }
+
+
+
+
+                /*
+                <div id="dbt-option-generalsettings" class="group" style="display: block;">
+                    <h2>General Settings</h2>
+                    <div class="section section-upload ">
+                        <h3 class="heading">Website Logo</h3>
+                        <div class="option">
+                            <div class="controls">
+
+                                <div class="clear"></div>
+                            </div>
+                            <div class="explain">Upload a custom logo for your Website.</div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                </div>
+                */
+            ?>
+
+
+            </div>
+            <div class="clear"></div>
+
+        </div>
+        <div class="save_bar_top">
+
+                <span class="submit-footer-reset">
+                    <input type="button" onclick="return window.location='admin.php?page=Database_Toolkit';" class="button submit-button reset-button" value="Close" name="close">
+                    <?php echo dais_standardSetupbuttons($Element); ?>
+                </span>
+        </div>
+    <div style="clear:both;"></div>
+</div>
+
+<?php
+
+}
 
 function GetDocument() {
     return uniqid('null');

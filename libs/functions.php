@@ -1238,7 +1238,9 @@ function dt_renderInterface($interface){
         include(DB_TOOLKIT.'data_report/element.def.php');
         if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
             //$InfoBox()
-            InfoBox($Config['_ReportDescription']);
+            if(!is_admin()){
+                InfoBox($Config['_ReportDescription']);
+            }
         }
     $Return .= ob_get_clean();
 
@@ -1312,7 +1314,9 @@ function dt_renderInterface($interface){
     if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
         //$InfoBox()
         ob_start();
-        EndInfoBox();
+        if(!is_admin()){
+            EndInfoBox();
+        }
         $Return .= ob_get_clean();
     }
 
