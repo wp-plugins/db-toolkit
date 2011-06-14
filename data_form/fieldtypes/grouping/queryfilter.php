@@ -24,7 +24,7 @@ if(!empty($Config['_CloneField'][$Field]['Master'])){
 
 if($Config['_GroupingFields'][$Field]['Action'] == 'concat'){
     //$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
-    $querySelects[$Field] = 'GROUP_CONCAT('.$Config['_GroupingFields'][$Field]['Field'].')';
+    $querySelects[$Field] = 'GROUP_CONCAT(prim.`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
 }else{
     $querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(prim.`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
 }
