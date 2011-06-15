@@ -12,8 +12,8 @@ echo df_listTables('_main_table', 'dr_fetchPrimSetup', $Element['Content']['_mai
     ?>
         <div style="width:565px;">
 
-        <?php echo '<h2>Advanced Field Types</h2>'; ?>
-        <div class="list_row3"><input type="button" class="button" value="Add Clone Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /></div>
+        
+            <div class="list_row3"><input type="button" class="button" value="Add Clone Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /><div class="description">A clone field is a duplicate of a field (master) and can be treated as a unique field with its own field type.</div></div>
         <div class="columnSorter" id="drToolBox">
             <?php
 //echo df_tableReportSetup($Element['Content']['_main_table'], $Element, false, 'C');

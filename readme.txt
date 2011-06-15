@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.7
+Stable tag: 0.2.4.8
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,17 +53,21 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
+= 0.2.4.8 =
+* Optimized javascript and css files so they are not included on every page and only on a page that has an interface. its not perfect yet. just a test to help out with load times. It will be increased to only include required scripts for exact interface configuration.
+
+
 = 0.2.4.7 =
-    - Fixed a bug on the Field Group Plugin. might still be dodgy though but i think i got it.
+* Fixed a bug on the Field Group Plugin. might still be dodgy though but i think i got it.
 
 = 0.2.4.6 =
-    - Fixed a bug that caused an interface to fail if a field has the same name as a mysql function i.e. interval, sum etc..
+* Fixed a bug that caused an interface to fail if a field has the same name as a mysql function i.e. interval, sum etc..
 
 = 0.2.4.5 =
-    - Interface changes made to make the editing and creation of interfaces easier as a lot of the features get explained.
+* Interface changes made to make the editing and creation of interfaces easier as a lot of the features get explained.
 
 = 0.2.4.4 =
-    - Fixed a bug that prevented the title of an enum fieldtype from displaying correctly.
+* Fixed a bug that prevented the title of an enum fieldtype from displaying correctly.
 
 = 0.2.4.3 =
 Added Error Reporting. if a interface has errors, you get an error box asking to submit an error report. This helps me to find query building bugs and fix them.

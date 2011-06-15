@@ -171,7 +171,11 @@ function dt_styles() {
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
-                $preIs[] = shortcode_parse_atts($preInterface);
+                $args = shortcode_parse_atts($preInterface);
+                $op = get_option($args['id']);
+                if(!empty($op)){
+                    $preIs[] = $args['id'];
+                }                
             }
         }
         }
@@ -180,20 +184,31 @@ function dt_styles() {
 
     }
 
+    if(!empty($preIs) || is_admin()){
     wp_register_style('jqueryUI-core', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
-    //wp_register_style('jqueryUI-base', WP_PLUGIN_URL . '/db-toolkit/jqueryui/base/jquery.ui.all.css');
-    //wp_register_style('jqueryUI-blitzer', WP_PLUGIN_URL . '/db-toolkit/jqueryui/blitzer/jquery-ui-1.8.13.custom.css');
-    
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
 
     wp_enqueue_style('jqueryUI-core');
-    //wp_enqueue_style('jqueryUI-base');
-    //wp_enqueue_style('jqueryUI-blitzer');
-    
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
 
+// add styles for reports grid
+$themeDir = get_theme_root().'/'.get_template();
+$themeURL = get_bloginfo('template_url');
+
+    if(file_exists($themeDir.'/table.css')) {
+        wp_register_style('custom_table_style', $themeURL.'/table.css');
+        wp_enqueue_style('custom_table_style');
+    }
+    if(file_exists('styles/themes/'.$themeDir.'/toolbar.css')){
+        wp_register_style('custom_toolbar_style', $themeURL.'/toolbar.css');
+    }else{
+        wp_register_style('custom_toolbar_style', WP_PLUGIN_URL.'/db-toolkit/data_report/css/style.css');
+    }    
+    wp_enqueue_style('custom_toolbar_style');
+
+}
 
 
     // load interface specifics
@@ -279,48 +294,54 @@ function dt_scripts() {
         
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
-                $preIs[] = shortcode_parse_atts($preInterface);
+                $args = shortcode_parse_atts($preInterface);
+                $op = get_option($args['id']);
+                
+                if(!empty($op)){
+                    $preIs[] = $args['id'];
+                }
                 //vardump($_SERVER);
             }
         }
     }
 
+    if(!empty($preIs) || is_admin()){
     // queue & register scripts
-    wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
-    wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
+        wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
+        wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
 
 
-    //wp_register_script('jquery-ui-datepicker' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.datepicker.js');
-    //wp_register_script('jquery-ui-progressbar' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.progressbar.js', false, false, true);
+        //wp_register_script('jquery-ui-datepicker' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.datepicker.js');
+        //wp_register_script('jquery-ui-progressbar' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.progressbar.js', false, false, true);
 
-    wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery.ui.js');
-
-
-    wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
-    wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
-    wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
-    wp_register_script('highcharts-exporting', WP_PLUGIN_URL . '/db-toolkit/data_report/js/exporting.src.js');
+        wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery.ui.js');
 
 
-    wp_enqueue_script("jquery");
-    wp_enqueue_script("jquery-ui-custom");
-    //wp_enqueue_script("jquery-ui-core");
-    //wp_enqueue_script("jquery-ui-progressbar");
-    //wp_enqueue_script("jquery-ui-tabs");
-    //wp_enqueue_script("jquery-ui-sortable");
-    //wp_enqueue_script("jquery-ui-draggable");
-    //wp_enqueue_script("jquery-ui-droppable");
-    //wp_enqueue_script("jquery-ui-dialog");
-    //wp_enqueue_script("jquery-ui-datepicker");
-    wp_enqueue_script('jquery-multiselect');
-    wp_enqueue_script('data_report');
-    wp_enqueue_script('data_form');
-    wp_enqueue_script('jquery-validate');
-    wp_enqueue_script('swfobject');
+        wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
+        wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
+        wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
+        wp_register_script('highcharts-exporting', WP_PLUGIN_URL . '/db-toolkit/data_report/js/exporting.src.js');
 
-    wp_enqueue_script('highcharts');
-    wp_enqueue_script('highcharts-exporting');
 
+        wp_enqueue_script("jquery");
+        wp_enqueue_script("jquery-ui-custom");
+        //wp_enqueue_script("jquery-ui-core");
+        //wp_enqueue_script("jquery-ui-progressbar");
+        //wp_enqueue_script("jquery-ui-tabs");
+        //wp_enqueue_script("jquery-ui-sortable");
+        //wp_enqueue_script("jquery-ui-draggable");
+        //wp_enqueue_script("jquery-ui-droppable");
+        //wp_enqueue_script("jquery-ui-dialog");
+        //wp_enqueue_script("jquery-ui-datepicker");
+        wp_enqueue_script('jquery-multiselect');
+        wp_enqueue_script('data_report');
+        wp_enqueue_script('data_form');
+        wp_enqueue_script('jquery-validate');
+        wp_enqueue_script('swfobject');
+
+        wp_enqueue_script('highcharts');
+        wp_enqueue_script('highcharts-exporting');
+    }
         /*$Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
 		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/javascript.php')){
