@@ -197,6 +197,7 @@ function dt_styles() {
 $themeDir = get_theme_root().'/'.get_template();
 $themeURL = get_bloginfo('template_url');
 
+    // report
     if(file_exists($themeDir.'/table.css')) {
         wp_register_style('custom_table_style', $themeURL.'/table.css');
         wp_enqueue_style('custom_table_style');
@@ -207,6 +208,27 @@ $themeURL = get_bloginfo('template_url');
         wp_register_style('custom_toolbar_style', WP_PLUGIN_URL.'/db-toolkit/data_report/css/style.css');
     }    
     wp_enqueue_style('custom_toolbar_style');
+
+    // form
+	if(file_exists($themeDir.'/form.css')){
+            wp_register_style('form_style', $themeDir.'/form.css');
+        }else{
+            wp_register_style('form_style', WP_PLUGIN_URL.'/db-toolkit/data_form/css/form.css');
+        }
+        
+        /*
+        //<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/css/ui.timepickr.css" />
+        <script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/js/ui.timepickr.js"></script>
+        */
+
+	$Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
+	foreach($Types[0] as $Type){
+		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php')){
+			include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php');
+		}
+	}
+
+
 
 }
 
