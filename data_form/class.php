@@ -34,7 +34,7 @@ if(is_admin()) {
 
 
         //$res = mysql_list_tables($_SESSION['settings'][$_SESSION['key']]['Database']);
-        $Return = '<select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
+        $Return = 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
         $Return .= '<option value="">'.$Value.'</option>';
         foreach($Data as $Tables) {
             //vardump($Tables);
@@ -739,8 +739,20 @@ function df_processInsert($EID, $Data) {
                 if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
                     include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                     $func = 'pre_process_'.$Setup['_process'];
-                    if(function_exists($func)){
-                        $Data = $func($Data, $Setup, $Config);                        
+                    if(function_exists($func)){                        
+                        $Data = $func($Data, $Setup, $Config);
+                        if(!empty($Data['__fail__'])){
+                            if(!empty($Data['__error__'])) {
+                                $Return['Message'] = $Data['__error__'];
+                                return $Return;
+                            }
+                            if(empty($Config['_InsertFail'])) {
+                                $Return['Message'] = 'Entry Insert Failed';
+                            }else{
+                                $Return['Message'] = $Config['_InsertFail'];
+                            }
+                            return $Return;
+                        }
                     }
                 }
             }
@@ -834,14 +846,6 @@ function df_processInsert($EID, $Data) {
         //post processors        
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
-                if(empty($Data)){
-                    if(empty($Config['_InsertFail'])) {
-                        $Return['Message'] = 'Entry Insert Failed';
-                    }else {
-                        $Return['Message'] = $Config['_InsertFail'];
-                    }
-                    return $Return;
-                }
                 if(!empty($Setup['_onInsert'])){
                     if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
                         include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';

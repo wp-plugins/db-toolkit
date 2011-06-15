@@ -2,7 +2,7 @@
 	<?php
 	InfoBox('Form Layout');
 	?>
-    <div style="margin-top: 20px; padding: 5px;" class="ui-state-highlight ui-corner-all"> 
+    <div style="margin-top: 20px; padding: 5px;" class="notice">
     <input type="button" class="button" value="Sync Fields" onclick="formsSetup_getFields();" />
     <input type="button" class="button" value="Insert Row" onclick="formSetup_AddRow();" />
     <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('form');" />

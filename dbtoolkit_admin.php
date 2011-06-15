@@ -231,7 +231,7 @@ if(!empty($_GET['renderinterface'])){
                     $Title = $newCFG['_ClusterTitle'];
                 }
                 
-                echo '<div class="updated fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
+                echo '<div class="notice fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
             }
             ?>
             <form method="post" action="" id="application-switcher">

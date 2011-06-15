@@ -775,7 +775,7 @@ function df_buildSetProcessors($Config) {
             $Return .= '<input type="hidden" name="Data[Content][_FormProcessors][' . $processID . '][_process]" value="' . $processor . '" />';
             $Return .= '<img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery(\'#' . $processID . '\').remove();" src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png">';
 
-            $Return .= '<h3>' . $Title . '</h3>';
+            $Return .= '<h3 class="fieldTypeHandle">' . $Title . '</h3>';
             $Return .= '<div class="admin_config_toolbar">';
 
             // if there is a config
@@ -3086,6 +3086,19 @@ function df_processupdate($Data, $EID) {
                     $func = 'pre_process_' . $Setup['_process'];
                     if (function_exists($func)) {
                         $updateData = $func($updateData, $Setup, $Config);
+                        if(!empty($updateData['__fail__'])){
+                            if(!empty($updateData['__error__'])) {
+                                $Return['Message'] = $updateData['__error__'];
+                                return $Return;
+                            }
+                            if(empty($Config['_InsertFail'])) {
+                                $Return['Message'] = 'Entry Insert Failed';
+                            }else{
+                                $Return['Message'] = $Config['_InsertFail'];
+                            }
+                            return $Return;
+                        }
+
                     }
                 }
             }
@@ -3162,10 +3175,6 @@ function df_processupdate($Data, $EID) {
         }
         return $Return;
     }
-    echo $Query;
-    echo '<br /><br />';
-    echo mysql_error();
-    die;
     return false;
 }
 
@@ -3206,7 +3215,7 @@ function df_deleteEntries($EID, $Data) {
                 }
             }
         }
-        mysql_query("DELETE FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;") or die(mysql_error());
+        mysql_query("DELETE FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;");
 
         // post update processess
         if (!empty($Config['_FormProcessors'])) {

@@ -1,6 +1,6 @@
 <h2>View Layout</h2>
 
-    <div style="margin-top: 20px; padding: 5px;" class="ui-state-highlight ui-corner-all">
+    <div style="margin-top: 20px; padding: 5px;" class="notice">
     <input type="button" class="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
     <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
     <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />

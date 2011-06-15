@@ -9,6 +9,7 @@
  *
  */
 function akismet_scan($Data, $Setup, $Config){
+    
     if(empty($Setup['_APIKey'])){
         return false;
     }
@@ -33,26 +34,22 @@ function akismet_scan($Data, $Setup, $Config){
 return false;
 }
 
-function post_process_akismet($Data, $Setup, $Config){
-    if(!empty($Setup['_DeleteSpam'])){
-        if(akismet_scan($Data, $Setup, $Config)){
-            global $wpdb;
-            $wpdb->query("DELETE FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$Data[$Config['_ReturnFields'][0]]."' LIMIT 1;");
-            return $Setup['_SpamMessage'];
-        }
-    }
-    return $Data;
-}
-
 function pre_process_akismet($Data, $Setup, $Config){
-    if(!empty($Setup['_SpamFlag']) && empty($Setup['_DeleteSpam'])){
-        if(akismet_scan($Data, $Setup, $Config)){
-            $Data[$Setup['_SpamFlag']] = 1;
-        }else{
-            return false;
+    if(akismet_scan($Data, $Setup, $Config)){
+        if(!empty($Setup['_DeleteSpam'])){
+            $Data = array();
+            $Data['__fail__'] = true;
+            $Data['__error__'] = $Setup['_SpamMessage'];
+            return $Data;
         }
+        if(!empty($Setup['_SpamFlag'])){
+            $Data[$Setup['_SpamFlag']] = 1;
+            return $Data;
+        }
+        return $Data;
+    }else{
+        return $Data;
     }
-    return $Data;
 }
 
 function config_akismet($ProcessID, $Table, $Config = false){

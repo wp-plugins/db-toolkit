@@ -32,7 +32,8 @@
 
                 // Dynamic Listing
                 $Tabs = array(
-                    'Field Setup'=>'fieldsetup.php',
+                    'Interface'=>'interfacesetup.php',
+                    'Fields Setup'=>'fieldsetup.php',
                     'General Settings'=>'viewsettings.php',
                     'Permissions'=>'permissions.php',
                     'Form Layout'=>'formlayout.php',
