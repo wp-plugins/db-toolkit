@@ -201,6 +201,9 @@ $themeURL = get_bloginfo('template_url');
     if(file_exists($themeDir.'/table.css')) {
         wp_register_style('custom_table_style', $themeURL.'/table.css');
         wp_enqueue_style('custom_table_style');
+    }else{
+        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');
+        wp_enqueue_style('interface_table_styles');
     }
     if(file_exists('styles/themes/'.$themeDir.'/toolbar.css')){
         wp_register_style('custom_toolbar_style', $themeURL.'/toolbar.css');
@@ -264,9 +267,6 @@ $themeURL = get_bloginfo('template_url');
             }
         }
     }else{
-
-        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');
-        wp_enqueue_style('interface_table_styles');
 
         if(!empty($preIs)){
             $stylesAdded = array();
