@@ -2572,7 +2572,7 @@ var " . $ChartID . " = new Highcharts.Chart({
                                         if (!empty($Format)) {
                                             // XML Output
                                             if (strtolower($Format) == 'xml') {
-                                                $apiOut .= "			<" . $Field . ">" . htmlentities(stripslashes($outData)) . "</" . $Field . ">\n";
+                                                $apiOut .= "			<" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
                                             }
                                             // json Output
                                             if (strtolower($Format) == 'json') {

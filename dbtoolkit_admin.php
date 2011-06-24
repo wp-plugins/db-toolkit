@@ -361,7 +361,8 @@ if(!empty($_GET['renderinterface'])){
                         $Config = unserialize(base64_decode($Interface['Content']));
                         //vardump($Config);
                         //vardump($cfg);
-                        $API = str_replace('dt_intfc', '', $Interface['ID']).'_'.md5(serialize($Config));
+                        $API = str_replace('dt_intfc', '', $Interface['ID']).'_'.md5(str_replace('dt_intfc', '', $Interface['ID']).$Config['_APISeed']);
+                        //$API = $Interface['ID'].'_'.md5($Interface['ID'].$Config['_APISeed']);//str_replace('dt_intfc', '', $Interface['ID']).'_'.md5(serialize($Config));
 
                         $Desc = '';
                         if(!empty($Config['_ReportExtendedDescription'])) {

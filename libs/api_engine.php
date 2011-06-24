@@ -4,8 +4,8 @@ if (!empty($_GET['APIKey'])) {
     // validate API Key
     $apikey = explode('_', $_GET['APIKey']);
     $Intrface = get_option('dt_intfc' . $apikey[0]);
-    $Config = unserialize(base64_decode($Intrface['Content']));
-    $VerifyKey = md5(serialize($Config));
+    $Config = unserialize(base64_decode($Intrface['Content']));    
+    $VerifyKey = md5($apikey[0].$Config['_APISeed']);
     if ($VerifyKey !== $apikey[1]) {
         api_Deny();
         die;
@@ -33,9 +33,13 @@ if (!empty($_GET['APIKey'])) {
                     if (strtolower($_GET['format']) != 'xml' && strtolower($_GET['format']) != 'json') {
                         api_Deny();
                     }
-                    header("content-type: text/" . strtolower($_GET['format']));
-                        //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)                    
-                    echo dr_BuildReportGrid('dt_intfc' . $apikey[0], $Page, false, false, strtolower($_GET['format']), $Limit);
+                    //header("content-type: text/" . strtolower($_GET['format']));
+                        //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
+                    $ReturnID = false;
+                    if(!empty($_GET['_returnValue'])){                        
+                        $Return = array($Config['_ReturnFields'][0]=>$_GET['_returnValue']);
+                    }
+                    echo dr_BuildReportGrid('dt_intfc' . $apikey[0], $Page, false, false, strtolower($_GET['format']), $Limit, $Return);
                     die;
                 }
                 break;

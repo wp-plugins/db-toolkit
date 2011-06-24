@@ -877,8 +877,15 @@ function dt_process() {
         header('Location: '.$Redirect);
         die;
     }
-
+    
+    if(is_404()){
+        echo 'p';
+        die;
+    }
+    
     // API Call
+    //vardump($_SERVER);
+    
     if(!empty($_GET['APIKey'])) {
         include_once(DB_TOOLKIT.'libs/api_engine.php');
         die;

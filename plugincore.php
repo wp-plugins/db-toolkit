@@ -4,7 +4,7 @@ Plugin Name: DB-Toolkit
 Plugin URI: http://dbtoolkit.digilab.co.za
 Description: Plugin for building database table managers and data viewer interfaces.
 Author: David Cramer
-Version: 0.2.4.8
+Version: 0.2.4.9
 Author URI: http://dbtoolkit.digilab.co.za
 */
 
