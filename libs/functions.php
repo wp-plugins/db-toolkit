@@ -71,7 +71,7 @@ function dt_start() {
             //vardump($oldOption);
             add_option($newTitle, $oldOption, NULL, 'No');
             header( 'Location: '.$_SERVER['HTTP_REFERER'].$hash);
-            die;
+            exit;
         }
     }
 
@@ -735,7 +735,7 @@ function dt_process() {
     if(!empty($_POST['func']) && !empty($_POST['action'])) {
         if($_POST['action'] == 'wp_dt_ajaxCall') {
             dt_ajaxCall();
-            die;
+            exit;
         }
     }
 
@@ -794,7 +794,7 @@ function dt_process() {
                 }
             }
             //echo $Location;
-            //die;
+            //exit;
             if(!empty($ReturnValue)) {
                 $url = parse_url($_SERVER['HTTP_REFERER']);
                 $returntoken = '?';
@@ -821,9 +821,9 @@ function dt_process() {
                 $Redirect = $Location.$returntoken.$ReturnValue;
             }
             //echo $Redirect;
-            //die;
+            //exit;
             header('Location: '.$Redirect);
-            die;
+            exit;
         }
     }
     //vardump($_POST);
@@ -839,7 +839,7 @@ function dt_process() {
             ";
             $Redirect = $_SERVER['HTTP_REFERER'];
             header('Location: '.$Redirect);
-            die;
+            exit;
         }
 
 
@@ -858,7 +858,7 @@ function dt_process() {
 
         $Redirect = $_SERVER['HTTP_REFERER'];
         header('Location: '.$Redirect);
-        die;
+        exit;
     }
 
     if(!empty($_POST['importPrepairKey'])) {
@@ -875,20 +875,18 @@ function dt_process() {
 
         $Redirect = $_SERVER['HTTP_REFERER'];
         header('Location: '.$Redirect);
-        die;
+        exit;
     }
-    
-    if(is_404()){
-        echo 'p';
-        die;
-    }
-    
+       
     // API Call
     //vardump($_SERVER);
+    $pattern = API_getInterfaceRegex();
     
-    if(!empty($_GET['APIKey'])) {
+    //$pattern = '('..')';
+    //$pattern = get_shortcode_regex();
+    if(preg_match('/'.$pattern['regex'].'/s', $_SERVER['REQUEST_URI'], $matches)){
         include_once(DB_TOOLKIT.'libs/api_engine.php');
-        die;
+        exit;
     }
 
 /// EXPORT
@@ -1029,7 +1027,7 @@ function dt_process() {
             }
             $report->cf_report_generate_output();
             mysql_close();
-            die;
+            exit;
         }
 
 
@@ -1055,7 +1053,7 @@ function dt_process() {
                                 //dump($Config['_Field']);
 
                                 //dump($Config);
-                                //die;
+                                //exit;
                                 $VisibleFields = array();
                                 $FieldHeaders = array();
                                 foreach($Config['_Field'] as $Field=>$Value){
@@ -1137,7 +1135,7 @@ function dt_process() {
 
                 if($exportFormat == 'template'){
                     echo dt_renderInterface($Media['ID']);
-                    die;
+                    exit;
                 }
 
 
@@ -1149,7 +1147,7 @@ function dt_process() {
                 if(file_exists(DB_TOOLKIT.'data_report/plugins/'.$exportFormat.'/functions.php')) {
                     include_once(DB_TOOLKIT.'data_report/plugins/'.$exportFormat.'/functions.php');
                     mysql_close();
-                    die;
+                    exit;
                 }
             }
         }
@@ -1407,7 +1405,7 @@ $InterfaceData['Content'] = unserialize(base64_decode($InterfaceData['Content'])
     $_SESSION['errorReport'][$Interface][md5($InterfaceDataraw)] = true;
 
     vardump($InterfaceData);
-   // die;
+   // exit;
 
 
 $to = 'DB-Toolkit Support <support@dbtoolkit.co.za>';
@@ -1852,7 +1850,7 @@ function exportApp($app){
         header('Content-type: application/itf');
         header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
         print($output);
-        die;
+        exit;
 }
 
 function core_createInterfaces($Installer){
@@ -1942,6 +1940,31 @@ function API_decodeUsersAPIKey($key){
     $str = gzinflate(base64_decode(urldecode(base64_decode($key))));
     $det = explode('::', $str);
     return array('id'=>$det[0], 'pass_word'=>$det[1]);
+}
+
+function API_getInterfaceRegex(){
+        global $wpdb;
+        $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+        $list = array();
+        foreach($interfaces as $interface){
+            $interface = get_option($interface['option_name']);
+            $Config = unserialize(base64_decode($interface['Content']));
+            if($Config['_ViewMode'] == 'API'){
+                
+                if(!empty($Config['_APICallName'])){
+                    $list[] = '\/'.$Config['_APICallName'].'\/';
+                    $output['interfaces'][$Config['_APICallName']] = $interface['ID'];
+                }else{
+                    $list[] = '\/'.$interface['ID'].'\/';
+                }
+                
+            }
+        }        
+        if(!empty($list)){
+            $output['regex'] = implode('|', $list);
+            return $output;
+        }
+return false;
 }
 
 ?>

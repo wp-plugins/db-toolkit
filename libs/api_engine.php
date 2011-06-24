@@ -1,9 +1,14 @@
 <?php
-
-if (!empty($_GET['APIKey'])) {
-    // validate API Key
-    $apikey = explode('_', $_GET['APIKey']);
-    $Intrface = get_option('dt_intfc' . $apikey[0]);
+    $interfaceID = $matches[0];
+    if(!empty($pattern['interfaces'][$matches[0]])){
+        $interfaceID = $pattern['interfaces'][$matches[0]];
+    }
+    $vars = explode($interfaceID, $_SERVER['REQUEST_URI']);
+    $vars = explode('/', ltrim($vars[1], '/'));
+        
+    // validate API Key    
+    $Intrface = get_option($interfaceID);
+    
     $Config = unserialize(base64_decode($Intrface['Content']));    
     $VerifyKey = md5($apikey[0].$Config['_APISeed']);
     if ($VerifyKey !== $apikey[1]) {
@@ -70,7 +75,7 @@ if (!empty($_GET['APIKey'])) {
     api_Deny();
     //header ("content-type: text/xml");
     //echo dr_BuildReportGrid($_GET['subvars'][3], false, false, false, 'xml');
-}
+
 
 function api_encode_string($str) {
     //$str = gzdeflate($str);
