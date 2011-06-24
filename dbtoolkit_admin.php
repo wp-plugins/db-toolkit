@@ -7,8 +7,6 @@ notes:
 */
 
 
-
-
 if(!empty($_GET['renderinterface'])){
     $Interface = get_option($_GET['renderinterface']);
     if($Interface['Type'] == 'Cluster'){
@@ -84,7 +82,7 @@ if(!empty($_GET['renderinterface'])){
     <div class="clear"></div>
     <div id="poststuff">
     <?php
-    echo dt_renderInterface($_GET['renderinterface']);
+        echo dt_renderInterface($_GET['renderinterface']);
     ?>
     </div>
     </div>
@@ -161,7 +159,7 @@ if(!empty($_GET['renderinterface'])){
                     $URL = str_replace('&cluster='.$Element['ID'], '#clusters', $URL);
 
                 ?>
-                <form name="newInterfaceForm" method="post" action="<?php echo $URL; ?>">
+                <form name="newInterfaceForm" id="newInterfaceForm" method="post" action="<?php echo $URL; ?>">
                         <?php
                         if(!empty($_GET['interface'])){
                             include('data_report/setup.plug.php');
@@ -425,7 +423,7 @@ if(!empty($_GET['renderinterface'])){
                         
                         echo "<div class=\"row-actions\">API Only Supported in non-templated list mode</div>";
                     }
-                    ?></div
+                    ?>
                     </td>
                 </tr>
                         <?php

@@ -1182,10 +1182,11 @@ function dt_listApplications($Application){
 
 
 function dt_rendercluster($cluster){
+    
     $Interface = get_option($cluster);
     $cfg = unserialize(base64_decode($Interface['Content']));
     parse_str($cfg['_clusterLayout'], $layout);
-
+    echo $cfg['_clusterLayout'];
     // Build Layout Array First...
 
     if(is_admin ()){
@@ -1204,7 +1205,7 @@ function dt_rendercluster($cluster){
                         $content = array_keys($layout, $row.'_'.$col);
                         if(!empty($content)){
                             $output = '';
-                            foreach($content as $render){
+                            foreach($content as $render){                                
                                 $output .= dt_renderInterface($render);
                             }
                             echo $output;
@@ -1257,12 +1258,14 @@ function dt_renderInterface($interface){
     if(empty($Media)) {
         return;
     }
-
+    
     if($Media['Type'] == 'Cluster'){
         ob_start();
-        dt_rendercluster($ID);
+        dt_rendercluster($ID);        
         $Return = ob_get_clean();
-        return do_shortcode($Return);
+        $Return = do_shortcode($Return);
+        return str_replace("\r\n", '', $Return);
+
     }
     //echo $Media['_Icon'];    
     if($Media['_menuAccess'] != 'null'){
@@ -1274,7 +1277,11 @@ function dt_renderInterface($interface){
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
     $Return = '';
-
+    if($Config['_ViewMode'] == 'API'){
+        include('api_details.php');        
+        $Return = do_shortcode($Return);
+        return str_replace("\r\n", '', $Return);
+    }
 
         if(empty($_SESSION['report_'.$Media['ID']]['limitOveride'])){
             $_SESSION['report_'.$Media['ID']]['limitOveride'] = false;
@@ -1927,5 +1934,14 @@ function core_populateApp($Installer){
     return false;
 }
 
+function API_getCurrentUsersKey(){
+    return rtrim(base64_encode(urlencode(base64_encode(gzdeflate(get_current_user_id().'::'.get_user_by('id', get_current_user_id())->user_pass)))), '=');
+}
+
+function API_decodeUsersAPIKey($key){
+    $str = gzinflate(base64_decode(urldecode(base64_decode($key))));
+    $det = explode('::', $str);
+    return array('id'=>$det[0], 'pass_word'=>$det[1]);
+}
 
 ?>

@@ -36,6 +36,7 @@
                     'Fields Setup'=>'fieldsetup.php',
                     'General Settings'=>'viewsettings.php',
                     'Permissions'=>'permissions.php',
+                    'API Settings'=>'api.php',
                     'Form Layout'=>'formlayout.php',
                     'Form Processors'=>'process.php',
                     'View Layout'=>'viewlayout.php',

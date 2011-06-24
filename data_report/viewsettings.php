@@ -32,6 +32,13 @@
                     if(!empty($Element['Content']['_HideFrame'])) {
                         $Sel = 'checked="checked"';
                     }
+                    $Sel = 'checked="checked"';
+                    if(!empty($Element['Content']['_ViewMode'])) {
+                        if($Element['Content']['_ViewMode']!='API'){
+                            $Sel = '';
+                        }
+                    }
+                    echo dais_customfield('radio', 'API Mode', '_ViewMode', '_ViewMode_View', 'list_row2' , 'API' , $Sel ,'In API mode, this interface is only available through API Calls. See API Settings.');
 
                     echo dais_customfield('checkbox', 'Hide Frame', '_HideFrame', '_HideFrame', 'list_row1' , 1 , $Sel, 'Hide the frame surrounding the interface.');
                     echo dais_customfield('text', 'New Item Title', '_New_Item_Title', '_New_Item_Title', 'list_row1' , $Element['Content']['_New_Item_Title'], 'The lable on the add entry button in the toolbar.');
@@ -203,13 +210,12 @@
                     echo '</select>';
                     echo '</div>';
                     
-                    echo '<h2>API and Audit</h2>';
+                    echo '<h2>Auditing</h2>';
                     $Sel = '';
                     if(!empty($Element['Content']['_EnableAudit'])) {
                         $Sel = 'checked="checked"';
                     }
-                    echo dais_customfield('checkbox', 'Enable Auditing', '_EnableAudit', '_EnableAudit', 'list_row2' , 1, $Sel, 'Keep a copy of all edited, inserted and deleted entries. A copy table will be created with the suffix _audit_<em>tablename</em>');
-                    echo dais_customfield('text', 'API Key Seed', '_APISeed', '_APISeed', 'list_row1' , $Element['Content']['_APISeed'] , '', 'Add a seed of random charactures to enable the chagning of this interfaces API key.');
+                    echo dais_customfield('checkbox', 'Enable Auditing', '_EnableAudit', '_EnableAudit', 'list_row2' , 1, $Sel, 'Keep a copy of all edited, inserted and deleted entries. A copy table will be created with the suffix _audit_<em>tablename</em>');                    
                     
 
                     ?>

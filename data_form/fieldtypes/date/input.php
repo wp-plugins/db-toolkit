@@ -111,12 +111,12 @@ if($FieldSet[1] == 'scheduleMin'){
 			if(in_array($m, $DefaultMin)){
 				$Sel = 'checked="checked"';
 			}
-			$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][]" value="'.$m.'" type="checkbox" id="'.$Field.'_m'.$m.'" '.$Sel.' /><label style="display:inline-block;" for="'.$Field.'_m'.$m.'">'.$m.'</label>';
+			$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][]" value="'.$m.'" type="checkbox" id="'.$Field.'_m'.$m.'" '.$Sel.' /><label style="display:inline-block;" for="'.$Field.'_m'.$m.'">'.$m.'&nbsp;</label>';
 		}
 		//$Return .= '<div class="caption" id="caption_'.$Element['ID'].'_'.$Field.'">Minutes to be run</div>';
 	$Return .= '</div>';
 	$_SESSION['dataform']['OutScripts'] .= "
-		jQuery(\"#entry_".$Element['ID']."_".$Field."_min\").buttonset();
+		//jQuery(\"#entry_".$Element['ID']."_".$Field."_min\").buttonset();
 	";
 }
 if($FieldSet[1] == 'scheduleHour'){
@@ -153,13 +153,13 @@ if($FieldSet[1] == 'scheduleHour'){
 					$Sel = 'checked="checked"';
 				}
 			}
-			$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][]" value="'.$h.'" type="checkbox" id="'.$Field.'_h'.$h.'" '.$Sel.' /><label style="display:inline-block;" for="'.$Field.'_h'.$h.'">'.$h.'</label>';
+			$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][]" value="'.$h.'" type="checkbox" id="'.$Field.'_h'.$h.'" '.$Sel.' /><label style="display:inline-block;" for="'.$Field.'_h'.$h.'">'.$h.'&nbsp;</label>';
 		}
 		$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][all]" value="*" type="checkbox" id="'.$Field.'_hour" '.$Def['00'].' /><label style="display:inline-block;" for="'.$Field.'_hour">Hourly</label>';
 		//$Return .= '<div class="caption" id="caption_'.$Element['ID'].'_'.$Field.'">Hours to be run</div>';
 	$Return .= '</div>';
 	$_SESSION['dataform']['OutScripts'] .= "
-		jQuery(\"#entry_".$Element['ID']."_".$Field."_hour\").buttonset();
+		//jQuery(\"#entry_".$Element['ID']."_".$Field."_hour\").buttonset();
 	";
 }
 if($FieldSet[1] == 'scheduleDay'){
@@ -176,15 +176,15 @@ if($FieldSet[1] == 'scheduleDay'){
 		if(in_array($d, $DefaultDay)){
 			$Sel = 'checked="checked"';
 		}
-		$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][]" value="'.$d.'" type="checkbox" id="'.$Field.'_'.$Days[$d].'" '.$Sel.' /><label style="display:inline-block;" for="'.$Field.'_'.$Days[$d].'">'.$Days[$d].'</label>';
+		$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][]" value="'.$d.'" type="checkbox" id="'.$Field.'_'.$Days[$d].'" '.$Sel.' /><label style="display:inline-block;" for="'.$Field.'_'.$Days[$d].'">'.$Days[$d].' &nbsp;</label>';
 	}
 	$Sel = '';
-	$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][all]" value="*" type="radio" id="'.$Field.'_day" /><label style="display:inline-block;" for="'.$Field.'_day">Every Day</label>';
+	$Return .= '<input name="dataForm['.$Element['ID'].']['.$Field.'][all]" value="*" type="radio" id="'.$Field.'_day" /> <label style="display:inline-block;" for="'.$Field.'_day">Every Day</label>';
 	//$Return .= '<div class="caption" id="caption_'.$Element['ID'].'_'.$Field.'">Days to be run</div>';
 	$Return .= '</div>';
 	
 	$_SESSION['dataform']['OutScripts'] .= "
-		jQuery(\"#entry_".$Element['ID']."_".$Field."_day\").buttonset();
+		//jQuery(\"#entry_".$Element['ID']."_".$Field."_day\").buttonset();
 	";
 
 }

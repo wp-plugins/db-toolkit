@@ -702,6 +702,7 @@ function dr_loadInsertInterfaceBox($EID) {
         jQuery('.formportlet-header .ui-icon').click(function() {
                 jQuery(this).toggleClass(\"ui-icon-minusthick\");
                 jQuery(this).parents(\".formportlet:first\").remove();
+                formSetup_columSave();
         });
     ";
 

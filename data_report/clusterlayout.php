@@ -52,6 +52,7 @@
                                             jQuery('.formportlet-header .ui-icon').click(function() {
                                                     jQuery(this).toggleClass(\"ui-icon-minusthick\");
                                                     jQuery(this).parents(\".formportlet:first\").remove();
+                                                    formSetup_columSave();
                                             });
                                         ";
 
@@ -87,7 +88,7 @@
 </div>
 
 
-<input name="Data[Content][_clusterLayout]" type="hidden" id="gridLayoutBoxForm" value="<?php echo $Element['Content']['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo 'disabled="disabled"';} ?>" />
+<input name="Data[Content][_clusterLayout]" type="text" id="gridLayoutBoxForm" value="<?php echo $Element['Content']['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo '"disabled"';} ?>" />
 
 
 
@@ -119,6 +120,10 @@ $_SESSION['dataform']['OutScripts'] .= "
 <script>
 	jQuery(function() {
 		
+                jQuery('#Save').bind('mouseover', function(){                    
+                    formSetup_columSave();
+                });
+
 		jQuery('#disableLayoutEngineform').bind('change', function(ui, e){
 		
 			if(jQuery(this).attr('checked') == true){
@@ -136,6 +141,12 @@ $_SESSION['dataform']['OutScripts'] .= "
 			connectWith: '.columnSorter',
 			stop: function(p){
 				//alert(columns);
+				formSetup_columSave();
+			},
+			update: function(event, ui){
+                                if(jQuery(this).parent().attr('id').length > 0){
+                                    jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
+                                }
 				formSetup_columSave();
 			}
 		
@@ -155,7 +166,12 @@ $_SESSION['dataform']['OutScripts'] .= "
                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                 }
 				formSetup_columSave();
+			},
+			stop: function(p){
+				//alert(columns);
+				formSetup_columSave();
 			}
+
 		});
 		jQuery(".formGridform").disableSelection();
 		
@@ -167,7 +183,9 @@ function formSetup_InsertInterface(eid){
     ajaxCall('dr_loadInsertInterfaceBox', eid, function(i){
         jQuery('#fieldTrayholdingPen').html(i);
         df_loadOutScripts();
+        formSetup_columSave();
     })
+    formSetup_columSave();
     //alert(eid);
 }
 
@@ -300,6 +318,7 @@ function formRemoveColumns(row){
 			jQuery(this).parent().remove();
 		});
 	}
+        formSetup_columSave();
 }	
 
 </script>
