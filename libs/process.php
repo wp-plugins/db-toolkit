@@ -72,6 +72,9 @@ if(!empty($_POST['Data'])) {
     if(!empty($_POST['Data']['Content']['_customCSSSource'])){
         $newCFG['_CustomCSSSource'] = $_POST['Data']['Content']['_customCSSSource'];
     }
+    // Sanatize Stuff
+    $_POST['Data']['Content']['_APICallName'] = sanitize_title($_POST['Data']['Content']['_APICallName']);
+    sanitize_title($title);
 
     $newCFG['Content'] = base64_encode(serialize($_POST['Data']['Content']));
     $newCFG['_interfaceType'] = 'Configured';

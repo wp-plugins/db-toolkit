@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 notes:
 
@@ -215,7 +215,7 @@ if(!empty($_GET['renderinterface'])){
                 <br class="clear" /><br />
             <?php
             if(!empty($_POST['Data'])) {               
-
+                
                 global $newCFG;
 
                 if(empty($_POST['Data']['ID'])){

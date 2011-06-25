@@ -881,14 +881,12 @@ function dt_process() {
     // API Call
     //vardump($_SERVER);
     $pattern = API_getInterfaceRegex();
-    
-    //$pattern = '('..')';
-    //$pattern = get_shortcode_regex();
-    if(preg_match('/'.$pattern['regex'].'/s', $_SERVER['REQUEST_URI'], $matches)){
-        include_once(DB_TOOLKIT.'libs/api_engine.php');
-        exit;
+    if(!empty($pattern)){
+        if(preg_match('/'.$pattern['regex'].'/s', $_SERVER['REQUEST_URI'], $matches)){
+            include_once(DB_TOOLKIT.'libs/api_engine.php');
+            exit;
+        }
     }
-
 /// EXPORT
 
     foreach($_GET as $PDFExport=>$Val) {
@@ -1937,9 +1935,13 @@ function API_getCurrentUsersKey(){
 }
 
 function API_decodeUsersAPIKey($key){
-    $str = gzinflate(base64_decode(urldecode(base64_decode($key))));
-    $det = explode('::', $str);
-    return array('id'=>$det[0], 'pass_word'=>$det[1]);
+    $str = base64_decode(urldecode(base64_decode($key)));
+    if($str = @gzinflate($str)){
+        $det = explode('::', $str);
+        return array('id'=>$det[0], 'pass_word'=>$det[1]);
+    }else{
+        return false;
+    }
 }
 
 function API_getInterfaceRegex(){

@@ -6,14 +6,18 @@ echo dais_customfield('text', 'API Call Name', '_APICallName', '_APICallName', '
 <?php
 $Sel = '';
 if(!empty($Element['Content']['_APIAuthentication'])) {
-    $Sel = 'checked="checked"';
+    if($Element['Content']['_APIAuthentication'] == 'key') {
+        $Sel = 'checked="checked"';
+    }
 }
-echo dais_customfield('radio', 'User Token', '_APIAuthentication', '_APIAuthentication', 'list_row2' , '', $Sel, 'Sets all methods to require a valid user token.');
+echo dais_customfield('radio', 'API Key', '_APIAuthentication', '_APIAuthentication', 'list_row2' , 'key', $Sel, 'Sets all methods to require a valid user API key.');
 $Sel = '';
 if(!empty($Element['Content']['_APIAuthentication'])) {
-    $Sel = 'checked="checked"';
+    if($Element['Content']['_APIAuthentication'] == 'ss') {
+        $Sel = 'checked="checked"';
+    }
 }
-echo dais_customfield('radio', 'Sharedsecret', '_APIAuthentication', '_APIAuthentication', 'list_row2' , '', $Sel, 'Interface accessed with a shared secret.');
+echo dais_customfield('radio', 'Sharedsecret', '_APIAuthentication', '_APIAuthentication', 'list_row2' , 'ss', $Sel, 'Interface accessed with a shared secret.');
 
 echo dais_customfield('text', 'Sharedsecret Seed', '_APISeed', '_APISeed', 'list_row1' , $Element['Content']['_APISeed'], '', 'Seed with random characters to change sharedsecret.');
 ?>
@@ -30,10 +34,15 @@ if(!empty($Element['Content']['_APIMethodFetch'])) {
 }
 echo dais_customfield('checkbox', 'Fetch', '_APIMethodFetch', '_APIMethodFetch', 'list_row2' , 1, $Sel, 'Fetch Method to fetch a single item by passing the primary Passback Value as _ItemID variable.');
 $Sel = '';
-if(!empty($Element['Content']['_APIMethodEdit'])) {
+if(!empty($Element['Content']['_APIMethodInsert'])) {
     $Sel = 'checked="checked"';
 }
-echo dais_customfield('checkbox', 'Edit', '_APIMethodEdit', '_APIMethodEdit', 'list_row1' , 1, $Sel, 'Edit Method to edit a single item by POST edited data and passing the primary Passback Value as _ItemID variable.');
+echo dais_customfield('checkbox', 'Insert', '_APIMethodInsert', '_APIMethodInsert', 'list_row2' , 1, $Sel, 'Insert Method inserts a new entry.');
+$Sel = '';
+if(!empty($Element['Content']['_APIMethodUpdate'])) {
+    $Sel = 'checked="checked"';
+}
+echo dais_customfield('checkbox', 'Update', '_APIMethodUpdate', '_APIMethodUpdate', 'list_row1' , 1, $Sel, 'Update Method to update a single item by POST edited data and passing the primary Passback Value as _ItemID variable.');
 $Sel = '';
 if(!empty($Element['Content']['_APIMethodDelete'])) {
     $Sel = 'checked="checked"';

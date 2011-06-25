@@ -1,84 +1,169 @@
+<?php echo get_bloginfo('url').'/ <em><strong>CallName</strong></em> / <em><strong>Key</strong></em> / <em><strong>Method</strong></em> / <em><strong>Format</strong></em> / <em><strong>? GET Variables</strong></em> '; ?>
 <h2>API Access Details</h2>
 <?php
-$API = str_replace('dt_intfc', '', $Media['ID']) . '_' . md5(str_replace('dt_intfc', '', $Media['ID']) . $Config['_APISeed']);
-
-
+$APIKey = md5($Media['ID']. $Config['_APISeed']);
 ?>
 
 <table class="form-table">
     <tbody>
-
-        <tr>
-            <th scope="row">URL Structure</th>
-            <td>
-                <?php echo get_bloginfo('url').'/ <em><strong>CallName</strong></em> / <em><strong>Key</strong></em> / <em><strong>Method</strong></em> / <em><strong>format</strong></em> / <em><strong>Variables</strong></em> '; ?>
-            </td>
-        </tr>
 
 
         <tr>
             <th scope="row">CallName</th>
             <td>
                 <?php
-
-                    
-
+                if(!empty($Config['_APICallName'])){
+                    echo $Config['_APICallName'];
+                }else{
+                    echo $Media['ID'];
+                }
                 ?>
             </td>
         </tr>
         
         <tr>
-            <th scope="row">API Call URL</th>
+            <th scope="row">Key</th>
             <td>
-                <?php echo get_bloginfo('url').'/'.$Media['ID'].'/'.$API.'/{operation[list|fetch|edit|delete]}/api.{format[xml|json]}{?_ItemID='.$Config['_ReturnFields'][0].'}'; ?>
+                <?php
+                if($Config['_APIAuthentication'] == 'key'){
+                    echo API_getCurrentUsersKey();
+                }else{
+                    echo $APIKey;
+                }
+                ?>
             </td>
         </tr>
 
+        <tr>
+            <th scope="row">Methods</th>
+            <td>
+                <ul>
+                    <?php if(!empty ($Config['_APIMethodList'])){ ?><li>list : GET <span class="description">Retrieves an array of all entries.</span></li><?php } ?>
+                    <?php if(!empty ($Config['_APIMethodFetch'])){ ?><li>fetch : GET <span class="description">Retrieves a single item. Requires itemID variable.</span></li><?php } ?>
+                    <?php if(!empty ($Config['_APIMethodInsert'])){ ?><li>insert : POST <span class="description">Inserts a single item.</span></li><?php } ?>
+                    <?php if(!empty ($Config['_APIMethodUpdate'])){ ?><li>update : POST <span class="description">Updates a single item. Requires itemID variable.</span></li><?php } ?>
+                    <?php if(!empty ($Config['_APIMethodDelete'])){ ?><li>delete : POST <span class="description">Deletes a single item. Requires itemID variable.</span></li><?php } ?>
+                </ul>
+            </td>            
+        </tr>
+        
+        <tr>
+            <th scope="row">Format</th>
+            <td>
+                <ul>
+                    <li>xml <span class="description">Data is returned in XML Format. [list|fetch|update|delete]</span></li>
+                    <li>json <span class="description">Data is returned in json Format. [list|fetch|update|delete]</span></li>
+                </ul>
+            </td>
+        </tr>
 
         <tr>
-            <th scope="row">Sharedsecret</th>
-            <td><?php echo $API; ?></td>
+            <th scope="row">Variables</th>
+            <td>
+                <ul>
+                    <li>itemID : GET|POST <span class="description">value of field <strong><?php echo $Config['_ReturnFields'][0]; ?></strong> for the item. [fetch GET |update POST |delete POST]</span></li>
+                    <li>limit : GET <span class="description">Limits the number of items returned. [list]</span></li>
+                    <li>offset : GET <span class="description">Offset page number fore limited results. Requires the limit variable. [list]</span></li>
+                </ul>
+            </td>
+        </tr>
+
+        <?php if(!empty ($Config['_APIMethodUpdate']) || !empty ($Config['_APIMethodInsert'])){ ?>
+        <tr>
+            <th scope="row">POST Fields</th>
+            <td>
+                <ul>
+                    <?php
+                    foreach($Config['_Field'] as $Field=>$Type){
+                        
+                        $Type = explode('_', $Type);
+                        if(!empty($Type[1])){
+                            if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/conf.php')) {
+                                include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/conf.php');
+                                if(!empty($FieldTypes[$Type[1]]['visible']) && empty($Config['_CloneField'][$Field]) ){
+                        ?>
+                                <li><?php echo $Field; ?> : <span class="description"><?php echo $Type[0]; ?></span></li>
+                        <?php
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                </ul>
+            </td>
+        </tr>
+        <?php } ?>
+
+        <tr>
+            <th scope="row">Return Types</th>
+            <td>
+                <ul>                    
+                    <?php if(!empty ($Config['_APIMethodList'])){
+                     ?>
+                    <li>list : <span class="description">entries array( entry array(
+                    <?php
+                        $Fields = array();
+                        foreach($Config['_IndexType'] as $Field=>$Index){
+                        
+                            $viewtype = explode('_', $Index);
+                            if($viewtype[1] == 'show'){
+                            
+                                $Fields[] = $Field;
+                    
+                            }                        
+                        }
+                        echo implode(' , ', $Fields);
+                    }
+                    ?>) )</span></li>
+
+                    
+                    <?php if(!empty ($Config['_APIMethodFetch'])){
+                    ?>
+                    <li>fetch : <span class="description">array(
+                    <?php
+                        $Fields = array();
+                        foreach($Config['_IndexType'] as $Field=>$Index){
+
+                            $viewtype = explode('_', $Index);
+                            if($viewtype[1] == 'show'){
+
+                                $Fields[] = $Field;
+
+                            }
+                        }
+                        echo implode(' , ', $Fields);
+                    }
+                    ?>)</span></li>
+                    
+                    
+                    <?php if(!empty ($Config['_APIMethodInsert'])){
+                    ?>
+                    <li>Insert : <span class="description">array(
+                    <?php
+                        $Fields = array();                        
+                        foreach($Config['_ReturnFields'] as $Field){
+                            $Fields[] = $Field;
+                        }
+                        echo implode(' , ', $Fields);
+                    }
+                    ?>)</span></li>
+                    
+                    <?php if(!empty ($Config['_APIMethodUpdate'])){
+                    ?>
+                    <li>Update : <span class="description">Boolean [true|false]</span></li>
+                    <?php
+                    }
+                    ?>
+
+                    <?php if(!empty ($Config['_APIMethodDelete'])){
+                    ?>
+                    <li>Delete : <span class="description">Boolean [true|false]</span></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </td>
         </tr>
 
     </tbody>
 </table>
-<?php
-
-if (empty($Config['_UseListViewTemplate'])) {
-    echo 'API Key: ' . $API . '<br />';
-
-    echo '<div class="row-actions-hide">';
-    echo '<strong>List Records</strong><br />';
-?>
-    <div class="row-actions-show">
-        <a href="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&format=xml" target="_blank">XML</a> |
-        <a href="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&format=json" target="_blank">JSON</a>
-    </div>
-    <strong>Insert Records</strong><br />
-    POST URL: <input type="text" style="width: 80%;" value="<?php echo get_bloginfo('url'); ?>/?APIKey=<?php echo $API; ?>&action=insert" />
-
-<?php
-    $Fields = array();
-    foreach ($Config['_Field'] as $Field => $Types) {
-        if (!empty($Types)) {
-            $Type = explode('_', $Types);
-            if ($Type[0] != 'auto') {
-                $Fields[] = $Field;
-            }
-        }
-    }
-    echo '<div>Submitted Data: ' . implode(', ', $Fields) . '</div>';
-    $Fields = array();
-    if (!empty($Config['_ReturnFields'])) {
-        foreach ($Config['_ReturnFields'] as $Field) {
-            $Fields[] = $Field;
-        }
-        echo '<div>Returned Fields: ' . implode(', ', $Fields) . '</div>';
-    }
-    echo '</div>';
-} else {
-
-
-    echo "<div class=\"row-actions\">API Only Supported in non-templated list mode</div>";
-}
-?>

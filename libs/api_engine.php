@@ -1,72 +1,112 @@
 <?php
-    $interfaceID = $matches[0];
-    if(!empty($pattern['interfaces'][$matches[0]])){
-        $interfaceID = $pattern['interfaces'][$matches[0]];
-    }
+
+/* TODO: need to add a search/filters method
+ * TODO: need to add Edit, Update, Insert, Delte Methods
+ *
+ */
+//  Key / Method / Format / ? GET Variables
+
+
+    $interfaceID = trim($matches[0], '/');    
     $vars = explode($interfaceID, $_SERVER['REQUEST_URI']);
     $vars = explode('/', ltrim($vars[1], '/'));
-        
+    
+
+    
+    if(!empty($pattern['interfaces'][$interfaceID])){
+        $interfaceID = $pattern['interfaces'][$interfaceID];
+    }
+
     // validate API Key    
     $Intrface = get_option($interfaceID);
-    
-    $Config = unserialize(base64_decode($Intrface['Content']));    
-    $VerifyKey = md5($apikey[0].$Config['_APISeed']);
-    if ($VerifyKey !== $apikey[1]) {
-        api_Deny();
-        die;
-    }
-    $Format = 'xml';
-    if (empty($_GET['format'])) {
-        $_GET['format'] = 'xml';
-    }
-    if(empty($_GET['action'])){
-        $_GET['action'] = 'list';
-    }
-    $Page = false;
-    if(!empty($_GET['page'])){
-        $Page = $_GET['page'];
+    $APIkey = $vars[0];
+    $Method = $vars[1];
+    $Format = $vars[2];
+
+    $Page = 0;
+    if(!empty($_GET['offset'])){
+        $Page = $_GET['offset'];
     }
     $Limit = false;
     if(!empty($_GET['limit'])){
         $Limit = $_GET['limit'];
     }
-    if (!empty($_GET['action'])) {
-        switch ($_GET['action']) {
+    $Config = unserialize(base64_decode($Intrface['Content']));
+
+    if($Config['_APIAuthentication'] == 'key'){
+        //echo API_getCurrentUsersKey();
+        if($userData = API_decodeUsersAPIKey($APIkey)){
+            if($user = get_user_by('id', $userData['id'])){
+                if($user->user_pass != $userData['pass_word']){
+                    api_Deny();
+                    exit;
+                }
+            }else{
+                api_Deny();
+                exit;
+            }
+        }else{
+            api_Deny();
+            exit;
+        }
+
+    }else{
+        $VerifyKey = md5($interfaceID.$Config['_APISeed']);
+        if ($VerifyKey !== $APIkey) {
+            api_Deny();
+            exit;
+        }
+    }
+
+    if (!empty($Method)) {
+        switch ($Method) {
             default:
             case 'list':
-                if (!empty($_GET['format'])) {
-                    if (strtolower($_GET['format']) != 'xml' && strtolower($_GET['format']) != 'json') {
+                if (!empty($Format)) {
+                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json') {
                         api_Deny();
                     }
-                    //header("content-type: text/" . strtolower($_GET['format']));
+                    header("content-type: text/" . strtolower($Format));
                         //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
-                    $ReturnID = false;
-                    if(!empty($_GET['_returnValue'])){                        
-                        $Return = array($Config['_ReturnFields'][0]=>$_GET['_returnValue']);
+                    $Return = false;
+                    echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
+                    exit;
+                }
+                break;
+            case 'fetch':
+                if (!empty($Format)) {
+                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json') {
+                        api_Deny();
                     }
-                    echo dr_BuildReportGrid('dt_intfc' . $apikey[0], $Page, false, false, strtolower($_GET['format']), $Limit, $Return);
-                    die;
+                    header("content-type: text/" . strtolower($Format));
+                        //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
+                    $Return = false;
+                    if(!empty($_GET['itemID'])){
+                        $Return = array($Config['_ReturnFields'][0]=>$_GET['itemID']);
+                    }
+                    echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
+                    exit;
                 }
                 break;
             case 'insert':
                 if(!empty($_POST)){
-                    $result = df_processInsert('dt_intfc' . $apikey[0], $_POST);
+                    $result = df_processInsert($interfaceID, $_POST);
                     echo json_encode($result);
                 }else{
                     $Return['Message'] = 'No Data submitted';
                     echo json_encode($Return);
                 }
-                die;
+                exit;
                 break;
             case 'update':
                 if(!empty($_POST)){
-                $result = df_processupdate($_POST, 'dt_intfc' . $apikey[0]);
+                $result = df_processupdate($_POST, $interfaceID);
                 echo json_encode($result);
                 }else{
                     $Return['Message'] = 'No Data submitted';
                     echo json_encode($Return);
                 }
-                die;
+                exit;
                 break;
         }
     } else {
@@ -92,8 +132,9 @@ function api_dencode_string($str) {
 
 function api_Deny() {
     mysql_close();
-    header("HTTP/1.0 404 Not Found");
-    die;
+    header("content-type: text/html");
+    echo 'Access Denied';
+    exit;
 }
 
 ?>
