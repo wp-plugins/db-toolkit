@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.8
+Stable tag: 0.2.4.9
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -54,8 +54,10 @@ A: Well you can technically use it now, however some things are still a little i
 == Changelog ==
 
 = 0.2.4.8 =
-* Optimized javascript and css files so they are not included on every page and only on a page that has an interface. its not perfect yet. just a test to help out with load times. It will be increased to only include required scripts for exact interface configuration.
+* Fixed a problem with Selected Item Filter field type on a cloned field.
 
+= 0.2.4.8 =
+* Optimized javascript and css files so they are not included on every page and only on a page that has an interface. its not perfect yet. just a test to help out with load times. It will be increased to only include required scripts for exact interface configuration.
 
 = 0.2.4.7 =
 * Fixed a bug on the Field Group Plugin. might still be dodgy though but i think i got it.

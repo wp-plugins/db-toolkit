@@ -21,13 +21,13 @@ if(!empty($_GET[$Field]) || !empty($Config['_overRide'][$Field])){
 	}
 	
 
-	$queryWhere[$Field] = "prim.".$Field." = '".$Filter."' ";
+	$queryWhere[$Field] = "prim.`".$Field."` = '".$Filter."' ";
 }else{
     if(!empty($_SESSION['viewitemFilter'][$EID][$Field])){
         if($WhereTag == ''){
                 $WhereTag = " WHERE ";
         }
-        $queryWhere[$Field] = "prim.".$Field." = '".$_SESSION['viewitemFilter'][$EID][$Field]."' ";
+        $queryWhere[$Field] = "prim.`".$Field."` = '".$_SESSION['viewitemFilter'][$EID][$Field]."' ";
     }
 }
 
