@@ -53,6 +53,7 @@ $APIKey = md5($Media['ID']. $Config['_APISeed']);
                 <ul>
                     <li>xml <span class="description">Data is returned in XML Format. [list|fetch|update|delete]</span></li>
                     <li>json <span class="description">Data is returned in json Format. [list|fetch|update|delete]</span></li>
+                    <li>html <span class="description">Output is rendered in html.(Great in template mode) [list|fetch]</span></li>
                 </ul>
             </td>
         </tr>

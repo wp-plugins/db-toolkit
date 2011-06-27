@@ -63,7 +63,7 @@
             default:
             case 'list':
                 if (!empty($Format)) {
-                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json') {
+                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
                         api_Deny();
                     }
                     header("content-type: text/" . strtolower($Format));
@@ -75,7 +75,7 @@
                 break;
             case 'fetch':
                 if (!empty($Format)) {
-                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json') {
+                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'hmtl') {
                         api_Deny();
                     }
                     header("content-type: text/" . strtolower($Format));
