@@ -36,6 +36,59 @@
 
                     echo dais_customfield('Text', 'X-Axis Angle', '_xAngle', '_xAngle', 'list_row1' , @$Element['Content']['_xAngle'] , '','X-Axis text rotation angle. -45 gives best results.');
 
+
+
+                    $Sel = '';
+                    if(!empty($Element['Content']['_disableDateTime'])) {
+                        $Sel = 'checked="checked"';
+                    }
+                    echo dais_customfield('checkbox', 'Disable Date Axis', '_disableDateTime', '_disableDateTime', 'list_row1' , 1 , $Sel, 'Use the date field as a text based category.');
+
+
+                    $sec = '';
+                    $min = '';
+                    $hour = '';
+                    $day = '';
+                    $mon = '';
+                    $year = '';
+
+                    if(!empty($Element['Content']['_xAxisTimeFrame'])){
+                        switch($Element['Content']['_xAxisTimeFrame']){
+                            case 'sec':
+                                $sec = 'selected="selected"';
+                                break;
+                            case 'min':
+                                $min = 'selected="selected"';
+                                break;
+                            case 'hour':
+                                $hour = 'selected="selected"';
+                                break;
+                            case 'day':
+                                $day = 'selected="selected"';
+                                break;
+                            case 'mon':
+                                $mon = 'selected="selected"';
+                                break;
+                            case 'year':
+                                $year = 'selected="selected"';
+                                break;
+                        }
+                    }
+
+                    echo 'DateTime x axis point interval frame: <select name="Data[Content][_xAxisTimeFrame]" >';
+                    echo '<option value="sec" '.$sec.'>Seconds</option>';
+                    echo '<option value="min" '.$min.'>Minutes</option>';
+                    echo '<option value="hour" '.$hour.'>Hours</option>';
+                    echo '<option value="day" '.$day.'>Days</option>';
+                    echo '<option value="mon" '.$mon.'>Months</option>';
+                    echo '<option value="year" '.$year.'>Years</option>';
+                    echo '</select>';
+                    
+
+
+
+                    echo dais_customfield('Text', 'Date Point Interval', '_xAxisIntervalNum', '_xAxisIntervalNum', 'list_row1' , @$Element['Content']['_xAxisIntervalNum'] , '','TImeframe Point Interval.');
+
                     $Sel = '';
                     if(!empty($Element['Content']['_hideLegend'])) {
                         $Sel = 'checked="checked"';

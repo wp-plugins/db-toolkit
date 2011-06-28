@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.4.9
+Stable tag: 0.2.5.0
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,10 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.5.0 =
+* Fixed a problem with charting on date fields.
+* Added html as an API format type
 
 = 0.2.4.8 =
 * Fixed a problem with Selected Item Filter field type on a cloned field.

@@ -1732,39 +1732,10 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $dateString[1] = $dateString[1] - 1;
 
                 //dump($dateString);
-
-                switch ($Config['_xAxisTimeFrame']) {
-                    case 'sec':
-                        $xInterval = $Config['_xAxisIntervalNum'] * 1000;
-                        $dateFormat = 'Y-m-d H:i:s';
-                        break;
-                    case 'min':
-                        $xInterval = $Config['_xAxisIntervalNum'] * 60000;
-                        $dateFormat = 'Y-m-d H:i';
-                        break;
-                    case 'hour':
-                        $xInterval = $Config['_xAxisIntervalNum'] * 3600000;
-                        $dateFormat = 'Y-m-d H:i';
-                        break;
-                    case 'day':
-                        $xInterval = 86400000 * $Config['_xAxisIntervalNum'];
-                        $dateFormat = 'Y-m-d';
-                        break;
-                    case 'mon':
-                        $xInterval = ((24 * 3600 * 1000) * 30) * $Config['_xAxisIntervalNum'];
-                        $dateFormat = 'Y-m';
-                        unset($dateString[2]);
-                        break;
-                    case 'year':
-                        $xInterval = ((24 * 3600 * 1000) * 365.242199) * $Config['_xAxisIntervalNum'];
-                        $dateFormat = 'Y';
-                        unset($dateString[2]);
-                        unset($dateString[1]);
-                        break;
-                }
-                $xStart = 'pointStart: Date.UTC(' . implode(',', $dateString) . '), ';
-                $xStartDate = date($dateFormat, strtotime($chartData[$Config['_xaxis']]));
-                $xInterval = "pointInterval: " . $xInterval . ",";
+                //echo $Config['_xAxisTimeFrame'];
+                //$xStart = 'pointStart: Date.UTC(' . implode(',', $dateString) . '), ';
+                //$xStartDate = date($dateFormat, strtotime($chartData[$Config['_xaxis']]));
+                //$xInterval = "pointInterval: " . $xInterval . ",";
             }
             if ($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])) {
                 // preX
@@ -1798,7 +1769,53 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         /// no idea how to do it yet.
         //dump($x);
         if ($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])) {
+
+            $firstDate = $x[0];
+            $currentDate = $x[0];
+            $lastDate = $x[count($x)-1];
+
+            $upindex = 0;
+            $run= true;            
+            while($run == true){
+                if($upindex >= 1){
+                    //echo $CurrentDate.' +'.$Config['_xAxisIntervalNum'].' '.$Config['_xAxisTimeFrame'].' | '.$currentDate.' = ';
+                    $nextDate = date($Config['_dateFormat'][$Config['_xaxis']], strtotime($currentDate.' +'.$Config['_xAxisIntervalNum'].' '.$Config['_xAxisTimeFrame']));
+                    $currentDate = $nextDate;
+                    $next = array_search($nextDate, $x);
+                    if(empty($next)){
+                        $newX[] = $nextDate;
+                        foreach($y as $field=>$item){
+                            $newY[$field][$upindex] = 0;
+                        }
+                    }else{
+                        foreach($y as $field=>$item){
+                            $newY[$field][$upindex] = $y[$field][$next];
+                        }
+                        $newX[] = $x[$next];
+                    }
+                }else{
+                    foreach($y as $field=>$item){
+                        $newY[$field][$upindex] = $y[$field][0];
+                    }
+                    $newX[] = $firstDate;
+                    $currentDate = $firstDate;
+                }
+                //echo $CurrentDate.' - '.$nextDate.' - '.$lastDate.'<br>';
+                if($nextDate == $lastDate || count($newX) >= 500){
+                    $run = false;
+                }
+                $upindex++;
+            }
+            $x = $newX;
+            $y = $newY;
+
+
+
+
+
+
             //echo $xStartDate.'<br>-------------<br> '.$xEndDate.'<br> =-----------======-<br><br> ';
+            /*
             $end = false;
             $nowTime = $xStartDate;
             $index = 0;
@@ -1831,6 +1848,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             }
             //dump($newY);
             //$y = $newY;
+             * 
+             */
         }
         //dump($y);
 
@@ -1844,12 +1863,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
 
 
-        if ($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])) {
-
-            $xType = 'type: \'datetime\'';
-        } else {
+        //if ($Config['_Field'][$Config['_xaxis']][0] == 'date' && empty($Config['_disableDateTime'])) {
+        //    $xType = 'type: \'datetime\'';
+        //} else {
             $xType = "categories: ['" . implode('\',\'', $x) . "']";
-        }
+        //}
         @mysql_data_seek($chartRes, 0);
 
 
@@ -2149,8 +2167,8 @@ var " . $ChartID . " = new Highcharts.Chart({
             $Line = '{';
             // datetime stuff
 
-            $Line .= $xStart . "\r\n";
-            $Line .= $xInterval . "\r\n";
+            //$Line .= $xStart . "\r\n";
+            //$Line .= $xInterval . "\r\n";
             $Line .= 'name: "' . $Config['_FieldTitle'][$Key] . '", ';
             $Line .= 'data: [' . $SeriesData . ']';
             $Line .= ', type: \'' . $Config['_chartType'][$Key] . '\' ';
