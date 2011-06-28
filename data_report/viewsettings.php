@@ -29,16 +29,16 @@
                     }
                     echo dais_customfield('radio', 'Search Mode', '_ViewMode', '_ViewMode_Search', 'list_row2' , 'search' , $Sel, 'In Search mode, the interface will only show results once a filter has been set.');
                     $Sel = '';
+                    if(!empty($Element['Content']['_ViewMode'])) {
+                        if($Element['Content']['_ViewMode']=='API'){
+                            $Sel = 'checked="checked"';
+                        }
+                    }
+                    echo dais_customfield('radio', 'API Mode', '_ViewMode', '_ViewMode_API', 'list_row2' , 'API' , $Sel, 'In API mode, interface is only interactable via the API.');
+                    $Sel = '';
                     if(!empty($Element['Content']['_HideFrame'])) {
                         $Sel = 'checked="checked"';
                     }
-                    $Sel = 'checked="checked"';
-                    if(!empty($Element['Content']['_ViewMode'])) {
-                        if($Element['Content']['_ViewMode']!='API'){
-                            $Sel = '';
-                        }
-                    }
-                    echo dais_customfield('radio', 'API Mode', '_ViewMode', '_ViewMode_View', 'list_row2' , 'API' , $Sel ,'In API mode, this interface is only available through API Calls. See API Settings.');
 
                     echo dais_customfield('checkbox', 'Hide Frame', '_HideFrame', '_HideFrame', 'list_row1' , 1 , $Sel, 'Hide the frame surrounding the interface.');
                     echo dais_customfield('text', 'New Item Title', '_New_Item_Title', '_New_Item_Title', 'list_row1' , $Element['Content']['_New_Item_Title'], 'The lable on the add entry button in the toolbar.');

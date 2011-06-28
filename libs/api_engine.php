@@ -32,7 +32,7 @@
         $Limit = $_GET['limit'];
     }
     $Config = unserialize(base64_decode($Intrface['Content']));
-
+    
     if($Config['_APIAuthentication'] == 'key'){
         //echo API_getCurrentUsersKey();
         if($userData = API_decodeUsersAPIKey($APIkey)){
@@ -62,6 +62,10 @@
         switch ($Method) {
             default:
             case 'list':
+                if(empty($Config['_APIMethodList'])){
+                    api_Deny();
+                    exit;
+                }
                 if (!empty($Format)) {
                     if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
                         api_Deny();
@@ -69,11 +73,18 @@
                     header("content-type: text/" . strtolower($Format));
                         //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
                     $Return = false;
+                    if($Format == 'html'){
+                        $Format = false;
+                    }
                     echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
                     exit;
                 }
                 break;
             case 'fetch':
+                if(empty($Config['_APIMethodFetch'])){
+                    api_Deny();
+                    exit;
+                }
                 if (!empty($Format)) {
                     if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'hmtl') {
                         api_Deny();
@@ -84,11 +95,18 @@
                     if(!empty($_GET['itemID'])){
                         $Return = array($Config['_ReturnFields'][0]=>$_GET['itemID']);
                     }
+                    if($Format == 'html'){
+                        $Format = false;
+                    }
                     echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
                     exit;
                 }
                 break;
             case 'insert':
+                if(empty($Config['_APIMethodInsert'])){
+                    api_Deny();
+                    exit;
+                }
                 if(!empty($_POST)){
                     $result = df_processInsert($interfaceID, $_POST);
                     echo json_encode($result);
@@ -99,6 +117,11 @@
                 exit;
                 break;
             case 'update':
+                if(empty($Config['_APIMethodUpdate'])){
+                    api_Deny();
+                    exit;
+                }
+
                 if(!empty($_POST)){
                 $result = df_processupdate($_POST, $interfaceID);
                 echo json_encode($result);
