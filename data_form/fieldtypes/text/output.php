@@ -7,14 +7,18 @@
 				dp.SyntaxHighlighter.HighlightAll('code');
 			";
 			break;
+		case 'textarea':
 		case 'textarealarge':
 			$Out .= nl2br($Data[$Field]);
 			break;
 		case 'url':
 			$Out .= '<a href="'.$Data[$Field].'" target="_blank" >'.$Data[$Field].'</a>';
 			break;
+		case 'wysiwyg':
+			$Out .= $Data[$Field];
+			break;
 		default:
-			$Out .= nl2br($Data[$Field]);
+			$Out .= $Data[$Field];
 			break;
 	};
 //$Out = nl2br($Data[$Field]);
