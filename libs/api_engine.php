@@ -19,6 +19,7 @@
 
     // validate API Key    
     $Intrface = get_option($interfaceID);
+    $Media = $Intrface;
     $APIkey = $vars[0];
     $Method = $vars[1];
     $Format = $vars[2];
@@ -76,6 +77,7 @@
                     if($Format == 'html'){
                         $Format = false;
                     }
+                    include PLUGINDIR.'/db-toolkit/data_report/element.def.php';
                     echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
                     exit;
                 }

@@ -2,42 +2,32 @@
 // Functions
 
 function file_imageConfig($Field, $Table, $Config = false){
-	
-	$icon = '';
-	$med = '';
-	$full = '';
-	$sel1 = '';
-	$sel2 = '';
-	if(!empty($Config['Content']['_ImageSizeI'][$Field])){
-		$icon = $Config['Content']['_ImageSizeI'][$Field];
-	}
-	if(!empty($Config['Content']['_ImageSizeM'][$Field])){
-		$med = $Config['Content']['_ImageSizeM'][$Field];
-	}
-	if(!empty($Config['Content']['_ImageSizeF'][$Field])){
-		$full = $Config['Content']['_ImageSizeF'][$Field];
-	}
-	if(!empty($Config['Content']['_ImageSquareI'][$Field])){
-		$Sel1 = 'checked="checked"';//$Config['Content']['_ImageSquare'][$Field]
-	}
-	if(!empty($Config['Content']['_ImageSquareM'][$Field])){
-		$Sel2 = 'checked="checked"';//$Config['Content']['_ImageSquare'][$Field]
-	}
-	$Return = '<div class="list_row1" style="padding:3px;">Icon Size (px): <input type="text" name="Data[Content][_ImageSizeI]['.$Field.']" value="'.$icon.'" class="textfield" size="3" maxlength="3" /> Square Crop: <input type="checkbox" name="Data[Content][_ImageSquareI]['.$Field.']" value="1" '.$Sel1.' /></div>';
-	$Return .= '<div class="list_row2" style="padding:3px;">View Size (px): <input type="text" name="Data[Content][_ImageSizeM]['.$Field.']" value="'.$med.'" class="textfield" size="3" maxlength="3" /> Square Crop: <input type="checkbox" name="Data[Content][_ImageSquareM]['.$Field.']" value="1" '.$Sel2.' /></div>';
-	$Return .= '<div class="list_row1" style="padding:3px;">Full Size (px): <input type="text" name="Data[Content][_ImageSizeF]['.$Field.']" value="'.$full.'" class="textfield" size="3" maxlength="3" /></div>';
 
-        $Class = '';
- 	if(!empty($Config['Content']['_ClassName'][$Field])){
-		$Class = $Config['Content']['_ClassName'][$Field];
+
+        $Compression = 75;
+        $Width = 'auto';
+        $Height = 'auto';
+	if(!empty($Config['Content']['_ImageSizeX'][$Field])){
+		$Width = $Config['Content']['_ImageSizeX'][$Field];
 	}
-        $Return .= '<div class="list_row1" style="padding:3px;">Image Class: <input type="text" name="Data[Content][_ClassName]['.$Field.']" value="'.$Class.'" class="textfield" /></div>';
-	
+	if(!empty($Config['Content']['_ImageSizeY'][$Field])){
+		$Height = $Config['Content']['_ImageSizeY'][$Field];
+	}
+	$Return = '<div class="list_row1" style="padding:3px;">Image Size: <input type="text" name="Data[Content][_ImageSizeX]['.$Field.']" value="'.$Width.'" class="textfield" size="3" maxlength="4" style="width:40px;" /> X <input type="text" name="Data[Content][_ImageSizeY]['.$Field.']" value="'.$Height.'" class="textfield" size="3" maxlength="4" style="width:40px;" /></div>';
+        if(!empty($Config['Content']['_ImageCompression'][$Field])){
+		$Compression = $Config['Content']['_ImageCompression'][$Field];
+	}
+	$Return .= '<div class="list_row1" style="padding:3px;">Image Compression: <input type="text" name="Data[Content][_ImageCompression]['.$Field.']" value="'.$Compression.'" class="textfield" size="3" maxlength="4" style="width:40px;" />%</div>';
+        $Class = '';
+ 	if(!empty($Config['Content']['_ImageClassName'][$Field])){
+		$Class = $Config['Content']['_ImageClassName'][$Field];
+	}
+        $Return .= '<div class="list_row1" style="padding:3px;">Image Class: <input type="text" name="Data[Content][_ImageClassName]['.$Field.']" value="'.$Class.'" class="textfield" /></div>';
         $Sel = '';
-	if(!empty($Config['Content']['_URLOnly'][$Field])){
+	if(!empty($Config['Content']['_ImageURLOnly'][$Field])){
 		$Sel = 'checked="checked"';//$Config['Content']['_ImageSquare'][$Field]
 	}
-        $Return .= '<div class="list_row2" style="padding:3px;">URL Only: <input type="checkbox" name="Data[Content][_URLOnly]['.$Field.']" value="1" '.$Sel.' /></div>';
+        $Return .= '<div class="list_row2" style="padding:3px;">URL Only: <input type="checkbox" name="Data[Content][_ImageURLOnly]['.$Field.']" value="1" '.$Sel.' /></div>';
 
 
 
@@ -94,22 +84,36 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 		switch ($Type){
 			case 'image';
                                 $Value = explode('?', $Value);
-				$Image = $Value[0];// str_replace(get_bloginfo('url'), '', $Value);
                                 
-				if(!empty($Config['_ImageSquareI'][$Field])){
-                                    if(!empty($Config['_URLOnly'][$Field])){
-                                        return UseImage($Image, 4, $Config['_ImageSizeI'][$Field]);
+                                    $Vars = array();
+                                    $Vars['q'] = '75';
+                                    $ClassName = '';
+                                    if(!empty($Config['_ImageClassName'][$Field])){
+                                        $ClassName = $Config['_ImageClassName'][$Field];
                                     }
-                                    return UseImage($Image, 0, $Config['_ImageSizeI'][$Field]);
-				}                                
-                                if(!empty($Config['_URLOnly'][$Field])){
-                                    return UseImage($Image, 7, $Config['_ImageSizeI'][$Field]);
-                                }
-                                $Class = '';
-                                if(!empty($Config['_ClassName'][$Field])){
-                                    $Class = $Config['_ClassName'][$Field];
-                                }                                
-				return UseImage($Image, 6, $Config['_ImageSizeI'][$Field], 10, $Class);
+                                    if(!empty($Config['_ImageCompression'][$Field])){
+                                        $Vars['q'] = $Config['_ImageCompression'][$Field];
+                                    }
+                                    if(!empty($Config['_ImageSizeY'][$Field])){
+                                        if($Config['_ImageSizeY'][$Field] != 'auto'){
+                                            $Vars['h'] = $Config['_ImageSizeY'][$Field];
+                                        }
+                                    }
+                                    if(!empty($Config['_ImageSizeX'][$Field])){
+                                        if($Config['_ImageSizeX'][$Field] != 'auto'){
+                                            $Vars['w'] = $Config['_ImageSizeX'][$Field];
+                                        }
+                                    }
+                                    
+                                    $Vars = build_query($Vars);
+
+                                    $Source = WP_PLUGIN_URL.'/db-toolkit/libs/timthumb.php?src='.urlencode($Value[0]).'&'.$Vars;
+                                    if(!empty($Config['_ImageURLOnly'][$Field])){
+                                        return $Source;
+                                    }
+
+                                    return '<img src="'.$Source.'" class="'.$ClassName.'">';
+
 		 		break;
 			case 'mp3';
 					$File = explode('?', $Value);

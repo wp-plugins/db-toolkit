@@ -19,9 +19,17 @@ if(empty($_SESSION['reportFilters'][$EID][$Field][1]))
 			if($_SESSION['reportFilters'][$EID][$Field][0] == $_SESSION['reportFilters'][$EID][$Field][1]){
                             $queryWhere[] = "( prim.".$Field." BETWEEN '".$_SESSION['reportFilters'][$EID][$Field][0]." 00:00:00' AND '".$_SESSION['reportFilters'][$EID][$Field][0]." 23:59:59')";
 			}else{
-
-                            $StartDate = date('Y-m-d 00:00:00', strtotime($_SESSION['reportFilters'][$EID][$Field][0]));
-                            $EndDate = date('Y-m-d 23:59:59', strtotime($_SESSION['reportFilters'][$EID][$Field][1]));
+                            $format = 'Y-m-d 00:00:00';
+                            if($_SESSION['reportFilters'][$EID][$Field][0] == 'NOW'){
+                                $format = 'Y-m-d H:i:s';
+                            }
+                            
+                            $StartDate = date($format, strtotime($_SESSION['reportFilters'][$EID][$Field][0]));
+                            $format = 'Y-m-d 00:00:00';
+                            if($_SESSION['reportFilters'][$EID][$Field][1] == 'NOW'){
+                                $format = 'Y-m-d H:i:s';
+                            }
+                            $EndDate = date($format, strtotime($_SESSION['reportFilters'][$EID][$Field][1]));
 
 
                             $queryWhere[] = "( prim.".$Field." BETWEEN '".$StartDate."' AND '".$EndDate."' )";
