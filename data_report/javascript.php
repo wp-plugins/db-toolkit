@@ -589,5 +589,20 @@
 	jQuery("#"+foo).animate({"height": "toggle"}, {"duration": 200});
     }
 
+    function dr_loadDataSource(url){        
 
+        jQuery('#_dataSourceView').html('<img src="../wp-content/plugins/db-toolkit/images/indicator.gif" align="absmiddle" /> Loading Data...');
+        ajaxCall('dr_dataSourceMapping', url, function(f){
+            jQuery('#_dataSourceView').html(f);
+            df_loadOutScripts();
+        });
 
+    }
+
+    function dr_loadFieldMapping(url, root, table){
+
+        jQuery('#_dataFieldMapView').html('<img src="../wp-content/plugins/db-toolkit/images/indicator.gif" align="absmiddle" /> Loading Data...');
+        ajaxCall('dr_loadFieldMapping', url, root, table, function(i){
+           jQuery('#_dataFieldMapView').html(i);
+        });
+    }

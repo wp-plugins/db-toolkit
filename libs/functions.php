@@ -1950,8 +1950,8 @@ function API_getInterfaceRegex(){
         $list = array();
         foreach($interfaces as $interface){
             $interface = get_option($interface['option_name']);
-            $Config = unserialize(base64_decode($interface['Content']));
-            if($Config['_ViewMode'] == 'API'){
+            $Config = unserialize(base64_decode($interface['Content']));            
+            if($Config['_ViewMode'] == 'API' || !empty($Config['_DataSourceFieldMap'])){
                 
                 if(!empty($Config['_APICallName'])){
                     $list[] = '\/'.$Config['_APICallName'].'\/';

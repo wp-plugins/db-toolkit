@@ -33,6 +33,12 @@
         $Limit = $_GET['limit'];
     }
     $Config = unserialize(base64_decode($Intrface['Content']));
+    if($vars[0] == 'import'){
+
+        dt_runDataSourceImport($Config);
+        exit;
+
+    }
     
     if($Config['_APIAuthentication'] == 'key'){
         //echo API_getCurrentUsersKey();
