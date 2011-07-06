@@ -119,7 +119,7 @@
 	?>
     <input type="checkbox" name="Data[Content][_disableLayoutEngineform]" id="disableLayoutEngineform" <?php if(!empty($Element['Content']['_disableLayoutEngineform'])){ echo 'checked="checked"';} ?>/>
     <label for="disableLayoutEngineform"> Disable Layout Engine</label>
-	<input name="Data[Content][_gridLayout]" type="text" id="gridLayoutBoxForm" value="<?php echo $cfg['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo 'disabled="disabled"';} ?>" />
+	<input name="Data[Content][_gridLayout]" type="hidden" id="gridLayoutBoxForm" value="<?php echo $cfg['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo 'disabled="disabled"';} ?>" />
 	</div>
 
 <script>
@@ -214,8 +214,8 @@ function formSetup_AddRow(){
 	jQuery('#formGridform').append('<div class="rowWrapperForm"><div style="clear:both; width:85%; float:left;" class="formRow" id="row'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="row'+rownum+'_col1" class="column"><input id="row'+rownum+'_col1_control" class="row'+rownum+'_control" name="Data[Content][_grid][row'+rownum+'][col1]" type="hidden" value="100%" /><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:15%; padding-top:12px; float:left;" class="formRow" id="row1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="formSetupColumns(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="formAddColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="formSubtractColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="formRemoveColumns(\'row'+rownum+'\');" /></div></div>');
 		jQuery(".formGridform").sortable({
 			connectWith: '.formGridform',
-			update: function(event, ui){
-                                if(jQuery(this).parent().attr('id').length > 0){
+			update: function(event, ui){                            
+                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                 }
 				formSetup_columSave();
@@ -272,7 +272,7 @@ function formAddColumn(row){
 				jQuery(".formGridform").sortable({
 					connectWith: '.formGridform',
 					update: function(event, ui){
-                                                if(jQuery(this).parent().attr('id').length > 0){
+                                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                                 }
 						formSetup_columSave();
@@ -301,7 +301,7 @@ function formSubtractColumn(row){
 	//jQuery('#'+row+'_col'+(cols+1)).fadeOut(100, function(){
 		jQuery('#'+row+'_col'+(cols+1)).remove();
 		jQuery('#'+row+' .column').animate({'width' : width+'%'}, 1, function(){
-                        if(jQuery(this).attr('id').length > 0){
+                        if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).attr('id'));
                             jQuery('.'+row+'_control').val(width+'%');
                         }
@@ -312,7 +312,7 @@ function formSubtractColumn(row){
 	jQuery(".formGridform").sortable({
 		connectWith: '.formGridform',
 		update: function(event, ui){
-                        if(jQuery(this).parent().attr('id').length > 0){
+                        if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                         }
 			formSetup_columSave();

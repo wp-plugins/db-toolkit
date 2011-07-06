@@ -37,7 +37,7 @@
                     'General Settings'=>'viewsettings.php',
                     'Permissions'=>'permissions.php',
                     'API Settings'=>'api.php',
-                    'Data Source' => 'datasource.php',
+                    'Data Source*' => 'datasource.php',
                     'Form Layout'=>'formlayout.php',
                     'Form Processors'=>'process.php',
                     'View Layout'=>'viewlayout.php',

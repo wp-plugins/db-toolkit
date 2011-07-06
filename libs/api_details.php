@@ -1,4 +1,4 @@
-<?php echo get_bloginfo('url').'/ <em><strong>CallName</strong></em> / <em><strong>Key</strong></em> / <em><strong>Method</strong></em> / <em><strong>Format</strong></em> / <em><strong>? GET Variables</strong></em> '; ?>
+<?php echo get_bloginfo('url').'/ <em><strong>CallName</strong></em> / <em><strong>Key/Token</strong></em> / <em><strong>Method</strong></em> / <em><strong>Format</strong></em> / <em><strong>? GET Variables</strong></em> '; ?>
 <h2>API Access Details</h2>
 <?php
 $APIKey = md5($Media['ID']. $Config['_APISeed']);
@@ -14,26 +14,48 @@ $APIKey = md5($Media['ID']. $Config['_APISeed']);
                 <?php
                 if(!empty($Config['_APICallName'])){
                     echo $Config['_APICallName'];
+                    $CallName = $Config['_APICallName'];
                 }else{
                     echo $Media['ID'];
+                    $CallName = $Media['ID'];
                 }
                 ?>
             </td>
         </tr>
         
         <tr>
-            <th scope="row">Key</th>
+            <th scope="row" span="2">Key</th>
             <td>
                 <?php
                 if($Config['_APIAuthentication'] == 'key'){
-                    echo API_getCurrentUsersKey();
+                    echo '<div>Your token: '.API_getCurrentUsersKey().'</div>';
+                    echo '<span class="description">This is the token for you. You\'ll need to call the Auth Method as indicated below to retireve the other tokens.</span>';
                 }else{
                     echo $APIKey;
                 }
                 ?>
             </td>
         </tr>
+        <?php
+        if($Config['_APIAuthentication'] == 'key'){
+        ?>
 
+        <tr>
+            <th scope="row" span="2">Authenticating a User</th>
+            <td>
+                <ul>
+                    <li>End Point: <?php
+                    echo get_bloginfo('url').'/'.$CallName.'/auth/<em><strong>format [xml | json]</strong></em>';
+                    ?></div></li>
+                    <li>user : POST <span class="description">Wordpress username</span></li>
+                    <li>pass : POST <span class="description">Wordpress password</span></li>
+                </ul>
+            </td>
+        </tr>
+
+        <?php
+        }
+        ?>
         <tr>
             <th scope="row">Methods</th>
             <td>

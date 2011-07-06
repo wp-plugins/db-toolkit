@@ -205,7 +205,7 @@ function formSetup_AddRow(){
 		jQuery(".formGridform").sortable({
 			connectWith: '.formGridform',
 			update: function(event, ui){
-                                if(jQuery(this).parent().attr('id').length > 0){
+                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                 }
 				formSetup_columSave();
@@ -262,7 +262,7 @@ function formAddColumn(row){
 				jQuery(".formGridform").sortable({
 					connectWith: '.formGridform',
 					update: function(event, ui){
-                                                if(jQuery(this).parent().attr('id').length > 0){
+                                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                                 }
 						formSetup_columSave();
@@ -291,7 +291,7 @@ function formSubtractColumn(row){
 	//jQuery('#'+row+'_col'+(cols+1)).fadeOut(100, function(){
 		jQuery('#'+row+'_col'+(cols+1)).remove();
 		jQuery('#'+row+' .column').animate({'width' : width+'%'}, 1, function(){
-                        if(jQuery(this).attr('id').length > 0){
+                        if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).attr('id'));
                             jQuery('.'+row+'_control').val(width+'%');
                         }
@@ -302,7 +302,7 @@ function formSubtractColumn(row){
 	jQuery(".formGridform").sortable({
 		connectWith: '.formGridform',
 		update: function(event, ui){
-                        if(jQuery(this).parent().attr('id').length > 0){
+                        if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                         }
 			formSetup_columSave();

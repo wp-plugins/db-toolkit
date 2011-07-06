@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.1.3
-Stable tag: 0.2.5.2
+Stable tag: 0.2.5.3
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -52,6 +52,12 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.5.3 =
+* Fixed a bug that prevented the saving of form, view and cluster layouts in WP 3.2
+* Added AUTH method to the API engine
+* Added INSERT, UPDATE, DELETE method to the API engine
+* Added Data Sources option to allow for automatictable population from a XML Source. (pretty neet!)
 
 = 0.2.5.2 =
 * Fixed a bug where wysiwyg field output with nl2br.

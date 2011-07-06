@@ -163,7 +163,7 @@
 		jQuery(".viewGridview").sortable({
 			connectWith: '.viewGridview',
 			update: function(event, ui){
-                                if(jQuery(this).parent().attr('id').length > 0){
+                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                 }
 				viewSetup_columSave();
@@ -220,7 +220,7 @@ function viewSetup_AddRow(){
 		jQuery(".viewGridview").sortable({
 			connectWith: '.viewGridview',
 			update: function(event, ui){
-                                if(jQuery(this).parent().attr('id').length > 0){
+                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                 }
 				viewSetup_columSave();
@@ -277,7 +277,7 @@ function viewAddColumn(row){
 				jQuery(".viewGridview").sortable({
 					connectWith: '.viewGridview',
 					update: function(event, ui){
-                                                if(jQuery(this).parent().attr('id').length > 0){
+                                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                                 }
 						viewSetup_columSave();
@@ -306,7 +306,7 @@ function viewSubtractColumn(row){
 	//jQuery('#'+row+'_col'+(cols+1)).fadeOut(100, function(){
 		jQuery('#'+row+'_viewCol'+(cols+1)).remove();
 		jQuery('#'+row+' .columnView').animate({'width' : width+'%'}, 1, function(){
-                        if(jQuery(this).attr('id').length > 0){
+                        if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).attr('id'));
                             jQuery('.'+row+'_controlView').val(width+'%');
                         }
@@ -317,7 +317,7 @@ function viewSubtractColumn(row){
 	jQuery(".viewGridview").sortable({
 		connectWith: '.viewGridview',
 		update: function(event, ui){
-                        if(jQuery(this).parent().attr('id').length > 0){
+                        if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                         }
 			viewSetup_columSave();

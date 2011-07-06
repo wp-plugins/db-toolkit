@@ -218,6 +218,8 @@ if(!empty($_GET['renderinterface'])){
                 
                 global $newCFG;
 
+                
+
                 if(empty($_POST['Data']['ID'])){
                     $LinkID = $optionTitle;
                 }else{

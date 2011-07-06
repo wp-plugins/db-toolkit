@@ -1,7 +1,7 @@
 <?php
 
-/* TODO: need to add a search/filters method
- * TODO: need to add Edit, Update, Insert, Delte Methods
+/* Caldera Engine - API engine
+ * (C) 2011 - Caldera
  *
  */
 //  Key / Method / Format / ? GET Variables
@@ -15,9 +15,8 @@
     
     if(!empty($pattern['interfaces'][$interfaceID])){
         $interfaceID = $pattern['interfaces'][$interfaceID];
-    }
-
-    // validate API Key    
+    }    
+    // validate API Key
     $Intrface = get_option($interfaceID);
     $Media = $Intrface;
     $APIkey = $vars[0];
@@ -39,14 +38,76 @@
         exit;
 
     }
-    
+
+    if(!empty($vars[1])){
+        if($vars[0] == 'auth'){
+            if(!empty($_POST['user']) && !empty($_POST['pass'])){
+                $creds = array();
+                $creds['user_login'] = $_POST['user'];
+                $creds['user_password'] = $_POST['pass'];
+                $creds['remember'] = true;
+                $user = wp_signon($creds, false);
+                header("content-type: text/" . strtolower($vars[1]));
+                if($Config['_menuAccess'] != 'null'){
+                    if(!isset($user->allcaps[$Config['_menuAccess']])){
+                       if(strtolower($vars[1]) == 'json'){
+                           $output['result'] = 'fail';
+                           $output['error'] = 'Access Denied';
+                           echo json_encode($output);
+                           exit;
+                       }else{
+                           echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+                           echo "   <result>fail</error>\r\n";
+                           echo "   <error>Access Denied</error>\r\n";
+                           echo "</xml>";
+                           exit;
+                       }
+                        exit;
+                    }
+                }
+                
+                if(is_wp_error($user)){
+                   if(strtolower($vars[1]) == 'json'){
+                       $output['result'] = 'fail';
+                       $output['error'] = $user->get_error_message();
+                       echo json_encode($output);
+                       exit;
+                   }else{
+                       echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+                       echo "   <result>fail</error>\r\n";
+                       echo "   <error><![CDATA[".$user->get_error_message()."]]></error>\r\n";
+                       echo "</xml>";
+                       exit;
+                   }
+
+                }else{
+                    set_current_user($user->data->ID);
+                    $token = API_getCurrentUsersKey();
+                    if(strtolower($vars[1]) == 'json'){
+                        $output['result'] = 'success';
+                        $output['token'] = $token;
+                        echo json_encode($output);
+                    }else{
+                       echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+                       echo "   <result>success</error>\r\n";
+                       echo "   <error>".$token."</error>\r\n";
+                       echo "</xml>";
+                    }
+                    exit;
+                }
+            }
+        }
+    }
+
     if($Config['_APIAuthentication'] == 'key'){
         //echo API_getCurrentUsersKey();
-        if($userData = API_decodeUsersAPIKey($APIkey)){
+        if($userData = API_decodeUsersAPIKey($APIkey)){            
             if($user = get_user_by('id', $userData['id'])){
                 if($user->user_pass != $userData['pass_word']){
                     api_Deny();
                     exit;
+                }else{
+                    set_current_user($userData['id']);
                 }
             }else{
                 api_Deny();
@@ -64,7 +125,7 @@
             exit;
         }
     }
-
+    
     if (!empty($Method)) {
         switch ($Method) {
             default:
@@ -125,13 +186,34 @@
                 exit;
                 break;
             case 'update':
+                
                 if(empty($Config['_APIMethodUpdate'])){
                     api_Deny();
                     exit;
                 }
-
+                
                 if(!empty($_POST)){
-                $result = df_processupdate($_POST, $interfaceID);
+                
+                    $Data[$Config['_ReturnFields'][0]] = $_POST['itemID'];
+                    unset($_POST['itemID']);
+                    $Data[$interfaceID] = $_POST;
+
+                $result = df_processupdate($Data, $interfaceID);
+                echo json_encode($result);
+                }else{
+                    $Return['Message'] = 'No Data submitted';
+                    echo json_encode($Return);
+                }
+                exit;
+                break;
+            case 'delete':
+                if(empty($Config['_APIMethodDelete'])){
+                    api_Deny();
+                    exit;
+                }
+
+                if(!empty($_POST['itemID'])){
+                $result = df_deleteEntries($interfaceID, $_POST['itemID']);
                 echo json_encode($result);
                 }else{
                     $Return['Message'] = 'No Data submitted';
