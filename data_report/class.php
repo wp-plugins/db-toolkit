@@ -3061,30 +3061,35 @@ function df_processupdate($Data, $EID) {
         }
     }
     //go through the Submitted Data / apply fieldtype filters and add processed value to update queue
+    
+
+    
     foreach ($Config['_Field'] as $Field => $Type) {
-        $typeSet = explode('_', $Type);
-        if (!empty($typeSet[1])) {
-            if (function_exists($typeSet[0] . '_handleInput')) {
-                $Func = $typeSet[0] . '_handleInput';
-                if (is_array($Data[$EID][$Field])) {
-                    $Data[$EID][$Field] = serialize($Data[$EID][$Field]);
-                } else {
-                    if (empty($Data[$EID][$Field])) {
-                        $Data[$EID][$Field] = '';
+        if(isset($Data[$EID][$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
+            $typeSet = explode('_', $Type);
+            if (!empty($typeSet[1])) {
+                if (function_exists($typeSet[0] . '_handleInput')) {
+                    $Func = $typeSet[0] . '_handleInput';
+                    if (is_array($Data[$EID][$Field])) {
+                        $Data[$EID][$Field] = serialize($Data[$EID][$Field]);
+                    } else {
+                        if (!isset($Data[$EID][$Field])) {
+                            $Data[$EID][$Field] = '';
+                        }
                     }
+                    $Element['_ActiveProcess'] = 'update';
+                    $newValue = $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $PreData, $Data);
+                    //}
+                } else {
+                    $newValue = $Data[$EID][$Field];
                 }
-                $Element['_ActiveProcess'] = 'update';
-                $newValue = $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $PreData, $Data);
-                //}
             } else {
-                $newValue = $Data[$EID][$Field];
+                $newValue = $PreData[$Field];
             }
-        } else {
-            $newValue = $PreData[$Field];
-        }
-        if (substr($Field, 0, 2) != '__') {
-            $updateData[$Field] = $newValue;
-            //$updateData[] = "`".$Field."` = '".mysql_real_escape_string($newValue)."' ";
+            if (substr($Field, 0, 2) != '__') {
+                $updateData[$Field] = $newValue;
+                //$updateData[] = "`".$Field."` = '".mysql_real_escape_string($newValue)."' ";
+            }
         }
     }
     // process update processess
@@ -3123,13 +3128,12 @@ function df_processupdate($Data, $EID) {
             }
         }
     }
+    
     foreach ($updateData as $Field => $newValue) {
         $newData[] = "`" . $Field . "` = '" . mysql_real_escape_string($newValue) . "' ";
     }
     $Updates = implode(', ', $newData);
     $Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
-    //echo $Query;
-    //die;
 
     if (!empty($Config['_ReturnFields'][0])) {
         $ReturnVals = implode(', ', $Config['_ReturnFields']);
@@ -3713,10 +3717,10 @@ return ob_get_clean();
 
 function dt_buildnodeMap($data, $Return = '', $level = 0, $path = '', $Default = false){
 
-    $Space = '';
+    $space = '';
     if($level > 0){
-        for($i=1; $i<=$level; $i++){
-            $space .= '&nbsp;&nbsp;';
+        for($i=0; $i<=$level; $i++){
+            $space .= '--';
         }
     }
     if(is_array($data)){
@@ -3740,7 +3744,7 @@ function dt_buildnodeMap($data, $Return = '', $level = 0, $path = '', $Default =
             }
         }
     }else{
-        return false;
+        
         $Return .= '<option value="'.$path.'['.$data.']">'.$space.$p.$data.'</option>';
     }
 
@@ -3753,8 +3757,11 @@ function dr_dataSourceMapping($url, $Config = false){
     //return $url;
 
     $data = file_get_contents($url);
-    $data = xml2array($data);
-
+    if(strpos(substr(strtolower($data),0,1024), 'xml')){
+        $data = xml2array($data);
+    }else{
+        $data = json_decode($data, true);
+    }
     //$Return = '<select>';
     $Return = dt_buildnodeMap($data, '', 0, '', $Config['_DataSourceRootNode']);
     ob_start();
@@ -3820,15 +3827,18 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
     $select .= '</select>';
 
     $data = file_get_contents($url);
-    $data = xml2array($data);
+
+    if(strpos(substr(strtolower($data),0,1024), 'xml')){
+        $data = xml2array($data);
+    }else{
+        $data = json_decode($data, true);
+    }
 
     preg_match_all('/\\[(.*?)\\]/', $root, $matchesarray);
 
     foreach($matchesarray[1] as $path){
         $data = $data[$path];
     }
-
-
         
     //vardump($select);
     $Return = '<table class="widefat">';
@@ -3879,7 +3889,12 @@ function dt_runDataSourceImport($Config){
 
 
     $data = file_get_contents($Config['_DataSourceURL']);
-    $data = xml2array($data);   
+    
+    if(strpos(substr(strtolower($data),0,1024), 'xml')){
+        $data = xml2array($data);
+    }else{
+        $data = json_decode($data, true);
+    }
     
     preg_match_all('/\\[(.*?)\\]/', $Config['_DataSourceRootNode'], $matchesarray);
     

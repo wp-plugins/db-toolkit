@@ -54,7 +54,7 @@ function grouping_setup($Field, $Table, $Config=false){
         $Sel = 'selected="selected"';
     }
     $Return .= '<option value="count" '.$Sel.'>Count</option>';
-
+    $Sel = '';
     if($Config['Content']['_GroupingFields'][$Field]['Action'] == 'concat'){
         $Sel = 'selected="selected"';
     }

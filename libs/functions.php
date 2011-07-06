@@ -731,7 +731,6 @@ function dbtoolkit_viewinterface(){
 // Processeing and Rendering of interfaces in wp frontend
 function dt_process() {
 
-
     if(!empty($_POST['func']) && !empty($_POST['action'])) {
         if($_POST['action'] == 'wp_dt_ajaxCall') {
             dt_ajaxCall();
@@ -740,6 +739,7 @@ function dt_process() {
     }
 
     if(!empty($_POST['processKey'])) {
+    
 
     $_POST = stripslashes_deep($_POST);
         if($_POST['processKey'] == $_SESSION['processKey']) {
@@ -756,7 +756,7 @@ function dt_process() {
                 $EID = $_POST['dataForm']['EID'];
                 $Setup = getelement($EID);
                 unset($_POST['dataForm']['dr_update']);
-                unset($_POST['dataForm']['EID']);
+                unset($_POST['dataForm']['EID']);                
                 $Return = df_processUpdate($_POST['dataForm'], $EID);
                 dr_trackActivity('Update', $EID, $Return['Value']);
                 if(empty($Setup['Content']['_NotificationsOff'])) {

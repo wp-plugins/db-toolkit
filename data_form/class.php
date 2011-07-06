@@ -715,13 +715,16 @@ function df_parseCamelCase($Field) {
 function df_processInsert($EID, $Data) {
     $Setup = getelement($EID);
     $Config = $Setup['Content'];
-    foreach($Config['_Field'] as $Field=>$Type) {
-        $typeSet = explode('_', $Type);
-        if(!empty($typeSet[1])) {
-            if(function_exists($typeSet[0].'_handleInput')) {
-                $Setup['_ActiveProcess'] = 'insert';
-                $Func = $typeSet[0].'_handleInput';
-                $Data[$Field] = $Func($Field, $Data[$Field], $typeSet[1], $Setup, $Data);
+    
+    foreach($Config['_Field'] as $Field=>$Type){       
+        if(isset($Data[$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
+            $typeSet = explode('_', $Type);
+            if(!empty($typeSet[1])) {
+                if(function_exists($typeSet[0].'_handleInput')) {
+                    $Setup['_ActiveProcess'] = 'insert';
+                    $Func = $typeSet[0].'_handleInput';
+                    $Data[$Field] = $Func($Field, $Data[$Field], $typeSet[1], $Setup, $Data);
+                }
             }
         }
     }
@@ -760,18 +763,20 @@ function df_processInsert($EID, $Data) {
     }
 
     foreach($Config['_Field'] as $Field=>$Type) {
-        if(substr($Field,0,2) != '__'){
-            $Fields[] = '`'.$Field.'`';
-            if(is_array($Data[$Field])) {
-                $EntryData = serialize($Data[$Field]);
-            }else {
-                if(!empty($Files[$Field])) {
-                    $EntryData = $Files[$Field];
+        if(isset($Data[$Field])){
+            if(substr($Field,0,2) != '__'){
+                $Fields[] = '`'.$Field.'`';
+                if(is_array($Data[$Field])) {
+                    $EntryData = serialize($Data[$Field]);
                 }else {
-                    $EntryData = $Data[$Field];
+                    if(isset($Files[$Field])) {
+                        $EntryData = $Files[$Field];
+                    }else {
+                        $EntryData = $Data[$Field];
+                    }
                 }
+                $Entries[$Field] = "'".mysql_real_escape_string($EntryData)."'";
             }
-            $Entries[$Field] = "'".mysql_real_escape_string($EntryData)."'";
         }
     }
     $Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";

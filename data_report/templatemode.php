@@ -1,9 +1,11 @@
 <?php
 global $wpdb;
 
+$jsqueue = "";
+
 $Data = $wpdb->get_results($Query, ARRAY_A);
 
-
+ob_start();
 echo $Config['_layoutTemplate']['_Header'];
 
 //vardump($Config['_layoutTemplate']['_Content']);
@@ -133,6 +135,10 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
 
         // Run first with processing values and wrapping them in thier template.
         foreach($row as $Field=>$Value){
+
+            $Value = str_replace('<?php', htmlentities('<?php'), $Value);
+            $Value = str_replace('?>', htmlentities('?>'), $Value);
+
             if(!empty($Config['_Field'][$Field])){
                 $Types = $Config['_Field'][$Field];
                 $func = $Types[0].'_processValue';
@@ -239,6 +245,9 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
     $outContent = '';
     // loop through again to change any missing ones
     foreach($row as $Field=>$Value){
+            
+            $Value = str_replace('<?php', htmlentities('<?php'), $Value);
+            $Value = str_replace('?>', htmlentities('?>'), $Value);
 
             if (!empty($Config['_FieldTitle'][$Field])) {
                 $name = $Config['_FieldTitle'][$Field];
@@ -363,6 +372,9 @@ $preHeader = ';';
     echo $preFooter;
 }
 echo $Config['_layoutTemplate']['_Footer'];
-
-
+$template = ob_get_clean();
+$template = str_replace('<?php', '<?php ', $template);
+$template = str_replace('?>', ' ?>', $template);
+echo eval(' ?> '.$template.' <?php ');
+$_SESSION['dataform']['OutScripts'] .= "\r\n".$jsqueue."\r\n";
 ?>

@@ -119,7 +119,7 @@
 	?>
     <input type="checkbox" name="Data[Content][_disableLayoutEngineform]" id="disableLayoutEngineform" <?php if(!empty($Element['Content']['_disableLayoutEngineform'])){ echo 'checked="checked"';} ?>/>
     <label for="disableLayoutEngineform"> Disable Layout Engine</label>
-	<input name="Data[Content][_gridLayout]" type="hidden" id="gridLayoutBoxForm" value="<?php echo $cfg['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo 'disabled="disabled"';} ?>" />
+	<input name="Data[Content][_gridLayout]" type="text" id="gridLayoutBoxForm" value="<?php echo $cfg['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo 'disabled="disabled"';} ?>" />
 	</div>
 
 <script>
