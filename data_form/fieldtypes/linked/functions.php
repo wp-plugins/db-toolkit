@@ -538,7 +538,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 			}
 			$Return .= '<option value="'.$row[$Config['_Linkedfields'][$Field]['ID']].'" '.$Sel.'>'.$row['out_value'].'</option>';
 		}
-		$Return .= '</select>&nbsp;&nbsp;&nbsp;</div>';
+		$Return .= '</select></div>';
 
                 $firstItem = 'true';
                 if(!empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
@@ -546,8 +546,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                 }
 
                 if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
-                    $_SESSION['dataform']['OutScripts'] .= "
-                        //$(\"#".$SelectID."\").multiSelect();
+                    $_SESSION['dataform']['OutScripts'] .= "                        
                         $(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
                     ";
                 }

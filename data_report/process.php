@@ -11,6 +11,7 @@
 
                     </ul>
                 </li>
+                <li class="root_item" id="processorIndicator"></li>
             </ul>
             <div style="clear:both;"></div>
         </div>

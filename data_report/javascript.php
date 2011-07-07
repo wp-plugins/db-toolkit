@@ -61,6 +61,7 @@
 
     function df_addPRocess(process){
         table = jQuery('#_main_table').val();
+        jQuery('.root_item ul').hide();        
         ajaxCall('df_addProcess', process, table, function(p){
             jQuery('#formProcessList').append(p);
         });

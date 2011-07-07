@@ -13,8 +13,7 @@ function pre_process_translate($Data, $Setup, $Config){
 
 // localhost API Key
 // ABQIAAAA2WN8lhaozxFRSRKYswV1xxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxS2ozqw2hkXqvyagCamKwZjQa60pw
-
-   // vardump($Setup);
+// vardump($Setup);
     foreach($Data as $Field=>$SubData){
        
         if(!empty($Setup['_toTranslate'][$Field])){            
