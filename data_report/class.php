@@ -893,7 +893,7 @@ function dr_BuildReportFilters($Config, $EID, $Defaults = false) {
         if (empty($_SESSION['lockedFilters'][$EID]['_keywords'])) {
             $Return .= '<div style="float:left; padding:2px;">';
             if (!empty($Config['_Keyword_Title'])) {
-                $Return .= '<strong>' . $Config['_Keyword_Title'] . '</strong><br />';
+                $Return .= '<h2>' . $Config['_Keyword_Title'] . '</h2>';
             }
             $Return .= '<input type="text" name="reportFilter[' . $EID . '][_keywords]" id="keyWordFilter" class="filterSearch" value="' . $Keywords . '" />&nbsp;&nbsp;&nbsp;</div>';
         } else {
@@ -1490,24 +1490,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $joinIndex++;
     }
 
-    if (!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
-        if ($WhereTag == '') {
-            $WhereTag = " WHERE ";
-        }
-        foreach ($querySelects as $Key => $Field) {
-            $preWhere[] = $Field . " LIKE '%" . $_SESSION['reportFilters'][$EID]['_keywords'] . "%' ";
-            // explode and serach parts
-            $parts = explode(' ', $_SESSION['reportFilters'][$EID]['_keywords']);
-            foreach ($parts as $Part) {
-                $preWhere[] = $Field . " LIKE '%" . trim($Part) . "%' ";
-            }
-            // explode and serach parts
-            $parts = explode(', ', $_SESSION['reportFilters'][$EID]['_keywords']);
-            foreach ($parts as $Part) {
-                $preWhere[] = $Field . " LIKE '%" . trim($Part) . "%' ";
-            }
-        }
-    }
 
     // combine keyword search if there are any
     if (!empty($preWhere)) {
@@ -1524,7 +1506,31 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // create Query Selects and Where clause string
     
     $querySelects = dr_processQuery($Config, $querySelects);
-    
+
+
+    if (!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
+        if ($WhereTag == '') {
+            $WhereTag = " WHERE ";
+        }
+        foreach ($querySelects as $Key => $Field) {
+            if(!empty($Config['_IndexType'][$Field][0])){
+                echo $Field.'<br />';
+                $preWhere[] = $Field . " LIKE '%" . $_SESSION['reportFilters'][$EID]['_keywords'] . "%' ";
+                // explode and serach parts
+                $parts = explode(',', $_SESSION['reportFilters'][$EID]['_keywords']);
+                foreach ($parts as $Part) {
+                    $preWhere[] = $Field . " LIKE '%" . trim($Part) . "%' ";
+                }
+                // explode and serach parts
+                $parts = explode(', ', $_SESSION['reportFilters'][$EID]['_keywords']);
+                foreach ($parts as $Part) {
+                    $preWhere[] = $Field . " LIKE '%" . trim($Part) . "%' ";
+                }
+            }
+        }
+    }
+
+
     //vardump($Config['_CloneField']);    //vardump($querySelects);
     $preSelects = array();
     foreach ($querySelects as $AS => $selectField) {

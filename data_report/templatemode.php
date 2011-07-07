@@ -110,7 +110,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
         $preHeader = str_replace('{{_footer_page_jump}}', $pagejump, $preHeader);
         $preHeader = str_replace('{{_footer_item_count}}', $itemcount, $preHeader);
         $preHeader = str_replace('{{_footer_no_entries}}', $noentries, $preHeader);
-
+        $preHeader = str_replace('{{_EID}}', $Media['ID'], $preHeader);
 
     }
     echo $preHeader;
@@ -366,6 +366,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
         $preFooter = str_replace('{{_footer_page_jump}}', $pagejump, $preFooter);
         $preFooter = str_replace('{{_footer_item_count}}', $itemcount, $preFooter);
         $preFooter = str_replace('{{_footer_no_entries}}', $noentries, $preFooter);
+        $preFooter = str_replace('{{_EID}}', $Media['ID'], $preFooter);
 
 $preHeader = ';';
     }
@@ -373,6 +374,10 @@ $preHeader = ';';
 }
 echo $Config['_layoutTemplate']['_Footer'];
 $template = ob_get_clean();
+
+
+
+
 $template = str_replace('<?php', '<?php ', $template);
 $template = str_replace('?>', ' ?>', $template);
 echo eval(' ?> '.$template.' <?php ');

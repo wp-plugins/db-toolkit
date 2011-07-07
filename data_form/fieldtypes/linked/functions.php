@@ -523,7 +523,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                 if($Res == false){
                     return;
                 }
-                $Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br /><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
+                $Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
                     $Return .= '<option>Select All</option>';
                 }else{                    
@@ -558,7 +558,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		if(empty($Config['_Linkedfilterfields'][$Field]['SingleSelect'])){
 			//$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';				
 		}
-		$Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br /><span id="status_'.$Field.'">';
+		$Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2><span id="status_'.$Field.'">';
 		if(!empty($filterSet[$Config['_Linkedfilterfields'][$Field]['ID']][0])){
 			$Return .= linked_makeFilterdLinkedFilter($EID, $Config['_Linkedfilterfields'][$Field]['Ref'] , $Config['_Linkedfilterfields'][$Field]['Value'], $Config['_Linkedfilterfields'][$Field]['Filter'], $filterSet[$Config['_Linkedfilterfields'][$Field]['ID']][0], $Config['_Linkedfilterfields'][$Field]['Table'], $Field, $FieldTitle, $filterSet[$Field]);
 		}else{

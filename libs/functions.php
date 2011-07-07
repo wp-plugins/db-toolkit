@@ -200,11 +200,10 @@ $themeURL = get_bloginfo('template_url');
     // report
     if(file_exists($themeDir.'/table.css')) {
         wp_register_style('custom_table_style', $themeURL.'/table.css');
-        wp_enqueue_style('custom_table_style');
     }else{
-        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');
-        wp_enqueue_style('interface_table_styles');
+        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');        
     }
+    wp_enqueue_style('interface_table_styles');
     if(file_exists('styles/themes/'.$themeDir.'/toolbar.css')){
         wp_register_style('custom_toolbar_style', $themeURL.'/toolbar.css');
     }else{
@@ -218,7 +217,7 @@ $themeURL = get_bloginfo('template_url');
         }else{
             wp_register_style('form_style', WP_PLUGIN_URL.'/db-toolkit/data_form/css/form.css');
         }
-        
+        wp_enqueue_style('form_style');
         /*
         //<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/css/ui.timepickr.css" />
         <script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/js/ui.timepickr.js"></script>
@@ -1273,6 +1272,11 @@ function dt_renderInterface($interface){
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
     $Return = '';
+    //check if there is a table
+    if(empty($Config['_main_table'])){
+        $Return = '<div id="interfaceError" class="notice" style="padding:5px;">No table Specified.</div>';
+        return str_replace("\r\n", '', $Return);
+    }
     if($Config['_ViewMode'] == 'API'){
         include('api_details.php');        
         $Return = do_shortcode($Return);
@@ -1289,12 +1293,7 @@ function dt_renderInterface($interface){
 
     ob_start();
         include(DB_TOOLKIT.'data_report/element.def.php');
-        if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
-            //$InfoBox()
-            if(!is_admin()){
-                InfoBox($Config['_ReportDescription']);
-            }
-        }
+
     $Return .= ob_get_clean();
 
 
@@ -1364,14 +1363,7 @@ function dt_renderInterface($interface){
     }
 
 
-    if(empty($Config['_HideFrame']) && ($Config['_ViewMode'] != 'search' && $Config['_ViewMode'] != 'form')){
-        //$InfoBox()
-        ob_start();
-        if(!is_admin()){
-            EndInfoBox();
-        }
-        $Return .= ob_get_clean();
-    }
+
 
     if(!empty($Config['_customFooterJavaScript'])){
 
@@ -1384,7 +1376,10 @@ function dt_renderInterface($interface){
 
     $Return = do_shortcode($Return);    
 
-    return str_replace("\r\n", '', $Return);
+    $order   = array("\r\n", "\n", "\r", "\n\n", "\r\r", "  ");
+    $replace = "";
+    $Return = str_replace($order, $replace, $Return);
+    return $Return;
    
 }
 

@@ -10,20 +10,12 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
-    <p>Added Error Reporting: If a interface has errors, you get an error box asking to submit an error report.</p>
-    <p>This helps me to find query building bugs and fix them.</p>
-    <p>Data sent in this error report:</p>
-    <p>
-    <ul class="">
-        <li>- Site name</li>
-        <li>- Site URL</li>
-        <li>- Admin Email (Only used for me to email back to ask questions etc.)</li>
-        <li>- Wordpress Version</li>
-        <li>- Interface Configuration</li>
-        <li>- mysql query error</li>
-        <li>- mysql query generated.</li>
-    </ul>
-    </p>
+                <p>Data Source* - this is an experimental feature - it allows you to supply a url to an XML feed which will then act as an import.
+                    I'm just experimenting with its use so some feedback would be nice.<br /><br /></p>
+                <p>API is almost fully complete. All methods now work. Still need to implement the passing of filters.<br /><br /></p>
+                <p>Added back the View Template. sorry about it :)<br /><br /></p>
+
+
             </div>
         </div>
 

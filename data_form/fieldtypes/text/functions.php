@@ -253,7 +253,7 @@ function text_showFilter($Field, $Type, $Default, $Config, $EID) {
         $text = $Default[$Field];
     }
     $UID = uniqid(rand(1,999));
-    $Return .= '<div style="padding:2px;float:left;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />
+    $Return .= '<div style="padding:2px;float:left;" '.$Class.'><h2>'.$FieldTitle.'</h2>
                                     <input type="text" name="reportFilter['.$EID.']['.$Field.']" class="filterSearch" id="filter_'.$EID.'_'.$UID.'" value="'.$text.'" /></div>';
 
 

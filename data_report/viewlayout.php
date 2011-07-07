@@ -1,9 +1,18 @@
 <h2>View Layout</h2>
 
+    <div id="viewtabs" class="dbtools_tabs">
+        <ul class="content-box-tabs">
+            <li><a href="#gridview">Grid View</a></li>
+            <li><a href="#templateview">Template</a></li>
+        </ul>
+        <div id="gridview" class="setupTab">
+
+
+
     <div style="margin-top: 20px; padding: 5px;" class="notice">
     <input type="button" class="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
     <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
-    <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
+    <!--<input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
     <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('view');" />-->
     Dialog Width: <input type="text" id="_popupWidthview" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])){ echo $Element['Content']['_popupWidthview'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeView]" value="modal" <?php if(!empty($Element['Content']['_popupTypeView'])) {
@@ -123,7 +132,50 @@
     <label for="disableLayoutEngineview"> Disable Layout Engine</label>
 	<input name="Data[Content][_gridViewLayout]" type="hidden" id="gridLayoutBoxView" value="<?php echo $cfg['_gridViewLayoutView']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengineview'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngineview'])){ echo 'disabled="disabled"';} ?>" />
 	
+        </div>
+        <div id="templateview" class="setupTab">
 
+
+            <?php
+
+            $Sel = '';
+            if(!empty($Element['Content']['_UseViewTemplate'])) {
+                $Sel = 'checked="checked"';
+            }
+            echo dais_customfield('checkbox', 'Use Template', '_UseViewTemplate', '_UseViewTemplate', 'list_row1' , 1, $Sel);
+
+            echo dais_customfield('textarea', 'Content Wrapper Start', '_ViewTemplateContentWrapperStart', '_ViewTemplateContentWrapperStart', 'list_row2' , $Element['Content']['_ViewTemplateContentWrapperStart'], '');
+            echo dais_customfield('textarea', 'PreContent', '_ViewTemplatePreContent', '_ViewTemplatePreContent', 'list_row2' , $Element['Content']['_ViewTemplatePreContent'], '');
+            echo dais_customfield('textarea', 'Content', '_ViewTemplateContent', '_ViewTemplateContent', 'list_row2' , $Element['Content']['_ViewTemplateContent'], '');
+            echo '<h2>Useable Keys</h2>';
+            ?>
+            <pre>
+{{_PageID}}		: Page ID
+{{_PageName}}		: Page Name
+{{_EID}}		: Element ID
+{{_<i>Fieldname</i>_name}}	: Field Title
+{{<i>Fieldname</i>}}		: Field Data
+{{_return_<i><b>Fieldname</b></i>}}	: Return Field
+            </pre>
+            Field Keys:
+            <?php
+            if(!empty($Element['Content']['_FieldTitle'])){
+                foreach($Element['Content']['_FieldTitle'] as $FieldKey=>$Val) {
+                    echo $Val.' = {{'.$FieldKey.'}}<br />';
+                }
+            }
+            echo '<br /><br />';
+            echo dais_customfield('textarea', 'PostContent', '_ViewTemplatePostContent', '_ViewTemplatePostContent', 'list_row2' , $Element['Content']['_ViewTemplatePostContent'], '');
+            echo dais_customfield('textarea', 'Content Wrapper End', '_ViewTemplateContentWrapperEnd', '_ViewTemplateContentWrapperEnd', 'list_row2' , $Element['Content']['_ViewTemplateContentWrapperEnd'], '');
+
+
+
+            ?>
+
+
+
+        </div>
+    </div>
         
         
 

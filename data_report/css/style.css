@@ -59,9 +59,19 @@ div.fbutton .reload{
 .filterpanels{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
-	border: 0px solid #eee;
+	border-top: 1px solid #eee;
 	overflow: hidden;
 	color: #000;
+        background: none repeat scroll 0 0 #F9F9F9;
+        padding: 0 9px;
+}
+.filterpanels .list_row3{
+    border-top: 1px solid #eee;
+    padding: 9px 0 0 0;
+}
+.filterpanels h2{    
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 	div.fbutton, div.fpanel
 		{

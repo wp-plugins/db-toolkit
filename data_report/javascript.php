@@ -277,7 +277,7 @@
 
     function dr_sortReport(eid, field, dir){
 
-	jQuery('#reportPanel_'+eid).css('position', 'relative').append('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+	jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
 
 	ajaxCall('dr_BuildReportGrid',eid, 0, field, dir, function(dta){
             jQuery('#reportPanel_'+eid).html(dta);
@@ -285,10 +285,10 @@
 	});
     }
     function dr_goToPage(eid, page, global){
-
 	if(page == false){
             if(global==undefined){
-                jQuery('#reportPanel_'+eid).css('position', 'relative').append('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+                jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+                
                 ajaxCall('dr_BuildReportGrid',eid, function(dta){
                     jQuery('#reportPanel_'+eid).html(dta);
                     df_loadOutScripts();
@@ -296,12 +296,12 @@
             }else{
                 jQuery('.data_report_Table').each(function(g){
                     report = this.id.split("_")[2];
-                    jQuery('#reportPanel_'+report).css('position', 'relative').append('<div class="ui-overlay" id="reportpanel_block_'+report+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+                    jQuery('#reportPanel_'+report).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+report+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
                     dr_reloadData(report);
                 });
             }
 	}else{
-            jQuery('#reportPanel_'+eid).css('position', 'relative').append('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>');
+            jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>');
             ajaxCall('dr_BuildReportGrid',eid, page, function(dta){
                 jQuery('#reportPanel_'+eid).html(dta);
                 df_loadOutScripts();
@@ -436,7 +436,8 @@
                             'Close': function() {
                                 jQuery(this).dialog("close"); },
                             'Edit': function() {
-                                dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
+                                jQuery(this).dialog('close');
+                                dr_BuildUpDateForm(eid, rid);
                             }
                         });
                         //}else{
@@ -465,9 +466,10 @@
         });
     }
 
-    function dr_BuildUpDateForm(eid, rid){
+    function dr_BuildUpDateForm(eid, rid, ismodal){
+    
 		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-
+                
         id = rid;//Math.floor(Math.random()*9999999);
 
 	if(jQuery("#ui-jsDialog-"+id+"-"+eid+"").length == 1){
@@ -476,7 +478,7 @@
 	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'-'+eid+'" title="Loading"><p>Loading Entry</p></div>');
 	jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog({
             autoResize: true,
-            //modal: true,
+            modal: true,
             buttons: {
                 'Cancel': function() {jQuery(this).dialog("close"); }
             },

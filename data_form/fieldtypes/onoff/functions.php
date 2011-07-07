@@ -110,7 +110,7 @@ function onoff_showFilter($Field, $Type, $Default, $Config, $EID){
 		$FieldTitle = $Config['_FieldTitle'][$Field];
 	}
 
-	$Return .= '<div style="float:left;padding:2px;" '.$Class.'><strong><strong>'.$FieldTitle.'</strong></strong><br />';
+	$Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2>';
 	$Out .= '<select class="filterBoxes" id="filter_'.$Field.'" name="reportFilter['.$EID.']['.$Field.'][]" multiple="multiple" size="1">';
 	$Out .= '<option value="">Select Both</option>';
 		$Sel = '';

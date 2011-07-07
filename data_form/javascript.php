@@ -241,7 +241,7 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit){
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
 		jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
-	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery('#reportPanel_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
 			position: 'center',
 			autoResize: true,
