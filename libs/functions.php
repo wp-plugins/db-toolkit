@@ -1181,7 +1181,7 @@ function dt_rendercluster($cluster){
     $Interface = get_option($cluster);
     $cfg = unserialize(base64_decode($Interface['Content']));
     parse_str($cfg['_clusterLayout'], $layout);
-    echo $cfg['_clusterLayout'];
+    
     // Build Layout Array First...
 
     if(is_admin ()){
@@ -1259,7 +1259,11 @@ function dt_renderInterface($interface){
         dt_rendercluster($ID);        
         $Return = ob_get_clean();
         $Return = do_shortcode($Return);
-        return str_replace("\r\n", '', $Return);
+
+        $order   = array("\r\n", "\n", "\r", "\n\n", "\r\r", "  ");
+        $replace = "";
+        $Return = str_replace($order, $replace, $Return);
+        return $Return;
 
     }
     //echo $Media['_Icon'];    
