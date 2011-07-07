@@ -704,6 +704,9 @@ h3.fieldTypeHandle{
 #dbt_container .controls textarea {
 	width: 225px;
 }
+.admin_config_panel input[type=text]{
+    width: 120px !important;
+}
 #dbt_container input[type=text] {
 	width: 225px;
 }

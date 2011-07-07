@@ -52,6 +52,10 @@ div.fbutton .reload{
     float: left;    
     width: 5px;
 }
+
+.report_tools{
+    padding-top: 15px;
+}
 .report_filters_panel{
     padding-bottom: 1px;
 }
