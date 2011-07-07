@@ -88,7 +88,7 @@
 </div>
 
 
-<input name="Data[Content][_clusterLayout]" type="text" id="gridLayoutBoxForm" value="<?php echo $Element['Content']['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo '"disabled"';} ?>" />
+<input name="Data[Content][_clusterLayout]" type="hidden" id="gridLayoutBoxForm" value="<?php echo $Element['Content']['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo '"disabled"';} ?>" />
 
 
 
