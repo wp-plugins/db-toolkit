@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.2
-Stable tag: 0.2.6.0
+Stable tag: 0.2.6.1
 
 Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
 
@@ -53,7 +53,7 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
-= 0.2.6.0 =
+= 0.2.6.1 =
 * Fixed the View Template and Layout
 * Cleaned up the style sheets to better match WP3.2
 * Updated jQueryUI style
