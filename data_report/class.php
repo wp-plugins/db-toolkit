@@ -2727,8 +2727,7 @@ var " . $ChartID . " = new Highcharts.Chart({
 
 // Make Scripts for deleting and select
     if (!empty($Config['_Show_Edit'])) {
-        $_SESSION['dataform']['OutScripts'] .= "
-            alert('".$EID."');
+        $_SESSION['dataform']['OutScripts'] .= "            
 		jQuery('#data_report_" . $EID . " .report_entry').bind('click', function(){
 			jQuery(this).toggleClass(\"highlight\");
 		});
