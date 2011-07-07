@@ -2267,7 +2267,7 @@ var " . $ChartID . " = new Highcharts.Chart({
                 }
             }
             if (empty($Config['_UseListViewTemplate'])) {
-                $ReportReturn .= '<tr class="' . $Row . ' itemRow_' . $EID . ' ' . $SelectedRow . ' report_entry" ref="' . $row['_return_' . $Config['_ReturnFields'][0]] . ' highlight" id="row_' . $EID . '_' . $rowIndex . '" >';
+                $ReportReturn .= '<tr class="' . $Row . ' itemRow_' . $EID . ' ' . $SelectedRow . '  report_entry" ref="' . $row['_return_' . $Config['_ReturnFields'][0]] . ' highlight" id="row_' . $EID . '_' . $rowIndex . '" >';
             }
             // API Output
             if (!empty($Format)) {
@@ -2728,6 +2728,7 @@ var " . $ChartID . " = new Highcharts.Chart({
 // Make Scripts for deleting and select
     if (!empty($Config['_Show_Edit'])) {
         $_SESSION['dataform']['OutScripts'] .= "
+            alert('".$EID."');
 		jQuery('#data_report_" . $EID . " .report_entry').bind('click', function(){
 			jQuery(this).toggleClass(\"highlight\");
 		});
