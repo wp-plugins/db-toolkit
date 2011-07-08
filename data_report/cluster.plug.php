@@ -56,15 +56,34 @@
         }
 
         ?>
-        <div id="menuPermissions" class="list_row2" style="padding: 3px;">Effective Permission: <select name="Data[Content][_menuAccess]">
-                <option value="null" <?php if($Element['Content']['_menuAccess'] == 'read'){ echo 'selected="selected"'; } ?>>All</option>
-                <option value="activate_plugins" <?php if($Element['Content']['_menuAccess'] == 'activate_plugins'){ echo 'selected="selected"'; } ?>>Administrator</option>
-                <option value="delete_pages" <?php if($Element['Content']['_menuAccess'] == 'delete_pages'){ echo 'selected="selected"'; } ?>>Editor</option>
-                <option value="upload_files" <?php if($Element['Content']['_menuAccess'] == 'upload_files'){ echo 'selected="selected"'; } ?>>Author</option>
-                <option value="edit_posts" <?php if($Element['Content']['_menuAccess'] == 'edit_posts'){ echo 'selected="selected"'; } ?>>Contributor</option>
-                <option value="read" <?php if($Element['Content']['_menuAccess'] == 'read'){ echo 'selected="selected"'; } ?>>Subscriber</option>
+
+
+    <div id="permSetup-simple" style="padding: 5px; display: <?php echo $sibox; ?>;">
+        <div id="menuPermissions" class="list_row2" style="padding: 3px;">Effective Capability Permission: <select name="Data[Content][_menuAccess]">
+                <option value="null" <?php if($Element['Content']['_menuAccess'] == 'null'){ echo 'selected="selected"'; } ?>>Public</option>
+                <?php
+                global $wp_roles;
+                foreach($wp_roles->roles as $key=>$role){
+                    echo '<optgroup label="'.$role['name'].'">';
+                    ksort($role['capabilities']);
+                    foreach($role['capabilities'] as $cap=>$null){
+                        $sel = '';
+                        if($Element['Content']['_menuAccess'] == $cap){
+                            $sel = 'selected="selected"';
+                        }
+                        echo '<option value="'.$cap.'" '.$sel.'>'.$cap.'</option>';
+                    }
+                }
+                ?>
+
             </select>
-        </div>        
+        </div>
+    </div>
+
+
+
+
+
     </div>
     <div class="setupTab" id="tabs-2">
         <?php

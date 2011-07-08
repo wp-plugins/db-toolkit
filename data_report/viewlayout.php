@@ -14,7 +14,7 @@
     <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
     <!--<input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
     <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('view');" />-->
-    Dialog Width: <input type="text" id="_popupWidthview" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])){ echo $Element['Content']['_popupWidthview'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
+    Width: <input type="text" id="_popupWidthview" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])){ echo $Element['Content']['_popupWidthview'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeView]" value="modal" <?php if(!empty($Element['Content']['_popupTypeView'])) {
                     echo 'checked="checked"';
                        } ?> /> <label for="_modalPopup">Modal</label>

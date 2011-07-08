@@ -7,7 +7,7 @@
     <input type="button" class="button" value="Insert Row" onclick="formSetup_AddRow();" />
     <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('form');" />
     <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('form');" />-->
-    Dialog Width: <input type="text" id="_popupWidth" name="Data[Content][_popupWidth]" value="<?php if(!empty($Element['Content']['_popupWidth'])){ echo $Element['Content']['_popupWidth'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
+    Width: <input type="text" id="_popupWidth" name="Data[Content][_popupWidth]" value="<?php if(!empty($Element['Content']['_popupWidth'])){ echo $Element['Content']['_popupWidth'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeForm]" value="modal" <?php if(!empty($Element['Content']['_popupTypeForm'])) {
                     echo 'checked="checked"';
                        } ?> /> <label for="_modalPopup">Modal</label>

@@ -1,4 +1,5 @@
 <?php
+echo '<div style="width: '.$Config['_popupTypeView'].'px;">';
     if(!empty($_SESSION['DocumentLoaded'])) {
         echo '<div class="warning">Database Interface View Mode. Requires: ';
         echo implode(', ', $Config['_ReturnFields']);
@@ -16,5 +17,6 @@
             EndInfoBox();
         }
     }
+    echo '</div>';
     return;
     ?>

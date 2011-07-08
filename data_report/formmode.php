@@ -1,4 +1,5 @@
 <?php
+echo '<div style="width: '.$Config['_popupWidth'].'px;">';
     foreach($Config['_Field'] as $Field=>$Value) {
         $typeSet = explode('_', $Value);
         if(function_exists($typeSet[0].'_preForm')) {
@@ -25,5 +26,6 @@
     if(empty($Config['_HideFrame'])) {
         EndInfoBox();
     }
+    echo '</div>';
     return;
 ?>

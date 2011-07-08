@@ -963,7 +963,8 @@ function df_alignmentSetup($id, $Default = false) {
 function dr_BuildUpDateForm($EID, $ID) {
     $Data = getelement($EID);
     $Data['_ActiveProcess'] = 'update';
-    $Out['title'] = 'Edit Entry';
+    
+    $Out['title'] = $Data['Content']['_EditFormText'];
     $PreOut = df_BuildCaptureForm($Data, $ID);
     if (!is_array($PreOut)) {
         return df_buildQuickCaptureForm($EID);
