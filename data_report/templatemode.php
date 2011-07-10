@@ -382,4 +382,20 @@ $template = str_replace('<?php', '<?php ', $template);
 $template = str_replace('?>', ' ?>', $template);
 echo eval(' ?> '.$template.' <?php ');
 $_SESSION['dataform']['OutScripts'] .= "\r\n".$jsqueue."\r\n";
+
+// Make Scripts for deleting and select
+
+if (!empty($Config['_Show_Edit'])) {
+
+    //    #data_report_dt_intfc4e10d80d9c725 .report_entry
+
+
+    $_SESSION['dataform']['OutScripts'] .= "            
+            jQuery('#reportPanel_" . $EID . " .report_entry').bind('click', function(){
+                    jQuery(this).toggleClass(\"highlight\");
+            });
+    ";
+}
+
+
 ?>

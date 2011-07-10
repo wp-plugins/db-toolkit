@@ -2714,6 +2714,7 @@ var " . $ChartID . " = new Highcharts.Chart({
     }
     //echo mysql_error();
     if (!empty($Config['_UseListViewTemplate'])) {
+        
         if (!empty($Config['_ListViewTemplateContentWrapperEnd'])) {
             $ReportReturn .= $Config['_ListViewTemplateContentWrapperEnd'];
         }
@@ -2728,6 +2729,7 @@ var " . $ChartID . " = new Highcharts.Chart({
 
 // Make Scripts for deleting and select
     if (!empty($Config['_Show_Edit'])) {
+        $ReportReturn .= 'asdkjfhakjsdhfkjasdhfa';
         $_SESSION['dataform']['OutScripts'] .= "            
 		jQuery('#data_report_" . $EID . " .report_entry').bind('click', function(){
 			jQuery(this).toggleClass(\"highlight\");

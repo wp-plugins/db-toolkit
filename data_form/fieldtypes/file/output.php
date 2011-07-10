@@ -1,73 +1,39 @@
 <?php
 switch($Types[1]) {
     case 'image':
-        if(empty($Data[$Field])){
-            $Data[$Field] = WP_PLUGIN_URL.'/db-toolkit/data_report/nopic.jpg';
+
+        $Value = explode('?', $Data[$Field]);
+
+        $Vars = array();
+        $Vars['q'] = '75';
+        $ClassName = '';
+        if(!empty($Config['_ImageClassName'][$Field])){
+            $ClassName = $Config['_ImageClassName'][$Field];
         }
-
-        
-        $file = $Data[$Field];//str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $Data[$Field]);
-        $file = explode('?', $file);
-
-        //vardump($file);
-
-        $ImageHeight = GetImageDimentions ($file[0], 'h');
-        $ImageWidth = GetImageDimentions ($file[0], 'w');
-        if ( $ImageHeight > $ImageWidth ) {
-            if($ImageHeight < $Config['_ImageSizeF'][$Field]) {
-                $Config['_ImageSizeF'][$Field] = $ImageHeight;
+        if(!empty($Config['_ImageCompression'][$Field])){
+            $Vars['q'] = $Config['_ImageCompression'][$Field];
+        }
+        if(!empty($Config['_ImageSizeY'][$Field])){
+            if($Config['_ImageSizeY'][$Field] != 'auto'){
+                $Vars['h'] = $Config['_ImageSizeY'][$Field];
             }
-            $new_width = $ImageWidth * ( $Config['_ImageSizeF'][$Field] / $ImageHeight );
-            $BoxSize = "
-						height: ".($Config['_ImageSizeF'][$Field]+40).",
-						width: ".(round($new_width)+20)."
-						";
-        }else {
-            if($ImageWidth < $Config['_ImageSizeF'][$Field]) {
-                $Config['_ImageSizeF'][$Field] = $ImageWidth;
+        }
+        if(!empty($Config['_ImageSizeX'][$Field])){
+            if($Config['_ImageSizeX'][$Field] != 'auto'){
+                $Vars['w'] = $Config['_ImageSizeX'][$Field];
             }
-            //vardump($Config);
-            $new_height = $ImageHeight * ( $Config['_ImageSizeF'][$Field] / $ImageWidth );
-            $BoxSize = "
-						height: 'auto',
-						width: 'auto'
-						";
         }
-        
 
-        if(!empty($Config['_ImageSquareM'][$Field])) {
-            $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Data[$Field]).'_img_'.$Field.'" style="height:'.$Config['_ImageSquareM'][$Field].'px;">';
-            $Out .= useimage($file[0], 0, $Config['_ImageSizeM'][$Field]).'</div>';
-        }else {
-            $preHeight = $ImageHeight * ( $Config['_ImageSizeM'][$Field] / $ImageWidth );
-            $Out .= '<div style="text-align:center; cursor:pointer;" class="'.$Row.'" id="'.md5($Data[$Field]).'_img_'.$Field.'" style="height:'.$preHeight.'px;">';
-            $Out .= useimage($file[0], 6, $Config['_ImageSizeM'][$Field]).'</div>';
+        $Vars = build_query($Vars);
+
+        $Source = WP_PLUGIN_URL.'/db-toolkit/libs/timthumb.php?src='.urlencode($Value[0]).'&'.$Vars;
+        if(!empty($Config['_ImageURLOnly'][$Field])){
+            return $Source;
         }
-        // need to do a caption thing
-        // 
-        //$Out .= '<div class="caption">'.df_parsecamelcase($Image[1]).'</div>';
+
+        $Out .= '<img src="'.$Source.'" class="'.$ClassName.'">';
 
 
-
-        $_SESSION['dataform']['OutScripts'] .= "
-				jQuery('#".md5($Data[$Field])."_img_".$Field."').click(function(){										
-					if(jQuery(\"#ui-dialog-".md5($Data[$Field])."\").length == 1){
-						jQuery(\"#ui-dialog-".md5($Data[$Field])."\").remove();
-					}
-					jQuery('body').append('<div id=\"ui-dialog-".md5($Data[$Field])."\" title=\"".$file[1]."\"><div style=\"height:".$new_height."px;\">".useimage($Data[$Field], 6, $Config['_ImageSizeF'][$Field])."</p></div>');
-					jQuery(\"#ui-dialog-".md5($Data[$Field])."\").dialog({
-						position: 'center',
-						buttons: {
-							'Close': function() {
-								jQuery(this).dialog(\"close\");
-								}
-							},
-						
-						".$BoxSize."
-					});
-					
-				});
-			";
         break;
     case 'file':
         if(!empty($Data[$Field])) {

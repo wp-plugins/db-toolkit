@@ -2,20 +2,41 @@
 /// This creates the actual input fields for capturing. this will handle the occurance of the setting
 //<input name="dataForm['.$ElementID.']['.$Field.']" type="'.$Type.'" id="entry_'.$ElementID.'_'.$Field.'" value="'.$Val.'" class="textfield '.$Req.'" />';
 if($FieldSet[1] == 'image'){
+        $Return = '';
 	if(!empty($Defaults[$Field])){
-		$im = explode('|', $Defaults[$Field]);
-                if(!empty($Config['_ImageSquareM'][$Field])){
-                        echo UseImage($im[0], 0, $Config['_ImageSizeM'][$Field]);
-                }else{
-                        echo UseImage($im[0], 6, $Config['_ImageSizeM'][$Field]);
-                }//echo useimage($im[0], 5, $Element['Content']['_ImageSizeM'][$Field]);
-		//echo '<div style="padding:3px;" class="list_row1"><input type="checkbox" name="deleteImage['.$Field.']" id="image_'.$Element['ID'].'_'.$Field.'" value="1" /> <label for="image_'.$Element['ID'].'_'.$Field.'">Remove Image</label></div>';
-                if(@getimagesize($im[0])){
-                    echo '<div style="padding:3px;" class="list_row1"><input type="checkbox" name="deleteImage['.$Field.']" id="image_'.$Element['ID'].'_'.$Field.'" value="1" /> <strong>Remove Image</strong></div>';
+            $Value = explode('?', $Defaults[$Field]);
+
+            $Vars = array();
+            $Vars['q'] = '75';
+            $ClassName = '';
+            if(!empty($Config['_IconClassName'][$Field])){
+                $ClassName = $Config['_IconClassName'][$Field];
+            }
+            if(!empty($Config['_IconCompression'][$Field])){
+                $Vars['q'] = $Config['_IconCompression'][$Field];
+            }
+            if(!empty($Config['_IconSizeY'][$Field])){
+                if($Config['_IconSizeY'][$Field] != 'auto'){
+                    $Vars['h'] = $Config['_IconSizeY'][$Field];
                 }
+            }
+            if(!empty($Config['_IconSizeX'][$Field])){
+                if($Config['_IconSizeX'][$Field] != 'auto'){
+                    $Vars['w'] = $Config['_IconeSizeX'][$Field];
+                }
+            }
+
+            $Vars = build_query($Vars);
+
+            $Source = WP_PLUGIN_URL.'/db-toolkit/libs/timthumb.php?src='.urlencode($Value[0]).'&'.$Vars;
+            if(!empty($Config['_IconURLOnly'][$Field])){
+                return $Source;
+            }
+
+            $Return = '<img src="'.$Source.'" class="'.$ClassName.'">';
 
         }
-	$Return = '<input type="file" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" style="width:97%;" class="'.$Req.'" />';
+	$Return .= '<input type="file" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" style="width:97%;" class="'.$Req.'" />';
 }
 
 
