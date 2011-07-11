@@ -228,7 +228,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
                 $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn); //'Edit | View';
-                $PreReturn = str_replace('{{_ViewLink}}', getdocument($Config['_ItemViewPage']) . "?" . $ReportReturnString, $PreReturn); //'Edit | View';
+                $PreReturn = str_replace('{{_ViewLink}}', $PageLink, $PreReturn); //'Edit | View';
             }
 
 
@@ -324,7 +324,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
                 $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn); //'Edit | View';
-                $PreReturn = str_replace('{{_ViewLink}}', getdocument($Config['_ItemViewPage']) . "?" . $ReportReturnString, $PreReturn); //'Edit | View';
+                $PreReturn = str_replace('{{_ViewLink}}', $PageLink, $PreReturn); //'Edit | View';
             }
 
 
