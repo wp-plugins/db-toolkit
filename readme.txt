@@ -6,27 +6,27 @@ Requires at least: 2.9.2
 Tested up to: 3.2
 Stable tag: 0.2.6.6
 
-Database Interface Toolkit creates interfaces (capture/update forms, reports, charts etc.) from database tables.
+DB-Toolkit allows you to create content, content managers and viewers
 
 == Description ==
 
-Adds interfaces to database tables on pages, posts, dashboard and custom menu groups within admin, to manage data.
-Build custom databased application for managing data from simple data entries to more complex linking tables.
+DB-Toolkit allows you to build web applications within Wordpress. From manager interfaces to capture forms to content viewers or almost any type.
+DB-Toolkit is not a simple plugin and has a steep learning curve, but the results are very rewarding.
 
-I'm running a tutorial series to explain the fundermentals on using the system and will be building documentation as i go.
-Tutorials will be on up on http://dbtoolkit.digilab.co.za
-please note: this is still alpha, but works pretty well.
+There is a tutorial series on http://dbtoolkit.digilab.co.za to explain the fundamentals on using the system its a few versions old so the interfaces do look a little different.
+Please join the support forum on http://dbtoolkit.digilab.co.za/forum/ and I'll do my best to answer any questions and help troubleshoot problems.
+
+please note: this is still alpha.
 
 
-Features include:
-
-*   Rebuilt Visual forms and reports builder
-*   Templates for output
-*   Field Specific configuration
-*   Application Export and Import
-*   Data importing via CSV files
-*   Report Exporting in PDF and CSV
+Some Features:
+*   Field-by-field data type handling makes data management very powerful and flexible.
+*   Data exporting in PDF and CSV
+*   Create API's to connect to your data. This allows you to build mobile apps that feed from your content.
 *   Multi Interface Layouts using clusters
+*   Build custom content managers, like galleries, contact lists, application forms, employee databases... and so on.
+*   Import data from an XML or CSV source
+*   Visually build forms that capture data to a database existing or not.
 
 == Installation ==
 
@@ -37,10 +37,11 @@ Features include:
 == Frequently Asked Questions ==
 
 Q: Is there any Documentation?
-A: Not fully, but I am putting together a tutorial series and building the documentation as i go along. you can access these at http://dbtoolkit.digilab.co.za/
+A: Nope. I intended on DB-Toolkit to be a personal project to help my own development, so I didnt write any as i was building it. I have however started writing up some tutorials and am working on new documentation which will be available eventually.
 
 Q: When will you have an RC release?
-A: Well you can technically use it now, however some things are still a little iffy (like cloned linking links) But it should mostly work on single level interfaces.
+A: Well you can technically use it now, however some things are still a little iffy (like cloned linking links) But it should mostly work on up to 3rd level interfaces.
+
 
 == Screenshots ==
 
@@ -52,6 +53,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.6.6 =
+* Left some test code in last update - removed it- sorry
 
 = 0.2.6.6 =
 * Left some test code in last update - removed it- sorry

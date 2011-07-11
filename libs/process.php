@@ -47,7 +47,30 @@ if(!empty($_POST['Data'])) {
     
     $Indexes = array();
     if(!empty($_POST['Data']['Content']['_Field'])){
+
+        
+
         foreach($_POST['Data']['Content']['_Field'] as $Field=>$Value){
+            // Make Sure the Fields EXIST!
+            $wpdb->query("SELECT `".$Field."` FROM `".$_POST['Data']['Content']['_main_table']."` LIMIT 1;");
+            if(mysql_errno() == '1054'){
+
+                $baseType = 'VARCHAR( 255 )';
+                $type = explode('_', $_POST['Data']['Content']['_Field'][$Field]);
+                
+                if(!empty($type[1])){
+                    if(file_exists(DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php')){
+                        include (DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php');
+                        if(!empty($FieldTypes[$type[1]]['baseType'])){
+                            $baseType = $FieldTypes[$type[1]]['baseType'];
+                        }
+                    }
+                }
+
+                $wpdb->query("ALTER TABLE `".$_POST['Data']['Content']['_main_table']."` ADD `".$Field."` ".$baseType." NOT NULL ");
+                echo mysql_error();
+            }
+
             $Indexes[$Field]['Visibility'] = 'hide';
             $Indexes[$Field]['Indexed'] = 'noindex';
         }

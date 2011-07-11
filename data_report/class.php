@@ -500,8 +500,6 @@ if (is_admin ()) {
             return $PreReturn[$Field];
         }
 
-        //vardump($Config);
-
         if ($EID == 'false') {
 
             $Defaults = $Config['Content'];

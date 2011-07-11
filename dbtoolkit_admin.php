@@ -214,7 +214,7 @@ if(!empty($_GET['renderinterface'])){
                 <span class="description">Manage Applications and Interfaces</span>
                 <br class="clear" /><br />
             <?php
-            if(!empty($_POST['Data'])) {               
+            if(!empty($_POST['Data'])) {
                 
                 global $newCFG;
 
@@ -231,6 +231,7 @@ if(!empty($_GET['renderinterface'])){
                     $Title = $newCFG['_ClusterTitle'];
                 }
                 
+
                 echo '<div class="notice fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
             }
             ?>

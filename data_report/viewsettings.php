@@ -209,13 +209,14 @@
                     echo '>Right</option>';
                     echo '</select>';
                     echo '</div>';
-                    
+                    /*
                     echo '<h2>Auditing</h2>';
                     $Sel = '';
                     if(!empty($Element['Content']['_EnableAudit'])) {
                         $Sel = 'checked="checked"';
                     }
-                    echo dais_customfield('checkbox', 'Enable Auditing', '_EnableAudit', '_EnableAudit', 'list_row2' , 1, $Sel, 'Keep a copy of all edited, inserted and deleted entries. A copy table will be created with the suffix _audit_<em>tablename</em>');                    
+                    echo dais_customfield('checkbox', 'Enable Auditing', '_EnableAudit', '_EnableAudit', 'list_row2' , 1, $Sel, 'Keep a copy of all edited, inserted and deleted entries. A copy table will be created with the suffix _audit_<em>tablename</em>');
+                    */
                     
 
                     ?>

@@ -1,30 +1,32 @@
 <h2>Fields Setup</h2>
+<div id="mainTableSelector">
 <?php
-echo df_listTables('_main_table', 'dr_fetchPrimSetup', $Element['Content']['_main_table']);
+    echo df_listTables('_main_table', 'dr_fetchPrimSetup', $Element['Content']['_main_table']);
 //EndInfoBox();
 ?>
-
+</div>
 <div id="col-container" >
     <?php
     echo '<h2>Define Fieldtypes</h2>';
 //dump($Element);
-    if ($_GET['page'] != 'Add_New') {
+    $addFieldButton = 'none';
+    if(!empty($Element['Content']['_main_table'])){
+        $addFieldButton = '';
+    }
     ?>
-        <div style="width:565px;">
-
-        
-            <div class="list_row3"><input type="button" class="button" value="Add Clone Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /><div class="description">A clone field is a duplicate of a field (master) and can be treated as a unique field with its own field type.</div></div>
+        <div style="width:565px;">        
+            <div class="list_row3">
+                <?php if ($_GET['page'] != 'Add_New') { ?><input type="button" class="button" value="Add Virtual Field" onclick="dr_addLinking('<?php echo $Element['Content']['_main_table']; ?>')" /> <?php } ?>
+                <input id="addFieldButton" type="button" style="display:<?php echo $addFieldButton; ?>;" class="button" value="Add Field" onclick="dr_addField()" />
+            </div>
         <div class="columnSorter" id="drToolBox">
             <?php
-//echo df_tableReportSetup($Element['Content']['_main_table'], $Element, false, 'C');
+                //echo df_tableReportSetup($Element['Content']['_main_table'], $Element, false, 'C');
             ?>
         </div>
 
 
     </div>
-    <?php
-        }
-    ?>
         <div style="">
             <div id="referenceSetup"></div>
             <div style="overflow:auto;">

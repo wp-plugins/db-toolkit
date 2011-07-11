@@ -326,6 +326,7 @@
     }
 
     function dr_fetchPrimSetup(table){
+        jQuery('#addFieldButton').show();
 	jQuery('#fieldTray').html('');
 	jQuery('.formColumn').html('');
 	table = jQuery('#'+table).val();
@@ -609,3 +610,93 @@
            jQuery('#_dataFieldMapView').html(i);
         });
     }
+
+
+
+
+    function dt_addNewTable(){
+
+        id = Math.floor(Math.random()*9999999);
+
+	if(jQuery("#ui-jsDialog-"+id).length == 1){
+            jQuery("#ui-jsDialog-"+id).remove();
+	}
+	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'" title="Create Table"><p><label>Name</lable><input type="text" id="'+id+'_newTable" value="" style="width:98%;" /></p></div>');
+	jQuery("#ui-jsDialog-"+id).dialog({
+            position: 'center',
+            title: 'New Table',
+            autoResize: true,
+            minWidth: 200,
+            modal: true,
+            buttons: {
+                'Cancel': function() {jQuery(this).dialog("close"); },
+                'Create': function() {
+                    if(jQuery('#'+id+'_newTable').val().length <= 0){
+                        alert('Please give your table a name.');
+                    }else{
+                        jQuery('#'+id+'_newTable').attr('disabled', 'disabled');
+                        ajaxCall('dt_buildNewTable', jQuery('#'+id+'_newTable').val(), function(v){
+                            if(v.error){
+                                alert(v.error);
+                                jQuery('#'+id+'_newTable').removeAttr('disabled');
+                            }else{
+                                jQuery('#mainTableSelector').html(v.html);
+                                dr_fetchPrimSetup('_main_table');
+
+                                jQuery('#ui-jsDialog-'+id).dialog("close");
+                            }
+
+                        })
+                    }
+                }
+            },
+            close: function(event, ui) {
+                jQuery("#ui-jsDialog-"+id).remove();
+            }
+        });
+
+    }
+
+
+    function dr_addField(){
+
+        id = Math.floor(Math.random()*9999999);
+
+	if(jQuery("#ui-jsDialog-"+id).length == 1){
+            jQuery("#ui-jsDialog-"+id).remove();
+	}
+	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'" title="Add Field"><p><label>Name</lable><input type="text" id="'+id+'_newField" value="" style="width:98%;" /></p></div>');
+	jQuery("#ui-jsDialog-"+id).dialog({
+            position: 'center',
+            title: 'Add Field',
+            autoResize: true,
+            minWidth: 200,
+            modal: true,
+            buttons: {
+                'Cancel': function() {jQuery(this).dialog("close"); },
+                'Add Field': function() {
+                    if(jQuery('#'+id+'_newField').val().length <= 0){
+                        alert('Please give your field a name.');
+                    }else{
+                        jQuery('#'+id+'_newField').attr('disabled', 'disabled');
+                        ajaxCall('dt_buildNewField', jQuery('#'+id+'_newField').val(), function(f){
+                            if(f.error){
+                                alert(f.error);
+                                jQuery('#'+id+'_newField').removeAttr('disabled');
+                            }else{
+                                jQuery('#FieldList_Main').append(f);
+                                jQuery('#ui-jsDialog-'+id).dialog("close");
+                            }
+
+                        })
+                    }
+                }
+            },
+            close: function(event, ui) {
+                jQuery("#ui-jsDialog-"+id).remove();
+            }
+        });
+
+
+    }
+    

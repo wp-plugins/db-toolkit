@@ -28,28 +28,30 @@ if(is_admin()) {
         return 'No Config Options Available';
     }
     function df_listTables($TableReference, $JFunc = 'alert', $Default = false, $Req = false) {
-        global $wpdb;
 
+        
+        global $wpdb;
+        
         $Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
 
-
-        //$res = mysql_list_tables($_SESSION['settings'][$_SESSION['key']]['Database']);
-        $Return = 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
+        $Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
         $Return .= '<option value="">'.$Value.'</option>';
         foreach($Data as $Tables) {
             //vardump($Tables);
-            $Value = $Tables[0];
-            $Sel = '';
-            if($Default == $Value) {
-                $Sel = 'selected="selected"';
-            }
-            //if(substr($Value, 0, 5) != 'dais_'){
-            $List[] = $Value;
-            $Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
+            //if(strpos($Tables[0], $wpdb->prefix.'dbt_') === false){
+                $Value = $Tables[0];
+                $Sel = '';
+                if($Default == $Value) {
+                    $Sel = 'selected="selected"';
+                }
+                //if(substr($Value, 0, 5) != 'dais_'){
+                $List[] = $Value;
+                $Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
+                //}
             //}
 
         }
-        $Return .= '</select>';
+        $Return .= '</select> <a href="#" onclick="dt_addNewTable(); return false;">Add New</a>';
         return $Return;
     }
 
@@ -1000,4 +1002,46 @@ if(!empty($_GET['validatorUniques'])) {
     mysql_close();
     die;
 }
+
+
+function dt_buildNewTable($name){
+
+    global $wpdb;
+    $Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
+    foreach($Data as $Table){
+        if($name == $Table[0]){
+            $return['error'] = 'Table Already Exists';
+            return $return;
+        }
+    }
+
+    // create table
+    $tablename = str_replace('-', '_', sanitize_title($name));
+
+
+    $query = "CREATE TABLE `".$wpdb->prefix.'dbt_'.$tablename."` (
+  `".$tablename."ID` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`".$tablename."ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+
+    if($wpdb->query($query)){
+        $output['html'] = df_listTables('_main_table', 'dr_fetchPrimSetup', $wpdb->prefix.'dbt_'.$tablename);
+        $output['table'] = $wpdb->prefix.'dbt_'.$tablename;
+        return $output;
+    }else{
+        $return['error'] = mysql_error();
+    return $return;
+    }
+
+}
+
+function dt_buildNewField($Field){
+
+
+    $Field = str_replace('-', '_', sanitize_title($Field));
+    return df_makeFieldConfigBox($Field, false);
+
+
+}
+
 ?>
