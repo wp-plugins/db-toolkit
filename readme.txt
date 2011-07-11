@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.2
-Stable tag: 0.2.6.6
+Stable tag: 0.2.6.7
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -53,6 +53,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.6.7 =
+* fixed a bug that stopped page redirect from working.
 
 = 0.2.6.6 =
 * Left some test code in last update - removed it- sorry

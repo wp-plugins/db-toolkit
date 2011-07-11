@@ -124,8 +124,8 @@ function dt_buildConfigPanel($Title, $Pages, $Defaults){
 
 }
 
-function GetDocument() {
-    return uniqid('null');
+function GetDocument($page) {
+    return get_permalink($page);
 }
 
 function getelement($optionTitle) {
