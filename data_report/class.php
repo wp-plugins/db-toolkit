@@ -3023,14 +3023,21 @@ function df_inlineedit($Entry, $ID, $Value) {
 }
 
 function df_processupdate($Data, $EID) {
+    global $wpdb;
     //dump($Data);
     $Element = getelement($EID);
     $Config = $Element['Content'];
     //dump($Config);
     // Load Entry's data for hidden values
-    $preQuery = mysql_query("SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'");
-    $PreData = mysql_fetch_assoc($preQuery);
 
+    //$preQuery = mysql_query("SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'");
+    //$PreData = mysql_fetch_assoc($preQuery);
+
+    $preQuery = "SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
+    $PreData = $wpdb->get_results($preQuery, ARRAY_A);
+    $PreData = $PreData[0];
+
+    /* Auditing Disabled for now. Need to find a way to audit dynamic and changed tables.
     if ($Config['_EnableAudit']) {
         $memberID = 0;
         if (!empty($_SESSION['UserBase']['Member']['ID'])) {
@@ -3067,7 +3074,7 @@ function df_processupdate($Data, $EID) {
         }
     }
     //go through the Submitted Data / apply fieldtype filters and add processed value to update queue
-    
+    */
 
     
     foreach ($Config['_Field'] as $Field => $Type) {
@@ -3098,6 +3105,7 @@ function df_processupdate($Data, $EID) {
             }
         }
     }
+    
     // process update processess
     if (!empty($Config['_FormProcessors'])) {
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
@@ -3135,27 +3143,6 @@ function df_processupdate($Data, $EID) {
         }
     }
     
-    foreach ($updateData as $Field => $newValue) {
-        $newData[] = "`" . $Field . "` = '" . mysql_real_escape_string($newValue) . "' ";
-    }
-    $Updates = implode(', ', $newData);
-    $Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
-
-    if (!empty($Config['_ReturnFields'][0])) {
-        $ReturnVals = implode(', ', $Config['_ReturnFields']);
-        $outq = mysql_query("SELECT " . $ReturnVals . " FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "';");
-        $dta = mysql_fetch_assoc($outq);
-        $outstr = array();
-        foreach ($dta as $key => $val) {
-            $outstr[] = $key . '=' . $val;
-        }
-        $Return['Value'] = implode('&', $outstr);
-    } else {
-        $Return['Value'] = $ID;
-    }
-    //dump($Return);
-    //die;
-    //$Return['Value'] = $Data[$Config['_ReturnFields'][0]];
     
     // Post Process
     foreach ($Config['_Field'] as $Field => $Type) {
@@ -3169,7 +3156,35 @@ function df_processupdate($Data, $EID) {
         }
     }
 
+        //foreach ($updateData as $Field => $newValue) {
+    //    $newData[] = "`" . $Field . "` = '" . mysql_real_escape_string($newValue) . "' ";
+    //}
+    //$Updates = implode(', ', $newData);
+    $Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
+    if($wpdb->update($Config['_main_table'], $updateData, array($Config['_ReturnFields'][0] => $Data[$Config['_ReturnFields'][0]]))){
+        $update = true;
+    }else{
+        $update = false;
+    }
 
+
+    if (!empty($Config['_ReturnFields'][0])) {
+        $ReturnVals = implode(', ', $Config['_ReturnFields']);
+        //$outq = mysql_query("SELECT " . $ReturnVals . " FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "';");
+        //$dta = mysql_fetch_assoc($outq);
+
+        $dta = $wpdb->get_results("SELECT " . $ReturnVals . " FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "';", ARRAY_A);
+        $dta = $dta[0];
+        $outstr = array();
+        foreach ($dta as $key => $val) {
+            $outstr[] = $key . '=' . $val;
+        }
+        $Return['Value'] = implode('&', $outstr);
+    } else {
+        $Return['Value'] = $ID;
+    }
+
+    
     // post update processess
     if (!empty($Config['_FormProcessors'])) {
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
@@ -3196,21 +3211,26 @@ function df_processupdate($Data, $EID) {
             }
         }
     }
-    if (mysql_query($Query)) {
+    //if ($update == true) {
         if (empty($Config['_UpdateSuccess'])) {
             $Return['Message'] = 'Entry updated successfully';
         } else {
             $Return['Message'] = $Config['_UpdateSuccess'];
         }
         return $Return;
-    }
-    return false;
+    //}
+    $Return['Message'] = 'Nothing to update, C';
+    return $Return;
 }
 
 function df_deleteEntries($EID, $Data) {
+    global $wpdb;
     $Data = df_cleanArray(explode('|||', $Data));
     $El = getelement($EID);
     $Config = $El['Content'];
+    if(empty($Config['_Show_Delete']) && empty($Config['_Show_Delete_action'])){
+        return 'Deleting is Disabled';
+    }
     if (!empty($RefConfig['Field'])) {
         if (in_array('imageupload', $RefConfig['Field'])) {
             $ImagesToDelete = array_keys($RefConfig['Field'], 'imageupload');
@@ -3220,9 +3240,12 @@ function df_deleteEntries($EID, $Data) {
     $Return = '';
     foreach ($Data as $ID) {
         $ID = str_replace($EID . '_', '', $ID);
-        $Pre = mysql_query("SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;");
+
+        //$Pre = $wpdb->escape("SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;");
+        $Pre = "SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;";
+        $OldData = $wpdb->get_row($Pre, ARRAY_A);
         dr_trackActivity('Delete', $EID, $ID);
-        $OldData = mysql_fetch_assoc($Pre);
+
         if (!empty($ImagesToDelete)) {
             foreach ($ImagesToDelete as $Field) {
                 if (file_exists($OldData[$Field])) {
@@ -3244,8 +3267,8 @@ function df_deleteEntries($EID, $Data) {
                 }
             }
         }
-        mysql_query("DELETE FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;");
-
+        $deleteQuery = "DELETE FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $ID . "' LIMIT 1;";
+        $Rows = $wpdb->query($deleteQuery);
         // post update processess
         if (!empty($Config['_FormProcessors'])) {
             foreach ($Config['_FormProcessors'] as $processID => $Setup) {
@@ -3267,10 +3290,10 @@ function df_deleteEntries($EID, $Data) {
         $Index++;
     }
     $Note = 'Item';
-    if (index > 1) {
+    if ($Rows > 1) {
         $Note = 'Items';
     }
-    return $Index . ' ' . $Note . ' Deleted<br />';
+    return $Rows . ' ' . $Note . ' Deleted<br />';
 }
 
 function dr_importer($EID) {

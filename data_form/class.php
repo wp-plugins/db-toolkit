@@ -292,6 +292,11 @@ function is_uppercase($Char) {
 function df_buildQuickCaptureForm($EID) {
     $Data = getelement($EID);
     //$Return = '<h2>'.$Data['Content']['_New_Item_Title'].'</h2>';
+    if(!empty($Data['Content']['_New_Item_Hide'])){
+        $Return['title'] = 'Access Denied';
+        $Return['html'] = '<div class="notice">Entry Insertion is disabled on this interface</div>';
+        return $Return;
+    }
     $Data['_ActiveProcess'] = 'insert';
     $Out = df_BuildCaptureForm($Data);
     $Out['title'] = $Data['Content']['_New_Item_Title'];
@@ -715,9 +720,14 @@ function df_parseCamelCase($Field) {
 }
 
 function df_processInsert($EID, $Data) {
+    global $wpdb;
     $Setup = getelement($EID);
     $Config = $Setup['Content'];
-    
+    if(!empty($Config['_New_Item_Hide'])){
+        $Return['Message'] = $Config['_InsertFail'];
+        return $Return;
+    }
+
     foreach($Config['_Field'] as $Field=>$Type){       
         if(isset($Data[$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
             $typeSet = explode('_', $Type);
@@ -777,19 +787,28 @@ function df_processInsert($EID, $Data) {
                         $EntryData = $Data[$Field];
                     }
                 }
-                $Entries[$Field] = "'".mysql_real_escape_string($EntryData)."'";
+                //$Entries[$Field] = "'".mysql_real_escape_string($EntryData)."'";
+                $Entries[$Field] = $EntryData;
             }
         }
     }
-    $Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
+    
+    //$Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
+    if($wpdb->insert($Config['_main_table'], $Entries)){
+        $inserted = true;
+        $ID = $wpdb->insert_id;
+    }else{
+        $inserted = false;
+    }
 
-    if(mysql_query($Query)) {
+
+    if(!empty($inserted)){
         //vardump($Config['_ReturnFields']);
         
         if(!empty($Config['_ReturnFields'][0])) {
             $ReturnVals = implode(', ', $Config['_ReturnFields']);
 
-            if($ID = mysql_insert_id()){
+            if(!empty($ID)){
                 $Data[$Config['_ReturnFields'][0]] = $ID;
                 $Query = "SELECT ".$ReturnVals." FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$ID."';";
             }else{
@@ -800,10 +819,8 @@ function df_processInsert($EID, $Data) {
                 }
                 $Query = "SELECT ".$ReturnVals." FROM `".$Config['_main_table']."` WHERE ".implode('&&', $Wheres)." LIMIT 1";
             }
-           // echo $Query;
-           // die;
-            $outq = mysql_query($Query);
-            $dta = mysql_fetch_assoc($outq);
+            
+            $dta = $wpdb->get_row($Query, ARRAY_A);
             $outstr = array();
             foreach($dta as $key=>$val) {
                 $outstr[] = $key.'='.$val;
@@ -827,6 +844,7 @@ function df_processInsert($EID, $Data) {
         }
 
         // Auding
+        /* Disabled Auditing
         if(!empty($Config['_EnableAudit'])) {
             $memberID = 0;
             if(!empty($_SESSION['UserBase']['Member']['ID'])) {
@@ -850,6 +868,8 @@ function df_processInsert($EID, $Data) {
 				mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
 			}
         }
+         * 
+         */
         //post processors        
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
