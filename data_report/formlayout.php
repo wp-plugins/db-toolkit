@@ -164,7 +164,7 @@
 				formSetup_columSave();
 			}
 		});
-		jQuery(".formGridform").disableSelection();
+		//jQuery(".formGridform").disableSelection();
 
 	});
 
@@ -221,7 +221,7 @@ function formSetup_AddRow(){
 				formSetup_columSave();
 			}
 		});
-		jQuery(".formGridform").disableSelection();
+		//jQuery(".formGridform").disableSelection();
 }
 
 function formSetupColumns(row){
@@ -278,7 +278,7 @@ function formAddColumn(row){
 						formSetup_columSave();
 					}
 				});
-				jQuery(".formGridform").disableSelection();
+				//jQuery(".formGridform").disableSelection();
                                 jQuery('.'+row+'_control').val(width+'%');
 			}
                         if(jQuery(this).attr('id').length > 0){
@@ -318,7 +318,7 @@ function formSubtractColumn(row){
 			formSetup_columSave();
 		}
 	});
-	jQuery(".formGridform").disableSelection();
+	//jQuery(".formGridform").disableSelection();
 }
 function formRemoveColumns(row){
 	if(jQuery('#'+row+' .formportlet').length != 0){

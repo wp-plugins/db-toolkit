@@ -217,30 +217,20 @@
 
         // number = jQuery('.sectionBreak').length;
 	number=Math.floor(Math.random()*99999);
-	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter sectionBreak '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak_SectionBreak'+number+'"><div class="'+area+'portlet-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style="-moz-user-select: none;"/><strong>Title:</strong><input type="text" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><div style="padding:3px;"><strong>Caption:</strong> <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Caption]" /></div><input class="layOut'+area+' positioning" type="hidden" name="_SectionBreak'+number+'" id="section_'+number+'" value="1"/></div>');
+	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter sectionBreak '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak_SectionBreak'+number+'"><div class="'+area+'portlet-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/><strong>Title:</strong><input type="textfield" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><div style="padding:3px;"><strong>Caption:</strong> <input type="textfield" class="sectionTitle" name="Data[Content][_SectionBreak][_SectionBreak'+number+'][Caption]" /></div><input class="layOut'+area+' positioning" type="hidden" name="_SectionBreak'+number+'" id="section_'+number+'" value="1"/></div>');
 	jQuery("."+area+"portlet-header .ui-icon").click(function() {
             jQuery(this).toggleClass("ui-icon-minusthick");
             jQuery(this).parents("."+area+"portlet:first").remove();
 	});
+        return;
 
-	jQuery("."+area+"Grid"+area).sortable({
-            connectWith: '.'+area+'Grid'+area,
-            update: function(event, ui){
-                jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
-                formSetup_columSave();
-                viewSetup_columSave();
-            }
-	});
-	jQuery(".formGrid"+area).disableSelection();
-
-	//dr_sorter();
     }
 
     function dr_addTab(area){
 
         // number = jQuery('.sectionBreak').length;
 	number=Math.floor(Math.random()*99999);
-	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter tab '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="tab_tab'+number+'"><div class="'+area+'portlet-header ui-widget-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style="-moz-user-select: none;"/>&nbsp;<input type="text" class="tabTitle" name="Data[Content][_Tab][_tab'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><input class="layOut'+area+' positioning" type="hidden" name="_tab'+number+'" id="tab_'+number+'" value="1"/></div>');
+	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter tab '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="tab_tab'+number+'"><div class="'+area+'portlet-header ui-widget-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/>&nbsp;<input type="text" class="tabTitle" name="Data[Content][_Tab][_tab'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><input class="layOut'+area+' positioning" type="hidden" name="_tab'+number+'" id="tab_'+number+'" value="1"/></div>');
 	jQuery("."+area+"portlet-header .ui-icon").click(function() {
             jQuery(this).toggleClass("ui-icon-minusthick");
             jQuery(this).parents("."+area+"portlet:first").remove();
@@ -278,7 +268,7 @@
 
     function dr_sortReport(eid, field, dir){
 
-	jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+	jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>')
 
 	ajaxCall('dr_BuildReportGrid',eid, 0, field, dir, function(dta){
             jQuery('#reportPanel_'+eid).html(dta);
@@ -288,7 +278,7 @@
     function dr_goToPage(eid, page, global){
 	if(page == false){
             if(global==undefined){
-                jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+                jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>')
                 
                 ajaxCall('dr_BuildReportGrid',eid, function(dta){
                     jQuery('#reportPanel_'+eid).html(dta);
@@ -297,12 +287,12 @@
             }else{
                 jQuery('.data_report_Table').each(function(g){
                     report = this.id.split("_")[2];
-                    jQuery('#reportPanel_'+report).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+report+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>')
+                    jQuery('#reportPanel_'+report).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+report+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>')
                     dr_reloadData(report);
                 });
             }
 	}else{
-            jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Loading Data</div></div>');
+            jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
             ajaxCall('dr_BuildReportGrid',eid, page, function(dta){
                 jQuery('#reportPanel_'+eid).html(dta);
                 df_loadOutScripts();
@@ -546,10 +536,10 @@
                 for(i=0;i<items.length;i++){
                     itemlist[i] = jQuery(items[i]).attr('ref');
                 }
-                jQuery('#reportPanel_'+EID).css('position', 'relative').append('<div class="ui-overlay" id="reportpanel_block_'+EID+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;" id="reportpanel_block_message_'+EID+'"><span class="ui-icon ui-icon-notice" unselectable="on" style="-moz-user-select: none; float:left;">close</span>Deleting Items</div></div>')
+                jQuery('#reportPanel_'+EID).css('position', 'relative').append('<div class="ui-overlay" id="reportpanel_block_'+EID+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;" id="reportpanel_block_message_'+EID+'"><span class="ui-icon ui-icon-notice" unselectable="on" style=" float:left;">close</span>Deleting Items</div></div>')
 
                 ajaxCall('df_deleteEntries',EID, itemlist.join('|||'), function(x){
-                    jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style="-moz-user-select: none; float:left;">close</span>'+x+'</div></div>');
+                    jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');
                     setTimeout('dr_goToPage(\''+EID+'\', jQuery(\'#pageJump_'+EID+'\').val())', 2000);
                     //df_dialog(x);
                 });
@@ -560,7 +550,7 @@
     function dr_deleteItem(EID, ID){
         if(confirm("Are you sure you want to delete this entry?")){
             ajaxCall('df_deleteEntries',EID, ID, function(x){
-                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style="-moz-user-select: none; float:left;">close</span>'+x+'</div></div>');
+                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');
                 setTimeout('dr_goToPage(\''+EID+'\', jQuery(\'#pageJump_'+EID+'\').val())', 2000);
                 //df_dialog(x);
             });

@@ -12,7 +12,7 @@
     <div style="margin-top: 20px; padding: 5px;" class="notice">
     <input type="button" class="button" value="Sync Fields" onclick="viewsSetup_getFields();" />
     <input type="button" class="button" value="Insert Row" onclick="viewSetup_AddRow();" />
-    <!--<input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
+    <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('view');" />
     <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('view');" />-->
     Width: <input type="text" id="_popupWidthview" name="Data[Content][_popupWidthview]" value="<?php if(!empty($Element['Content']['_popupWidthview'])){ echo $Element['Content']['_popupWidthview'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeView]" value="modal" <?php if(!empty($Element['Content']['_popupTypeView'])) {
@@ -49,7 +49,7 @@
                             echo '<div class="columnView" id="viewRow'.$newRow.'_viewCol'.$newCol.'" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
 
                                 echo '<input type="hidden" value="'.$width.'" name="Data[Content][_gridView][viewRow'.$newRow.'][viewCol'.$newCol.']" class="viewRow'.$newRow.'_controlView" id="viewRow'.$newRow.'_viewCol'.$newCol.'_controlView">';//row'.$newRow.'_col'.$newCol.'';
-                                echo '<div style="padding: 10px; margin: 10px; -moz-user-select: none;" class="ui-state-error viewGridview viewColumn ui-sortable" unselectable="on">';
+                                echo '<div style="padding: 10px; margin: 10px; " class="ui-state-error viewGridview viewColumn ui-sortable">';
 
                                 $content = array_keys($layout, $row.'_'.$col);
                                 if(!empty($content)){
@@ -64,7 +64,7 @@
                                         }
 
                                         if(!empty($cfg['_SectionBreak'][$render])){
-                                            $output .= '<div style="padding: 3px;" class="viewportlet list_row4 table_sorter sectionBreak ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak'.$render.'"><div class="viewportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style="-moz-user-select: none;"/><strong>Title:</strong> <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak]['.$render.'][Title]" value="'.$cfg['_SectionBreak'][$render]['Title'].'" /></div><div style="padding:3px;"><strong>Caption:</strong> <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak]['.$render.'][Caption]" value="'.$cfg['_SectionBreak'][$render]['Caption'].'" /></div><input class="layOutview positioning" type="hidden" name="'.$render.'" id="'.$render.'" value="row'.$newRow.'_col'.$newCol.'"/></div>';
+                                            $output .= '<div style="padding: 3px;" class="viewportlet list_row4 table_sorter sectionBreak ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak'.$render.'"><div class="viewportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/><strong>Title:</strong> <input type="textfield" class="sectionTitle" name="Data[Content][_SectionBreak]['.$render.'][Title]" value="'.$cfg['_SectionBreak'][$render]['Title'].'asdasd" /></div><div style="padding:3px;"><strong>Caption:</strong> <input type="textfield" class="sectionTitle" name="Data[Content][_SectionBreak]['.$render.'][Caption]" value="'.$cfg['_SectionBreak'][$render]['Caption'].'" /></div><input class="layOutview positioning" type="hidden" name="'.$render.'" id="'.$render.'" value="row'.$newRow.'_col'.$newCol.'"/></div>';
                                             $_SESSION['dataview']['OutScripts'] .= "
                                                 jQuery('.viewportlet-header .ui-icon').click(function() {
                                                         jQuery(this).toggleClass(\"ui-icon-minusthick\");
@@ -221,7 +221,7 @@
 				viewSetup_columSave();
 			}
 		});
-		jQuery(".viewGridview").disableSelection();
+		//jQuery(".viewGridview").disableSelection();
 
 	});
 
@@ -278,7 +278,7 @@ function viewSetup_AddRow(){
 				viewSetup_columSave();
 			}
 		});
-		jQuery(".viewGridview").disableSelection();
+		//jQuery(".viewGridview").disableSelection();
 }
 
 function viewSetupColumns(row){
@@ -335,7 +335,7 @@ function viewAddColumn(row){
 						viewSetup_columSave();
 					}
 				});
-				jQuery(".viewGridview").disableSelection();
+				//jQuery(".viewGridview").disableSelection();
                                 jQuery('.'+row+'_controlView').val(width+'%');
 			}
                         if(jQuery(this).attr('id').length > 0){
@@ -375,7 +375,7 @@ function viewSubtractColumn(row){
 			viewSetup_columSave();
 		}
 	});
-	jQuery(".viewGridview").disableSelection();
+	//jQuery(".viewGridview").disableSelection();
 }
 function viewRemoveColumns(row){
 	if(jQuery('#'+row+' .viewportlet').length != 0){
