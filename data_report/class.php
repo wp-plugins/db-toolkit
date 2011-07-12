@@ -3953,7 +3953,7 @@ function dt_runDataSourceImport($Config){
                         $currentEntry = $currentEntry[$point];
                     }
                 }
-                $insertString[] = "'".mysql_real_escape_string($currentEntry)."'";
+                $insertString[] = "'".@mysql_real_escape_string($currentEntry)."'";
             }
         }
         $query = $prefix.implode(', ',$prefixFields).") VALUES (".implode(', ', $insertString).");";

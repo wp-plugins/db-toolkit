@@ -74,7 +74,7 @@ for($p=1; $p<=$TotalPages; $p++){
         }
     }else{
         if($p == $TotalPages && $Page < $TotalPages-4){
-            $pagination .= '&hellip;<a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">'.$p.'</a>';
+            $pagination .= '<a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">&hellip;</a><a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">'.$p.'</a>';
         }
     }
 }
