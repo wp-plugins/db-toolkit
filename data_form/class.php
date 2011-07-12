@@ -728,15 +728,17 @@ function df_processInsert($EID, $Data) {
         return $Return;
     }
 
-    foreach($Config['_Field'] as $Field=>$Type){       
-        if(isset($Data[$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
-            $typeSet = explode('_', $Type);
-            if(!empty($typeSet[1])) {
-                if(function_exists($typeSet[0].'_handleInput')) {
-                    $Setup['_ActiveProcess'] = 'insert';
-                    $Func = $typeSet[0].'_handleInput';
-                    $Data[$Field] = $Func($Field, $Data[$Field], $typeSet[1], $Setup, $Data);
+    foreach($Config['_Field'] as $Field=>$Type){        
+        $typeSet = explode('_', $Type);
+        if(!empty($typeSet[1])) {
+            if(function_exists($typeSet[0].'_handleInput')) {
+                $Setup['_ActiveProcess'] = 'insert';
+                $Func = $typeSet[0].'_handleInput';
+                $Value = false;
+                if(!empty($Data[$Field])){
+                    $Value = $Data[$Field];
                 }
+                $Data[$Field] = $Func($Field, $Value, $typeSet[1], $Setup, $Data);
             }
         }
     }

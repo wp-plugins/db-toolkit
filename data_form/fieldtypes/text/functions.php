@@ -90,9 +90,25 @@ function text_presuff($Field, $Table, $Config = false){
 	}
        
 
-	$Return = 'Length: <input type="text" name="Data[Content][_FieldLength]['.$Field.']" value="'.$PreLen.'" class="textfield" size="5" />&nbsp;';
-	$Return .= 'Prefix: <input type="text" name="Data[Content][_Prefix]['.$Field.']" value="'.$Pre.'" class="textfield" size="5" />&nbsp;';
-	$Return .= ' Suffix: <input type="text" name="Data[Content][_Suffix]['.$Field.']" value="'.$Suf.'" class="textfield" size="5" />';
+	$Return = 'Length: <input type="text" name="Data[Content][_FieldLength]['.$Field.']" value="'.$PreLen.'" class="textfield" size="5" style="width:100px" />&nbsp;<br />';
+	$Return .= 'Prefix: <input type="text" name="Data[Content][_Prefix]['.$Field.']" value="'.$Pre.'" class="textfield" size="5" style="width:100px" />&nbsp;<br />';
+	$Return .= ' Suffix: <input type="text" name="Data[Content][_Suffix]['.$Field.']" value="'.$Suf.'" class="textfield" size="5" style="width:100px" /><br />';
+        $Return .= 'Type: <select name="Data[Content][_fieldType]['.$Field.']">';
+            $type = 'text';
+            
+                $sel = 'selected="selected"';
+                if($Config['Content']['_fieldType'][$Field] != 'text'){
+                    $sel = '';
+                }
+                $Return .= '<option value="text" '.$sel.'>Textfield</option>';
+                $sel = '';
+                if($Config['Content']['_fieldType'][$Field] == 'password'){
+                    $sel = 'selected="selected"';
+                }
+                $Return .= '<option value="password" '.$sel.'>Password</option>';
+            
+
+        $Return .= '</select>';
        
         
 return $Return;

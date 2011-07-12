@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 2.9.2
 Tested up to: 3.2
-Stable tag: 0.2.6.8
+Stable tag: 0.2.6.9
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -53,6 +53,11 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.2.6.9 =
+* Added a new form processor: Wordpress Login. It can take two fields and use them to login the user before saving the data to the table. (password field gets ******) for security.
+* Fixed a bug that prevented Auto Values (IPAddress, UserID, TimeStamp) from running through their value processors.
+* Fixed a bug that prevented the wysiwyg fieldtype from loading.
 
 = 0.2.6.8 =
 * yet more bug fixes. mainly on the form layout and view layout builder
