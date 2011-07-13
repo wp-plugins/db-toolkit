@@ -174,6 +174,24 @@ if(!empty($_GET['renderinterface'])){
             return;
         }
 
+
+
+        /// Start of listing applications
+        if(!empty($_FILES['appImage']['size'])){
+            $path = wp_upload_dir();
+            // set filename and paths
+            $Ext = pathinfo($_FILES['appImage']['name']);
+            $newFileName = sanitize_file_name($_POST['application'].'.'.$Ext['extension']);
+            $upload = wp_upload_bits($newFileName, null, file_get_contents($_FILES['appImage']['tmp_name']));
+
+            $appConfig = get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
+            $appConfig['imageURL'] = $upload['url'];
+            $appConfig['imageFile'] = $upload['file'];
+            update_option('_'.sanitize_title($_POST['application']).'_app', $appConfig);
+            
+        }
+
+
         global $wpdb;
         $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
 
@@ -189,29 +207,42 @@ if(!empty($_GET['renderinterface'])){
                 }
                 
             }
-            unset($apps[$_SESSION['activeApp']]);
+            unset($apps[sanitize_title($_SESSION['activeApp'])]);
             update_option('dt_int_Apps', $apps);
+            delete_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
             $_SESSION['activeApp'] = 'Base';
         }
 
         if(!empty($_POST['loadApp'])){
-            $_SESSION['activeApp'] = $_POST['application'];
-
+            $_SESSION['activeApp'] = sanitize_title($_POST['application']);
         }
-
+        
         if(empty($_SESSION['activeApp'])){
             $_SESSION['activeApp'] = 'Base';
         }
         $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
         $clusters = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_clstr%' ", ARRAY_A);
+
+
+        // check if there is a app config
+        $appConfig = get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
+        
+
+
         ?>
 
         <div class="wrap">
-            <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />
+            <div><?php
+            if(!empty($appConfig['imageURL'])){
+               echo '<img src="'.$appConfig['imageURL'].'" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />';
+            }else{
+                echo '<img src="'.WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />';
+            }
+            ?>
                 <a href="admin.php?page=Add_New" class="button">New Interface</a>&nbsp;
                 <a href="admin.php?page=New_Cluster" class="button">New Cluster</a>
                 <br />
-                <span class="description">Manage Applications and Interfaces</span>
+                <span class="description">Manage Interfaces & Clusters</span>
                 <br class="clear" /><br />
             <?php
             if(!empty($_POST['Data'])) {
@@ -235,24 +266,36 @@ if(!empty($_GET['renderinterface'])){
                 echo '<div class="notice fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
             }
             ?>
-            <form method="post" action="" id="application-switcher">
+            <form method="post" action="" enctype="multipart/form-data" id="application-switcher">
             <div class="tablenav">
                 <div class="alignleft actions">Application
+                    <?php
+                        $appList = get_option('dt_int_Apps');
+                    ?>
                     <select name="application">
                     <?php
-
-                    $appList = get_option('dt_int_Apps');
                     if(empty($appList)){
                         $appList['Base'] = 'open';
                         update_option('dt_int_Apps', $appList);
                     }
                     foreach($appList as $app=>$state){
-                        if($state == 'open'){
-                            $Sel = '';
-                            if($app == $_SESSION['activeApp']){
-                                $Sel = 'selected="selected"';
+                        if(is_array($state)){
+                            if($state['state'] == 'open'){
+                                $Sel = '';
+                                if($app == $_SESSION['activeApp']){
+                                    $Sel = 'selected="selected"';
+                                }
+                                echo '<option '.$Sel.' value="'.$app.'">'.$state['name'].'</option>';
                             }
-                            echo '<option '.$Sel.' value="'.$app.'">'.$app.'</option>';
+                            
+                        }else{
+                            if($state == 'open'){
+                                $Sel = '';
+                                if($app == $_SESSION['activeApp']){
+                                    $Sel = 'selected="selected"';
+                                }
+                                echo '<option '.$Sel.' value="'.$app.'">'.$app.'</option>';
+                            }
                         }
                     }
                     ?>
@@ -261,6 +304,17 @@ if(!empty($_GET['renderinterface'])){
                     <?php
                     if($_SESSION['activeApp'] != 'Base'){
                         echo '<input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
+                    ?>
+
+                    App Image: <input type="file" name="appImage"><input type="submit" value="Upload" class="button">
+
+
+
+                    <?php
+
+
+
+
                     }
                     ?>
                     
@@ -334,7 +388,7 @@ if(!empty($_GET['renderinterface'])){
                         if(empty($cfg['_Application'])){
                             $cfg['_Application'] = 'Base';
                         }
-                        if($cfg['_Application'] == $_SESSION['activeApp']){
+                        if(sanitize_title($cfg['_Application']) == $_SESSION['activeApp']){
                             $GroupName = '__Ungrouped';
                             if(!empty($cfg['_ItemGroup'])){
                                 $GroupName = $cfg['_ItemGroup'];
@@ -427,7 +481,7 @@ if(!empty($_GET['renderinterface'])){
                         if(empty($cfg['_Application'])){
                             $cfg['_Application'] = 'Base';
                         }
-                        if($cfg['_Application'] == $_SESSION['activeApp']){
+                        if(sanitize_title($cfg['_Application']) == $_SESSION['activeApp']){
                             $GroupName = '__Ungrouped';
                             if(!empty($cfg['_ItemGroup'])){
                                 $GroupName = $cfg['_ItemGroup'];

@@ -454,6 +454,7 @@ function dt_menus() {
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
+        $Manager = add_submenu_page("Database_Toolkit_Welcome", 'Application Masnagement', 'App Management', 'activate_plugins', "app_manager", 'dbtoolkit_appman');
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
@@ -477,6 +478,11 @@ function dt_menus() {
             add_action('admin_head-'.$addNew, 'dt_headers');
             add_action('admin_print_scripts-'.$addNew, 'dt_scripts');
             add_action('admin_footer-'.$addNew, 'dt_footers');
+
+            add_action('admin_print_styles-'.$Manager, 'dt_styles');
+            add_action('admin_head-'.$Manager, 'dt_headers');
+            add_action('admin_print_scripts-'.$Manager, 'dt_scripts');
+            add_action('admin_footer-'.$Manager, 'dt_footers');
 
             add_action('admin_print_styles-'.$Import, 'dt_styles');
             add_action('admin_head-'.$Import, 'dt_headers');
@@ -649,6 +655,12 @@ function dbtoolkit_admin() {
 function dbtoolkit_cluster() {
     global $user_ID;
     include_once(DB_TOOLKIT.'dbtoolkit_cluster.php');
+}
+
+function dbtoolkit_appman() {
+    global $user_ID, $wpdb;
+
+    include_once(DB_TOOLKIT.'dbtoolkit_apps.php');
 }
 
 function dbtoolkit_dashboard() {

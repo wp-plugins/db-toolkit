@@ -97,7 +97,7 @@ if(!empty($_POST['Data'])) {
     }
     // Sanatize Stuff
     $_POST['Data']['Content']['_APICallName'] = sanitize_title($_POST['Data']['Content']['_APICallName']);
-    sanitize_title($title);
+    //sanitize_title($title);
 
     $newCFG['Content'] = base64_encode(serialize($_POST['Data']['Content']));
     $newCFG['_interfaceType'] = 'Configured';
@@ -107,14 +107,30 @@ if(!empty($_POST['Data'])) {
         $newCFG['_Application'] = 'Base';
     }
     $Apps = get_option('dt_int_Apps');
-    if(!empty($Apps[$newCFG['_Application']])){
-        $Apps[$newCFG['_Application']] = 'open';
+    if(!empty($Apps[sanitize_title($newCFG['_Application'])])){
+        $Apps[sanitize_title($newCFG['_Application'])]['state'] = 'open';
+        $Apps[sanitize_title($newCFG['_Application'])]['name'] = $newCFG['_Application'];
         update_option('dt_int_Apps', $Apps);
+        $_SESSION['activeApp'] = sanitize_title($_POST['Data']['Content']['_Application']);
+        $appConfig = get_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app');
+        $appConfig['state'] = 'open';
+        $appConfig['name'] = $_POST['Data']['Content']['_Application'];
+        update_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app', $appConfig);
+
     }else{
-        $Apps[$newCFG['_Application']] = 'open';
+        $Apps[sanitize_title($newCFG['_Application'])]['state'] = 'open';
+        $Apps[sanitize_title($newCFG['_Application'])]['name'] = $newCFG['_Application'];
         update_option('dt_int_Apps', $Apps);
+        //$newApp['Author'] =
+        $newApp = array(
+            'state'=>'open',
+            'name'=>$_POST['Data']['Content']['_Application'],
+            'logo'=>array(),
+            'author'=>''
+        );
+        update_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app', $newApp);        
     }
-    $_SESSION['activeApp'] = $newCFG['_Application'];
+    $_SESSION['activeApp'] = sanitize_title($newCFG['_Application']);
     $newCFG['_interfaceName'] = $_POST['Data']['Content']['_ReportTitle'];
     if(!empty($_POST['Data']['Content']['_SetMenuItem'])) {
         $newCFG['_isMenu'] = true;
