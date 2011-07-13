@@ -445,7 +445,7 @@ function dt_menus() {
         //$menu['2.995'] = array( '', 'manage_options', 'separator-dbtoolkit', '', 'wp-menu-separator' );
 
         // Create the new top-level Menu
-        //add_menu_page ('Application Marketplace', 'App Marketplace', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/icons/shop_cart.png', '2.996');
+        //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.996');
 
 
         add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
@@ -454,7 +454,7 @@ function dt_menus() {
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
-        $Manager = add_submenu_page("Database_Toolkit_Welcome", 'Application Masnagement', 'App Management', 'activate_plugins', "app_manager", 'dbtoolkit_appman');
+        //$Manager = add_submenu_page("Database_Toolkit_Welcome", 'Application Masnagement', 'App Management', 'activate_plugins', "app_manager", 'dbtoolkit_appman');
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
@@ -468,6 +468,11 @@ function dt_menus() {
             add_action('admin_head-'.$adminPage, 'dt_headers');
             add_action('admin_print_scripts-'.$adminPage, 'dt_scripts');
             add_action('admin_footer-'.$adminPage, 'dt_footers');
+
+            add_action('admin_print_styles-'.$market, 'dt_styles');
+            add_action('admin_head-'.$market, 'dt_headers');
+            add_action('admin_print_scripts-'.$market, 'dt_scripts');
+            add_action('admin_footer-'.$market, 'dt_footers');
 
             add_action('admin_print_styles-'.$NewCluster, 'dt_styles');
             add_action('admin_head-'.$NewCluster, 'dt_headers');
@@ -1170,16 +1175,27 @@ function dt_process() {
 
 
 function dt_listApplications($Application){
-
+    
     $Apps = get_option('dt_int_Apps');
+    //vardump($Apps);
     echo '<select id="appsSelector" name="Data[Content][_Application]" >';
     foreach($Apps as $app=>$state){
-        if($state == 'open'){
-            $Sel = '';
-            if($app == $Application){
-                $Sel = 'selected="selected"';
+        if(is_array($state)){
+            if($state['state'] == 'open'){
+                $Sel = '';
+                if($state['name'] == $Application){
+                    $Sel = 'selected="selected"';
+                }
+                echo '<option value="'.$state['name'].'" '.$Sel.'>'.$state['name'].'</option>';
             }
-            echo '<option value="'.$app.'" '.$Sel.'>'.ucwords($app).'</option>';
+        }else{
+            if($state == 'open'){
+                $Sel = '';
+                if($app == $Application){
+                    $Sel = 'selected="selected"';
+                }
+                echo '<option value="'.$app.'" '.$Sel.'>'.ucwords($app).'</option>';
+            }
         }
     }
     echo '</select>';
@@ -1785,14 +1801,22 @@ function core_applySystemTables(&$value, $key){
 /// App Exporter
 
 
-function exportApp($app){
+function exportApp($app, $publish=false){
+    
+    //die;
     global $wpdb;
-    $Len = strlen($app);
-    $appString = 's:12:"_Application";s:'.$Len.':"'.$app.'"';
+    $Len = strlen($app['name']);
+    $appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
+
     $interfaces = $wpdb->get_results( "SELECT option_name, option_value FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'");
+    
 
     $export = array();
-    $export['application'] = $app;
+    if(file_exists($app['imageFile'])){
+        $export['logo'] = base64_encode(file_get_contents($app['imageFile']));
+    }
+    $export['application'] = $app['name'];
+    $export['appInfo'] = $app;
     if(!empty($interfaces)){
 
         $name = uniqid('intfc');
@@ -1849,17 +1873,29 @@ function exportApp($app){
 
         //fwrite($file, gzdeflate(base64_encode(serialize($export)),9));
         //fclose($file);
-        $fileName = preg_replace('/[^\w\-]+/u', '-', $app);
 
+        //vardump($export);
+
+        $fileName = sanitize_file_name($app['name']);
         $output = gzdeflate(base64_encode(serialize($export)),9);
-        header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
-        header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
-        header ("Pragma: no-cache");                          // HTTP/1.0
-        header('Content-type: application/itf');
-        header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
-        print($output);
-        exit;
+
+        if(empty($publish)){
+            header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
+            header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+            header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
+            header ("Pragma: no-cache");                          // HTTP/1.0
+            header('Content-type: application/itf');
+            header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
+            print($output);
+            exit;
+        }else{
+            
+            $src = wp_upload_bits($fileName.'.gz', null, $output);
+            return $src;
+            //vardump($upload);
+            //die;
+
+        }
 }
 
 function core_createInterfaces($Installer){
@@ -1868,8 +1904,9 @@ function core_createInterfaces($Installer){
     $data = file_get_contents($Installer);
     $data = gzinflate($data);
     $data = unserialize(base64_decode($data));
-    if(empty($apps[$data['application']])){
-        $apps[$data['application']] = 'open';
+    if(empty($apps[sanitize_title($data['application'])])){
+        $apps[sanitize_title($data['application'])]['state'] = 'open';
+        $apps[sanitize_title($data['application'])]['name'] = $data['application'];
         update_option('dt_int_Apps', $apps);
     }
     if(!empty($data['interfaces'])){

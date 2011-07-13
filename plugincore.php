@@ -16,6 +16,7 @@ require_once DB_TOOLKIT.'libs/functions.php';
 require_once DB_TOOLKIT.'libs/actions.php';
 require_once DB_TOOLKIT.'libs/shortcodes.php';
 require_once DB_TOOLKIT.'libs/process.php';
+require_once DB_TOOLKIT.'libs/apps.php';
 
 register_activation_hook( __FILE__, 'interface_VersionCheck');
 

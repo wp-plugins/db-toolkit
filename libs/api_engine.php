@@ -52,7 +52,7 @@
                     if(!isset($user->allcaps[$Config['_menuAccess']])){
                        if(strtolower($vars[1]) == 'json'){
                            $output['result'] = 'fail';
-                           $output['error'] = 'Access Denied';
+                           $output['error'] = $user;
                            echo json_encode($output);
                            exit;
                        }else{
@@ -125,7 +125,6 @@
             exit;
         }
     }
-    
     if (!empty($Method)) {
         switch ($Method) {
             default:
@@ -155,7 +154,7 @@
                     exit;
                 }
                 if (!empty($Format)) {
-                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'hmtl') {
+                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
                         api_Deny();
                     }
                     header("content-type: text/" . strtolower($Format));
@@ -163,6 +162,9 @@
                     $Return = false;
                     if(!empty($_GET['itemID'])){
                         $Return = array($Config['_ReturnFields'][0]=>$_GET['itemID']);
+                    }
+                    if(!empty($_POST['itemID'])){
+                        $Return = array($Config['_ReturnFields'][0]=>$_POST['itemID']);
                     }
                     if($Format == 'html'){
                         $Format = false;

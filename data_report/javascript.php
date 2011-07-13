@@ -689,4 +689,26 @@
 
 
     }
+
+
+
+        function dbtMarketLogin(){
+
+            user=jQuery('#dbt_user').val();
+            pass=jQuery('#dbt_pass').val();
+            jQuery('#loginStatus').html('');
+            ajaxCall('app_marketLogin', user, pass, function(x){
+                if(x.error){                    
+                     if(x.error.errors.incorrect_password){
+                        jQuery('#loginStatus').html(x.error.errors.incorrect_password[0]);
+                     }
+                     if(x.error.errors.invalid_username){                        
+                        jQuery('#loginStatus').html(x.error.errors.invalid_username[0]);
+                     }
+                     return;
+                }
+                location.reload();
+            })
+
+        }
     

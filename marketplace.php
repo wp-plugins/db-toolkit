@@ -1,58 +1,137 @@
-<?php
+<div id="dbt_container" class="wrap poststuff">
 
-//$linkPrefix = get_bloginfo('url');
-$searchTab = '';
-$featuredTab = '';
-$popularTab = '';
-$newestTab = '';
-$updatedTab = '';
-if(!empty($_GET['tab'])){
-    $tab = $_GET['tab'].'Tab';
-    $$tab = 'class="current"';
-}else{
-    $_GET['tab'] == 'search';
-    $searchTab = 'class="current"';
-}
+        <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
+        <div id="header">
+            <div class="logo">
+                <h2>App Market</h2>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+        <div id="main">
+            <?php
+            // Tabs
+            ?>
+            <div id="dbt-nav">
+                <ul>
+                <?php
+
+                //app_fetchCategories($user, $pass);
+            //$interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+                
+                $marketToken = get_option('_app_marketid_'.get_current_user_id());
+                
+                if(empty($marketToken)){
+                    $cats[0]['category'] = 'Market Login';
+                    $cats[0]['description'] = 'Market Login';
+                    $cats[0]['appmarket_categoriesID'] = 'login';
+                }else{
+                    $cats = app_fetchCategories($marketToken);
+                }
+                //vardump($cats);
+                $tabIndex = 1;
+                foreach($cats as $cat){
+                    
+                    $Class = '';
+                    if(!empty($_GET['ctb'])){
+                    if($_GET['ctb'] == $tabIndex){
+                        $Class = 'current';
+                    }
+                    }else{
+                        if($tabIndex == 1){
+                            $Class= 'current';
+                        }
+                    }
+                    echo '<li class="'.$Class.'">';
+                    echo '<a href="#dbt-option-'.$tabIndex++.'" id="'.$cat['appmarket_categoriesID'].'" title="'.$cat['description'].'">'.$cat['category'].'</a>';
+                    echo '</li>';
+                }
+
+                ?>
+                </ul>
+
+            </div>
+
+            <div id="content">
+
+                <?php
+                // Option Tab
+                $tabIndex = 1;
+                
+                foreach($cats as $cat){
+                    $view = 'none';
+                    if(!empty($_GET['ctb'])){
+                        if($_GET['ctb'] == $tabIndex){
+                            $view = 'block';
+                        }
+                    }else{
+                        if($tabIndex == 1){
+                            $view = 'block';
+                        }
+                    }
+
+                    echo '<div id="dbt-option-'.$tabIndex.'" class="group" style="display: '.$view.';">';
+
+                    // Do Call for apps in category
+                    echo '<h2>'.$cat['category'].'</h2>';
+                    echo '<div id="panel_'.$cat['appmarket_categoriesID'].'">';
+                        if($cat['appmarket_categoriesID'] == 'login'){
+                            include(DB_TOOLKIT.'marketlogin.php');
+                        }
+                        if($tabIndex == 1){
+                            echo app_fetchApps($cat['appmarket_categoriesID']);
+                        }
+                    echo '</div>';
+                    echo '</div>';
+                    $tabIndex++;
+                }
 
 
-?>
-<div class="wrap">
-	<div class="icon32" id="icon-themes"><br></div>
-<h2>Application Marketplace</h2>
-
-	<ul class="subsubsub">
-		<li><a <?php echo $searchTab; ?> href="admin.php?page=appmarket&tab=search">Search</a> | </li>
-		<li><a <?php echo $featuredTab; ?> href="admin.php?page=appmarket&tab=featured">Featured</a> | </li>
-		<li><a <?php echo $popularTab; ?> href="admin.php?page=appmarket&tab=popular">Popular</a> | </li>
-		<li><a <?php echo $newestTab; ?> href="admin.php?page=appmarket&tab=newest">Newest</a> | </li>
-		<li><a <?php echo $updatedTab; ?> href="admin.php?page=appmarket&tab=updated">Recently Updated</a></li>
-	</ul>
-	<br class="clear">
-		<p>Applications are predefined sets of interfaces created by other DB-Toolkit users and published on the DB-Toolkit Marketplace.</p>
+            ?>
 
 
+            </div>
+            <div class="clear"></div>
 
-        <?php
-        if($_GET['tab'] == 'search'){
-            
-        //vardump($_POST);
+        </div>
+        <div class="save_bar_top">
 
-        ?>
-	<h4>Search</h4>
-	<p class="install-help">Search for apps by keyword, author, or tag.</p>
-	<form action="admin.php?page=appmarket&tab=search" method="post" id="search-plugins">
-		<select id="typeselector" name="type">
-			<option value="term">Term</option>
-			<option value="author">Author</option>
-			<option value="tag">Tag</option>
-		</select>
-		<input type="text" value="" name="s">
-		<label for="plugin-search-input" class="screen-reader-text">Search Apps</label>
-		<input type="submit" class="button" value="Search Apps" name="search" id="plugin-search-input">
-	</form>
-	<?php
-        }
-        ?>
+                <span class="submit-footer-reset">
+                </span>
+        </div>
+
+    <div style="clear:both;"></div>
+</div>
 
 
-        <br class="clear"></div>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    
+    jQuery(document).ready(function(){
+        
+        jQuery('#dbt-nav li a').click(function(){
+            jQuery('#dbt-nav li').removeClass('current');
+            jQuery('.group').hide();
+            jQuery(''+jQuery(this).attr('href')+'').show();
+            jQuery(this).parent().addClass('current');
+            cat = jQuery(this).attr('id');
+            jQuery('#panel_'+cat).html('Loading Apps...');
+            ajaxCall('app_fetchApps', cat, function(l){
+                jQuery('#panel_'+cat).html(l);
+            })
+            return false;
+        });
+
+        jQuery('#dbt_container .help').click(function(){
+            jQuery(''+jQuery(this).attr('href')+'').toggle();
+            return false;
+        })
+    });
+</script>

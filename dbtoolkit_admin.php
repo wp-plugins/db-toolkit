@@ -6,7 +6,6 @@ notes:
 
 */
 
-
 if(!empty($_GET['renderinterface'])){
     $Interface = get_option($_GET['renderinterface']);
     if($Interface['Type'] == 'Cluster'){
@@ -207,6 +206,8 @@ if(!empty($_GET['renderinterface'])){
                 }
                 
             }
+            //vardump($apps);
+            //die;
             unset($apps[sanitize_title($_SESSION['activeApp'])]);
             update_option('dt_int_Apps', $apps);
             delete_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
@@ -214,6 +215,28 @@ if(!empty($_GET['renderinterface'])){
         }
 
         if(!empty($_POST['loadApp'])){
+            
+            if(strtolower($_POST['application']) != 'base'){
+                $Apps = get_option('dt_int_Apps');
+                $appConfig= get_option('_'.sanitize_title($_POST['application']).'_app');
+                //vardump($appConfig);
+                if(empty($appConfig)){
+                    // for old apps
+                    unset($Apps[$_POST['application']]);
+                    $Apps[sanitize_title($_POST['application'])]['state'] = 'open';
+                    $Apps[sanitize_title($_POST['application'])]['name'] = $_POST['application'];
+                    update_option('dt_int_Apps', $Apps);
+                    //$newApp['Author'] =
+                    $user = wp_get_current_user();
+                    $newApp = array(
+                        'state'=>'open',
+                        'name'=>$_POST['application'],
+                        'author'=>$user->data->first_name.' '.$user->data->last_name,
+                        'author email'=>$user->data->user_email
+                    );
+                    update_option('_'.sanitize_title($_POST['application']).'_app', $newApp);
+                }
+            }
             $_SESSION['activeApp'] = sanitize_title($_POST['application']);
         }
         
@@ -226,7 +249,8 @@ if(!empty($_GET['renderinterface'])){
 
         // check if there is a app config
         $appConfig = get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
-        
+        //vardump($_SESSION['activeApp']);
+        //vardump($appConfig);
 
 
         ?>
@@ -234,7 +258,7 @@ if(!empty($_GET['renderinterface'])){
         <div class="wrap">
             <div><?php
             if(!empty($appConfig['imageURL'])){
-               echo '<img src="'.$appConfig['imageURL'].'" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />';
+               echo '<img src="'.UseImage($appConfig['imageURL'], 7, 200, 100).'" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />';
             }else{
                 echo '<img src="'.WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />';
             }
@@ -302,7 +326,8 @@ if(!empty($_GET['renderinterface'])){
                     </select>
                     <input type="submit" class="button-secondary action" id="doaction" name="loadApp" value="Switch">
                     <?php
-                    if($_SESSION['activeApp'] != 'Base'){
+                    
+                    if(strtolower($_SESSION['activeApp']) != 'base'){
                         echo '<input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
                     ?>
 
@@ -321,7 +346,7 @@ if(!empty($_GET['renderinterface'])){
                 </div>
                 <div class="alignright actions">
                     <?php
-                    if($_SESSION['activeApp'] != 'Base'){
+                    if(strtolower($_SESSION['activeApp']) != 'base'){
                         echo '<input type="submit" class="button-primary action" id="doaction" name="deleteApp" value="Delete Application" onClick="return confirm(\'This will delete all interfaces in this Application. Data will remain intact. This cannot be undone. Continue?\');" >';
                     }
                     ?>

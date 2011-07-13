@@ -16,7 +16,7 @@
                 <ul>
                 <?php
 
-
+                //app_fetchCategories($user, $pass);
             //$interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
                 $apps = get_option('dt_int_Apps');                
                 
@@ -71,7 +71,7 @@
                         if(!empty($appConfig['imageURL'])){
                             echo '<img src="'.$appConfig['imageURL'].'" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" style="float:right;" />';
                         }
-                        
+
 
                         echo '</div>';
 

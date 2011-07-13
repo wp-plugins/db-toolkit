@@ -6,14 +6,15 @@
  */
 
 if(!empty($_POST['exportApp'])){
-    exportApp($_POST['application']);
+    $appData = get_option('_'.$_POST['application'].'_app');
+    exportApp($appData);
 }
 
 //// FROM dbtoolkit_admin.php
 //// LINE 95
 
 if(!empty($_POST['Data'])) {
-
+    global $user;
     $_POST = stripslashes_deep($_POST);
     //vardump($_POST);
 
@@ -122,11 +123,14 @@ if(!empty($_POST['Data'])) {
         $Apps[sanitize_title($newCFG['_Application'])]['name'] = $newCFG['_Application'];
         update_option('dt_int_Apps', $Apps);
         //$newApp['Author'] =
+
+        $user = wp_get_current_user();
         $newApp = array(
             'state'=>'open',
             'name'=>$_POST['Data']['Content']['_Application'],
-            'logo'=>array(),
-            'author'=>''
+            'description'=>'',
+            'author'=>$user->data->first_name.' '.$user->data->last_name,
+            'author email'=>$user->data->user_email
         );
         update_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app', $newApp);        
     }

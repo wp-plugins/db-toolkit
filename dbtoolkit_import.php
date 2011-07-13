@@ -26,6 +26,27 @@ if(!empty($_FILES['itfInstaller']['size'])){
             $data = file_get_contents($_SESSION['appInstall']);
             $data = gzinflate($data);
             $data = unserialize(base64_decode($data));
+
+            $exisits = get_option('_'.sanitize_title($data['appInfo']['name']).'_app');
+            if(!empty($exisits)){                
+                echo '<p><strong>ERROR: App is already installed.</strong></p>';
+                echo '<p id="returnLink" style="display:block;"><a href="'.$_SERVER['REQUEST_URI'].'">Back to installer</p>';
+                unset($_SESSION['appInstall']);
+                return;
+            }
+
+            if(!empty($data['appInfo'])){
+                $Ext = pathinfo(basename($data['appInfo']['imageFile']));
+                if(!empty($data['logo'])){
+                    $filename = sanitize_file_name($data['appInfo']['name'].'.'.$Ext['extension']);
+                    $src = wp_upload_bits($filename, null, base64_decode($data['logo']));
+                    $data['appInfo']['imageURL'] = $src['url'];
+                    $data['appInfo']['imageFile'] = $src['file'];
+                }
+                update_option('_'.sanitize_title($data['appInfo']['name']).'_app', $data['appInfo']);
+            }
+
+
             if(!empty($data['application'])){
             echo '<p>Installing Application: <strong>'.$data['application'].'</strong></p>';
             echo '<p id="createingInterfaces">Creating Interfaces...</p>';
