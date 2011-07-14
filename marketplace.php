@@ -77,9 +77,10 @@
                     echo '<div id="panel_'.$cat['appmarket_categoriesID'].'">';
                         if($cat['appmarket_categoriesID'] == 'login'){
                             include(DB_TOOLKIT.'marketlogin.php');
-                        }
-                        if($tabIndex == 1){
-                            echo app_fetchApps($cat['appmarket_categoriesID']);
+                        }else{
+                            if($tabIndex == 1){
+                                echo app_fetchApps($cat['appmarket_categoriesID']);
+                            }
                         }
                     echo '</div>';
                     echo '</div>';

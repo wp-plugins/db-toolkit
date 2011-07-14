@@ -23,7 +23,7 @@ if(!empty($_GET['renderinterface'])){
         <?php
             //global $user;
             $user = wp_get_current_user();
-            if(!empty($user->caps['administrator'])){
+            if(!empty($user->caps['administrator']) && empty($noedit)){
         ?>
         <a class="button add-new-h2" href="admin.php?page=Database_Toolkit&interface=<?php echo $_GET['renderinterface']; ?>">Edit</a>
     <?php

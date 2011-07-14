@@ -1226,16 +1226,23 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
 //Filters will be picked up via Session value
 // Set Vars
+    if(empty($Page)){
+        $Page = 1;
+    }
     if (!empty($Format)) {
         // XML Output
         if (strtolower($Format) == 'xml') {
-            $apiOut = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-            $apiOut .= "	<entries type=\"array\">\n";
+            $apiOut = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";            
+            $apiOut .= "    <entries>\n";            
         }
         //json output
         if (strtolower($Format) == 'json') {
             $jsonIndex = 0;
             $apiOutput = array();
+            $apiOutput['page'] = $Page;
+            $apiOutput['totalpages'] = '';
+            $apiOutput['totalentries'] = '';
+            $apiOutput['entrycount'] = '';
             $apiOutput['entries'] = array();
         }
 
@@ -1605,7 +1612,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     global $wpdb;
     //dump($Queries);
     $CountQuery = "SELECT count(" . $countSelect . ") as Total FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . " \n " . $groupBy . "\n\n " . $countLimit . ";";
-
     $CountResult = mysql_query($CountQuery);
     if (!empty($entryCount)) {
         // Countr Rows
@@ -1664,6 +1670,21 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if (empty($Config['_Items_Per_Page'])) {
         $queryLimit = '';
     }
+
+    if (!empty($Format)) {
+        // XML Output
+        if (strtolower($Format) == 'xml') {
+            $apiOut .= "    <page>".$Page."</page>\n";
+            $apiOut .= "    <totalpages>".$TotalPages."</totalpages>\n";
+            $apiOut .= "    <totalentries>".$Count['Total']."</totalentries>\n";
+        }
+        //json output
+        if (strtolower($Format) == 'json') {
+            $apiOutput['totalpages'] = $TotalPages;
+            $apiOutput['totalentries'] = $Count['Total'];
+        }
+    }
+
     // Select Query
     //$Query = "SELECT count(b.Country) as TotalCountry, ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n GROUP BY b.Country \n ".$orderStr." \n ".$queryLimit.";"
 
@@ -2244,8 +2265,18 @@ var " . $ChartID . " = new Highcharts.Chart({
     }
 
     if (!empty($Result)) {
+        if (!empty($Format)) {
+            // XML Output
+            if (strtolower($Format) == 'xml') {
+                $apiOut .= "    <entrycount>".count($Result)."</entrycount>\n";
+            }
+            //json output
+            if (strtolower($Format) == 'json') {
+                $apiOutput['entrycount'] = count($Result);
+            }
+        }
 
-        //while($row = mysql_fetch_assoc($Result)) {
+        //while($row = mysql_fetch_assoc($Result)) {        
         foreach ($Result as $row) {
         
             // Switch Row Style
@@ -2272,7 +2303,7 @@ var " . $ChartID . " = new Highcharts.Chart({
             if (!empty($Format)) {
                 // XML Output
                 if (strtolower($Format) == 'xml') {
-                    $apiOut .= "		<entry>\n";
+                    $apiOut .= "    <entry>\n";
                 }
                 // json Output
                 if (strtolower($Format) == 'json') {
@@ -2596,7 +2627,8 @@ var " . $ChartID . " = new Highcharts.Chart({
                                         if (!empty($Format)) {
                                             // XML Output
                                             if (strtolower($Format) == 'xml') {
-                                                $apiOut .= "			<" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
+                                                //$apiOut .= "			<" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
+                                                $apiOut .= "	<" . $Field . ">" .htmlentities(stripslashes($outData)). "</" . $Field . ">\n";
                                             }
                                             // json Output
                                             if (strtolower($Format) == 'json') {
@@ -2686,7 +2718,7 @@ var " . $ChartID . " = new Highcharts.Chart({
                     if (!empty($Format)) {
                         // XML Output
                         if (strtolower($Format) == 'xml') {
-                            $apiOut .= "		</entry>\n";
+                            $apiOut .= "    </entry>\n";
                         }
                         // json Output
                         if (strtolower($Format) == 'json') {

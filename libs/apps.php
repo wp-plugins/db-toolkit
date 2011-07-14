@@ -72,5 +72,8 @@ function app_fetchApps($cat){
     return $response;
 }
 
+function app_launcher(){
+    include DB_TOOLKIT.'dbtoolkit_launcher.php';
+}
 
 ?>

@@ -237,8 +237,11 @@ $themeURL = get_bloginfo('template_url');
 
     // load interface specifics
     if(is_admin()){
-
-        wp_register_style('interface_setup_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/setup.css');
+        if($_GET['page'] == 'app_launcher'){
+            wp_register_style('interface_setup_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/launcher.css');
+        }else{
+            wp_register_style('interface_setup_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/setup.css');
+        }
         wp_enqueue_style('interface_setup_styles');
 
         if(!empty($_GET['page']) || !empty($_GET['renderinterface'])){
@@ -445,8 +448,11 @@ function dt_menus() {
         //$menu['2.995'] = array( '', 'manage_options', 'separator-dbtoolkit', '', 'wp-menu-separator' );
 
         // Create the new top-level Menu
-        //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.996');
-
+        //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
+        //$appMarket = add_submenu_page("appmarket", 'App Market', 'Browse Market', 'read', "appmarket");
+        //$launcher = add_submenu_page("appmarket", 'Applications', 'Applications', 'read', "app_launcher", 'app_launcher');
+        //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function)
+        //add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function)
 
         add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
@@ -473,6 +479,11 @@ function dt_menus() {
             add_action('admin_head-'.$market, 'dt_headers');
             add_action('admin_print_scripts-'.$market, 'dt_scripts');
             add_action('admin_footer-'.$market, 'dt_footers');
+
+            add_action('admin_print_styles-'.$launcher, 'dt_styles');
+            add_action('admin_head-'.$launcher, 'dt_headers');
+            add_action('admin_print_scripts-'.$launcher, 'dt_scripts');
+            add_action('admin_footer-'.$launcher, 'dt_footers');
 
             add_action('admin_print_styles-'.$NewCluster, 'dt_styles');
             add_action('admin_head-'.$NewCluster, 'dt_headers');
