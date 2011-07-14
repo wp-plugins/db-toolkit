@@ -237,7 +237,8 @@ $themeURL = get_bloginfo('template_url');
 
     // load interface specifics
     if(is_admin()){
-        if($_GET['page'] == 'app_launcher'){
+        
+        if(substr($_GET['page'],0,4) == 'app_' || substr($_GET['page'],0,8) == 'dt_intfc'){
             wp_register_style('interface_setup_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/launcher.css');
         }else{
             wp_register_style('interface_setup_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/setup.css');
@@ -434,6 +435,21 @@ function dt_scripts() {
 }
 
 //Menus
+
+function add_admin_menu_separator($position) {
+  global $menu;
+  $index = 0;
+  foreach($menu as $offset => $section) {
+    if (substr($section[2],0,9)=='separator')
+      $index++;
+    if ($offset>=$position) {
+      $menu[$position] = array('','read',"separator{$index}",'','wp-menu-separator');
+      break;
+    }
+  }
+}
+
+
 function dt_menus() {
 
     global $wpdb;
@@ -443,10 +459,10 @@ function dt_menus() {
     $user = wp_get_current_user();
 
 
-        //vardump($menu);
         // Create the new separator
-        //$menu['2.995'] = array( '', 'manage_options', 'separator-dbtoolkit', '', 'wp-menu-separator' );
-
+        //$menu['26'] = array( '', 'read', 'separator-dbtoolkit1', '', 'wp-menu-separator' );
+        //$menu['30.99'] = array( '', 'read', 'separator-dbtoolkit1', '', 'wp-menu-separator' );
+        
         // Create the new top-level Menu
         //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
         //$appMarket = add_submenu_page("appmarket", 'App Market', 'Browse Market', 'read', "appmarket");
@@ -517,6 +533,86 @@ function dt_menus() {
 
 	////add_submenu_page("Database_Toolkit", 'Setup', 'Setup', 'read', "General Settings", 'dbtoolkit_setup');
 
+       
+            $apps = get_option('dt_int_Apps');
+
+            //vardump($apps);
+            $base = 1;
+            foreach($apps as $app=>$data){
+                $Groups = array();
+                $appSettings = get_option('_'.$app.'_app');
+                //vardump($data);
+                // Create app menu
+                //add seperator
+                //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position)
+                add_admin_menu_separator('25.'.$base++);
+                $appPage = add_menu_page($data['name'], $data['name'], 'read', 'app_'.$app, "app_launcher", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png', '25.'.$base++);
+
+                add_action('admin_head-'.$appPage, 'dt_headers');
+                add_action('admin_print_scripts-'.$appPage, 'dt_scripts');
+                add_action('admin_print_styles-'.$appPage, 'dt_styles');
+                add_action('admin_footer-'.$appPage, 'dt_footers');
+
+                foreach($appSettings['interfaces'] as $interface=>$access){
+                    // load interface settings and check for menus
+                    $cfg = get_option($interface);
+                    if(!empty($cfg['_ItemGroup'])){
+                        $Groups[$cfg['_ItemGroup']][] = $cfg;
+                    }else{
+                        if(!empty($cfg['_interfaceName'])){
+                            $Groups[$cfg['_interfaceName']][] = $cfg;
+                        }
+                    }
+                    //vardump($cfg);
+
+                }
+                //vardump($Groups);
+                ksort($Groups);
+                if(!empty($Groups)){
+                    $m = 1;
+                    foreach($Groups as $Group=>$Interfaces){
+                        
+                        //vardump($Interfaces);
+                        $icon = WP_PLUGIN_URL.'/db-toolkit/data_report/table_branch.png';
+                        if($m >= count($Groups)){
+                            $icon = WP_PLUGIN_URL.'/db-toolkit/data_report/table_end.png';
+                        }
+                        $pageName = $Interfaces[0]['ID'];
+                        
+                        if($Interfaces[0]['_menuAccess'] == 'null'){
+                            $Interfaces[0]['_menuAccess'] = 'read';
+                        }
+                        $groupPage = add_menu_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "app_launcher", $icon, '25.'.$base++);
+                        add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                        
+                        add_action('admin_head-'.$groupPage, 'dt_headers');
+                        add_action('admin_print_scripts-'.$groupPage, 'dt_scripts');
+                        add_action('admin_print_styles-'.$groupPage, 'dt_styles');
+                        add_action('admin_footer-'.$groupPage, 'dt_footers');
+
+                        for($i = 1; $i <= count($Interfaces)-1; $i++){
+                            if($Interfaces[$i]['_menuAccess'] == 'null'){
+                                $Interfaces[$i]['_menuAccess'] = 'read';
+                            }                            //vardump($Interfaces[$i]);
+                            $subPage = add_submenu_page($pageName, $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                            
+                            add_action('admin_head-'.$subPage, 'dt_headers');
+                            add_action('admin_print_scripts-'.$subPage, 'dt_scripts');
+                            add_action('admin_print_styles-'.$subPage, 'dt_styles');
+                            add_action('admin_footer-'.$subPage, 'dt_footers');
+
+                        }
+
+                    $m++;
+                    }
+
+                    
+
+                }
+
+            }
+            //vardump($menu);
+            return;
 
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
     if(!empty($interfaces)) {
@@ -538,14 +634,19 @@ function dt_menus() {
         if(empty($Groups)){
             return;
         }
+        $base = 1;
         foreach($Groups as $Group=>$Interfaces){
+            
             $pageName = str_replace("'",'', '_grp_'.$Group);
             $pageName = str_replace("+",'_', $pageName);
             $pageName = str_replace(" ",'_', $pageName);
 
             $pageName = $Interfaces[0]['ID'];
 
-            $groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
+
+            add_admin_menu_separator('25.'.$base++);
+
+            $groupPage = add_menu_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png', '25.'.$base++);
             add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
             
             for($i = 1; $i <= count($Interfaces)-1; $i++){
@@ -565,6 +666,8 @@ function dt_menus() {
                 add_action('admin_print_styles-'.$groupPage, 'dt_styles');
                 add_action('admin_footer-'.$groupPage, 'dt_footers');
         }
+        ksort($menu);
+        //vardump($menu);
     }
 }
 
@@ -1186,7 +1289,6 @@ function dt_process() {
 
 
 function dt_listApplications($Application){
-    
     $Apps = get_option('dt_int_Apps');
     //vardump($Apps);
     echo '<select id="appsSelector" name="Data[Content][_Application]" >';
@@ -1194,7 +1296,7 @@ function dt_listApplications($Application){
         if(is_array($state)){
             if($state['state'] == 'open'){
                 $Sel = '';
-                if($state['name'] == $Application){
+                if($app == $Application){
                     $Sel = 'selected="selected"';
                 }
                 echo '<option value="'.$state['name'].'" '.$Sel.'>'.$state['name'].'</option>';
@@ -1202,7 +1304,7 @@ function dt_listApplications($Application){
         }else{
             if($state == 'open'){
                 $Sel = '';
-                if($app == $Application){
+                if(sanitize_title($app) == sanitize_title($Application)){
                     $Sel = 'selected="selected"';
                 }
                 echo '<option value="'.$app.'" '.$Sel.'>'.ucwords($app).'</option>';
@@ -1922,10 +2024,15 @@ function core_createInterfaces($Installer){
     }
     if(!empty($data['interfaces'])){
         foreach($data['interfaces'] as $interface=>$configData){
+
             $Config = unserialize(base64_decode($configData));
             array_walk_recursive($Config, 'core_applySystemTables');
-            update_option($interface, $Config);
+            update_option($interface, $Config);            
+            app_update($Config['_Application'], $interface, $Config['_menuAccess']);
         }
+
+        // Update App Config
+
         return true;
     }else{
         unlink($Installer);

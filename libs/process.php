@@ -109,6 +109,7 @@ if(!empty($_POST['Data'])) {
     }
     $Apps = get_option('dt_int_Apps');
     if(!empty($Apps[sanitize_title($newCFG['_Application'])])){
+
         $Apps[sanitize_title($newCFG['_Application'])]['state'] = 'open';
         $Apps[sanitize_title($newCFG['_Application'])]['name'] = $newCFG['_Application'];
         update_option('dt_int_Apps', $Apps);
@@ -116,23 +117,11 @@ if(!empty($_POST['Data'])) {
         $appConfig = get_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app');
         $appConfig['state'] = 'open';
         $appConfig['name'] = $_POST['Data']['Content']['_Application'];
+        $appConfig['interfaces'][$optionTitle] = $_POST['Data']['Content']['_menuAccess'];
         update_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app', $appConfig);
-
+        
     }else{
-        $Apps[sanitize_title($newCFG['_Application'])]['state'] = 'open';
-        $Apps[sanitize_title($newCFG['_Application'])]['name'] = $newCFG['_Application'];
-        update_option('dt_int_Apps', $Apps);
-        //$newApp['Author'] =
-
-        $user = wp_get_current_user();
-        $newApp = array(
-            'state'=>'open',
-            'name'=>$_POST['Data']['Content']['_Application'],
-            'description'=>'',
-            'author'=>$user->data->first_name.' '.$user->data->last_name,
-            'author email'=>$user->data->user_email
-        );
-        update_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app', $newApp);        
+        app_update($newCFG['_Application'], $optionTitle, $_POST['Data']['Content']['_menuAccess']);
     }
     $_SESSION['activeApp'] = sanitize_title($newCFG['_Application']);
     $newCFG['_interfaceName'] = $_POST['Data']['Content']['_ReportTitle'];

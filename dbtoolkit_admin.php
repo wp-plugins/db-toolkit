@@ -193,15 +193,18 @@ if(!empty($_GET['renderinterface'])){
 
         global $wpdb;
         $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
-
+        
         if(!empty($_POST['deleteApp'])){
 
 
             $apps = get_option('dt_int_Apps');
-            
+            $appname = $apps[$_POST['application']]['name'];
             foreach($interfaces as $interface){
+                
                 $tmp = get_option($interface['option_name']);
-                if($tmp['_Application'] == $_POST['application']){
+                if($tmp['_Application'] == $appname){
+                    echo $interface['option_name'];
+                    echo ' | ';
                     dt_removeInterface($interface['option_name']);
                 }
                 
@@ -216,25 +219,21 @@ if(!empty($_GET['renderinterface'])){
 
         if(!empty($_POST['loadApp'])){
             
-            if(strtolower($_POST['application']) != 'base'){
-                $Apps = get_option('dt_int_Apps');
+            // quick scan to fix apps
+            $Apps = get_option('dt_int_Apps');
+            foreach($interfaces as $Interface){
+                $cfg = get_option($Interface['option_name']);
+                
+                app_update($cfg['_Application']);
+            }
+
+
+            if(strtolower($_POST['application']) != 'base'){                
                 $appConfig= get_option('_'.sanitize_title($_POST['application']).'_app');
                 //vardump($appConfig);
                 if(empty($appConfig)){
-                    // for old apps
-                    unset($Apps[$_POST['application']]);
-                    $Apps[sanitize_title($_POST['application'])]['state'] = 'open';
-                    $Apps[sanitize_title($_POST['application'])]['name'] = $_POST['application'];
-                    update_option('dt_int_Apps', $Apps);
-                    //$newApp['Author'] =
-                    $user = wp_get_current_user();
-                    $newApp = array(
-                        'state'=>'open',
-                        'name'=>$_POST['application'],
-                        'author'=>$user->data->first_name.' '.$user->data->last_name,
-                        'author email'=>$user->data->user_email
-                    );
-                    update_option('_'.sanitize_title($_POST['application']).'_app', $newApp);
+                    // for old apps                    
+                    app_update($_POST['application']);
                 }
             }
             $_SESSION['activeApp'] = sanitize_title($_POST['application']);
@@ -250,7 +249,6 @@ if(!empty($_GET['renderinterface'])){
         // check if there is a app config
         $appConfig = get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
         //vardump($_SESSION['activeApp']);
-        //vardump($appConfig);
 
 
         ?>
@@ -302,6 +300,7 @@ if(!empty($_GET['renderinterface'])){
                         $appList['Base'] = 'open';
                         update_option('dt_int_Apps', $appList);
                     }
+                    
                     foreach($appList as $app=>$state){
                         if(is_array($state)){
                             if($state['state'] == 'open'){
@@ -388,6 +387,7 @@ if(!empty($_GET['renderinterface'])){
                     <tr>
                         <th scope="col" class="manage-column" id="interface-spacer-top"></th>
                         <th scope="col" class="manage-column" id="interface-name-top">Interface Name</th>
+                        <th scope="col" class="manage-column" id="interface-name-top" style="width:80px;">Landing</th>
                         <th scope="col" class="manage-column" id="interface-table-top">Table Interfaced</th>
                         <th scope="col" class="manage-column" id="interface-date-top">Interface Type</th>
                         <th scope="col" class="manage-column" id="interface-date-top">Short Code</th>
@@ -397,6 +397,7 @@ if(!empty($_GET['renderinterface'])){
                     <tr>
                         <th scope="col" class="manage-column" id="interface-spacer-bottom"></th>
                         <th scope="col" class="manage-column" id="interface-name-bottom">Interface Name</th>
+                        <th scope="col" class="manage-column" id="interface-name-top" style="width:80px;">Landing</th>
                         <th scope="col" class="manage-column" id="interface-table-bottom">Table Interfaced</th>
                         <th scope="col" class="manage-column" id="interface-date-bottom">Interface Type</th>
                         <th scope="col" class="manage-column" id="interface-date-bottom">Short Code</th>                        
@@ -429,14 +430,20 @@ if(!empty($_GET['renderinterface'])){
                         }
                         ?>
                         <tr>
-                            <th scope="row" colspan="5" class="highlight"><?php echo $Group; ?></th>
+                            <th scope="row" colspan="6" class="highlight"><?php echo $Group; ?></th>
                         </tr>
                         <?php
 
 
-
-
+                        $app = sanitize_title($appConfig['name']);
                         foreach($Interfaces as $Interface){
+
+                        $landing = '';
+                        if(!empty($appConfig['landing'])){
+                            if($appConfig['landing'] == $Interface['ID']){
+                                $landing = 'checked="checked"';
+                            }
+                        }
                         
                         $Config = unserialize(base64_decode($Interface['Content']));
                         //vardump($Config);
@@ -454,7 +461,7 @@ if(!empty($_GET['renderinterface'])){
                 <tr id="<?php echo $Interface['ID']; ?>">
                     <td></td>
                     <td>
-                        <strong><?php
+                        <strong><?php                                    
                                     $titleName = 'Untitled Interface';
                                     if(!empty($Interface['_ReportDescription'])) {
                                         $titleName = $Interface['_ReportDescription'];
@@ -463,6 +470,7 @@ if(!empty($_GET['renderinterface'])){
                         <div><?php echo $Desc; ?></div>
                         <div class="row-actions"><a href="<?php echo $_SERVER['REQUEST_URI']; ?>&interface=<?php echo $Interface['ID']; ?>">Edit</a> | <a href="<?php echo $_SERVER['REQUEST_URI']; ?>&renderinterface=<?php echo $Interface['ID']; ?>">View</a> | <a href="<?php echo $_SERVER['REQUEST_URI']; ?>&duplicateinterface=<?php echo $Interface['ID']; ?>">Duplicate</a> | <a href="#" onclick="dt_deleteInterface('<?php echo $Interface['ID']; ?>'); return false;">Delete</a></div></div>
                     </td>
+                    <td><input type="radio" name="<?php echo 'landing_'.$app; ?>" id="rdo_<?php echo $Interface['ID']; ?>" value="<?php echo $Interface['ID']; ?>" onclick="app_setLanding('<?php echo $app; ?>', '<?php echo $Interface['ID']; ?>');" <?php echo $landing; ?> /></td>
                     <td><?php echo $Config['_main_table']; ?></td>
                     <td><?php echo $Config['_ViewMode']; ?></td>
                     <td>[interface id="<?php echo $Interface['ID']; ?>"]</td>

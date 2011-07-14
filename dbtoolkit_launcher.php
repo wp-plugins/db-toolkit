@@ -2,10 +2,10 @@
 /*
  * app launcher! ye baby
  */
+//vardump($_SESSION['activeApp']);
 global $wpdb;
 $user = wp_get_current_user();
-
-$app= get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
+//$app= get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
 
 $Len = strlen($app['name']);
 $appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
@@ -21,12 +21,14 @@ foreach($itnf as $interface){
         if(!empty($cfg['_ItemGroup'])){
             $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
         }else{
-            $menus[$cfg['_ReportDescription']] = $cfg['ID'];
+            if(!empty($cfg['_interfaceName'])){
+                $menus[$cfg['_interfaceName']] = $cfg['ID'];
+            }
         }
     }
 }
 ?>
-<h2 id="appTitle"><?php echo  $app['name']; ?></h2>
+<h2 id="appTitle"><?php echo $app['name']; ?></h2>
 <?php
     if(!empty($menus)){
         ksort($menus);
@@ -37,12 +39,12 @@ foreach($itnf as $interface){
                         echo '<li class="root_item"><a class="parent hasSubs">'.$menu.'</a>';
                             echo '<ul id="'.sanitize_title($menu).'" style="visibility: hidden; display: block;">';
                             foreach($group as $interface=>$label){
-                                echo '<li><a href="admin.php?page=app_launcher&renderinterface='.$interface.'">'.$label.'</a></li>';
+                                echo '<li><a href="admin.php?page='.$interface.'">'.$label.'</a></li>';
                             }
                             echo '</ul>';
                         echo '</li>';
                     }else{
-                        echo '<li class="root_item"><a href="admin.php?page=app_launcher&renderinterface='.$group.'" class="parent">'.$menu.'</a></li>';
+                        echo '<li class="root_item"><a href="admin.php?page='.$group.'" class="parent">'.$menu.'</a></li>';
                     }
                 }                
             echo '</ul>';
@@ -82,7 +84,20 @@ foreach($itnf as $interface){
 <?php
      * 
      */
+   
 if(!empty($_GET['renderinterface'])){
+    $noedit = true;
+    include DB_TOOLKIT.'dbtoolkit_admin.php';
+}else{
+    // load landing
+    if(!empty($app['landing'])){
+        $_GET['renderinterface'] = $app['landing'];
+    }else{
+        foreach($app['interfaces'] as $intf=>$val){
+            $_GET['renderinterface'] = $intf;
+            break;
+        }
+    }
     $noedit = true;
     include DB_TOOLKIT.'dbtoolkit_admin.php';
 }

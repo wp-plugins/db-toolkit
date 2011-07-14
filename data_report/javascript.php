@@ -711,4 +711,12 @@
             })
 
         }
+
+        function app_setLanding(app, intf){
+
+            if(jQuery('#rdo_'+intf).attr('checked')){
+                ajaxCall('app_setLanding', app, intf, function(){});
+            }
+
+        }
     
