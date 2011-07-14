@@ -93,9 +93,11 @@ if(!empty($_GET['renderinterface'])){
     if(!empty($app['landing'])){
         $_GET['renderinterface'] = $app['landing'];
     }else{
-        foreach($app['interfaces'] as $intf=>$val){
-            $_GET['renderinterface'] = $intf;
-            break;
+        if(!empty($app['interfaces'])){
+            foreach($app['interfaces'] as $intf=>$val){
+                $_GET['renderinterface'] = $intf;
+                break;
+            }
         }
     }
     $noedit = true;
