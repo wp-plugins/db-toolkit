@@ -552,19 +552,20 @@ function dt_menus() {
                 add_action('admin_print_scripts-'.$appPage, 'dt_scripts');
                 add_action('admin_print_styles-'.$appPage, 'dt_styles');
                 add_action('admin_footer-'.$appPage, 'dt_footers');
-
-                foreach($appSettings['interfaces'] as $interface=>$access){
-                    // load interface settings and check for menus
-                    $cfg = get_option($interface);
-                    if(!empty($cfg['_ItemGroup'])){
-                        $Groups[$cfg['_ItemGroup']][] = $cfg;
-                    }else{
-                        if(!empty($cfg['_interfaceName'])){
-                            $Groups[$cfg['_interfaceName']][] = $cfg;
+                if(!empty($appSettings['interfaces'])){
+                    foreach($appSettings['interfaces'] as $interface=>$access){
+                        // load interface settings and check for menus
+                        $cfg = get_option($interface);
+                        if(!empty($cfg['_ItemGroup'])){
+                            $Groups[$cfg['_ItemGroup']][] = $cfg;
+                        }else{
+                            if(!empty($cfg['_interfaceName'])){
+                                $Groups[$cfg['_interfaceName']][] = $cfg;
+                            }
                         }
-                    }
-                    //vardump($cfg);
+                        //vardump($cfg);
 
+                    }
                 }
                 //vardump($Groups);
                 ksort($Groups);
