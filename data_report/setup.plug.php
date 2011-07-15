@@ -45,6 +45,7 @@
                     'Redirects' => 'redirects.php',
                     'List Template'=>'listtemplate.php',
                     'Custom Scripts'=>'customscripts.php',
+                    //'Query Tuning'=>'querytune.php',
                     'Import & Export'=>'importexport.php'
                 );
 

@@ -1224,6 +1224,7 @@ function dr_exportChartImage($chartData) {
 
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false) {
 
+
 //Filters will be picked up via Session value
 // Set Vars
     if(empty($Page)){
@@ -1257,6 +1258,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     $ReportReturn = '';
     $Element = getelement($EID);
     $Config = $Element['Content'];
+    if(empty($Config['_main_table']))
+        return 'No Table Selected';
     $queryJoin = '';
     $queryJoins = array();
     $queryWhere = array();
@@ -1699,6 +1702,20 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
     $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";   
+
+
+    if(!empty($Config['_UserQueryOveride']) && !empty($Config['_QueryOveride'])){
+        $Query = $Config['_QueryOveride'];
+
+        preg_match('/(LIMIT [ 0-9]+,[ 0-9]+)/', $Query, $Limits);
+        if(!empty($Limits[0])){
+            $Query = str_replace($Limits[0], $queryLimit, $Query);
+        }else{
+            $Query .= $queryLimit;
+        }
+
+    }
+
     //vardump($Query);
     // Wrap fields with ``
     //foreach($querySelects as $Field=>$FieldValue){
@@ -3035,7 +3052,7 @@ var " . $ChartID . " = new Highcharts.Chart({
 
 
 
-    return $header . $ReportReturn . $footer;
+    return do_shortcode($header . $ReportReturn . $footer);
 }
 
 function df_inlineedit($Entry, $ID, $Value) {

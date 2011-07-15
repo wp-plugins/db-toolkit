@@ -464,7 +464,7 @@ function dt_menus() {
         //$menu['30.99'] = array( '', 'read', 'separator-dbtoolkit1', '', 'wp-menu-separator' );
         
         // Create the new top-level Menu
-        //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
+        $market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
         //$appMarket = add_submenu_page("appmarket", 'App Market', 'Browse Market', 'read', "appmarket");
         //$launcher = add_submenu_page("appmarket", 'Applications', 'Applications', 'read', "app_launcher", 'app_launcher');
         //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function)
@@ -535,8 +535,9 @@ function dt_menus() {
 
        
             $apps = get_option('dt_int_Apps');
-
-            //vardump($apps);
+            unset($apps['base']);
+            unset($apps['Base']);
+            
             $base = 1;
             foreach($apps as $app=>$data){
                 $Groups = array();
@@ -1489,7 +1490,6 @@ function dt_renderInterface($interface){
             break;
     }
 
-
     if($error = mysql_error()){
         if(is_admin()){            
             $InterfaceData = get_option($Media['ID']);
@@ -1501,9 +1501,17 @@ function dt_renderInterface($interface){
                 echo '<h4>Error</h4>';
                 echo $error;
                 echo '<h4>Queries</h4>';
-                vardump($_SESSION['queries'][$Media['ID']]);
+                
                 $error = ob_get_clean();
-                echo '<div id="interfaceError" class="notice" style="padding:5px;">An error has been detected while building this interface. Would you like to submit an error report to the developer? <input type="button" class="button" value="Send Report" onclick="dbt_sendError(\''.$Media['ID'].'\', \''.  base64_encode($error).'\');" /></div>';
+
+
+
+                if(!empty($Config['_UserQueryOveride']) && !empty($Config['_QueryOveride'])){
+
+                    echo '<div id="interfaceError" class="notice" style="padding:5px;">'.mysql_error().'</div>';
+                }else{
+                    echo '<div id="interfaceError" class="notice" style="padding:5px;">An error has been detected while building this interface. Would you like to submit an error report to the developer? <input type="button" class="button" value="Send Report" onclick="dbt_sendError(\''.$Media['ID'].'\', \''.  base64_encode($error).'\');" /></div>';
+                }
             }
         }
     }
