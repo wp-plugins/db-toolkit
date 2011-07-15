@@ -47,6 +47,7 @@
                         <pre>
 {{_ViewEdit}}           : View and Edit Icons
 {{_ViewLink}}           : View Item Link
+{{_ViewTarget}}         : javascript target interface call
 {{_RowClass}}           : Row Class
 {{_RowIndex}}           : Row Index
 {{_UID}}                : Unique Row ID

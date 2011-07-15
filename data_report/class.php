@@ -1716,6 +1716,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
     }
 
+
     //vardump($Query);
     // Wrap fields with ``
     //foreach($querySelects as $Field=>$FieldValue){
@@ -2248,6 +2249,11 @@ var " . $ChartID . " = new Highcharts.Chart({
         return $Query;
     }
 
+    if(!empty($exitNotice)){
+        return;//'<div id="'.$EID.'_wrapper"></div>';
+    }
+
+
     $Result = $wpdb->get_results($Query, ARRAY_A);
 
     //$Result = mysql_query($Query);
@@ -2540,50 +2546,6 @@ var " . $ChartID . " = new Highcharts.Chart({
                                     $itemID = uniqid('');
                                     // Add Reload Highlighting
                                     $LiveHighlight = '';
-                                    if (!empty($Config['_showReload'])) {
-                                        /*
-                                          if(empty($_SESSION['liveLoad'][$EID][$row['_return_'.$Config['_ReturnFields'][0]]][$Field])){
-                                          $_SESSION['liveLoad'][$EID][$row['_return_'.$Config['_ReturnFields'][0]]][$Field] = md5(stripslashes($outData));
-                                          $_SESSION['liveLoad'][$EID][$row['_return_'.$Config['_ReturnFields'][0]]][$Field] = md5(stripslashes($outData));
-                                          $_SESSION['dataform']['OutScripts'] .= "
-                                          jQuery('#".$itemID."').animate({opacity: 0.9}, 1000, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 0}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 1}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 0}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 1}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 0}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 1}, 50);
-                                          });
-                                          });
-                                          });
-                                          });
-                                          });
-                                          });
-                                          ";
-                                          }else{
-                                          if($_SESSION['liveLoad'][$EID][$row['_return_'.$Config['_ReturnFields'][0]]][$Field] != md5(stripslashes($outData))){
-                                          //echo $Field.' - Different<br />';
-                                          //$LiveHighlight = ' liveChange ';
-                                          $_SESSION['liveLoad'][$EID][$row['_return_'.$Config['_ReturnFields'][0]]][$Field] = md5(stripslashes($outData));
-                                          $_SESSION['dataform']['OutScripts'] .= "
-                                          jQuery('#".$itemID."').animate({opacity: 0.9}, 1000, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 0}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 1}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 0}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 1}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 0}, 50, function(){
-                                          jQuery('#".$itemID."').animate({opacity: 1}, 50);
-                                          });
-                                          });
-                                          });
-                                          });
-                                          });
-                                          });
-                                          ";
-                                          }
-                                          }
-                                         */
-                                    }
                                     $ReportReturn .= '<td class="' . $Row . ' ' . $sortClass . ' ' . $LiveHighlight . '" scope="col" id="' . $itemID . '" ref="itemRow_' . $EID . '" width="' . ($Config['_WidthOverride'][$Field] == '' ? '{{width_' . $Field . '}}px' : $Config['_WidthOverride'][$Field] . 'px') . '" style="text-align:' . $Config['_Justify'][$Field] . '; ">';
                                     //inline editing
                                     if (!empty($Config['_InlineEdit'][$Field])) {
@@ -2597,10 +2559,10 @@ var " . $ChartID . " = new Highcharts.Chart({
                                         $ReportReturn .= ob_get_clean();
                                     } else {
                                         $PreReportReturn = '';
-                                        // Make View Item Link If page is set
+                                        // Make View Item Link If page is set                                        
                                         if (is_admin ()) {
                                             //vardump($Config);
-                                            if (!empty($Config['_ItemViewInterface'])) {
+                                            if (!empty($Config['_ItemViewInterface'])) {                                                
                                                 // Create return link
                                                 $ReportVars = array();
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
@@ -2612,8 +2574,39 @@ var " . $ChartID . " = new Highcharts.Chart({
                                                 $PreReportReturn .= "<a href=\"" . $PageLink . "\"><strong>";
                                             }
                                         } else {
+
+                                            if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
+                                                // Create return link
+                                                $url = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+
+                                                $url = strtok($url, '?');
+                                                $ReportVars = array();
+
+
+
+                                                foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                                    $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                                }
+                                                // Get permalink
+                                                // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
+                                                $op = '?';
+                                                if(strpos($url, '?') !== false){
+                                                    $op = '&';
+                                                }
+                                                $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
+                                                $PageLink = $url. $op . $sendString;
+
+                                                //$sendString = implode('&', $ReturnFields);
+                                                //$PreReportReturn .= '<a id href="#'.$Config['_ItemViewInterface'].'" onclick="dr_pushResult(\''.$Config['_ItemViewInterface'].'\', \''.$sendString.'\'); return false;">'.$outData.'</a>';
+
+                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\" onclick=\"dr_pushResult('".$Config['_ItemViewInterface']."', '".$sendString."'); return false;\" >";
+
+
+                                                //$PreReportReturn .= "<a href=\"" . $PageLink . "\">";
+                                            }
                                             if (!empty($Config['_ItemViewPage'])) {
                                                 // Create return link
+                                                echo 'p';
                                                 $ReportVars = array();
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
                                                     $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
@@ -2628,7 +2621,9 @@ var " . $ChartID . " = new Highcharts.Chart({
                                                 } else {
                                                     $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }
-                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\"><strong>";
+
+
+                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\" ><strong>";
                                             }
                                         }
                                         $ReturnFields = array();
@@ -2639,7 +2634,12 @@ var " . $ChartID . " = new Highcharts.Chart({
                                         }
                                         //$ReturnMix = implode('&', $ReturnFields);
                                         //$PreReportReturn .= '<a href="'.getdocument($_GET['PageData']['ID']).'#'.$ReturnMix.'">'.stripslashes($outData).'</a>';
-                                        $PreReportReturn .= $outData;
+
+                                        // CREATE redirect pushing
+
+                                            $PreReportReturn .= $outData;
+                                        
+
                                         // API Output
                                         if (!empty($Format)) {
                                             // XML Output
@@ -2666,6 +2666,9 @@ var " . $ChartID . " = new Highcharts.Chart({
                                         if (!empty($Config['_ItemViewInterface'])) {
                                             $PreReportReturn .= "</strong></a>";
                                         }
+                                         if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
+                                             $PreReportReturn .= "</a>";
+                                         }
                                     }
                                     $ReportReturn .= $PreReportReturn;
                                     if (!empty($Config['_Show_popup'])) {
@@ -3832,9 +3835,26 @@ return $Return;
 
 function dr_dataSourceMapping($url, $Config = false){
 
-    //return $url;
+    if(empty($url)){
+        return 'Disabled.';
+    }
 
-    $data = file_get_contents($url);
+    // Create a stream
+    $opts = array(
+      'http'=>array(
+        'method'=>"GET",
+        'header'=>"Accept-language: en\r\n" .
+                  "Cookie: foo=bar\r\n"
+      )
+    );
+
+    $context = stream_context_create($opts);
+
+    // Open the file using the HTTP headers set above
+    if(!$data = @file_get_contents($url, false, $context)){
+        return 'Could not connect to source.';
+    }
+
     if(strpos(substr(strtolower($data),0,1024), 'xml')){
         $data = xml2array($data);
     }else{

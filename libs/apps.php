@@ -14,8 +14,6 @@
 
 function app_update($name, $interface = false, $access = false){
     
-    global $user;
-
     if(empty($name) || strtolower($name) == 'base')
         return;
     $Apps = get_option('dt_int_Apps');
@@ -30,12 +28,12 @@ function app_update($name, $interface = false, $access = false){
         $Apps[sanitize_title($name)]['name'] = $name;
         update_option('dt_int_Apps', $Apps);
         //$newApp['Author'] =
-        $user = wp_get_current_user();
+        //$user = wp_get_current_user();
         $newApp = array(
             'state'=>'open',
-            'name'=>$name,
-            'author'=>$user->data->first_name.' '.$user->data->last_name,
-            'author email'=>$user->data->user_email
+            'name'=>$name
+            //'author'=>$user->data->first_name.' '.$user->data->last_name,
+            //'author email'=>$user->data->user_email
         );
 
         // select interfaces and add them.

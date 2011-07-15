@@ -8,7 +8,7 @@
 <div id="redirectTabs" class="dbtools_tabs">
     <ul class="content-box-tabs">
         <li><a href="#publicRedirect">Public</a></li>
-        <li><a href="#adminRedirect">Admin</a></li>
+        <li><a href="#adminRedirect">Interface</a></li>
     </ul>
     <div class="setupTab" id="publicRedirect">
         <?php
@@ -32,6 +32,10 @@
             $Sel = 'checked="checked"';
         }
         echo dais_customfield('radio', 'No Redirect', '_ItemViewInterface', '_ItemViewInterface', 'list_row1' , 0, $Sel);
+        $Sel = '';
+        if(!empty($Element['Content']['_targetInterface'])) {
+            $Sel = 'checked="checked"';
+        }        echo dais_customfield('checkbox', 'Targeting', '_targetInterface', '_targetInterface', 'list_row1' , 1, $Sel, 'Push passback fields to target Interface');
         global $wpdb;
         $Interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
         $Clusters = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_clstr%' ", ARRAY_A);

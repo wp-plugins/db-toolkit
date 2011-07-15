@@ -1,4 +1,8 @@
 <?php
+if(!empty($exitNotice)){
+    return;//'<div id="'.$EID.'_wrapper"></div>';
+}
+
 global $wpdb;
 
 $jsqueue = "";
@@ -220,6 +224,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                         }
                         $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
                     }
+
                 }
                 if (!empty($Config['_Show_Edit'])) {
                     if ($ViewLink != '') {
@@ -227,8 +232,25 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     }
                     $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
+
+
+                    if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
+
+                        // Create return link
+                        $ReportVars = array();
+                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                        }
+
+                        $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
+
+                        $viewTarget = "dr_pushResult('".$Config['_ItemViewInterface']."', '".$sendString."');";
+                    }
+
+
                 $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn); //'Edit | View';
                 $PreReturn = str_replace('{{_ViewLink}}', $PageLink, $PreReturn); //'Edit | View';
+                $PreReturn = str_replace('{{_ViewTarget}}', $viewTarget, $PreReturn); //'Edit | View';
             }
 
 
@@ -323,8 +345,22 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     }
                     $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
+
+                    if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
+                        // Create return link
+                        $ReportVars = array();
+                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                        }
+                        $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
+
+                        $viewTarget = "dr_pushResult('".$Config['_ItemViewInterface']."', '".$sendString."');";
+                    }
+
+
                 $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn); //'Edit | View';
                 $PreReturn = str_replace('{{_ViewLink}}', $PageLink, $PreReturn); //'Edit | View';
+                $PreReturn = str_replace('{{_ViewTarget}}', $viewTarget, $PreReturn); //'Edit | View';
             }
 
 

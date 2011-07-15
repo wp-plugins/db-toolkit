@@ -15,6 +15,7 @@ if (!empty($Element['_Application'])) {
         $Application = $_SESSION['activeApp'];
     }
 }
+
 ?>
 <div class="section">
     <div class="option">

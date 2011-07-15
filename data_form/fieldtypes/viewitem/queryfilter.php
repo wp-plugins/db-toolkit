@@ -2,6 +2,10 @@
 //Filters query variables for the field type
 //echo $Field.'<br />';
 //vardump($Config);
+if(empty($_GET[$Field]) && empty($Config['_overRide'][$Field])){ 
+    $exitNotice = true;    
+}
+
 
 if(!empty($_GET[$Field]) || !empty($Config['_overRide'][$Field])){        
 
@@ -30,5 +34,7 @@ if(!empty($_GET[$Field]) || !empty($Config['_overRide'][$Field])){
         $queryWhere[$Field] = "prim.`".$Field."` = '".$_SESSION['viewitemFilter'][$EID][$Field]."' ";
     }
 }
+
+
 
 ?>

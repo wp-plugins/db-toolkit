@@ -458,6 +458,15 @@
         });
     }
 
+    function dr_pushResult(eid, str){
+
+        jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
+        //jQuery('#'+eid+'_wrapper').html('<div class="loading">loading</div>');
+        ajaxCall('dr_callInterface',eid, str, function(h){
+            jQuery('#reportPanel_'+eid).html(h);
+        });
+    }
+
     function dr_BuildUpDateForm(eid, rid, ismodal){
     
 		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
