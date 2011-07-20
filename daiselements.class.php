@@ -146,13 +146,23 @@ function dais_pagetree($SelectType = 'S', $Default=0, $Name = 'My Pages', $callb
 /// End File Selection Stuff
 
 function dais_standardsetupbuttons($Element) {
+    if(empty($Element['ID']))
+        $Element['ID'] = '';
 
-    return '<input name="Data[ID]" type="hidden" id="Data[Element]" value="'.$Element['ID'].'">
+    if(empty($Element['Element']))
+        $Element['Element'] = '';
+
+    if(empty($Element['Position']))
+        $Element['Position'] = '';
+
+
+
+    return '<input name="Data[ID]" type="hidden" id="interfaceID" value="'.$Element['ID'].'">
 <input name="Data[Element]" type="hidden" id="Data[Element]" value="'.$Element['Element'].'">
 <input name="Data[Position]" type="hidden" id="Data[Position]" value="'.$Element['Position'].'">
 <input name="Data[Type]" type="hidden" id="Type" value="plugin">
 <input name="Save" type="submit" class="button-primary" id="Save" value="Save" />
-<input name="Apply" type="submit" class="button-primary" id="Apply" value="Apply" />';
+<input name="Apply" type="button" class="button-primary" id="Apply" value="Apply" onclick="dt_saveInterface(jQuery(\'#newInterfaceForm\').serialize());" />';
 //<a class="button-primary" href="'.str_replace('&interface='.$Element['ID'], '', str_replace('&dt_newInterface=true', '', $_SERVER['REQUEST_URI'])).'">Close</a>';
 
 }

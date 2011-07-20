@@ -3,8 +3,146 @@
     Created on : Dec 17, 2010, 11:12:02 AM
     Author     : dcramer
     Description:
-        Purpose of the stylesheet follows.
+
 */
+
+#wphead{
+    display: none;
+}
+
+body.admin-bar #appTitle{
+    padding-top: 28px;
+}
+
+#appTitle {
+    border-bottom: 1px solid #E7E7E7;
+    font-size: 1.3em;
+    margin-bottom: 5px;
+    padding: 1px 15px 0 0;
+    color: #464646;
+    line-height: 29px;
+    font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: normal;
+    margin: 0;
+    text-shadow: 0 1px 0 #FFFFFF;
+    display: block;
+}
+
+
+.interfaceModule:hover{
+    background-color: #F1F1F1;
+}
+.interfaceModule{
+    border: 1px solid #E7E7E7;
+    border-radius: 8px;
+    float: left;
+    margin: 5px 0 10px 5px;
+    max-height: 220px;
+    min-height: 50px;
+    padding: 0 0 10px 10px;
+    position: relative;
+    width: 570px;
+}
+.interfaceModule h2{
+    font-size: 1.1em !important;
+    padding: 1px 240px 0 0 !important;
+}
+.interfaceModule .interfaceDescription{
+    font-size: 10px;
+    color: #888;
+    padding: 0 240px 5px 0;
+}
+.interfaceDets{
+    background: none repeat scroll 0 0 #EFEFEF;
+    float: right;
+    margin: 0 5px 5px 10px;
+    border-radius: 0 8px 0 8px;
+    clear: both;
+    color: #000;
+    font-family: "Helvetica Neue",Helvetica,Arial,"Lucida Grande",Verdana,"Bitstream Vera Sans",sans-serif;
+    margin: 0;
+    padding: 3px 0 5px 0;
+    text-align: center;
+    width: 238px;
+    font-size: 0.9em;
+}
+.interfaceActions{
+    float: left;
+    text-align: left;
+    font-size: 10px;
+}
+.interfaceDetails{
+    float: right;
+    text-align: left;
+    font-size: 11px;
+    padding-right: 10px;
+}
+
+
+.appModule:hover{
+    background-color: #F7F7F7;
+}
+.appModule {
+    border: 1px solid #E7E7E7;
+    border-radius: 4px;
+    float: left;
+    margin: 20px 0 0px 20px;
+    max-height: 220px;
+    min-height: 110px;
+    padding: 0 0 35px 15px;
+    position: relative;
+    width: 540px;
+}
+.appModule.smlPanel{
+    width: 330px;
+}
+.appModule div.appLogo {
+    background: none repeat scroll 0 0 #58585a;
+    border-radius: 5px;
+    float: right;
+    margin: 0 5px 5px 10px;
+ 
+}
+
+.appModule .appIntCount{
+    padding: 10px 5px;;
+    font-size: 2em;
+    width: 60px;
+    color: #fff;
+    text-align: center;
+}
+.appModule p{
+    color: #666666;
+    font-size: 12px;
+    line-height: 150%;
+    margin-bottom: 20px;
+}
+.appModule div.appLogo p {
+    background: none repeat scroll 0 0 #ef4036;
+    border-radius: 0px 0px 5px 5px;
+    clear: both;
+    color: #FFFFFF;
+    font-family: "Helvetica Neue",Helvetica,Arial,"Lucida Grande",Verdana,"Bitstream Vera Sans",sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+.appModule div.appLogo img {
+    padding: 6px;
+}
+
+.appModule .appModuleButton {
+    background: none repeat scroll 0 0 #FFFFFF;
+    bottom: 20px;
+    display: block;
+    left: 15px;
+    position: absolute;
+}
+
+
+
 
 
 
@@ -282,7 +420,7 @@ admin_toolbar td a:hover, admin_toolbar tr a:active{
     margin: 0;
 }
 .admin_config_toolbar{
-	padding:0px 9px;
+	padding:8px;
 
 }
 .admin_config_panel .admin_config_panel{
@@ -567,9 +705,13 @@ h3.fieldTypeHandle{
 	border-top-right-radius: 6px;
 	-moz-border-radius-topright: 6px;
 }
-#dbt_container #header .logo {
+#dbt_container #header .title {
 	float: left;
 	margin:15px 20px;
+}
+#dbt_container #header .logo {
+	float: right;
+	margin:9px 20px;
 }
 #dbt_container #js-warning {
     color: red;
@@ -883,6 +1025,14 @@ h3.fieldTypeHandle{
 }
 .reset-button {
 	float:left;
+}
+.save_bar_tools {
+	background: #f9f9f9;
+	border:solid #ccc;
+	border-width:1px 1px 1px 1px;
+	padding: 10px 14px 3px 14px;
+	height: 30px;
+	text-align: left;
 }
 .save_bar_top {
 	background: #f3f3f3;

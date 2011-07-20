@@ -48,6 +48,8 @@ if (!empty($Config['_Hide_Toolbar'])) {
 
 
     if (!empty($Config['_Show_Export'])) {
+        if(empty($Global))
+            $Global = false;
         echo '<div class="btnseparator"></div>';
         echo '<div class="fbutton"><div class="button add-new-h2" onclick="dr_exportReport(\'?format_' . $Media['ID'] . '=pdf\', \'' . $Media['ID'] . '\',\'' . $Global . '\');"><span class="export" style="padding-left: 20px;">Export PDF</span></div></div>';
 

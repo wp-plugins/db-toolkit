@@ -30,11 +30,13 @@ if(is_admin()) {
     function df_listTables($TableReference, $JFunc = 'alert', $Default = false, $Req = false) {
 
         
+        
         global $wpdb;
         
         $Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
-
-        $Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
+        if(empty($Value))
+            $Value = '';
+        $Return = 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
         $Return .= '<option value="">'.$Value.'</option>';
         foreach($Data as $Tables) {
             //vardump($Tables);
@@ -471,6 +473,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         $Form .= "<div class=\"form-gen-field-wrapper\" id=\"form-field-".$Field."\">\n";
                                         $Form .= "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>\n";
                                             ob_start();
+                                            if(empty($Defaults[$Field]))
+                                                $Defaults[$Field] = '';
                                             $Val = esc_attr($Defaults[$Field]);
                                             if(!empty($Config['_readOnly'][$Field])){
                                                 $func = $FieldSet[0].'_processValue';
@@ -794,8 +798,15 @@ function df_processInsert($EID, $Data) {
             }
         }
     }
-    
+
+    $wpdb->show_errors();
+
     //$Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
+    if(empty($Entries)){
+        $Return['Message'] = 'umm, there was nothing to insert.';
+        return $Return;
+    }
+        
     if($wpdb->insert($Config['_main_table'], $Entries)){
         $inserted = true;
         $ID = $wpdb->insert_id;

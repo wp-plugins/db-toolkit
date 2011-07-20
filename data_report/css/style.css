@@ -1,6 +1,15 @@
 @charset "UTF-8";
 /* CSS Document */
 
+
+div.fbutton a{
+    text-decoration: none;
+    color: #464646;
+}
+div.fbutton a:hover{
+    text-decoration: none;
+    color: #000;
+}
 div.fbutton .add {
 	background:transparent url(images/add.png) no-repeat scroll left center;
 }

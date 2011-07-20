@@ -113,7 +113,7 @@ function dt_buildConfigPanel($Title, $Pages, $Defaults){
         <div class="save_bar_top">
 
                 <span class="submit-footer-reset">
-                    <input type="button" onclick="return window.location='admin.php?page=Database_Toolkit';" class="button submit-button reset-button" value="Close" name="close">
+                    <input type="button" onclick="return window.location='admin.php?page=dbt_builder';" class="button submit-button reset-button" value="Close" name="close">
                     <?php echo dais_standardSetupbuttons($Element); ?>
                 </span>
         </div>

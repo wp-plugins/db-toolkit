@@ -1,7 +1,11 @@
 <h2>Interface Setup</h2>
 <?php
-
+if(empty($Element['_ReportDescription']))
+    $Element['_ReportDescription'] = '';
 echo dais_customfield('text', 'Interface Title', '_ReportDescription', '_ReportDescription', 'list_row2', $Element['_ReportDescription'], '','Sets the title of the interface which is whoen when using the interface.');
+if(empty($Element['_ReportExtendedDescription']))
+    $Element['_ReportExtendedDescription'] = '';
+
 echo dais_customfield('text', 'Description', '_ReportExtendedDescription', '_ReportExtendedDescription', 'list_row1', $Element['_ReportExtendedDescription'], '','Give the interface a description to quickly identify it\'s function.');
 
 
@@ -17,26 +21,16 @@ if (!empty($Element['_Application'])) {
 }
 
 ?>
-<div class="section">
-    <div class="option">
-        <div class="title">Application</div>
-        <div class="controls">
-            <?php
-                echo dt_listApplications($Application);
-            ?><input type="text" value="" style="padding: 5px; display:none;" id="_Application_New" name="Data[Content][_Application]" disabled="disabled">
-            <a id="addAppB" href="#" onclick="return dt_addNewApp();">Add New</a>
-            <div class="clear"></div>
-            <div class="clear"></div>
-        </div>
-        <div class="explain">Select an application to add the interface to, or create a new application.</div>
-        <div class="clear"></div>
-    </div>
-</div>
 
 <h2>Navigation</h2>
 <?php
-                    
+                    if(empty($Element['_ItemGroup']))
+                        $Element['_ItemGroup'] = '';
+
                     echo dais_customfield('text', 'Menu Group', '_ItemGroup', '_ItemGroup', 'list_row2', $Element['_ItemGroup'], '', 'Sets the menu group on the left navigation bar within Wordpress admin.');
+                    if(empty($Element['_interfaceName']))
+                        $Element['_interfaceName'] = '';
+
                     echo dais_customfield('text', 'Menu Label', '_ReportTitle', '_ReportTitle', 'list_row1', $Element['_interfaceName'], '', 'Sets the title of the menu link.');
                     $Sel = '';
                     if (!empty($Element['Content']['_SetDashboard'])) {

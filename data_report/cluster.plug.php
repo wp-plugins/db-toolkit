@@ -17,23 +17,6 @@
         }
 
         ?>
-        <div class="list_row1" style="padding: 3px;">
-            <table width="100%" cellspacing="2" cellpadding="2" border="0" class="highlight">
-                <tbody>
-                    <tr>
-                        <td width="150" align="" class="">
-                            <label for="_Application">Application</label>
-                        </td>
-                        <td class="">
-                            <?php
-                            echo dt_listApplications($Application);
-                            ?><input type="text" value="" style="padding: 5px; display:none;" id="_Application_New" name="Data[Content][_Application]" disabled="disabled">
-                            <a id="addAppB" href="#" onclick="return dt_addNewApp();">Add New</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
         <?php
 
         echo dais_customfield('text', 'Menu Group', '_MenuGroup', '_MenuGroup', 'list_row2' , $Element['_MenuGroup'] , '');

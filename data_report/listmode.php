@@ -3,14 +3,15 @@
 // use filters
 $Defaults = false;
 $FilterVisiable = 'none';
-if (empty($_GET['PageData']['ID'])) {
+
+/*if (empty($_GET['PageData']['ID'])) {
     $_GET['PageData']['ID'] = $_SESSION['DocumentLoaded'];
 }
 if (!empty($_SESSION['dr_filters'][$_GET['PageData']['ID']])) {
     $Defaults = df_cleanArray($_SESSION['dr_filters'][$_GET['PageData']['ID']]);
     $FilterVisiable = 'block';
 }
-
+*/
 
 if (empty($Config['_useListTemplate'])) {
     echo '<div id="reportPanel_' . $Media['ID'] . '">';

@@ -1,5 +1,8 @@
 <h2>API Engine</h2>
 <?php
+if(empty($Element['Content']['_APICallName']))
+    $Element['Content']['_APICallName'] = '';
+
 echo dais_customfield('text', 'API Call Name', '_APICallName', '_APICallName', 'list_row1' , $Element['Content']['_APICallName'], '', 'Create a call name for this API. Leaving it blank defaults to interface ID.');
 ?>
 <h2>Authentication</h2>

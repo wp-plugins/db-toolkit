@@ -32,15 +32,11 @@ function dt_start() {
         session_start();
     }
     // Include Libraries
-    if(is_admin()) {
-        if(empty($_SESSION['adminscripts'])) {
+
+    if(empty($_SESSION['dataform']['OutScripts']))
+        $_SESSION['dataform']['OutScripts'] = '';
+    if(empty($_SESSION['adminscripts']))
             $_SESSION['adminscripts'] = "";
-        }
-    }  else {
-        if(empty($_SESSION['dataform']['OutScripts'])){
-            $_SESSION['dataform']['OutScripts'] = '';
-        }
-    }
     /*
     require_once(DB_TOOLKIT.'libs/lib.php');
     require_once(DB_TOOLKIT.'daiselements.class.php');
@@ -48,32 +44,6 @@ function dt_start() {
     require_once(DB_TOOLKIT.'data_report/class.php');
     require_once(DB_TOOLKIT.'data_itemview/class.php');
     */
-
-    // dumplicate interface hack
-    if(is_admin()) {
-        if(!empty($_GET['duplicateinterface'])){
-            $dupvar = get_option($_GET['duplicateinterface']);
-            $oldOption = $dupvar;
-
-            if($oldOption['Type'] == 'Cluster'){
-                $NewName = uniqid($oldOption['_ClusterTitle'].' ');
-                $oldOption['_ClusterTitle'] = $NewName;
-                $newTitle = uniqid('dt_clstr');
-                $hash = '&r=y#clusters';
-            }else{
-                $NewName = uniqid($oldOption['_ReportDescription'].' ');
-                $oldOption['_ReportDescription'] = $NewName;
-                $newTitle = uniqid('dt_intfc');
-                $hash = '';
-            }
-            $oldOption['ID'] = $newTitle;
-            $oldOption['ParentDocument'] = $newTitle;
-            //vardump($oldOption);
-            add_option($newTitle, $oldOption, NULL, 'No');
-            header( 'Location: '.$_SERVER['HTTP_REFERER'].$hash);
-            exit;
-        }
-    }
 
 
     // Ajax processing
@@ -105,7 +75,7 @@ function dt_headers() {
                         if(x == true){
                             jQuery('#'+interfaceID).fadeOut('slow', function(){
                                 jQuery(this).remove();
-                                window.location = '<?php echo $_SERVER['REQUEST_URI']; ?>'+hash;
+                                //window.location = '<?php echo $_SERVER['REQUEST_URI']; ?>'+hash;
                             });
                         }else{
                             alert('strange, that should have worked '+x);
@@ -157,15 +127,43 @@ function dt_styles() {
         $texts = get_option('widget_text');
         $preIs = array();
         foreach($texts as $text){
-            //vardump($text['text']);
-            preg_match_all('/'.$pattern.'/s', $text['text'], $matches);
-            if(!empty($matches[3])){                
-                foreach($matches[3] as $preInterface){
-                    $preIs[] = shortcode_parse_atts($preInterface);                    
+        $preIs = array();
+        $ilc_widget_active = get_option('sidebars_widgets');
+
+        unset($ilc_widget_active['wp_inactive_widgets']);
+
+            if($ilc_widget_active){
+                foreach($ilc_widget_active as $sidebar){
+                    if(is_array($sidebar))
+                    foreach($sidebar as $widget){
+                        if(substr($widget, 0, 5) == 'text-'){
+
+                            /// filter each item
+                            //vardump($text['text']);
+                            preg_match_all('/'.$pattern.'/s', $texts[substr($widget, 5)]['text'], $matches);
+                            //vardump($matches);
+                            if(!empty($matches[3])){
+                                foreach($matches[3] as $preInterface){
+                                   $preIs[] = shortcode_parse_atts($preInterface);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-
+        foreach($ilc_widget_active as $sidebar=>$widgets){
+            if(is_array($widgets)){                
+                foreach($widgets as $widget){
+                    if(is_active_sidebar($sidebar)){
+                        if(substr($widget, 0, 10) == 'interface-'){
+                            $interfaces = get_option('widget_interface');
+                            $preIs[] = $interfaces[substr($widget,10)]['Interface'];
+                        }
+                    }
+                }
+            }
+        }
 
         if(!empty($post)){        
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
@@ -237,7 +235,7 @@ $themeURL = get_bloginfo('template_url');
 
     // load interface specifics
     if(is_admin()){
-        
+        if(!empty($_GET['page']))
         if(substr($_GET['page'],0,4) == 'app_' || substr($_GET['page'],0,8) == 'dt_intfc'){
             wp_register_style('interface_setup_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/launcher.css');
         }else{
@@ -301,15 +299,44 @@ function dt_scripts() {
         global $post;
         //$te = wp_get_sidebars_widgets();
         $pattern = get_shortcode_regex();
-
         $texts = get_option('widget_text');
+        if(!empty($texts)){
         $preIs = array();
-        foreach($texts as $text){
-            //vardump($text['text']);
-            preg_match_all('/'.$pattern.'/s', $text['text'], $matches);
-            if(!empty($matches[3])){
-                foreach($matches[3] as $preInterface){
-                    $preIs[] = shortcode_parse_atts($preInterface);
+        $ilc_widget_active = get_option('sidebars_widgets');
+        
+        unset($ilc_widget_active['wp_inactive_widgets']);
+        
+            if($ilc_widget_active){
+                foreach($ilc_widget_active as $sidebar){
+                    if(is_array($sidebar))
+                    foreach($sidebar as $widget){
+                        if(substr($widget, 0, 5) == 'text-'){
+                            
+                            /// filter each item
+                            //vardump($text['text']);
+                            preg_match_all('/'.$pattern.'/s', $texts[substr($widget, 5)]['text'], $matches);
+                            //vardump($matches);
+                            if(!empty($matches[3])){
+                                foreach($matches[3] as $preInterface){
+                                   $preIs[] = shortcode_parse_atts($preInterface);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        foreach($ilc_widget_active as $sidebar=>$widgets){
+            if(is_array($widgets)){
+                foreach($widgets as $widget){
+                    
+                    if(substr($widget, 0, 10) == 'interface-'){
+                        if(is_active_sidebar($sidebar)){
+                            $interfaces = get_option('widget_interface');
+                            $preIs[] = $interfaces[substr($widget,10)]['Interface'];
+                        }
+                    }
                 }
             }
         }
@@ -331,6 +358,7 @@ function dt_scripts() {
     }
 
     if(!empty($preIs) || is_admin()){
+        //vardump($preIs);
     // queue & register scripts
         wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
         wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
@@ -438,12 +466,12 @@ function dt_scripts() {
 
 function add_admin_menu_separator($position) {
   global $menu;
-  $index = 0;
+  $index = 0; 
   foreach($menu as $offset => $section) {
     if (substr($section[2],0,9)=='separator')
       $index++;
     if ($offset>=$position) {
-      $menu[$position] = array('','read',"separator{$index}",'','wp-menu-separator');
+      $menu[$position] = array('','read',"dbt_separator".rand(111,99999),'','wp-menu-separator');
       break;
     }
   }
@@ -464,7 +492,7 @@ function dt_menus() {
         //$menu['30.99'] = array( '', 'read', 'separator-dbtoolkit1', '', 'wp-menu-separator' );
         
         // Create the new top-level Menu
-        $market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
+        //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
         //$appMarket = add_submenu_page("appmarket", 'App Market', 'Browse Market', 'read', "appmarket");
         //$launcher = add_submenu_page("appmarket", 'Applications', 'Applications', 'read', "app_launcher", 'app_launcher');
         //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function)
@@ -472,11 +500,13 @@ function dt_menus() {
 
         add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
-        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces & Clusters', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
+
+        //$adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces & Clusters', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
+        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Application Builder', 'App Builder', 'activate_plugins', "dbt_builder", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
-        //$Manager = add_submenu_page("Database_Toolkit_Welcome", 'Application Masnagement', 'App Management', 'activate_plugins', "app_manager", 'dbtoolkit_appman');
+        //$Manager = add_submenu_page("Database_Toolkit_Welcome", 'Application Masnagement', 'App Management', 'activate_plugins', "manage_apps", 'dbtoolkit_appman');
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
@@ -491,15 +521,15 @@ function dt_menus() {
             add_action('admin_print_scripts-'.$adminPage, 'dt_scripts');
             add_action('admin_footer-'.$adminPage, 'dt_footers');
 
-            add_action('admin_print_styles-'.$market, 'dt_styles');
-            add_action('admin_head-'.$market, 'dt_headers');
-            add_action('admin_print_scripts-'.$market, 'dt_scripts');
-            add_action('admin_footer-'.$market, 'dt_footers');
+            //add_action('admin_print_styles-'.$market, 'dt_styles');
+            //add_action('admin_head-'.$market, 'dt_headers');
+            //add_action('admin_print_scripts-'.$market, 'dt_scripts');
+            //add_action('admin_footer-'.$market, 'dt_footers');
 
-            add_action('admin_print_styles-'.$launcher, 'dt_styles');
-            add_action('admin_head-'.$launcher, 'dt_headers');
-            add_action('admin_print_scripts-'.$launcher, 'dt_scripts');
-            add_action('admin_footer-'.$launcher, 'dt_footers');
+            //add_action('admin_print_styles-'.$launcher, 'dt_styles');
+            //add_action('admin_head-'.$launcher, 'dt_headers');
+            //add_action('admin_print_scripts-'.$launcher, 'dt_scripts');
+            //add_action('admin_footer-'.$launcher, 'dt_footers');
 
             add_action('admin_print_styles-'.$NewCluster, 'dt_styles');
             add_action('admin_head-'.$NewCluster, 'dt_headers');
@@ -511,10 +541,10 @@ function dt_menus() {
             add_action('admin_print_scripts-'.$addNew, 'dt_scripts');
             add_action('admin_footer-'.$addNew, 'dt_footers');
 
-            add_action('admin_print_styles-'.$Manager, 'dt_styles');
-            add_action('admin_head-'.$Manager, 'dt_headers');
-            add_action('admin_print_scripts-'.$Manager, 'dt_scripts');
-            add_action('admin_footer-'.$Manager, 'dt_footers');
+            //add_action('admin_print_styles-'.$Manager, 'dt_styles');
+            //add_action('admin_head-'.$Manager, 'dt_headers');
+            //add_action('admin_print_scripts-'.$Manager, 'dt_scripts');
+            //add_action('admin_footer-'.$Manager, 'dt_footers');
 
             add_action('admin_print_styles-'.$Import, 'dt_styles');
             add_action('admin_head-'.$Import, 'dt_headers');
@@ -569,9 +599,10 @@ function dt_menus() {
 
                         }
                     }
-                    //vardump($Groups);
                     ksort($Groups);
                     if(!empty($Groups)){
+                            //vardump($Groups);
+
                         $m = 1;
                         foreach($Groups as $Group=>$Interfaces){
 
@@ -615,6 +646,7 @@ function dt_menus() {
 
                 }
             }
+            ksort($menu);
             //vardump($menu);
             return;
 
@@ -769,10 +801,30 @@ function dt_ajaxCall() {
 }
 
 // Page Loading Functions
-
+// Load application
 function dbtoolkit_admin() {
     global $user_ID;
-    include_once(DB_TOOLKIT.'dbtoolkit_admin.php');
+    if(!empty($_GET['open'])){
+        if(app_exists($_GET['open'])){
+            update_option('_dbt_activeApp', $_GET['open']);
+        }
+    }
+    $activeApp = get_option('_dbt_activeApp');
+    if(!empty($_GET['close'])){
+        if(!empty($activeApp)){
+            if($activeApp == $_GET['close']){
+                update_option('_dbt_activeApp', false);
+                $activeApp = false;
+            }
+        }
+    }
+    if(empty($activeApp)){
+        update_option('_dbt_activeApp', false);
+        $activeApp = false;
+        include_once(DB_TOOLKIT.'dbtoolkit_builder.php');
+        return;
+    }
+    include_once(DB_TOOLKIT.'dbtoolkit_admin.php');    
 }
 
 function dbtoolkit_cluster() {
@@ -892,17 +944,24 @@ function dt_process() {
                 unset($_POST['dataForm']['dr_update']);
                 unset($_POST['dataForm']['EID']);                
                 $Return = df_processUpdate($_POST['dataForm'], $EID);
-                dr_trackActivity('Update', $EID, $Return['Value']);
+
+                if(!empty($Return['Value'])){
+                    dr_trackActivity('Update', $EID, $Return['Value']);
+                    $_SESSION['DF_Post_returnID'] = $Return['Value'];
+                    $_SESSION['DF_Post_EID'] = $EID;
+                }
                 if(empty($Setup['Content']['_NotificationsOff'])) {
                     $_SESSION['DF_Post'][] = $Return['Message'];
                 }
-                $_SESSION['DF_Post_returnID'] = $Return['Value'];
-                $_SESSION['DF_Post_EID'] = $EID;
+
+                    
             }else {
                 foreach($_POST['dataForm'] as $EID=>$Data) {
                     $Return = df_processInsert($EID, $Data);
                     // Track Activity
+                    if(!empty($Return['Value']))
                     dr_trackActivity('Insert', $EID, $Return['Value']);
+                    
                     $Setup = getelement($EID);
                     if(empty($Setup['Content']['_NotificationsOff'])) {
                         $_SESSION['DF_Post'][] = $Return['Message'];
@@ -1292,35 +1351,6 @@ function dt_process() {
 }
 
 
-function dt_listApplications($Application){
-    
-    $Apps = get_option('dt_int_Apps');
-    //vardump($Apps);
-    echo '<select id="appsSelector" name="Data[Content][_Application]" >';
-    foreach($Apps as $app=>$state){
-        if(is_array($state)){
-            if($state['state'] == 'open'){
-                $Sel = '';
-                if($state['name'] == $Application){
-                    $Sel = 'selected="selected"';
-                }
-                echo '<option value="'.$state['name'].'" '.$Sel.'>'.$state['name'].'</option>';
-            }
-        }else{
-            if($state == 'open'){
-                $Sel = '';
-                if(sanitize_title($app) == sanitize_title($Application)){
-                    $Sel = 'selected="selected"';
-                }
-                echo '<option value="'.$app.'" '.$Sel.'>'.ucwords($app).'</option>';
-            }
-        }
-    }
-    echo '</select>';
-
-}
-
-
 
 function dt_rendercluster($cluster){
     
@@ -1587,9 +1617,36 @@ return mail($to, $subject, $message, $headers);
 // delete interface
 function dt_removeInterface($Interface) {
 
-    delete_option($Interface);
-    delete_option('filter_Lock_'.$Interface);
-    delete_option('dt_set_'.$Interface);
+    $activeApp = get_option('_dbt_activeApp');
+    if(empty($activeApp))
+        return false;
+
+    $app = get_option('_'.$activeApp.'_app');
+    
+    if(!empty($app['interfaces'])){
+    
+        if(key_exists($Interface,  $app['interfaces'])){
+            unset($app['interfaces'][$Interface]);
+
+            delete_option($Interface);
+            delete_option('filter_Lock_'.$Interface);
+            delete_option('dt_set_'.$Interface);
+
+        }
+    }
+
+    if(!empty($app['clusters'])){
+        if(key_exists($Interface,  $app['clusters'])){
+            unset($app['clusters'][$Interface]);
+
+            delete_option($Interface);
+            delete_option('filter_Lock_'.$Interface);
+            delete_option('dt_set_'.$Interface);
+
+        }
+    }
+
+    update_option('_'.$activeApp.'_app', $app);
     return true;
 }
 
@@ -1945,6 +2002,9 @@ function exportApp($app, $publish=false){
     
 
     $export = array();
+    if(empty($app['imageFile']))
+        $app['imageFile'] = '';
+
     if(file_exists($app['imageFile'])){
         $export['logo'] = base64_encode(file_get_contents($app['imageFile']));
     }
@@ -1974,10 +2034,10 @@ function exportApp($app, $publish=false){
                 }
             }
             array_walk_recursive($cfg, 'core_cleanSystemTables');
-
-            if($wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'") != $table_name){
-                $tables[$cfg['_main_table']] = $cfg['_main_table'];
-            }
+            //echo $wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'");
+            //if($wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'") != $table_name){
+            //    $tables[$cfg['_main_table']] = $cfg['_main_table'];
+            //}
             //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
             $export['interfaces'][$interface->option_name] = base64_encode($interface->option_value);
         }

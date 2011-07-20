@@ -10,10 +10,10 @@
             <h3><span>Updates in this version</span></h3>
             <div style="margin: 10px;">
 
-                <p>Data Source* - this is an experimental feature - it allows you to supply a url to an XML feed which will then act as an import.
-                    I'm just experimenting with its use so some feedback would be nice.<br /><br /></p>
-                <p>API is almost fully complete. All methods now work. Still need to implement the passing of filters.<br /><br /></p>
-                <p>Added back the View Template. sorry about it :)<br /><br /></p>
+                <p>Rebuild the management section.</p>
+                <p>Renamed "Interfaces & Clusters" to App Builder.</p>
+                <p>Refined how the apps menus work.</p>
+                <p>Give your app a logo :)</p>
 
 
             </div>

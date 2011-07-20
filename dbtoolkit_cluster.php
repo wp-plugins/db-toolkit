@@ -7,7 +7,7 @@
             <div class="clear"></div>
                 <br />
                 <div id="poststuff">
-                    <form name="newInterfaceForm" method="post" action="admin.php?page=Database_Toolkit#clusters">
+                    <form name="newInterfaceForm" method="post" action="admin.php?page=dbt_builder#clusters">
                             <?php
                             include('data_report/cluster.plug.php');
                             ?>

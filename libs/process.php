@@ -5,34 +5,101 @@
  *
  */
 
-if(!empty($_POST['exportApp'])){
-    $appData = get_option('_'.$_POST['application'].'_app');
-    exportApp($appData);
+function dt_saveInterface($str){
+    parse_str(urldecode($str), $vars);
+    return dt_saveCreateInterface($vars);
 }
 
+if(!empty($_GET['exportApp'])){
+    $activeApp = get_option('_dbt_activeApp');
+    if(empty($activeApp))
+        return;
+
+    $app = get_option('_'.$activeApp.'_app');
+    if($app['state'] == 'open'){
+        exportApp($app);
+    }
+    return;
+}
+    // dumplicate interface hack
+if(is_admin()) {
+    
+    $activeApp = get_option('_dbt_activeApp');
+    if(empty($activeApp))
+        return;
+
+    $app = get_option('_'.$activeApp.'_app');
+    
+    if(!empty($_GET['duplicateinterface'])){
+        $dupvar = get_option($_GET['duplicateinterface']);
+        $oldOption = $dupvar;
+        if($oldOption['Type'] == 'Cluster'){
+            $NewName = uniqid($oldOption['_ClusterTitle'].' ');
+            $oldOption['_ClusterTitle'] = $NewName;
+            $newTitle = uniqid('dt_clstr');
+            $hash = '&r=y#clusters';
+            $app['clusters'][$newTitle] = $oldOption['_menuAccess'];
+        }else{
+            $NewName = uniqid($oldOption['_ReportDescription'].' ');
+            $oldOption['_ReportDescription'] = $NewName;
+            $newTitle = uniqid('dt_intfc');
+            $hash = '';
+            $app['interfaces'][$newTitle] = $oldOption['_menuAccess'];
+        }
+        $oldOption['ID'] = $newTitle;
+        $oldOption['ParentDocument'] = $newTitle;
+        if(update_option($newTitle, $oldOption)){
+            update_option('_'.$activeApp.'_app', $app);
+        }
+        header( 'Location: '.$_SERVER['HTTP_REFERER'].$hash);
+        exit;
+    }
+}
+
+    
 //// FROM dbtoolkit_admin.php
 //// LINE 95
-
 if(!empty($_POST['Data'])) {
-    global $user;
-    $_POST = stripslashes_deep($_POST);
-    //vardump($_POST);
 
-    if(!empty($_POST['Data']['ID'])){
-        $optionTitle = $_POST['Data']['ID'];
+    dt_saveCreateInterface($_POST);
+    
+}
 
+function dt_saveCreateInterface($saveData){
+    global $wpdb, $user;
+
+    $activeApp = get_option('_dbt_activeApp');
+    
+    if(empty($activeApp))
+        return;
+
+
+    $app = get_option('_'.$activeApp.'_app');
+    if(empty($app))
+        return;
+
+
+    $saveData = stripslashes_deep($saveData);
+    //vardump($saveData);
+
+    if(!empty($saveData['Data']['ID'])){
+        $optionTitle = $saveData['Data']['ID'];
         $newCFG = get_option($optionTitle);
         //vardump($newCFG);
     }else{
 
-        $optionTitle = uniqid('dt_intfc');
-        if(isset($_POST['Data']['Content']['_clusterLayout'])){
+        $optionTitle = uniqid('dt_intfc');        
+        if(isset($saveData['Data']['Content']['_clusterLayout'])){
             $optionTitle = uniqid('dt_clstr');
         }
 
         $newOption = array();
         $newCFG['ID'] = $optionTitle;
-        $newCFG['_interfaceName'] = $_POST['dt_newInterface'];
+        if(empty($saveData['dt_newInterface']))
+            $saveData['dt_newInterface'] = '';
+
+
+        $newCFG['_interfaceName'] = $saveData['dt_newInterface'];
         $newCFG['_interfaceType'] = 'unconfigured';
         $newCFG['_interfaceDate'] = date('Y-m-d H:i:s');
         $newCFG['ID'] = $optionTitle;
@@ -42,22 +109,24 @@ if(!empty($_POST['Data'])) {
         $newCFG['Position'] = 0;
         $newCFG['Column'] = 0;
         $newCFG['Row'] = 0;
-    }    
+    }
+
+    $app['interfaces'][$optionTitle] = $saveData['Data']['Content']['_menuAccess'];
     // Setup Index_Show's
     //echo '<br><br><br>';
     
     $Indexes = array();
-    if(!empty($_POST['Data']['Content']['_Field'])){
+    if(!empty($saveData['Data']['Content']['_Field'])){
 
         
 
-        foreach($_POST['Data']['Content']['_Field'] as $Field=>$Value){
+        foreach($saveData['Data']['Content']['_Field'] as $Field=>$Value){
             // Make Sure the Fields EXIST!
-            $wpdb->query("SELECT `".$Field."` FROM `".$_POST['Data']['Content']['_main_table']."` LIMIT 1;");
+            $wpdb->query("SELECT `".$Field."` FROM `".$saveData['Data']['Content']['_main_table']."` LIMIT 1;");
             if(mysql_errno() == '1054'){
 
                 $baseType = 'VARCHAR( 255 )';
-                $type = explode('_', $_POST['Data']['Content']['_Field'][$Field]);
+                $type = explode('_', $saveData['Data']['Content']['_Field'][$Field]);
                 
                 if(!empty($type[1])){
                     if(file_exists(DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php')){
@@ -68,15 +137,15 @@ if(!empty($_POST['Data'])) {
                     }
                 }
 
-                $wpdb->query("ALTER TABLE `".$_POST['Data']['Content']['_main_table']."` ADD `".$Field."` ".$baseType." NOT NULL ");
+                $wpdb->query("ALTER TABLE `".$saveData['Data']['Content']['_main_table']."` ADD `".$Field."` ".$baseType." NOT NULL ");
                 echo mysql_error();
             }
 
             $Indexes[$Field]['Visibility'] = 'hide';
             $Indexes[$Field]['Indexed'] = 'noindex';
         }
-        if(!empty($_POST['Data']['Content']['_IndexType'])){
-            foreach($_POST['Data']['Content']['_IndexType'] as $Field=>$Setting){
+        if(!empty($saveData['Data']['Content']['_IndexType'])){
+            foreach($saveData['Data']['Content']['_IndexType'] as $Field=>$Setting){
                 if(!empty($Setting['Visibility'])){
                     $Indexes[$Field]['Visibility'] = $Setting['Visibility'];
                 }
@@ -85,74 +154,56 @@ if(!empty($_POST['Data'])) {
                 }
             }
         }
-        foreach($_POST['Data']['Content']['_Field'] as $Field=>$Value){
-            $_POST['Data']['Content']['_IndexType'][$Field] = $Indexes[$Field]['Indexed'].'_'.$Indexes[$Field]['Visibility'];
+        foreach($saveData['Data']['Content']['_Field'] as $Field=>$Value){
+            $saveData['Data']['Content']['_IndexType'][$Field] = $Indexes[$Field]['Indexed'].'_'.$Indexes[$Field]['Visibility'];
         }
     }
     
-    if(!empty($_POST['Data']['Content']['_customJSLibrary'])){
-        $newCFG['_CustomJSLibraries'] = $_POST['Data']['Content']['_customJSLibrary'];
+    if(!empty($saveData['Data']['Content']['_customJSLibrary'])){
+        $newCFG['_CustomJSLibraries'] = $saveData['Data']['Content']['_customJSLibrary'];
     }
-    if(!empty($_POST['Data']['Content']['_customCSSSource'])){
-        $newCFG['_CustomCSSSource'] = $_POST['Data']['Content']['_customCSSSource'];
+    if(!empty($saveData['Data']['Content']['_customCSSSource'])){
+        $newCFG['_CustomCSSSource'] = $saveData['Data']['Content']['_customCSSSource'];
     }
     // Sanatize Stuff
-    $_POST['Data']['Content']['_APICallName'] = sanitize_title($_POST['Data']['Content']['_APICallName']);
+    $saveData['Data']['Content']['_APICallName'] = sanitize_title($saveData['Data']['Content']['_APICallName']);
     //sanitize_title($title);
 
-    $newCFG['Content'] = base64_encode(serialize($_POST['Data']['Content']));
+    $newCFG['Content'] = base64_encode(serialize($saveData['Data']['Content']));
     $newCFG['_interfaceType'] = 'Configured';
-    if(!empty($_POST['Data']['Content']['_Application'])){
-        $newCFG['_Application'] = $_POST['Data']['Content']['_Application'];
-    }else{
-        $newCFG['_Application'] = 'Base';
-    }
-    $Apps = get_option('dt_int_Apps');
-    if(!empty($Apps[sanitize_title($newCFG['_Application'])])){
-
-        $Apps[sanitize_title($newCFG['_Application'])]['state'] = 'open';
-        $Apps[sanitize_title($newCFG['_Application'])]['name'] = $newCFG['_Application'];
-        update_option('dt_int_Apps', $Apps);
-        $_SESSION['activeApp'] = sanitize_title($_POST['Data']['Content']['_Application']);
-        $appConfig = get_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app');
-        $appConfig['state'] = 'open';
-        $appConfig['name'] = $_POST['Data']['Content']['_Application'];
-        $appConfig['interfaces'][$optionTitle] = $_POST['Data']['Content']['_menuAccess'];
-        update_option('_'.sanitize_title($_POST['Data']['Content']['_Application']).'_app', $appConfig);
-        
-    }else{
-        app_update($newCFG['_Application'], $optionTitle, $_POST['Data']['Content']['_menuAccess']);
-    }
-    $_SESSION['activeApp'] = sanitize_title($newCFG['_Application']);
-    $newCFG['_interfaceName'] = $_POST['Data']['Content']['_ReportTitle'];
-    if(!empty($_POST['Data']['Content']['_SetMenuItem'])) {
+    $newCFG['_Application'] = $activeApp;
+    $newCFG['_interfaceName'] = $saveData['Data']['Content']['_ReportTitle'];
+    if(!empty($saveData['Data']['Content']['_SetMenuItem'])) {
         $newCFG['_isMenu'] = true;
     }else {
         $newCFG['_isMenu'] = false;
     }
-    if(!empty($_POST['Data']['Content']['_SetDashboard'])) {
+    if(!empty($saveData['Data']['Content']['_SetDashboard'])) {
         $newCFG['_Dashboard'] = true;
     }else {
         $newCFG['_Dashboard'] = false;
     }
-    if(!isset($_POST['Data']['Content']['_clusterLayout'])){
-        $newCFG['_ReportDescription'] = $_POST['Data']['Content']['_ReportDescription'];
-        $newCFG['_ReportExtendedDescription'] = $_POST['Data']['Content']['_ReportExtendedDescription'];
+    if(!isset($saveData['Data']['Content']['_clusterLayout'])){
+        $newCFG['_ReportDescription'] = $saveData['Data']['Content']['_ReportDescription'];
+        $newCFG['_ReportExtendedDescription'] = $saveData['Data']['Content']['_ReportExtendedDescription'];
         $newCFG['Type'] = 'Plugin';
     }else{
-        $newCFG['_ClusterTitle'] = $_POST['Data']['Content']['_ClusterTitle'];
-        $newCFG['_ClusterDescription'] = $_POST['Data']['Content']['_ClusterDescription'];
+        $newCFG['_ClusterTitle'] = $saveData['Data']['Content']['_ClusterTitle'];
+        $newCFG['_ClusterDescription'] = $saveData['Data']['Content']['_ClusterDescription'];
         $newCFG['Type'] = 'Cluster';
     }
 
 
-    $newCFG['_ItemGroup'] = $_POST['Data']['Content']['_ItemGroup'];
-    $newCFG['_menuAccess'] = $_POST['Data']['Content']['_menuAccess'];
-    $newCFG['_SetAdminMenu'] = $_POST['Data']['Content']['_SetAdminMenu'];
-    $newCFG['_Icon'] = $_POST['Data']['Content']['_Icon'];
-
-    if(!empty($_POST['Data']['Content']['_ProcessImport'])){
-        $imported = unserialize(base64_decode($_POST['Data']['_SerializedImport']));
+    $newCFG['_ItemGroup'] = $saveData['Data']['Content']['_ItemGroup'];
+    $newCFG['_menuAccess'] = $saveData['Data']['Content']['_menuAccess'];
+    if(!empty($saveData['Data']['Content']['_SetAdminMenu'])){
+        $newCFG['_SetAdminMenu'] = $saveData['Data']['Content']['_SetAdminMenu'];
+    }
+    if(!empty($saveData['Data']['Content']['_Icon'])){
+        $newCFG['_Icon'] = $saveData['Data']['Content']['_Icon'];
+    }
+    if(!empty($saveData['Data']['Content']['_ProcessImport'])){
+        $imported = unserialize(base64_decode($saveData['Data']['_SerializedImport']));
         $imported['Content'] = base64_encode(serialize($imported['Content']));
         $imported['ID'] = $optionTitle;
         $imported['_Application'] = $newCFG['_Application'];        
@@ -161,12 +212,13 @@ if(!empty($_POST['Data'])) {
         die;
     }
 
-
+    
     update_option($optionTitle, $newCFG);
-    if(!empty($_POST['Apply'])){
-        header('location: '.$_SERVER['REQUEST_URI'].'&interface='.$optionTitle);
-        die;
-    }
+    update_option('_'.$activeApp.'_app', $app);
+    //vardump($app);
+
+    return $optionTitle;
+    
 }
 
 

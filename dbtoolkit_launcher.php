@@ -2,22 +2,22 @@
 /*
  * app launcher! ye baby
  */
-//vardump($_SESSION['activeApp']);
+//vardump($app);
 global $wpdb;
 $user = wp_get_current_user();
 //$app= get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
 
-$Len = strlen($app['name']);
-$appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
+//$Len = strlen($app['name']);
+//$appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
 
-$itnf = $wpdb->get_results( "SELECT option_name FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'", ARRAY_A);
+//$itnf = $wpdb->get_results( "SELECT option_name FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'", ARRAY_A);
 
-foreach($itnf as $interface){
-    $cfg = get_option($interface['option_name']);
+foreach($app['interfaces'] as $interface=>$access){
+    $cfg = get_option($interface);
     if($cfg['_menuAccess'] == 'null'){
         $cfg['_menuAccess'] = 'read';
     }
-    if(!empty($user->allcaps[$cfg['_menuAccess']])){
+    if(!empty($user->allcaps[$access])){
         if(!empty($cfg['_ItemGroup'])){
             $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
         }else{

@@ -2,6 +2,9 @@
 <div class="description">Supplying a data source allows for auto populating of data from an XML source. (JSON Coming Soon)</div><br />
 
     <?php
+    if(empty($Element['Content']['_DataSourceURL']))
+        $Element['Content']['_DataSourceURL'] = '';
+    
         echo dais_customfield('text', 'Source URL', '_DataSourceURL', '_DataSourceURL', 'list_row1' , $Element['Content']['_DataSourceURL'], '','<input type="button" value="Invoke" onclick="dr_loadDataSource(jQuery(\'#_DataSourceURL\').val());" />');
     ?>
 <h2>Field Mapping</h2>

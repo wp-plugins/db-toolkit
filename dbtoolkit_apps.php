@@ -67,10 +67,27 @@
                         }
 
                         echo '<div id="dbt-option-'.$tabIndex++.'" class="group" style="display: '.$view.';">';
-                        echo '<h2>'.$State['name'].'</h2>';
+                        //echo '<h2>'.$State['name'].'</h2>';
                         if(!empty($appConfig['imageURL'])){
                             echo '<img src="'.$appConfig['imageURL'].'" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" style="float:right;" />';
-                        }
+                        }?>
+
+<div id="<?php echo 'app-'.$tabIndex++; ?>" class="appModule" style="height: 160px;">
+<h2>Digilab Media Portfolio & Customer Database</h2>
+<div class="appDescription">
+<div class="appLogo">
+<img width="71" height="45" align="right" src="http://localhost/wordpress/wp-content/plugins/jetpack/_inc/images/icons/twitter-widget.png">
+<p>$45.00</p>
+</div>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at sem ipsum, quis iaculis est. Maecenas iaculis congue augue, quis volutpat risus fringilla eu. Aenean porttitor nulla in nulla mollis sodales. Nulla ac lacinia diam. In mollis aliquet felis, cursus mattis nunc aliquam eget. Sed in porta sem.</p>
+</div>
+
+<div class="appModuleButton">
+<a href="http://en.blog.wordpress.com/2009/03/26/twitter-widget/" class="button more-info-link">Learn More</a>								</div>
+</div>
+                            
+                <?php
 
 
                         echo '</div>';

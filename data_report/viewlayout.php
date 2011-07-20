@@ -34,6 +34,9 @@
 
 
         $cfg = $Element['Content'];
+        if(empty($cfg['_gridViewLayout']))
+            $cfg['_gridViewLayout'] = '';
+        
         parse_str($cfg['_gridViewLayout'], $layout);
         //vardump($layout);
 

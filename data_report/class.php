@@ -54,6 +54,7 @@ if (is_admin ()) {
 
         $result = mysql_query("SHOW COLUMNS FROM " . $Table);
         if (mysql_num_rows($result) > 0) {
+            $TotalsField = '';
             while ($row = mysql_fetch_assoc($result)) {
                 $TotalsField .= '<option value="' . $row['Field'] . '" {{' . $row['Field'] . '}}>' . $row['Field'] . '</option>';
                 $FieldsClearer[] = $row['Field'];
@@ -146,7 +147,7 @@ if (is_admin ()) {
         //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
 
 
-        $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox '.$addClass.'" style="width:550px;">';
+        $PreReturn[$Field] = '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox '.$addClass.'" style="width:550px;">';
 
         $PreReturn[$Field] .= '<img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" />';
 
@@ -320,7 +321,9 @@ if (is_admin ()) {
 
 
 
-
+        if(empty($row))
+            $row = false;
+        
         $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) .'</div>'. dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
         // inline settings
         //class="button-highlighted"
@@ -515,7 +518,7 @@ if (is_admin ()) {
                     //$Row = dais_rowSwitch($Row);
                     $FieldList[] = $row['Field'];
                     $Field = $row['Field'];
-                    $PreReturn[$Field] .= df_makeFieldConfigBox($Field, $Config, $Defaults);
+                    $PreReturn[$Field] = df_makeFieldConfigBox($Field, $Config, $Defaults);
                 }
             }
             if (!empty($Defaults['_Field']) && $Column != 'N') {
@@ -590,15 +593,16 @@ if (is_admin ()) {
         $VSel = '';
         $ISel = '';
 
-
-        $Part = explode('_', $Default);
-        if($Part[1] == 'show'){
-            $VSel = 'checked="checked"';
-            $VClass = 'button-highlighted highlight';
-        }
-        if($Part[0] == 'index'){
-            $ISel = 'checked="checked"';
-            $IClass = 'button-highlighted highlight';
+        if(!empty($Default)){
+            $Part = explode('_', $Default);
+            if($Part[1] == 'show'){
+                $VSel = 'checked="checked"';
+                $VClass = 'button-highlighted highlight';
+            }
+            if($Part[0] == 'index'){
+                $ISel = 'checked="checked"';
+                $IClass = 'button-highlighted highlight';
+            }
         }
 
         
@@ -2491,6 +2495,9 @@ var " . $ChartID . " = new Highcharts.Chart({
                     //foreach ($row as $Field => $Data) {
                         if($Type[1] === 1)
                             break;
+
+                        if(empty($row[$Field]))
+                            $row[$Field] = '';
                         $Data = $row[$Field];
 
                         if (!empty($Config['_IndexType'][$Field][1])) {
@@ -2570,7 +2577,7 @@ var " . $ChartID . " = new Highcharts.Chart({
                                                 }
                                                 // Get permalink
                                                 // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
-                                                $PageLink = 'admin.php?page=Database_Toolkit&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 $PreReportReturn .= "<a href=\"" . $PageLink . "\"><strong>";
                                             }
                                         } else {
@@ -3055,7 +3062,7 @@ var " . $ChartID . " = new Highcharts.Chart({
 
 
 
-    return do_shortcode($header . $ReportReturn . $footer);
+    return do_shortcode($ReportReturn);
 }
 
 function df_inlineedit($Entry, $ID, $Value) {
@@ -3212,7 +3219,12 @@ function df_processupdate($Data, $EID) {
     //    $newData[] = "`" . $Field . "` = '" . mysql_real_escape_string($newValue) . "' ";
     //}
     //$Updates = implode(', ', $newData);
-    $Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
+    //$Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
+    if(empty($updateData))
+        $Return['Message'] = 'umm, there was nothing to update.';
+        return $Return;
+
+    
     if($wpdb->update($Config['_main_table'], $updateData, array($Config['_ReturnFields'][0] => $Data[$Config['_ReturnFields'][0]]))){
         $update = true;
     }else{
@@ -3667,7 +3679,7 @@ function dr_addListRowTemplate($Default = false){
 ob_start();
                 $show = 'block';
                 if(!empty($Default)){
-                    $show = 'none';
+                    $show = 'block';
                 }
                 $rowTemplateID = uniqid('Template-');
                 $Name = $rowTemplateID;

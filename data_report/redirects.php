@@ -18,6 +18,9 @@
             $Sel = 'checked="checked"';
         }
         echo dais_customfield('radio', 'No Redirect', '_ItemViewPage', '_ItemViewPage', 'list_row1' , 0, $Sel);
+        if(empty($Element['Content']['_ItemViewPage']))
+            $Element['Content']['_ItemViewPage'] = '';
+        
         $PageList[] = $Element['Content']['_ItemViewPage'];
         echo dais_page_selector('s', $PageList, false, '_ItemViewPage');
         EndInfoBox();
@@ -68,6 +71,9 @@
 
                         $Plugins = array();
                         $Clusters = array();
+                        if(empty($PrimInterfaces['Plugin']))
+                            $PrimInterfaces['Plugin'] = '';
+                        
                         if(is_array($PrimInterfaces['Plugin'])){
                             foreach($PrimInterfaces['Plugin'] as $PrimInterface) {
                                 if(empty($PrimInterface['_ItemGroup'])){
@@ -150,10 +156,16 @@
                                 $Dis = '';
                                 $Cls = '';
                                 $Sel = '';
+                                if(empty($_GET['interface']))
+                                    $_GET['interface'] = false;
+                                
                                 if($Interface['ID'] == $_GET['interface']){
                                     $Dis = 'disabled="disabled"';
                                     $Cls = 'highlight';
                                 }
+                                if(empty($Element['Content']['_ItemViewInterface']))
+                                    $Element['Content']['_ItemViewInterface'] ='';
+
                                if($Interface['ID'] == $Element['Content']['_ItemViewInterface']){
                                     $Sel = 'checked="checked"';
                                }

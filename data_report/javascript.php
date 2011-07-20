@@ -1,5 +1,17 @@
 //<script>
 
+
+    function dt_saveInterface(str){
+
+        jQuery('.save_bar_top').css('position', 'relative').prepend('<div class="ui-overlay" id="newInterfaceForm_overlay"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Saving Data</div></div>')
+        ajaxCall('dt_saveInterface', str, function(o){
+            jQuery('#interfaceID').val(o);
+            jQuery('#newInterfaceForm_overlay').hide('slow', function(){
+                jQuery(this).remove();
+            });
+        });
+    }
+
     function dbt_sendError(interface, errordata){
         //alert(errordata);
         ajaxCall('dbt_sendError', interface, errordata, function(i){
@@ -685,6 +697,51 @@
                             }else{
                                 jQuery('#FieldList_Main').append(f);
                                 jQuery('#ui-jsDialog-'+id).dialog("close");
+                            }
+
+                        })
+                    }
+                }
+            },
+            close: function(event, ui) {
+                jQuery("#ui-jsDialog-"+id).remove();
+            }
+        });
+
+
+    }
+
+    function dr_addApplication(){
+
+        id = Math.floor(Math.random()*9999999);
+
+	if(jQuery("#ui-jsDialog-"+id).length == 1){
+            jQuery("#ui-jsDialog-"+id).remove();
+	}
+	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'" title="New Application"><p><label>Name</lable><input type="text" id="'+id+'_newTitle" value="" style="width:98%;" /></p><p><label>Description</lable><textarea type="text" id="'+id+'_newDesc" style="width:98%; height:100px;" ></textarea></p></div>');
+	jQuery("#ui-jsDialog-"+id).dialog({
+            position: 'center',
+            title: 'New Application',
+            autoResize: true,
+            minWidth: 200,
+            modal: true,
+            buttons: {
+                'Cancel': function() {jQuery(this).dialog("close"); },
+                'Create Application': function() {
+                    if(jQuery('#'+id+'_newTitle').val().length <= 0){
+                        alert('You need to give your application a name.');
+                    }else{
+                        jQuery('#'+id+'_newTitle').attr('disabled', 'disabled');
+                        jQuery('#'+id+'_newDesc').attr('disabled', 'disabled');
+                        ajaxCall('app_createApplication', jQuery('#'+id+'_newTitle').val(),jQuery('#'+id+'_newDesc').val(), function(f){
+                            if(f.error){
+                                alert(f.error);
+                                jQuery('#'+id+'_newTitle').removeAttr('disabled');
+                                jQuery('#'+id+'_newDesc').removeAttr('disabled');
+                            }else{
+                                jQuery('#FieldList_Main').append(f);
+                                window.location = "admin.php?page=dbt_builder";
+                                //location.reload();
                             }
 
                         })

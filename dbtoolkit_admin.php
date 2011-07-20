@@ -1,11 +1,28 @@
 <?php
+
+
 /*
 notes:
 
 
 
 */
-
+/*
+ *
+ * Render Interface
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 if(!empty($_GET['renderinterface'])){
     $Interface = get_option($_GET['renderinterface']);
     if($Interface['Type'] == 'Cluster'){
@@ -16,7 +33,13 @@ if(!empty($_GET['renderinterface'])){
     if(!empty($Interface['_ReportDescription'])) {
        $Title = $Interface['_ReportDescription'];
     }
+    $appConfig = get_option('_'.$activeApp.'_app');
+    if(!empty($user->caps['administrator']) && empty($noedit)){
+    ?>
 
+    <h2 id="appTitle"><?php echo $appConfig['name']; ?></h2>
+    <?php
+    }
     ?>
     <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?>
@@ -25,7 +48,7 @@ if(!empty($_GET['renderinterface'])){
             $user = wp_get_current_user();
             if(!empty($user->caps['administrator']) && empty($noedit)){
         ?>
-        <a class="button add-new-h2" href="admin.php?page=Database_Toolkit&interface=<?php echo $_GET['renderinterface']; ?>">Edit</a>
+        <a class="button add-new-h2" href="admin.php?page=dbt_builder&interface=<?php echo $_GET['renderinterface']; ?>">Edit</a>
     <?php
             }
     ?></h2>
@@ -92,6 +115,24 @@ if(!empty($_GET['renderinterface'])){
 
 
 
+/*
+ *
+ *
+ *
+ *
+ *
+ * Creating new Interface
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
+
         if($_GET['page'] == 'Add_New'){
         /*    ?>
         <div class="wrap">
@@ -122,8 +163,10 @@ if(!empty($_GET['renderinterface'])){
 
 
 */
+                 $appConfig = get_option('_'.$activeApp.'_app');
                     ?>
-                <form name="newInterfaceForm" method="post" action="admin.php?page=Database_Toolkit">
+                <h2 id="appTitle"><?php echo $appConfig['name']; ?></h2>
+                <form name="newInterfaceForm" id="newInterfaceForm" method="post" action="admin.php?page=dbt_builder">
                         <?php 
                         $defaults = get_option('_dbtoolkit_defaultinterface');
                         
@@ -143,8 +186,37 @@ if(!empty($_GET['renderinterface'])){
             return;
         }
 
-        if(!empty($_GET['interface']) || !empty($_GET['cluster'])) {
 
+
+
+/*
+ *
+ *
+ *
+ *
+ *
+ * Edit Interface
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
+
+
+
+
+
+        if(!empty($_GET['interface']) || !empty($_GET['cluster'])) {
+            $appConfig = get_option('_'.$activeApp.'_app');
+            
             if(!empty($_GET['interface'])){
                 $Element = get_option($_GET['interface']);
             }else{
@@ -158,6 +230,7 @@ if(!empty($_GET['renderinterface'])){
                     $URL = str_replace('&cluster='.$Element['ID'], '#clusters', $URL);
 
                 ?>
+                <h2 id="appTitle"><?php echo $appConfig['name']; ?></h2>
                 <form name="newInterfaceForm" id="newInterfaceForm" method="post" action="<?php echo $URL; ?>">
                         <?php
                         if(!empty($_GET['interface'])){
@@ -175,84 +248,338 @@ if(!empty($_GET['renderinterface'])){
 
 
 
+
+
+
+
+        /*
+         *
+         *
+         *
+         *
+         *
+         *
+         * Interface listings
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         */
+
+
+
+
+
+
+
+
+
+         /*
+          *
+          *
+          * App Image Uploader
+          *
+          *
+          *
+          */
+
+
         /// Start of listing applications
         if(!empty($_FILES['appImage']['size'])){
             $path = wp_upload_dir();
             // set filename and paths
             $Ext = pathinfo($_FILES['appImage']['name']);
-            $newFileName = sanitize_file_name($_POST['application'].'.'.$Ext['extension']);
+            $newFileName = sanitize_file_name($activeApp.'.'.$Ext['extension']);
             $upload = wp_upload_bits($newFileName, null, file_get_contents($_FILES['appImage']['tmp_name']));
 
-            $appConfig = get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
+            $appConfig = get_option('_'.$activeApp.'_app');
             $appConfig['imageURL'] = $upload['url'];
             $appConfig['imageFile'] = $upload['file'];
-            update_option('_'.sanitize_title($_POST['application']).'_app', $appConfig);
+            update_option('_'.$activeApp.'_app', $appConfig);
             
         }
 
 
-        global $wpdb;
-        $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+
+
+        // get master app config
+        $appConfig = get_option('_'.$activeApp.'_app');
         
-        if(!empty($_POST['deleteApp'])){
 
 
-            $apps = get_option('dt_int_Apps');
-            $appname = $apps[$_POST['application']]['name'];
-            foreach($interfaces as $interface){
-                
-                $tmp = get_option($interface['option_name']);
-                if($tmp['_Application'] == $appname){
-                    echo $interface['option_name'];
-                    echo ' | ';
-                    dt_removeInterface($interface['option_name']);
-                }
-                
-            }
-            //vardump($apps);
-            //die;
-            unset($apps[sanitize_title($_SESSION['activeApp'])]);
-            update_option('dt_int_Apps', $apps);
-            delete_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
-            $_SESSION['activeApp'] = 'Base';
-        }
-
-        if(!empty($_POST['loadApp'])){
-            
-            // quick scan to fix apps
-            $Apps = get_option('dt_int_Apps');
-            foreach($interfaces as $Interface){
-                $cfg = get_option($Interface['option_name']);
-                
-                app_update($cfg['_Application']);
-            }
-
-
-            if(strtolower($_POST['application']) != 'base'){                
-                $appConfig= get_option('_'.sanitize_title($_POST['application']).'_app');
-                //vardump($appConfig);
-                if(empty($appConfig)){
-                    // for old apps                    
-                    app_update($_POST['application']);
-                }
-            }
-            $_SESSION['activeApp'] = sanitize_title($_POST['application']);
-        }
         
-        if(empty($_SESSION['activeApp'])){
-            $_SESSION['activeApp'] = 'Base';
-        }
-        $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
-        $clusters = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_clstr%' ", ARRAY_A);
-
-
-        // check if there is a app config
-        $appConfig = get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
-        //vardump($_SESSION['activeApp']);
-
+       
 
         ?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+$Apps = get_option('dt_int_Apps');
+//vardump($Apps);
+$icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/defaultlogo.png" align="top" />';
+if(!empty($appConfig['imageURL'])){
+   $icon = '<img src="'.UseImage($appConfig['imageURL'], 7, 150, 100).'" align="top" />';
+}
+?>
+<h2 id="appTitle"><?php echo $appConfig['name']; ?></h2>
+
+<div id="dbt_container" class="wrap poststuff">
+
+        <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
+        <div id="header">
+            <div class="title">
+                <h2><?php echo $appConfig['name']; ?></h2>
+            </div>
+            <div class="logo"><?php echo $icon; ?></div>
+
+            <div class="clear"></div>
+        </div>
+        <div class="save_bar_tools">
+
+            <div class="fbutton"><a href="admin.php?page=Add_New"><div class="button add-new-h2" id="addNewInterface"><span class="add" style="padding-left: 20px;">New Interface</span></div></a></div>
+            <div class="fbutton"><a href="admin.php?page=New_Cluster"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;">New Cluster</span></div></a></div>
+            <?php
+            if(strtolower($activeApp) != 'base'){
+            ?>
+                <div class="fbutton"><a href="?page=dbt_builder&exportApp=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export</span></div></a></div>
+            <?php
+            }
+            ?>
+            <div class="fbutton"><a href="?page=dbt_builder&close=<?php echo $activeApp; ?>"><div class="button add-new-h2"><span class="delete" style="padding-left: 20px;">Close Application</span></div></a></div>
+
+
+        </div>
+        <div id="main">            
+            <div id="dbt-nav">
+
+                <ul>
+                    <li class="current">
+                        <a href="#interfaces" title="interfaces">Interfaces</a>
+                    </li>
+                    <li class="">
+                        <a href="#clusters" title="clusters">Clusters</a>
+                    </li>
+                    <li class="">
+                        <a href="#config" title="config">Config</a>
+                    </li>
+                </ul>
+
+            </div>
+            
+            <div id="content">
+                
+                <div id="interfaces" class="group" style="display: block;">
+
+                <?php
+                
+                if(!empty($appConfig['interfaces'])) {
+                    $Groups = array();
+                    foreach($appConfig['interfaces'] as $interface=>$access) {
+                        $Iname = $interface;
+                        $cfg = get_option($Iname);
+                        if(empty($cfg['_Application'])){
+                            $cfg['_Application'] = 'Base';
+                        }
+                        if(sanitize_title($cfg['_Application']) == $activeApp){
+                            $GroupName = '__Ungrouped';
+                            if(!empty($cfg['_ItemGroup'])){
+                                $GroupName = $cfg['_ItemGroup'];
+                            }
+                            $Groups[$GroupName][] = $cfg;
+                        }
+                    }
+                    ksort($Groups);
+                    foreach($Groups as $Group=>$data){
+                        if($Group == '__Ungrouped')
+                            $Group = '<em>Uncategorised</em>';
+                        echo '<h2 style="clear:both;">'.$Group.'</h2>';
+
+                        // Interface panel
+                        foreach($data as $Interface){
+                        ?>
+                        <div id="<?php echo $Interface['ID']; ?>" class="interfaceModule">
+
+                            <div class="interfaceDets">
+                                <div>[interface id="<?php echo $Interface['ID']; ?>"]</div>
+                            </div>
+                            <h2><?php echo $Interface['_ReportDescription']; ?></h2>
+                            <div class="interfaceDescription">
+                            <?php
+                                if(!empty($Interface['_ReportExtendedDescription']))
+                                    echo $Interface['_ReportExtendedDescription'];
+
+
+                                $Config = unserialize(base64_decode($Interface['Content']));
+                                //vardump($Config);
+                                //die;
+
+
+                                $landing = '';
+                                if(!empty($appConfig['landing'])){
+                                    if($appConfig['landing'] == $Interface['ID']){
+                                        $landing = 'checked="checked"';
+                                    }
+                                }
+
+
+
+                            ?>
+                            </div>
+
+                            <div class="interfaceActions">Landing: <input type="radio" name="<?php echo 'landing_'.$activeApp; ?>" id="rdo_<?php echo $Interface['ID']; ?>" value="<?php echo $Interface['ID']; ?>" onclick="app_setLanding('<?php echo $activeApp; ?>', '<?php echo $Interface['ID']; ?>');" <?php echo $landing; ?> /> | <a href="admin.php?page=dbt_builder&interface=<?php echo $Interface['ID']; ?>">Edit</a> | <a href="admin.php?page=dbt_builder&renderinterface=<?php echo $Interface['ID']; ?>">View</a> | <a href="admin.php?page=dbt_builder&duplicateinterface=<?php echo $Interface['ID']; ?>">Duplicate</a> | <a href="#" onclick="dt_deleteInterface('<?php echo $Interface['ID']; ?>'); return false;">Delete</a></div>
+                            <div class="interfaceDetails">Type: <strong><?php echo $Config['_ViewMode']; ?></strong> | Table: <strong><?php echo $Config['_main_table']; ?></strong></div>
+                            
+                        </div>
+
+                        <?php
+                        }
+
+
+
+                    }
+                }else{
+                    echo '<h2>Interfaces</h2>';
+                    echo 'You have no interfaces yet, go make some!';
+                    $blink = true;
+
+                }
+                ?>
+
+
+
+                </div>
+                <div id="clusters" class="group" style="display: none;">
+                    <h2>Clusters</h2>
+                </div>
+                <div id="config" class="group" style="display: none;">
+                    <h2>Configuration</h2>
+                    <form method="post" action="" enctype="multipart/form-data" id="application-switcher">
+                            <?php
+                            if(strtolower($activeApp) != 'base'){
+                            ?>
+                            <br />
+                            Application logo: <input type="file" name="appImage"><input type="submit" value="Upload" class="button">
+                            <div class="description">A 150 X 65px transparent PNG gives the best results</div>
+
+
+
+                            <?php
+
+
+
+
+                            }
+                            ?>
+                    </form>
+                </div>
+
+
+
+
+            </div>
+            <div class="clear"></div>
+
+        </div>
+        <div class="save_bar_top">
+
+                <span class="submit-footer-reset">
+                </span>
+        </div>
+
+    <div style="clear:both;"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+<?php
+if(!empty($blink)){
+    ?>
+        jQuery('#addNewInterface').effect("highlight", {}, 2000, function(s){
+            jQuery('#addNewInterface').effect("highlight", {}, 2000, function(s){
+            });
+        });
+        <?php
+}
+        ?>
+
+        jQuery('#dbt-nav li a').click(function(){
+            jQuery('#dbt-nav li').removeClass('current');
+            jQuery('.group').hide();
+            jQuery(''+jQuery(this).attr('href')+'').show();
+            jQuery(this).parent().addClass('current');
+            //alert(jQuery(this).attr('href'));
+            return false;
+        });
+
+        jQuery('#dbt_container .help').click(function(){
+            jQuery(''+jQuery(this).attr('href')+'').toggle();
+            return false;
+        })
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+return;
+?>
         <div class="wrap">
             <div><?php
             if(!empty($appConfig['imageURL'])){
@@ -263,6 +590,13 @@ if(!empty($_GET['renderinterface'])){
             ?>
                 <a href="admin.php?page=Add_New" class="button">New Interface</a>&nbsp;
                 <a href="admin.php?page=New_Cluster" class="button">New Cluster</a>
+                <?php
+                if(strtolower($activeApp) != 'base'){
+                    echo '&nbsp;&nbsp; <input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
+                }
+                
+                ?>
+                <a href="?page=dbt_builder&close=<?php echo $activeApp; ?>" class="button-secondary action" id="closeApp">Close Application</a>
                 <br />
                 <span class="description">Manage Interfaces & Clusters</span>
                 <br class="clear" /><br />
@@ -274,10 +608,11 @@ if(!empty($_GET['renderinterface'])){
                 
 
                 if(empty($_POST['Data']['ID'])){
-                    $LinkID = $optionTitle;
+                    $LinkID = $newCFG['ID'];
                 }else{
                     $LinkID = $_POST['Data']['ID'];
                 }
+                
                 if(isset($newCFG['_ReportDescription'])){
                     $Title = $newCFG['_ReportDescription'];
                 }else{
@@ -285,77 +620,14 @@ if(!empty($_GET['renderinterface'])){
                 }
                 
 
-                echo '<div class="notice fade" id="message"><p><strong>Interface <a href="admin.php?page=Database_Toolkit&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
+                echo '<div class="notice fade" id="message"><p><strong>Interface <a href="admin.php?page=dbt_builder&renderinterface='.$LinkID.'">'.$Title.'</a> Updated.</strong></p></div>';
             }
             ?>
-            <form method="post" action="" enctype="multipart/form-data" id="application-switcher">
-            <div class="tablenav">
-                <div class="alignleft actions">Application
-                    <?php
-                        $appList = get_option('dt_int_Apps');
-                    ?>
-                    <select name="application">
-                    <?php
-                    if(empty($appList)){
-                        $appList['Base'] = 'open';
-                        update_option('dt_int_Apps', $appList);
-                    }
-                    
-                    foreach($appList as $app=>$state){
-                        if(is_array($state)){
-                            if($state['state'] == 'open'){
-                                $Sel = '';
-                                if($app == $_SESSION['activeApp']){
-                                    $Sel = 'selected="selected"';
-                                }
-                                echo '<option '.$Sel.' value="'.$app.'">'.$state['name'].'</option>';
-                            }
-                            
-                        }else{
-                            if($state == 'open'){
-                                $Sel = '';
-                                if($app == $_SESSION['activeApp']){
-                                    $Sel = 'selected="selected"';
-                                }
-                                echo '<option '.$Sel.' value="'.$app.'">'.$app.'</option>';
-                            }
-                        }
-                    }
-                    ?>
-                    </select>
-                    <input type="submit" class="button-secondary action" id="doaction" name="loadApp" value="Switch">
-                    <?php
-                    
-                    if(strtolower($_SESSION['activeApp']) != 'base'){
-                        echo '<input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
-                    ?>
-
-                    App Image: <input type="file" name="appImage"><input type="submit" value="Upload" class="button">
-
-
-
-                    <?php
-
-
-
-
-                    }
-                    ?>
-                    
-                </div>
-                <div class="alignright actions">
-                    <?php
-                    if(strtolower($_SESSION['activeApp']) != 'base'){
-                        echo '<input type="submit" class="button-primary action" id="doaction" name="deleteApp" value="Delete Application" onClick="return confirm(\'This will delete all interfaces in this Application. Data will remain intact. This cannot be undone. Continue?\');" >';
-                    }
-                    ?>
-                </div></div>
-            </form>
             <?php
             /*
             <form name="exportPublish" method="post" action="<?php echo str_replace('&interface='.$Element['ID'], '', $_SERVER['REQUEST_URI']); ?>">
                 <?php
-                if($_SESSION['activeApp'] != 'Base'){
+                if($activeApp != 'Base'){
                     echo '<input type="submit" class="button-secondary action" id="exportApp" name="exportApp" value="Export Application">';
                 }
                 ?>
@@ -404,17 +676,16 @@ if(!empty($_GET['renderinterface'])){
                     </tr>
                 </tfoot>
                 <?php
-                if(!empty($interfaces)) {
+                
+                if(!empty($appConfig['interfaces'])) {
                     $Groups = array();
-                    foreach($interfaces as $interface) {
-                        //vardump($interface);
-                        
-                        $Iname = $interface['option_name'];
+                    foreach($appConfig['interfaces'] as $interface=>$access) {                        
+                        $Iname = $interface;
                         $cfg = get_option($Iname);
                         if(empty($cfg['_Application'])){
                             $cfg['_Application'] = 'Base';
                         }
-                        if(sanitize_title($cfg['_Application']) == $_SESSION['activeApp']){
+                        if(sanitize_title($cfg['_Application']) == $activeApp){
                             $GroupName = '__Ungrouped';
                             if(!empty($cfg['_ItemGroup'])){
                                 $GroupName = $cfg['_ItemGroup'];
@@ -514,7 +785,7 @@ if(!empty($_GET['renderinterface'])){
                         if(empty($cfg['_Application'])){
                             $cfg['_Application'] = 'Base';
                         }
-                        if(sanitize_title($cfg['_Application']) == $_SESSION['activeApp']){
+                        if(sanitize_title($cfg['_Application']) == $activeApp){
                             $GroupName = '__Ungrouped';
                             if(!empty($cfg['_ItemGroup'])){
                                 $GroupName = $cfg['_ItemGroup'];

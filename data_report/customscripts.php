@@ -1,5 +1,8 @@
 <h2>Custom Scripts</h2>
         <?php
+        if(empty($Element['Content']['_customFooterJavaScript']))
+            $Element['Content']['_customFooterJavaScript'] = '';
+        
         echo dais_customfield('textarea', 'Footer Scripts', '_customFooterJavaScript', '_customFooterJavaScript', 'list_row1' , $Element['Content']['_customFooterJavaScript'], 'style="height:300px;"', 'Javascript code to be run when page is ready.');
         ?>
 <h2>Custom Libraries</h2>

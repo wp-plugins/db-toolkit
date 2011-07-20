@@ -27,6 +27,9 @@
 
 
         $cfg = $Element['Content'];
+        if(empty($cfg['_gridLayout']))
+            $cfg['_gridLayout'] = '';
+        
         parse_str($cfg['_gridLayout'], $layout);
 
 
@@ -106,7 +109,10 @@
 	
         <?php echo InfoBox('Available Fields'); ?>
         <div style="padding:10px;" class="formGridform" id="fieldTrayform">
-       <?php 
+       <?php
+       if(empty($Hidden))
+           $Hidden = '';
+       
         echo $Hidden;
        ?>
 		</div>

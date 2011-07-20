@@ -48,7 +48,7 @@ function app_update($name, $interface = false, $access = false){
 
     //}
     if(!empty($interface)){
-        $newApp['interfaces'][$optionTitle] = $access;
+        $newApp['interfaces'][$interface] = $access;
     }
 
     update_option('_'.sanitize_title($name).'_app', $newApp);
@@ -132,9 +132,55 @@ function app_setLanding($app, $inf){
 
 
     $appcfg = get_option('_'.$app.'_app');
+    vardump($app);
+    vardump($inf);
     $appcfg['landing'] = $inf;
     update_option('_'.$app.'_app', $appcfg);
     
 
+}
+
+function app_exists($app){
+
+    $Apps = get_option('dt_int_Apps');
+    if(!empty($Apps[$app])){
+        return true;
+    }
+    return false;
+}
+
+function app_createApplication($name, $desc = false){
+
+    if(empty($name)){
+        $out['error'] = 'You need an application name first.';
+        return $out;
+    }
+
+    $cleanName = sanitize_title($name);
+    if(app_exists($cleanName)){
+        $out['error'] = 'Application "'.$name.'" already exists';
+        return $out;
+    }
+
+    $newApp = array();
+    $newApp['state'] = 'open';
+    $newApp['name'] = $name;
+    if(!empty($desc)){
+        $newApp['description'] = $desc;
+    }
+
+
+    if(update_option('_'.$cleanName.'_app', $newApp)){
+        $apps = get_option('dt_int_Apps');
+        $apps[$cleanName] = $newApp;
+        if(update_option('dt_int_Apps', $apps)){
+            if(update_option('_dbt_activeApp', $cleanName)){
+                return true;
+            }
+        }
+    }
+    $out['error'] = 'There was an error creating the app. Sorry.';
+    return $out;
+    
 }
 ?>
