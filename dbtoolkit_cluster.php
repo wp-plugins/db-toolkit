@@ -1,5 +1,10 @@
-<?php 
+<?php
+    $app = get_option('_dbt_activeApp');
+    $appConfig = get_option('_'.$app.'_app');
+?>
 
+<h2 id="appTitle"><?php echo $appConfig['name']; ?></h2>
+<?php 
         if($_GET['page'] == 'New_Cluster'){
             ?>
         <div class="wrap">

@@ -659,17 +659,18 @@ function dr_unlockFilters($EID) {
 function dr_buildInterfaceList() {
 
     global $wpdb;
-    $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
-    $apps = get_option('dt_int_Apps');
-    $appGroups = array();
-    $Return = '';
-    foreach ($interfaces as $interface) {
-        $cfg = get_option($interface['option_name']);
-        $appGroups[$cfg['_Application']][] = $cfg;
+    $app = get_option('_dbt_activeApp');
+    $appConfig = get_option('_'.$app.'_app');
+    foreach ($appConfig['interfaces'] as $interface=>$access) {
+        $cfg = get_option($interface);
+        if(empty($cfg['_itemGroup'])){
+            $cfg['_itemGroup'] = 'uncategorised';
+        }
+        $appGroups[$cfg['_itemGroup']][] = $cfg;
     }
-    //vardump($appGroups);
-    foreach ($apps as $app => $state) {
-        //vardump($app);
+    
+    foreach ($appGroups as $app => $state) {
+        
         $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
         $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" /> ' . $app . '</a>';
 

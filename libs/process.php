@@ -110,8 +110,11 @@ function dt_saveCreateInterface($saveData){
         $newCFG['Column'] = 0;
         $newCFG['Row'] = 0;
     }
-
-    $app['interfaces'][$optionTitle] = $saveData['Data']['Content']['_menuAccess'];
+    if(isset($saveData['Data']['Content']['_clusterLayout'])){
+        $app['clusters'][$optionTitle] = 'null';
+    }else{
+        $app['interfaces'][$optionTitle] = $saveData['Data']['Content']['_menuAccess'];
+    }
     // Setup Index_Show's
     //echo '<br><br><br>';
     
@@ -211,7 +214,6 @@ function dt_saveCreateInterface($saveData){
         header('location: '.$_SERVER['REQUEST_URI'].'&interface='.$optionTitle);
         die;
     }
-
     
     update_option($optionTitle, $newCFG);
     update_option('_'.$activeApp.'_app', $app);

@@ -186,6 +186,77 @@ if(!empty($_GET['renderinterface'])){
             return;
         }
 
+/*
+ *
+ *
+ *
+ *
+ *
+ * Creating new Cluster
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+
+
+        if($_GET['page'] == 'New_Cluster'){
+        /*    ?>
+        <div class="wrap">
+            <div><img src="<?php echo WP_PLUGIN_URL . '/db-toolkit/images/dbtoolkit-logo.png'; ?>" name="DB-Toolkit" title="DB-Toolkit" align="absmiddle" />Create new Interface
+            <div class="clear"></div>
+                <br />
+            <div id="poststuff">
+                    <?php
+                    //$optionTitle = uniqid('dt_intfc');
+
+//                $_POST = stripslashes_deep($_POST);
+//
+//		$newOption = array();
+//		$newOption['_interfaceName'] = $_POST['dt_newInterface'];
+//		$newOption['_interfaceType'] = 'unconfigured';
+//		$newOption['_interfaceDate'] = date('Y-m-d H:i:s');
+//		$newOption['ID'] = $optionTitle;
+//		$newOption['Element'] = 'data_report';
+//		$newOption['Content'] = base64_encode(serialize(array()));
+//		$newOption['ParentDocument'] = $optionTitle;
+//		$newOption['Position'] = 0;
+//		$newOption['Column'] = 0;
+//		$newOption['Type'] = 'Plugin';
+//		$newOption['Row'] = 0;
+
+                    //add_option($optionTitle, serialize($newOption), NULL, "no");
+
+
+
+*/
+                 $appConfig = get_option('_'.$activeApp.'_app');
+                    ?>
+                <h2 id="appTitle"><?php echo $appConfig['name']; ?></h2>
+                <form name="newInterfaceForm" id="newInterfaceForm" method="post" action="admin.php?page=dbt_builder">
+                        <?php
+                        $defaults = get_option('_dbtoolkit_defaultinterface');
+
+                        $Element['Content'] = $defaults;
+                        include('data_report/cluster.plug.php');
+                        ?>
+                </form>
+<?php
+                        /*
+                        ?>
+                </form>
+            </div>
+        </div>
+            <?php
+                         *
+                         */
+            return;
+        }
+
 
 
 
@@ -472,7 +543,84 @@ if(!empty($appConfig['imageURL'])){
 
                 </div>
                 <div id="clusters" class="group" style="display: none;">
-                    <h2>Clusters</h2>
+                <?php
+                
+                if(!empty($appConfig['clusters'])) {
+                    $Groups = array();
+                    foreach($appConfig['clusters'] as $interface=>$access) {
+                        $Iname = $interface;
+                        $cfg = get_option($Iname);
+                        if(empty($cfg['_Application'])){
+                            $cfg['_Application'] = 'Base';
+                        }
+                        if(sanitize_title($cfg['_Application']) == $activeApp){
+                            $GroupName = '__Ungrouped';
+                            if(!empty($cfg['_ItemGroup'])){
+                                $GroupName = $cfg['_ItemGroup'];
+                            }
+                            $Groups[$GroupName][] = $cfg;
+                        }
+                    }
+                    ksort($Groups);
+                    foreach($Groups as $Group=>$data){
+                        if($Group == '__Ungrouped')
+                            $Group = '<em>Uncategorised</em>';
+                        echo '<h2 style="clear:both;">'.$Group.'</h2>';
+
+                        // Interface panel
+                        foreach($data as $Interface){
+                            //vardump($data);
+                        
+                        ?>
+                        <div id="<?php echo $Interface['ID']; ?>" class="interfaceModule">
+
+                            <div class="interfaceDets">
+                                <div>[interface id="<?php echo $Interface['ID']; ?>"]</div>
+                            </div>
+                            <h2><?php echo $Interface['_ClusterTitle']; ?></h2>
+                            <div class="interfaceDescription">
+                            <?php
+                                if(!empty($Interface['_ReportExtendedDescription']))
+                                    echo $Interface['_ReportExtendedDescription'];
+
+
+                                $Config = unserialize(base64_decode($Interface['Content']));
+                                //vardump($Config);
+                                //die;
+
+
+                                $landing = '';
+                                if(!empty($appConfig['landing'])){
+                                    if($appConfig['landing'] == $Interface['ID']){
+                                        $landing = 'checked="checked"';
+                                    }
+                                }
+
+
+
+                            ?>
+                            </div>
+
+                            <div class="interfaceActions">Landing: <input type="radio" name="<?php echo 'landing_'.$activeApp; ?>" id="rdo_<?php echo $Interface['ID']; ?>" value="<?php echo $Interface['ID']; ?>" onclick="app_setLanding('<?php echo $activeApp; ?>', '<?php echo $Interface['ID']; ?>');" <?php echo $landing; ?> /> | <a href="admin.php?page=dbt_builder&cluster=<?php echo $Interface['ID']; ?>">Edit</a> | <a href="admin.php?page=dbt_builder&renderinterface=<?php echo $Interface['ID']; ?>">View</a> | <a href="admin.php?page=dbt_builder&duplicateinterface=<?php echo $Interface['ID']; ?>">Duplicate</a> | <a href="#" onclick="dt_deleteInterface('<?php echo $Interface['ID']; ?>'); return false;">Delete</a></div>
+                            <div class="interfaceDetails">Type: <strong>Cluster</strong></div>
+
+                        </div>
+
+                        <?php
+                        }
+
+
+
+                    }
+                }else{
+                    echo '<h2>Interfaces</h2>';
+                    echo 'You have no interfaces yet, go make some!';
+                    $blink = true;
+
+                }
+                ?>
+
+
                 </div>
                 <div id="config" class="group" style="display: none;">
                     <h2>Configuration</h2>

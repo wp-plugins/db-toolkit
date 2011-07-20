@@ -505,7 +505,7 @@ function dt_menus() {
         $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Application Builder', 'App Builder', 'activate_plugins', "dbt_builder", 'dbtoolkit_admin');
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
-        $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_cluster');
+        $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_admin');
         //$Manager = add_submenu_page("Database_Toolkit_Welcome", 'Application Masnagement', 'App Management', 'activate_plugins', "manage_apps", 'dbtoolkit_appman');
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');

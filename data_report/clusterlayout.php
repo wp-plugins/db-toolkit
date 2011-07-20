@@ -3,7 +3,7 @@
         <li class="root_item"><a class="parent"><strong>Applications</strong></a>
             <ul id="" style="visibility: hidden; display: block;">
 
-                <?php
+                <?php                
                     echo dr_buildInterfaceList();
                 ?>
 
