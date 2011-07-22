@@ -1708,7 +1708,12 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
     $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";   
 
-
+    if (strtolower($Format) == 'data') {
+        $dtaRes = mysql_query($Query);
+        $Data = mysql_fetch_assoc($dtaRes);
+        return $Data;
+    }
+    
     if(!empty($Config['_UserQueryOveride']) && !empty($Config['_QueryOveride'])){
         $Query = $Config['_QueryOveride'];
 
@@ -1728,10 +1733,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // echo $Field.' = '.$FieldValue.'<br />';
     //   $Query = str_replace('.'.$Field, '.`'.$Field.'`', $Query);
     //}
-    if (strtolower($Format) == 'data') {
-        $dtaRes = mysql_query($Query);
-        return mysql_fetch_assoc($dtaRes);
-    }
+
     if (!empty($Config['_UseCustomQuery']) && !empty($Config['_ManualQuery'])) {
         $Query = $Config['_ManualQuery'];
 
@@ -2695,8 +2697,18 @@ var " . $ChartID . " = new Highcharts.Chart({
                                                             $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
                                                         }
                                                         // Get permalink
-                                                        $PageLink = 'admin.php?page=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+
+                                                        // check if its in a menu
+                                                        $inf = get_option($Config['_ItemViewInterface']);
+
+                                                        if(empty($inf['_ItemGroup']) && empty($inf['_interfaceName'])){
+                                                            $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                        }else{
+                                                            $PageLink = 'admin.php?page=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                        }
                                                         $ViewLink['view'] = "<a href=\"" . $PageLink . "\">View</a>";
+                                                        
+
                                                     }
                                                 } else {
                                                     if (!empty($Config['_ItemViewPage'])) {

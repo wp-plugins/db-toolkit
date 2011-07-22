@@ -5,7 +5,10 @@
 //vardump($app);
 global $wpdb;
 $user = wp_get_current_user();
-//$app= get_option('_'.sanitize_title($_SESSION['activeApp']).'_app');
+$Interface = get_option($_GET['renderinterface']);
+if(empty($app) && !empty($_GET['renderinterface'])){
+    $app= get_option('_'.$Interface['_Application'].'_app');
+}
 
 //$Len = strlen($app['name']);
 //$appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';

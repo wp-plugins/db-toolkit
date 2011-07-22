@@ -292,20 +292,20 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 			$Sel = 'selected="selected"';	
 		}
 		$Types .= '<option value="autocomplete" '.$Sel.'>Autocomplete</option>';
-		$Sel = '';
-		if($Defaults[$Field]['Type'] == 'checkbox'){
-			$Sel = 'selected="selected"';	
-		}
-		$Types .= '<option value="checkbox" '.$Sel.'>Checkbox</option>';
-		$Sel = '';
-		if($Defaults[$Field]['Type'] == 'radio'){
-			$Sel = 'selected="selected"';	
-		}
-		$Types .= '<option value="radio" '.$Sel.'>Radio Group</option>';
-		$Sel = '';
-		if($Defaults[$Field]['Type'] == 'multiselect'){
-			$Sel = 'selected="selected"';	
-		}
+		//$Sel = '';
+		//if($Defaults[$Field]['Type'] == 'checkbox'){
+		//	$Sel = 'selected="selected"';
+		//}
+		//$Types .= '<option value="checkbox" '.$Sel.'>Checkbox</option>';
+		//$Sel = '';
+		//if($Defaults[$Field]['Type'] == 'radio'){
+		//	$Sel = 'selected="selected"';
+		//}
+		//$Types .= '<option value="radio" '.$Sel.'>Radio Group</option>';
+		//$Sel = '';
+		//if($Defaults[$Field]['Type'] == 'multiselect'){
+		//	$Sel = 'selected="selected"';
+		//}
 	$Types .= '</select></div>';
 
 	

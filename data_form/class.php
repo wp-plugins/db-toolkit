@@ -473,9 +473,11 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         $Form .= "<div class=\"form-gen-field-wrapper\" id=\"form-field-".$Field."\">\n";
                                         $Form .= "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>\n";
                                             ob_start();
-                                            if(empty($Defaults[$Field]))
-                                                $Defaults[$Field] = '';
-                                            $Val = esc_attr($Defaults[$Field]);
+                                            if(!empty($Defaults[$Field])){
+                                                $Val = esc_attr($Defaults[$Field]);
+                                            }else{
+                                                $Val = '';
+                                            }
                                             if(!empty($Config['_readOnly'][$Field])){
                                                 $func = $FieldSet[0].'_processValue';
                                                 if(function_exists($func)){
@@ -544,6 +546,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             $Shown .= '</div>';
         }
         if(!empty($Defaults)) {
+            //vardump($Defaults);
             $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
             $Hidden .= '<input type="hidden" name="dr_update" value="1" />';
             $Hidden .= '<input type="hidden" name="dataForm[EID]" value="'.$Element['ID'].'" />';
@@ -793,21 +796,19 @@ function df_processInsert($EID, $Data) {
                         $EntryData = $Data[$Field];
                     }
                 }
-                //$Entries[$Field] = "'".mysql_real_escape_string($EntryData)."'";
-                $Entries[$Field] = $EntryData;
+                $Entries[$Field] = "'".mysql_real_escape_string($EntryData)."'";
+                //$Entries[$Field] = $EntryData;
             }
         }
     }
-
-    $wpdb->show_errors();
-
-    //$Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
+    
     if(empty($Entries)){
         $Return['Message'] = 'umm, there was nothing to insert.';
         return $Return;
     }
-        
-    if($wpdb->insert($Config['_main_table'], $Entries)){
+    $Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
+    
+    if($wpdb->query($Query)){
         $inserted = true;
         $ID = $wpdb->insert_id;
     }else{

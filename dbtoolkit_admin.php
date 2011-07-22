@@ -34,6 +34,10 @@ if(!empty($_GET['renderinterface'])){
        $Title = $Interface['_ReportDescription'];
     }
     $appConfig = get_option('_'.$activeApp.'_app');
+
+    $user = wp_get_current_user();
+
+
     if(!empty($user->caps['administrator']) && empty($noedit)){
     ?>
 
@@ -44,8 +48,7 @@ if(!empty($_GET['renderinterface'])){
     <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?>
         <?php
-            //global $user;
-            $user = wp_get_current_user();
+            //global $user;            
             if(!empty($user->caps['administrator']) && empty($noedit)){
         ?>
         <a class="button add-new-h2" href="admin.php?page=dbt_builder&interface=<?php echo $_GET['renderinterface']; ?>">Edit</a>
@@ -439,7 +442,8 @@ if(!empty($appConfig['imageURL'])){
             <?php
             }
             ?>
-            <div class="fbutton"><a href="?page=dbt_builder&close=<?php echo $activeApp; ?>"><div class="button add-new-h2"><span class="delete" style="padding-left: 20px;">Close Application</span></div></a></div>
+            <div class="fbutton"><a href="?page=dbt_builder&close=<?php echo $activeApp; ?>"><div class="button add-new-h2"><span class="closefilter" style="padding-left: 20px;">Close Application</span></div></a></div>
+            <div class="fbutton" style="float:right;"><a href="?page=dbt_builder&delete=<?php echo $activeApp; ?>" onclick="return confirm('Are you sure you want to delete this App and all its interfaces? It\'s permanent!')"><div class="button add-new-h2"><span class="delete" style="padding-left: 20px;">Delete Application</span></div></a></div>
 
 
         </div>

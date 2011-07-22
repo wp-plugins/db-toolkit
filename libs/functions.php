@@ -818,10 +818,46 @@ function dbtoolkit_admin() {
             }
         }
     }
+    if(!empty($_GET['delete'])){
+        if(!empty($activeApp)){
+            if($activeApp == $_GET['delete']){
+                if($_GET['delete'] == $activeApp){
+                    $Apps = get_option('dt_int_Apps');
+                    $appConfig = get_option('_'.$activeApp.'_app');
+                    if(!empty($appConfig['interfaces'])){
+                        foreach($appConfig['interfaces'] as $inf=>$val){
+                            dt_removeInterface($inf);
+                        }
+                    }
+                    if(!empty($appConfig['clusters'])){
+                        foreach($appConfig['clusters'] as $inf=>$val){
+                            dt_removeInterface($inf);
+                        }
+                    }
+                    if(!empty($appConfig['imageFile'])){
+                        if(file_exists($appConfig['imageFile'])){
+                            unlink($appConfig['imageFile']);
+                        }
+                    }                    
+                    delete_option('_'.$activeApp.'_app');
+                    unset($Apps[$activeApp]);
+                    update_option('dt_int_Apps', $Apps);
+                    update_option('_dbt_activeApp', false);
+                    $activeApp = false;
+                }
+                //update_option('_dbt_activeApp', false);
+                ///$activeApp = false;
+            }
+        }
+    }
     if(empty($activeApp)){
         update_option('_dbt_activeApp', false);
         $activeApp = false;
-        include_once(DB_TOOLKIT.'dbtoolkit_builder.php');
+        include_once(DB_TOOLKIT.'dbtoolkit_builder.php');        
+        return;
+    }
+    if(!empty($_GET['renderinterface'])){
+        include_once(DB_TOOLKIT.'dbtoolkit_launcher.php');
         return;
     }
     include_once(DB_TOOLKIT.'dbtoolkit_admin.php');    

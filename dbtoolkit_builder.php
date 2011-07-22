@@ -77,7 +77,7 @@ $Apps = get_option('dt_int_Apps');
                    }
                    }
                 }else{
-                    echo 'You have no apps. Create one now.';
+                    echo '<p>You have no apps. Create one now.</p>';
                 }
                 ?>
                 </div>
