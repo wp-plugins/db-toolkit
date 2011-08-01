@@ -416,7 +416,12 @@ $template = ob_get_clean();
 
 $template = str_replace('<?php', '<?php ', $template);
 $template = str_replace('?>', ' ?>', $template);
-echo eval(' ?> '.$template.' <?php ');
+ob_start();
+eval(' ?> '.$template.' <?php ');
+$Output = do_shortcode(do_shortcode(ob_get_clean()));
+echo $Output;
+
+
 $_SESSION['dataform']['OutScripts'] .= "\r\n".$jsqueue."\r\n";
 
 // Make Scripts for deleting and select
