@@ -592,7 +592,10 @@ blockquote .boxtitle{
 }
 
 */
-.ui-tabs-nav.ui-widget-header{
+.buttonbar{
+    margin-top: 10px !important;
+}
+.ui-tabs-nav.ui-widget-header_desabled{
     background-color: #dedede !important;
 }
 .ui-widget-content a{

@@ -251,12 +251,12 @@
 	jQuery("."+area+"Grid"+area).sortable({
             connectWith: '.'+area+'Grid'+area,
             update: function(event, ui){
-                jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id')+'_'+jQuery(this).parent().css('width'));
+                jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                 formSetup_columSave();
                 viewSetup_columSave();
             }
 	});
-	jQuery(".formGrid"+area).disableSelection();
+	//jQuery(".formGrid"+area).disableSelection();
 
 	//dr_sorter();
     }

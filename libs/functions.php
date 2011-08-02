@@ -183,7 +183,17 @@ function dt_styles() {
     }
 
     if(!empty($preIs) || is_admin()){
-    wp_register_style('jqueryUI-core', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+
+    // add styles for reports grid
+    $themeDir = get_theme_root().'/'.get_template();
+    $themeURL = get_bloginfo('template_url');
+
+    if(!file_exists($themeDir.'/uicustom')){
+            wp_register_style('jqueryUI-core', WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.css');
+    }else{
+            wp_register_style('jqueryUI-core', $themeURL.'/uicustom/jquery-ui.css');
+    }
+
     wp_register_style('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist.css');
     wp_register_style('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/validationEngine.jquery.css');
 
@@ -191,9 +201,6 @@ function dt_styles() {
     wp_enqueue_style('jquery-multiselect');
     wp_enqueue_style('jquery-validate');
 
-// add styles for reports grid
-$themeDir = get_theme_root().'/'.get_template();
-$themeURL = get_bloginfo('template_url');
 
     // report
     if(file_exists($themeDir.'/table.css')) {
@@ -227,9 +234,6 @@ $themeURL = get_bloginfo('template_url');
 			include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php');
 		}
 	}
-
-
-
 }
 
 

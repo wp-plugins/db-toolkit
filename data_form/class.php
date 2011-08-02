@@ -440,11 +440,37 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         foreach($Config['_grid'] as $row=>$cols){
             $Form .= "<div style=\"clear: both;\" class=\"form-gen-row\" id=\"pg-form-".$row."\">\n";
                 foreach($cols as $col=>$width){
+                    // place tabs header
+                    
                     $Form .= "<div class=\"form-".$row."-".$col."\" style=\"float: left; overflow: hidden; width: ".$width.";\">\n";
                         $Form .= "<div id=\"pg-form-".$row."-".$col."\" class=\"form-gen-row form-gen-col form-col-".$col."\">\n";
 
-                            // check for section breaks                            
+
                             $contentKeys = array_keys($Layout, $row.'_'.$col);
+
+                            /// Put down Tab Headers
+                            $isTabs = false;
+                            foreach($contentKeys as $tabKey=>$tabID){
+                                
+                                if(substr($tabID,0,4) == '_tab'){
+                                    if($isTabs == false){
+                                        $Form .= '<ul>';
+                                        $isTabs = true;
+                                        $_SESSION['dataform']['OutScripts'] .="
+                                            jQuery('#pg-form-".$row."-".$col."').tabs();
+                                        ";
+
+                                    }
+                                    $Form .= "<li><a href=\"#".$tabID."\">".$Config['_Tab'][$tabID]['Title']."</a></li>";
+                                }
+                            }
+                            if($isTabs == true){
+                                $Form .= '</ul>';
+                            }
+                            //vardump($contentKeys);
+
+                            // check for section breaks                            
+                            
                             foreach($contentKeys as $Field){                                
                                 $Field = str_replace('Field_', '', $Field);
                                 
@@ -511,9 +537,31 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         }
                                         $Form .= "</div>\n";
                                     }
+                                    if(!empty($Config['_Tab'][$Field])){
+                                        
+                                        if(!empty($tabStarted)){
+                                            $Form .= '</div>';
+                                        }
+                                        //vardump($Config['_Tab'][$Field]);
+                                        $Form .= '<div id="'.$Field.'">';
+                                        $tabStarted = true;
+                                    }
+                                    if(!empty($Config['_SectionBreak'][$Field])){
+                                        $Form .= "<div class=\"sectionbreak\">\n";
+                                        if(!empty($Config['_SectionBreak'][$Field]['Title'])){
+                                            $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
+                                        }
+                                        if(!empty($Config['_SectionBreak'][$Field]['Caption'])){
+                                            $Form .= "<span class=\"description\">".$Config['_SectionBreak'][$Field]['Caption']."</span>\n";
+                                        }
+                                        $Form .= "</div>\n";
+                                    }
                                     $Form .= '&nbsp;';
                                 }
-                            }                            
+                            }
+                         if(!empty($tabStarted)){
+                             $Form .= "</div>";
+                         }
                         $Form .= "</div>\n";
                     $Form .= "</div>\n";
                 }

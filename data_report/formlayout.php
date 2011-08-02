@@ -6,7 +6,7 @@
     <input type="button" class="button" value="Sync Fields" onclick="formsSetup_getFields();" />
     <input type="button" class="button" value="Insert Row" onclick="formSetup_AddRow();" />
     <input type="button" class="button" id="AddSection" value="Add Section Break" onclick="dr_addSectionBreak('form');" />
-    <!--<input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('form');" />-->
+    <input type="button" class="button" id="AddTab" value="Add Tab" onclick="dr_addTab('form');" />
     Width: <input type="text" id="_popupWidth" name="Data[Content][_popupWidth]" value="<?php if(!empty($Element['Content']['_popupWidth'])){ echo $Element['Content']['_popupWidth'];}else{ echo '450';} ?>" size="5" maxlength="4" style="width:40px;" />px
     <input type="checkbox" id="_modalPopup" name="Data[Content][_popupTypeForm]" value="modal" <?php if(!empty($Element['Content']['_popupTypeForm'])) {
                     echo 'checked="checked"';
@@ -32,7 +32,7 @@
         
         parse_str($cfg['_gridLayout'], $layout);
 
-
+        //vardump($layout);
         if(!empty($cfg['_grid'])){
             $newRow = 1;
             foreach($cfg['_grid'] as $row=>$cols){
@@ -46,11 +46,12 @@
 
                                 echo '<input type="hidden" value="'.$width.'" name="Data[Content][_grid][row'.$newRow.'][col'.$newCol.']" class="row'.$newRow.'_control" id="row'.$newRow.'_col'.$newCol.'_control">';//row'.$newRow.'_col'.$newCol.'';
                                 echo '<div style="padding: 10px; margin: 10px; -moz-user-select: none;" class="ui-state-error formGridform formColumn ui-sortable" unselectable="on">';
-
+                                
                                 $content = array_keys($layout, $row.'_'.$col);
                                 if(!empty($content)){
                                     $output = '';
                                     foreach($content as $render){
+                                        //$output .= $render;
                                         //$dta = get_option($render);                                        
                                         $Name = str_replace('Field_', '', $render);
                                         if(!empty($cfg['_FieldTitle'][$render])){
@@ -61,8 +62,11 @@
 
                                         if(!empty($cfg['_SectionBreak'][$render])){
                                             $output .= '<div style="padding: 3px;" class="list_row4 table_sorter sectionBreak ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="SectionBreak'.$render.'"><div class="formportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style="-moz-user-select: none;"/><strong>Title:</strong> <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak]['.$render.'][Title]" value="'.$cfg['_SectionBreak'][$render]['Title'].'" /></div><div style="padding:3px;"><strong>Caption:</strong> <input type="text" class="sectionTitle" name="Data[Content][_SectionBreak]['.$render.'][Caption]" value="'.$cfg['_SectionBreak'][$render]['Caption'].'" /></div><input class="layOutform positioning" type="hidden" name="'.$render.'" id="'.$render.'" value="row'.$newRow.'_col'.$newCol.'"/></div>';
-                                        }elseif(!empty($cfg['_Tabs'][$render])){
+                                        }elseif(!empty($cfg['_Tab'][$render])){
+                                            
+                                            $output .= '<div style="padding: 3px;" class="list_row4 table_sorter tab formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="tab'.$render.'"><div class="formportlet-header ui-widget-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/>&nbsp;<input type="text" class="tabTitle" name="Data[Content][_Tab]['.$render.'][Title]" value="'.$cfg['_Tab'][$render]['Title'].'" /><span class="ui-icon ui-icon-close"></span></div><input class="layOutform positioning" type="hidden" name="'.$render.'" id="'.$render.'" value="row'.$newRow.'_col'.$newCol.'"/></div>';
 
+                                            //$output .= $render;
                                         }elseif(substr($render,0,6) == 'Field_'){
                                             $output .= '<div class="formportlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="formportlet_'.$render.'"><div class="formportlet-header ui-corner-all"><span class="ui-icon ui-icon-close"></span><div><strong>'.$name.'</strong></div><span class="description">field: '.$render.'</span><input class="layOutform positioning" type="hidden" name="'.$render.'" id="interface_'.$render.'" value="row'.$newRow.'_col'.$newCol.'"/></div></div>';
                                             $_SESSION['dataform']['OutScripts'] .= "
@@ -125,7 +129,12 @@
 	?>
     <input type="checkbox" name="Data[Content][_disableLayoutEngineform]" id="disableLayoutEngineform" <?php if(!empty($Element['Content']['_disableLayoutEngineform'])){ echo 'checked="checked"';} ?>/>
     <label for="disableLayoutEngineform"> Disable Layout Engine</label>
-	<input name="Data[Content][_gridLayout]" type="hidden" id="gridLayoutBoxForm" value="<?php echo $cfg['_gridLayout']; ?>" size="100" <?php if(!empty($element['content']['_disablelayoutengine'])){ echo 'disabled="disabled"';} ?>="<?php if(!empty($Element['Content']['_disableLayoutEngine'])){ echo 'disabled="disabled"';} ?>" />
+               
+               <input  type="hidden" id="gridLayoutBoxForm" name="Data[Content][_gridLayout]" value="<?php echo $cfg['_gridLayout']; ?>" size="100" <?php if (!empty($element['content']['_disablelayoutengine'])) {
+                   echo 'disabled="disabled"';
+               } ?>="<?php if (!empty($Element['Content']['_disableLayoutEngine'])) {
+                   echo 'disabled="disabled"';
+               } ?>" />
 	</div>
 
 <script>
@@ -148,7 +157,6 @@
 			connectWith: '.columnSorter',
                         handle: 'h3',
 			stop: function(p){
-				//alert(columns);
 				formSetup_columSave();
 			}
 
@@ -163,8 +171,8 @@
 
 		jQuery(".formGridform").sortable({
 			connectWith: '.formGridform',
-			update: function(event, ui){
-                                if(jQuery(this).parent().attr('id').length > 0){
+			update: function(event, ui){                            
+                                if(jQuery(this).parent().attr('id') != 'undefined'){
                                     jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
                                 }
 				formSetup_columSave();
@@ -190,7 +198,6 @@ function formsSetup_getFields(){
 		jQuery(".formportlet-header .ui-icon").click(function() {
 			jQuery(this).toggleClass("ui-icon-minusthick");
 			jQuery(this).parents(".formportlet:first").remove();
-                        formSetup_columSave();
 		});
 }
 
