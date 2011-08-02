@@ -292,6 +292,7 @@ function is_uppercase($Char) {
 }
 
 function df_buildQuickCaptureForm($EID) {
+    
     $Data = getelement($EID);
     //$Return = '<h2>'.$Data['Content']['_New_Item_Title'].'</h2>';
     if(!empty($Data['Content']['_New_Item_Hide'])){
@@ -369,7 +370,7 @@ function set_iso($string) {
 function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
     global $wpdb;
-
+    $Script = '';
     $Config = $Element['Content'];
     //vardump($Config);
     if(!empty($Config['_FormLayout'])) {
@@ -456,6 +457,9 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     if($isTabs == false){
                                         $Form .= '<ul>';
                                         $isTabs = true;
+                                        $Script .= "
+                                            jQuery('#pg-form-".$row."-".$col."').tabs();
+                                        ";
                                         $_SESSION['dataform']['OutScripts'] .="
                                             jQuery('#pg-form-".$row."-".$col."').tabs();
                                         ";
@@ -561,6 +565,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                             }
                          if(!empty($tabStarted)){
                              $Form .= "</div>";
+                             $tabStarted = false;
                          }
                         $Form .= "</div>\n";
                     $Form .= "</div>\n";
@@ -622,6 +627,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
         $Output['width'] = $Config['_popupWidth'];
         $Output['html'] = $Hidden.$Form.$Shown;
+        $Output['script'] = $Script;
         return $Output;
     }
 

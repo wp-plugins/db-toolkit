@@ -253,7 +253,7 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit){
 			 	jQuery(".formError").remove();
 			},
 			open: function(event, ui) {
-				ajaxCall('df_buildQuickCaptureForm',eid, function(c){                                
+				ajaxCall('df_buildQuickCaptureForm',eid, function(c){
 					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'title', c.title);	
 					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {
 						'Close': function() {
@@ -277,7 +277,11 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit){
                                                         //alert(eid);
 						}
 					});
-					jQuery("#ui-jsDialog-"+eid+"").html(c.html);	
+					jQuery("#ui-jsDialog-"+eid+"").html(c.html);
+                                        
+                                        if(c.script){
+                                            eval(c.script);
+                                        }
 					//alert(parseFloat(c.width));
 					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
 					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
