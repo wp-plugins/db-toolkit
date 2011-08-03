@@ -1,10 +1,5 @@
 <?php
 
-if(empty($_SESSION['dataform']['OutScripts'])) {
-    $_SESSION['dataform']['OutScripts'] = '';
-}
-
-
 $FieldTypeFunctions = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 
 foreach($FieldTypeFunctions[0] as $Type) {
@@ -967,12 +962,13 @@ function df_processInsert($EID, $Data) {
 
 function df_loadOutScripts() {
 
+    $Return = '';
     if(!empty($_SESSION['dataform']['OutScripts'])) {
-        $Return = $_SESSION['dataform']['OutScripts'];
+        $Return .= $_SESSION['dataform']['OutScripts'];
         unset($_SESSION['dataform']['OutScripts']);
-        return $Return;
     }
-    return false;
+
+    return $Return;
 }
 
 // Activity Tracking Functions

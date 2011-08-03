@@ -2,11 +2,11 @@
 /* 
  * Footers output for db toolkit
  */
-if(!empty($_SESSION['adminscripts'])){
+if(!empty($_SESSION['dataform']['OutScripts'])){
     echo "<script language=\"javascript\">\n";
     echo "jQuery(function() {\n";
-    echo $_SESSION['adminscripts'];
-    unset($_SESSION['adminscripts']);
+    echo $_SESSION['dataform']['OutScripts'];
+    unset($_SESSION['dataform']['OutScripts']);
     echo "});\n";
     echo "</script>\n";
 }

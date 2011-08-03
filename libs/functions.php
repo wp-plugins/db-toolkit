@@ -33,10 +33,12 @@ function dt_start() {
     }
     // Include Libraries
 
-    if(empty($_SESSION['dataform']['OutScripts']))
+    if(empty($_SESSION['dataform']['OutScripts'])){
         $_SESSION['dataform']['OutScripts'] = '';
-    if(empty($_SESSION['adminscripts']))
-            $_SESSION['adminscripts'] = "";
+    }
+    if(empty($_SESSION['dataform']['OutScripts'])){
+            $_SESSION['dataform']['OutScripts'] = "";
+    }
     /*
     require_once(DB_TOOLKIT.'libs/lib.php');
     require_once(DB_TOOLKIT.'daiselements.class.php');
@@ -1063,11 +1065,11 @@ function dt_process() {
     if(!empty($_POST['importKey'])) {
 
         $_POST = stripslashes_deep($_POST);
-        $_SESSION['adminscripts'] .= "
+        $_SESSION['dataform']['OutScripts'] .= "
           //df_buildImportManager(eid);
         ";
         if(empty($_FILES['fileImport']['size'])){
-            $_SESSION['adminscripts'] .= "
+            $_SESSION['dataform']['OutScripts'] .= "
               df_buildImportForm('".$_POST['importInterface']."');
             ";
             $Redirect = $_SERVER['HTTP_REFERER'];
@@ -1085,7 +1087,7 @@ function dt_process() {
 
         $_SESSION['import_'.$_POST['importInterface']]['import'] = wp_upload_bits($newFileName, null, file_get_contents($_FILES['fileImport']['tmp_name']));
 
-        $_SESSION['adminscripts'] .= "
+        $_SESSION['dataform']['OutScripts'] .= "
           df_buildImportManager('".$_POST['importInterface']."');
         ";
 
@@ -1102,7 +1104,7 @@ function dt_process() {
             $_SESSION['import_'.$_POST['importInterface']]['import']['importSkipFirst'] = $_POST['importSkipFirst'];
         }
         $_SESSION['import_'.$_POST['importInterface']]['import']['map'] = $_POST['importMap'];
-        $_SESSION['adminscripts'] .= "
+        $_SESSION['dataform']['OutScripts'] .= "
             df_processImport('".$_POST['importInterface']."');
         ";
 
@@ -1445,9 +1447,7 @@ function dt_rendercluster($cluster){
 
 
 // Render interface from shortcode to front end and view
-function dt_renderInterface($interface){
-
-   
+function dt_renderInterface($interface){   
 
     if(is_array($interface)) {
         if(!empty($interface['id'])){
@@ -1474,7 +1474,7 @@ function dt_renderInterface($interface){
         ob_start();
         dt_rendercluster($ID);        
         $Return = ob_get_clean();
-        $Return = do_shortcode($Return);
+        $Return = do_shortcode(do_shortcode(do_shortcode($Return)));
 
         $order   = array("\r\n", "\n", "\r", "\n\n", "\r\r", "  ");
         $replace = "";
@@ -1499,7 +1499,7 @@ function dt_renderInterface($interface){
     }
     if($Config['_ViewMode'] == 'API'){
         include('api_details.php');        
-        $Return = do_shortcode($Return);
+        $Return = do_shortcode(do_shortcode(do_shortcode($Return)));
         return str_replace("\r\n", '', $Return);
     }
 
@@ -1563,6 +1563,7 @@ function dt_renderInterface($interface){
             break;
     }
 
+
     if($error = mysql_error()){
         if(is_admin()){            
             $InterfaceData = get_option($Media['ID']);
@@ -1589,19 +1590,7 @@ function dt_renderInterface($interface){
         }
     }
 
-
-
-
-    if(!empty($Config['_customFooterJavaScript'])){
-
-        if(is_admin ()){
-            $_SESSION['adminscripts'] .= $Config['_customFooterJavaScript'];
-        }else{
-            $_SESSION['dataform']['OutScripts'] .= $Config['_customFooterJavaScript'];
-        }
-    }
-
-    $Return = do_shortcode($Return);    
+    $Return = do_shortcode(do_shortcode(do_shortcode($Return)));
 
     $order   = array("\r\n", "\n", "\r", "\n\n", "\r\r", "  ");
     $replace = "";

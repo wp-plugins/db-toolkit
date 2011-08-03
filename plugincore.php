@@ -9,7 +9,9 @@ Author URI: http://dbtoolkit.digilab.co.za
 */
 
 //initilize plugin
-
+if(empty($_SESSION['dataform']['OutScripts'])) {
+    $_SESSION['dataform']['OutScripts'] = '';
+}
 define('DB_TOOLKIT', plugin_dir_path(__FILE__));
 
 //hide notices while I work through the cleanup.

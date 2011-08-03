@@ -294,7 +294,7 @@
                 
                 ajaxCall('dr_BuildReportGrid',eid, function(dta){
                     jQuery('#reportPanel_'+eid).html(dta);
-                    df_loadOutScripts();
+                    //df_loadOutScripts();
                 });
             }else{
                 jQuery('.data_report_Table').each(function(g){
@@ -307,7 +307,7 @@
             jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
             ajaxCall('dr_BuildReportGrid',eid, page, function(dta){
                 jQuery('#reportPanel_'+eid).html(dta);
-                df_loadOutScripts();
+                //df_loadOutScripts();
             });
 	}
 	df_loadOutScripts();

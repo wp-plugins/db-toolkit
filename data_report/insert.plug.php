@@ -249,5 +249,5 @@ jQuery(document).ready(function($) {
 	});
 
 <?php
-$_SESSION['adminscripts'] .= ob_get_clean();
+$_SESSION['dataform']['OutScripts'] .= ob_get_clean();
 ?>

@@ -82,7 +82,7 @@
 /* Interaction states
 ----------------------------------*/
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 1px solid #B6B6B6; font-weight: normal; color: #4F4F4F; }
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { 
 	background: url(images/bg_fallback.png) 0 0 repeat-x;
 	background: -webkit-gradient(
     linear,
@@ -103,7 +103,7 @@
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #4F4F4F; text-decoration: none; }
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #9D9D9D; font-weight: normal; color: #313131; }
 .ui-state-hover a, .ui-state-hover a:hover { color: #313131; text-decoration: none; }
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { 
 	outline: none;
 	color: #1c4257; border: 1px solid #7096ab;
 	background: url(images/bg_fallback.png) 0 -50px repeat-x;
@@ -407,7 +407,7 @@
 	-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
 	-moz-box-shadow: 0 1px 5px rgba(0,0,0,0.3);
 	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.3);
-}
+}	
 
 /* workarounds */
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
@@ -479,8 +479,8 @@ button.ui-button-icons-only { width: 3.7em; }
 }
 
 /*states*/
-.ui-button.ui-state-hover {
-	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
+.ui-button.ui-state-hover { 
+	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset; 
 	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
 }
@@ -500,11 +500,11 @@ button.ui-button-icons-only { width: 3.7em; }
 		rgb(185,224,245),
 		rgb(146,189,214)
 	);
-	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
+	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset; 
 	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255,255,255,0.8) inset;
 }
-
+ 
 /*button text element */
 .ui-button .ui-button-text { display: block; line-height: 1.4; font-size: 14px; font-weight: bold; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); }
 .ui-button-text-only .ui-button-text { padding: .4em 1em; }
@@ -514,8 +514,8 @@ button.ui-button-icons-only { width: 3.7em; }
 .ui-button-text-icons .ui-button-text { padding-left: 2.1em; padding-right: 2.1em; }
 /* no icon support for input elements, provide padding by default */
 input.ui-button { font-size: 14px; font-weight: bold; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); padding: 0 1em !important; height: 33px; }
-/*remove submit button internal padding in Firefox*/
-input.ui-button::-moz-focus-inner {
+/*remove submit button internal padding in Firefox*/ 
+input.ui-button::-moz-focus-inner { 
     border: 0;
     padding: 0;
 }
@@ -573,7 +573,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 	-moz-box-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
 .ui-dialog .ui-dialog-titlebar { padding: 0.7em 1em 0.6em 1em; position: relative; border: none; border-bottom: 1px solid #979797; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;  }
-.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .2em 0; font-size: 14px; text-shadow: 0 1px 0 rgba(255,255,255,0.5); }
+.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .2em 0; font-size: 14px; text-shadow: 0 1px 0 rgba(255,255,255,0.5); } 
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .8em; top: 55%; width: 16px; margin: -10px 0 0 0; padding: 0; height: 16px; }
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; background: url(images/icon_sprite.png) 0 -16px no-repeat; }
 .ui-dialog .ui-dialog-titlebar-close:hover span { background-position: -16px -16px; }
@@ -621,8 +621,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://docs.jquery.com/UI/Tabs#theming
  */
 .ui-tabs { position: relative; zoom: 1; border: 0; background: transparent; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
-.ui-tabs .ui-tabs-nav { margin: 0; padding: 0; background: transparent; border-width: 0 0 1px 0; margin: 0 0.4em; }
-.ui-tabs .ui-tabs-nav {
+.ui-tabs .ui-tabs-nav { margin: 0; padding: 0; background: transparent; border-width: 0 0 1px 0; }
+.ui-tabs .ui-tabs-nav { 
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	border-radius: 0;
@@ -632,7 +632,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 1px; background: #fff; border-color: #B6B6B6; }
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; outline: none; }
 .ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs .ui-tabs-panel { display: block; border-width: 0 1px 1px 1px; padding: 1em 1.4em; background: none; margin: 0 0.4em; }
+.ui-tabs .ui-tabs-panel { display: block; border-width: 0 1px 1px 1px; padding: 1em 1.4em; background: none; }
 .ui-tabs .ui-tabs-panel { background: #FFF;
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;

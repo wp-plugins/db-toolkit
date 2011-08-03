@@ -1695,7 +1695,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
     // Select Query
     //$Query = "SELECT count(b.Country) as TotalCountry, ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n GROUP BY b.Country \n ".$orderStr." \n ".$queryLimit.";"
-
+    if(!empty($Config['_customFooterJavaScript'])){
+        $_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
+    }
     if(!empty($Config['_useListTemplate']) && empty($Format)){
         $Media = $Element;
         ob_start();
@@ -1703,6 +1705,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         echo '<div id="reportPanel_'.$Media['ID'].'" class="interfaceWrapper">';
         include('templatemode.php');
         echo '</div>';
+
         return ob_get_clean();
     }
 

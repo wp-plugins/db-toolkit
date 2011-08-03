@@ -418,7 +418,7 @@ $template = str_replace('<?php', '<?php ', $template);
 $template = str_replace('?>', ' ?>', $template);
 ob_start();
 eval(' ?> '.$template.' <?php ');
-$Output = do_shortcode(do_shortcode(ob_get_clean()));
+$Output = do_shortcode(do_shortcode(do_shortcode(do_shortcode(ob_get_clean()))));
 echo $Output;
 
 
