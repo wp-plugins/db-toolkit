@@ -597,10 +597,10 @@ return $Return;
 
 
 // Autocomplete Ajax Output
-if(!empty($_GET['q_eid'])){
-	$Element = getelement($_GET['q_eid']);
-	$Config = $Element['Content'];
-	$Field = decodestring($_GET['f_i']);
+function linked_autocomplete($eid, $Field, $query){
+
+	$Element = getelement($eid);
+	$Config = $Element['Content'];	
 	$Setup = $Config[$Table];
 	$Table = $Config['_Linkedfields'][$Field]['Table'];
 	$ID = $Config['_Linkedfields'][$Field]['ID'];
@@ -608,11 +608,11 @@ if(!empty($_GET['q_eid'])){
 	//dump($Config['_Linkedfields']);
 	foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 		$vals[] = $outValue;
-		$Wheres .= " `".$outValue."` LIKE '%".$_GET['input']."%' OR ";
+		$Wheres .= " `".$outValue."` LIKE '%".$query."%' OR ";
 	}
 	$Value = implode(',', $vals);
 	//$Value = $Config['_Linkedfields'][$Field]['Value'];
-	$Query = "SELECT ".$ID.",".$Value." FROM `".$Table."` WHERE ".$Wheres." `".$ID."` LIKE '%".$_GET['input']."%' ORDER BY `".$vals[0]."` ASC;";
+	$Query = "SELECT ".$ID.",".$Value." FROM `".$Table."` WHERE ".$Wheres." `".$ID."` LIKE '%".$query."%' ORDER BY `".$vals[0]."` ASC;";
 	$Res = mysql_query($Query);
 	//echo $Query;
 	header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -623,7 +623,7 @@ if(!empty($_GET['q_eid'])){
 
 	//echo '<?xml version="1.0" encoding="utf-8" >';
 	//echo '<results>';
-	echo "{\"results\": [";
+	echo "[";
 	$index = 0;
 	while($Out = mysql_fetch_assoc($Res)){
 		$OutString = array();
@@ -644,12 +644,12 @@ if(!empty($_GET['q_eid'])){
 		//$out['results'][$index]['id'] = $Out[$ID];
 		//$out['results'][$index]['value'] = implode(' ', $OutString);
 		//$out['results'][$index]['info'] = '';
-		$arr[] = "{\"id\": \"".$Out[$ID]."\", \"value\": \"".implode(' ', $OutString)."\", \"info\": \"".$infostring."\"}";
+		$arr[] = "{\"id\": \"".$Out[$ID]."\", \"label\": \"".implode(' ', $OutString)."\", \"value\": \"".implode(' ', $OutString)."\"}";
 		//echo '<rs id="'.$Out[$ID].'" info="">'.implode(' ', $OutString).'</rs>';
 		//echo $Out[$ID]." (".$Out[$Value].")|".$Out[$ID]."\n";
 	}
 	echo implode(", ", $arr);
-	echo "]}";
+	echo "]";
 	//echo '</results>';
 	mysql_close();
 	die;

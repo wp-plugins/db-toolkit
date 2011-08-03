@@ -123,7 +123,32 @@ if($FieldSet[1] == 'linked'){
 			//$FieldID = uniqid('check_'.$Field);
 			//$Return .= '<input type="text" id="autocomplete_'.$FieldID.'" class="textfield" value="'.$Det[$IDField].' ['.$Det[$ValueField].']" /><input type="hidden" name="dataForm['.$ElementID.']['.$Field.']" id="autocomplete_'.$FieldID.'_value" value="'.$Det[$IDField].'" class="'.$Req.'" />';
 			$Return .= '<input type="text" id="entry_'.$Element['ID'].'_'.$Field.'_view" class="'.$Req.' text" value="'.$VisDef.'" style="width:95%;" /><input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Det[$Config['_Linkedfields'][$Field]['ID']].'" />';
-			$_SESSION['dataform']['OutScripts'] .="
+
+
+
+                       $_SESSION['dataform']['OutScripts'] .="
+                        jQuery('#entry_".$Element['ID']."_".$Field."_view').autocomplete({
+                                source: function( request, response ) {
+                                    //alert(request.term);
+                                    ajaxCall('linked_autocomplete', '".$Element['ID']."', '".$Field."', request.term, function(output){
+                                        response(output);
+                                    });
+                                },
+                                minLength: 2,
+                                select: function( event, ui ) {
+                                        jQuery('#entry_".$Element['ID']."_".$Field."').val(ui.item.id);
+                                },
+                                open: function() {
+                                        jQuery( this ).removeClass( \"ui-corner-all\" ).addClass( \"ui-corner-top\" );
+                                },
+                                close: function() {
+                                        jQuery( this ).removeClass( \"ui-corner-top\" ).addClass( \"ui-corner-all\" );
+                                }
+                        });
+                        ";
+
+                        /*
+                        $_SESSION['dataform']['OutScripts'] .="
 			
 			var options = {
 				script:'".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".urlencode(base64_encode($Field))."&',
@@ -135,9 +160,9 @@ if($FieldSet[1] == 'linked'){
 				}
 			};
 			var as_json = new bsn.AutoSuggest('entry_".$Element['ID']."_".$Field."_view', options);
+			*/
 			
 			
-			";
 				//jQuery('#autocomplete_".$FieldID."').autocomplete(\"".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".encodestring($Field)."\",{width: 250, selectFirst: false});
 				//jQuery('#autocomplete_".$FieldID."').result(function(event, data, formatted) {
 				//	jQuery('#autocomplete_".$FieldID."_value').val(data[1]);
