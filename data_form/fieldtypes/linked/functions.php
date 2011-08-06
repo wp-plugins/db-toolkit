@@ -582,7 +582,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 				ajaxCall('linked_makeFilterdLinkedFilter', '".$EID."', '".$Config['_Linkedfilterfields'][$Field]['ID']."' , '".$Config['_Linkedfilterfields'][$Field]['Value']."', '".$Config['_Linkedfilterfields'][$Field]['Filter']."', ''+this.value+'', '".$Config['_Linkedfilterfields'][$Field]['Table']."', '".$Field."', '".$FieldTitle."', function(f){
 					//jQuery('#status_".$Field."').html(f);
 					//jQuery('.filterBoxes').multiSelect({ oneOrMoreSelected: '*' });
-                                        $(\"#filter_".$Field."\").dropdownchecklist({ firstItemChecksAll: true});
+                                        jQuery(\"#filter_".$Field."\").dropdownchecklist({ firstItemChecksAll: true});
 				});
 			});
 		
