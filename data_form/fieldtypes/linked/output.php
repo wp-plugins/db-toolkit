@@ -1,18 +1,44 @@
 <?php
 	if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-	
-		$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
-		$outList = array();
-		foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
-			$outList[] = 'too.'.$outValue;
-		}
-		$outString = 'CONCAT('.implode(',\' \',',$outList).') as '.$Field;
-		$ourRes = mysql_query('SELECT prim.from, prim.to, '.$outString.' FROM `'.$LinkingTable.'` AS prim JOIN `'.$Config['_Linkedfields'][$Field]['Table'].'` AS too ON (prim.to = too.'.$Config['_Linkedfields'][$Field]['ID'].');');
-		$outlist = array();
-		while($outData = mysql_fetch_assoc($ourRes)){
-			$outlist[] = $outData[$Field];
-		}
-		$Data[$Field] = implode(', ',$outlist);
+
+            $Items = explode('||', ltrim(rtrim($Data[$Field], '||'), '||'));
+
+
+            if(count($Config['_Linkedfields'][$Field]['Value']) > 1){
+            foreach($Config['_Linkedfields'][$Field]['Value'] as $Key=>$outValue){
+
+                if(!empty($Config['_Linkedfields'][$Field]['Prefix'][$Key])){
+                    $outList[] = "'".$Config['_Linkedfields'][$Field]['Prefix'][$Key]."'";
+                }else{
+                    $outList[] = "' '";
+                }
+                    $outList[] = $joinIndexSet.'.'.$outValue;
+                if(!empty($Config['_Linkedfields'][$Field]['Suffix'][$Key])){
+                    $outList[] = "'".$Config['_Linkedfields'][$Field]['Suffix'][$Key]."'";
+                }else{
+                    $outList[] = "' '";
+                }
+            }
+
+                $outString = 'CONCAT('.implode(',',$outList).')';
+            }else{
+                $outString = $Config['_Linkedfields'][$Field]['Value'][0];
+            }
+            //$querySelects[$Field] = $outString;
+            $q = "SELECT ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` WHERE `".$Config['_Linkedfields'][$Field]['ID']."` IN (".implode(',', $Items).");";
+
+
+            $res = mysql_query($q);
+            $parts = array();
+            while($idata = mysql_fetch_assoc($res)){
+                //vardump($idata);
+                foreach($idata as $item){
+                    $parts[] = $item;
+                }
+            }
+
+            $Data[$Field] = implode(', ', $parts);
+            //die;
 	}
 
 	$Out .= $Data[$Field];

@@ -5,7 +5,7 @@
 if($FieldSet[1] == 'linked'){
 	switch($Config['_Linkedfields'][$Field]['Type']){
 		case "checkbox":
-                    
+
 				$concatvalues = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$concatvalues[] = $outValue;
@@ -23,7 +23,7 @@ if($FieldSet[1] == 'linked'){
 			while($lrow = mysql_fetch_assoc($Res)){
 				$Sel = '';
 				if(!empty($Defaults[$Field])){
-					$DefaultArray = core_cleanArray(explode(',',$Defaults[$Field]));
+					$DefaultArray = core_cleanArray(explode('||',$Defaults[$Field]));
 					if(in_array($lrow[$Config['_Linkedfields'][$Field]['ID']], $DefaultArray)){
 						$Sel = 'checked="checked"';
 					}
@@ -32,7 +32,7 @@ if($FieldSet[1] == 'linked'){
 				$checkindex++;
 			}
 			//$Return .= '</select>';
-		$Return .= '<div style="clear:both;"></div>';	
+		$Return .= '<div style="clear:both;"></div>';
 		break;
 		case "multiselect":
 				$concatvalues = array();
@@ -60,13 +60,13 @@ if($FieldSet[1] == 'linked'){
 				//$Return .= '<option value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" '.$Sel.' >'.$lrow['outValue'].'</option>';
 				$Return .= '<div style="width:200px; float:left;"><label for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' />'.$lrow['outValue'].'</label></div>';
 				$checkindex++;
-				
+
 			}
 			//$Return .= '</select> <input type="button" name="button" id="button" value="Add" onclick="linked_addOption(\''.$Element['ID'].'_'.$Field.'\')" />';
 			//$Return .= 'Selected: <select name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'">';
 			//$Return .= '</select>';
-			
-			
+
+
 		break;
 		case "dropdown":
 
@@ -124,7 +124,7 @@ if($FieldSet[1] == 'linked'){
 			//$Return .= '<input type="text" id="autocomplete_'.$FieldID.'" class="textfield" value="'.$Det[$IDField].' ['.$Det[$ValueField].']" /><input type="hidden" name="dataForm['.$ElementID.']['.$Field.']" id="autocomplete_'.$FieldID.'_value" value="'.$Det[$IDField].'" class="'.$Req.'" />';
 			$Return .= '<input type="text" id="entry_'.$Element['ID'].'_'.$Field.'_view" class="'.$Req.' text" value="'.$VisDef.'" style="width:95%;" /><input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Det[$Config['_Linkedfields'][$Field]['ID']].'" />';
 			$_SESSION['dataform']['OutScripts'] .="
-			
+
 			var options = {
 				script:'".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".urlencode(base64_encode($Field))."&',
 				varname:'input',
@@ -135,8 +135,8 @@ if($FieldSet[1] == 'linked'){
 				}
 			};
 			var as_json = new bsn.AutoSuggest('entry_".$Element['ID']."_".$Field."_view', options);
-			
-			
+
+
 			";
 				//jQuery('#autocomplete_".$FieldID."').autocomplete(\"".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".encodestring($Field)."\",{width: 250, selectFirst: false});
 				//jQuery('#autocomplete_".$FieldID."').result(function(event, data, formatted) {
