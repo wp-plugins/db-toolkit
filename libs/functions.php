@@ -1448,7 +1448,7 @@ function dt_rendercluster($cluster){
 
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface){   
-
+        
     if(is_array($interface)) {
         if(!empty($interface['id'])){
             unset($_SESSION['viewitemFilter'][$interface['id']]);

@@ -1,37 +1,23 @@
 <?php
 
 function linked_processValue($Value, $Type, $Field, $Config, $EID, $Data){
-
+//vardump($Data);
         if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
+
+                $Items = explode('||', rtrim(ltrim($Value, '||'), '||'));
+
+                
+
+                //$OutQuery = 'SELECT prim.from, prim.to, '.$outString.' FROM `'.$LinkingTable.'` AS prim JOIN `'.$Config['_Linkedfields'][$Field]['Table'].'` AS too ON (prim.to = too.'.$Config['_Linkedfields'][$Field]['ID'].') ';
 	
-		$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
-		$outList = array();
-		foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
-			$outList[] = 'too.'.$outValue;
-		}
-		$outString = 'CONCAT('.implode(',\' \',',$outList).') as '.$Field;
-		$OutQuery = 'SELECT prim.from, prim.to, '.$outString.' FROM `'.$LinkingTable.'` AS prim JOIN `'.$Config['_Linkedfields'][$Field]['Table'].'` AS too ON (prim.to = too.'.$Config['_Linkedfields'][$Field]['ID'].');';
-		$ourRes = mysql_query($OutQuery);
-		$outlist = array();
-		while($outData = mysql_fetch_assoc($ourRes)){
-			$outlist[] = $outData[$Field];
-		}
-		$Value = implode(',',$outlist);
+		
 	}
-	$out = $Value;
-	if(strlen($Value) >= 20){
-	//	return '<span title="'.htmlentities($Value).'" name="'.htmlentities($Value).'">'.substr($Value, 0 ,19).'&hellip;</span>';	
-	}
-	if(!empty($Data['URL_LINK_'.$Field])){
-		return '<a href="'.$Data['URL_LINK_'.$Field].'" target="_blank">'.$out.'</a>';
-	}
-	if(!empty($Data['LURL_LINK_'.$Field])){
-		return '<a href="'.$Data['LURL_LINK_'.$Field].'" target="_blank">'.$out.'</a>';
-	}
+        
 	return $Value;
 }
 
 function linked_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){
+    return;
 	if($Config['Content']['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 		$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
 		mysql_query("DELETE FROM `".$LinkingTable."` WHERE `from` = '".$ID."' ");		
@@ -41,7 +27,14 @@ function linked_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){
 }
 function linked_handleInput($Field, $Input, $FieldType, $Config, $Data){
 	if($Config['Content']['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-	//$InputArray = unserialize($Input);
+            
+            if($Config['_ActiveProcess'] == 'update'){
+                $Input = unserialize($Input);
+            }
+
+        return '||'.implode('||', $Input).'||';
+
+        //$InputArray = unserialize($Input);
 	$_SESSION['LinkingControl'][$Config['ID']] = md5(uniqid(date('YmdHis')));
 	$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
 	mysql_query("CREATE TABLE `".$LinkingTable."` (`from` INT NOT NULL ,`to` INT NOT NULL, `control` VARCHAR( 100 ) ,INDEX ( `from` , `to`, `control` )) ENGINE = InnoDB");
@@ -292,17 +285,17 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 			$Sel = 'selected="selected"';	
 		}
 		$Types .= '<option value="autocomplete" '.$Sel.'>Autocomplete</option>';
-		//$Sel = '';
-		//if($Defaults[$Field]['Type'] == 'checkbox'){
-		//	$Sel = 'selected="selected"';
-		//}
-		//$Types .= '<option value="checkbox" '.$Sel.'>Checkbox</option>';
-		//$Sel = '';
-		//if($Defaults[$Field]['Type'] == 'radio'){
-		//	$Sel = 'selected="selected"';
-		//}
-		//$Types .= '<option value="radio" '.$Sel.'>Radio Group</option>';
-		//$Sel = '';
+		$Sel = '';
+		if($Defaults[$Field]['Type'] == 'checkbox'){
+			$Sel = 'selected="selected"';
+		}
+		$Types .= '<option value="checkbox" '.$Sel.'>Checkbox</option>';
+		$Sel = '';
+		if($Defaults[$Field]['Type'] == 'radio'){
+			$Sel = 'selected="selected"';
+		}
+		$Types .= '<option value="radio" '.$Sel.'>Radio Group</option>';
+		$Sel = '';
 		//if($Defaults[$Field]['Type'] == 'multiselect'){
 		//	$Sel = 'selected="selected"';
 		//}
@@ -547,7 +540,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 
                 if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
                     $_SESSION['dataform']['OutScripts'] .= "                        
-                        $(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
+                        jQuery(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
                     ";
                 }
 	}

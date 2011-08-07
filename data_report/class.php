@@ -3099,7 +3099,6 @@ function df_inlineedit($Entry, $ID, $Value) {
 
 function df_processupdate($Data, $EID) {
     global $wpdb;
-    //dump($Data);
     $Element = getelement($EID);
     $Config = $Element['Content'];
     //dump($Config);
@@ -3180,9 +3179,9 @@ function df_processupdate($Data, $EID) {
             }
         }
     }
-    
     // process update processess
     if (!empty($Config['_FormProcessors'])) {
+
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
             if(empty($updateData)){
                 if(empty($Config['_InsertFail'])) {
@@ -3217,7 +3216,8 @@ function df_processupdate($Data, $EID) {
             }
         }
     }
-    
+
+
     
     // Post Process
     foreach ($Config['_Field'] as $Field => $Type) {
@@ -3236,11 +3236,12 @@ function df_processupdate($Data, $EID) {
     //}
     //$Updates = implode(', ', $newData);
     //$Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
-    if(empty($updateData))
+    if(empty($updateData)){
         $Return['Message'] = 'umm, there was nothing to update.';
         return $Return;
+    }
 
-    
+
     if($wpdb->update($Config['_main_table'], $updateData, array($Config['_ReturnFields'][0] => $Data[$Config['_ReturnFields'][0]]))){
         $update = true;
     }else{

@@ -50,7 +50,7 @@
 			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['ID'].'`';
 
 			// left Join linked table
-			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
+			if($Config['_Linkedfields'][$Field]['Type'] == 'oldcheckbox'){
 
 				//$LinkingTable = '_linking_'.$Config['_Linkedfields'][$Field]['Table'].'_'.$Config['_Linkedfields'][$Field]['ID'];
 				//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex."_linking on (prim.".$Config['_ReturnFields'][0]." = ".$joinIndex."_linking.from) \n";
