@@ -34,20 +34,10 @@
                                 }
                                 $querySelects[$Field] = $outString;
 
-
-			}
-			if(!empty($Config['_Linkedfields'][$Field]['LocalURL'])){
-				if($Config['_Linkedfields'][$Field]['LocalURL'] != 'none'){
-					$querySelects['_LURL_Link_'.$Field] = 'prim.'.$Config['_Linkedfields'][$Field]['LocalURL'];
-				}
-			}
-			if(!empty($Config['_Linkedfields'][$Field]['URL'])){
-				if($Config['_Linkedfields'][$Field]['URL'] != 'none'){
-					$querySelects['_URL_Link_'.$Field] = $joinIndexSet.'.'.$Config['_Linkedfields'][$Field]['URL'];
-				}
-			}
-
 			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['ID'].'`';
+
+			}
+
 
 			// left Join linked table
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
@@ -68,7 +58,7 @@
                                     $Primary = 'prim.`'.$Config['_CloneField'][$Field]['Master'].'`';
 
                                 }
-                                if(empty($queryJoins[$joinIndex])){                                    
+                                if(empty($queryJoins[$joinIndex])){
                                     $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
                                     $queryJoins[$joinIndex] = $joinIndex;
@@ -77,7 +67,7 @@
                             //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
 
 			}
-                        
+
                         if(!empty($Config['_Linkedfields'][$Field]['_Filter']) && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
                             if($WhereTag == ''){
                                     $WhereTag = " WHERE ";

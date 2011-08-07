@@ -3,77 +3,70 @@
 function linked_processValue($Value, $Type, $Field, $Config, $EID, $Data){
 
         if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-	
-		$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
-		$outList = array();
-		foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
-			$outList[] = 'too.'.$outValue;
-		}
-		$outString = 'CONCAT('.implode(',\' \',',$outList).') as '.$Field;
-		$OutQuery = 'SELECT prim.from, prim.to, '.$outString.' FROM `'.$LinkingTable.'` AS prim JOIN `'.$Config['_Linkedfields'][$Field]['Table'].'` AS too ON (prim.to = too.'.$Config['_Linkedfields'][$Field]['ID'].');';
-		$ourRes = mysql_query($OutQuery);
-		$outlist = array();
-		while($outData = mysql_fetch_assoc($ourRes)){
-			$outlist[] = $outData[$Field];
-		}
-		$Value = implode(',',$outlist);
-	}
-	$out = $Value;
-	if(strlen($Value) >= 20){
-	//	return '<span title="'.htmlentities($Value).'" name="'.htmlentities($Value).'">'.substr($Value, 0 ,19).'&hellip;</span>';	
-	}
-	if(!empty($Data['URL_LINK_'.$Field])){
-		return '<a href="'.$Data['URL_LINK_'.$Field].'" target="_blank">'.$out.'</a>';
-	}
-	if(!empty($Data['LURL_LINK_'.$Field])){
-		return '<a href="'.$Data['LURL_LINK_'.$Field].'" target="_blank">'.$out.'</a>';
-	}
+
+            $Items = explode('||', ltrim(rtrim($Value, '||'), '||'));
+
+
+            if(count($Config['_Linkedfields'][$Field]['Value']) > 1){
+            foreach($Config['_Linkedfields'][$Field]['Value'] as $Key=>$outValue){
+
+                if(!empty($Config['_Linkedfields'][$Field]['Prefix'][$Key])){
+                    $outList[] = "'".$Config['_Linkedfields'][$Field]['Prefix'][$Key]."'";
+                }else{
+                    $outList[] = "' '";
+                }
+                    $outList[] = $joinIndexSet.'.'.$outValue;
+                if(!empty($Config['_Linkedfields'][$Field]['Suffix'][$Key])){
+                    $outList[] = "'".$Config['_Linkedfields'][$Field]['Suffix'][$Key]."'";
+                }else{
+                    $outList[] = "' '";
+                }
+            }
+
+                $outString = 'CONCAT('.implode(',',$outList).')';
+            }else{
+                $outString = $Config['_Linkedfields'][$Field]['Value'][0];
+            }
+            //$querySelects[$Field] = $outString;
+            $q = "SELECT ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` WHERE `".$Config['_Linkedfields'][$Field]['ID']."` IN (".implode(',', $Items).");";
+            $res = mysql_query($q);
+            $parts = array();
+            while($idata = mysql_fetch_assoc($res)){
+                //vardump($idata);
+                foreach($idata as $item){
+                    $parts[] = $item;
+                }
+            }
+
+            $Value = implode(', ', $parts);
+            //die;
+        }
 	return $Value;
 }
 
 function linked_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){
 	if($Config['Content']['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 		$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
-		mysql_query("DELETE FROM `".$LinkingTable."` WHERE `from` = '".$ID."' ");		
+		mysql_query("DELETE FROM `".$LinkingTable."` WHERE `from` = '".$ID."' ");
 		mysql_query("UPDATE `".$LinkingTable."` SET `from` = '".$ID."' WHERE `control` = '".$_SESSION['LinkingControl'][$Config['ID']]."' ");
 		unset($_SESSION['LinkingControl'][$Config['ID']]);
 	}
 }
 function linked_handleInput($Field, $Input, $FieldType, $Config, $Data){
 	if($Config['Content']['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-	//$InputArray = unserialize($Input);
-	$_SESSION['LinkingControl'][$Config['ID']] = md5(uniqid(date('YmdHis')));
-	$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
-	mysql_query("CREATE TABLE `".$LinkingTable."` (`from` INT NOT NULL ,`to` INT NOT NULL, `control` VARCHAR( 100 ) ,INDEX ( `from` , `to`, `control` )) ENGINE = InnoDB");
-	//mysql_query("INSERT INTO `".$LinkingTable."` ( `from` , `to`, `control` ) VALUES
-	//	('2', '6')
-		
-		$Inserts = array();
-		$Inputs = array();
-		//dump($Input);
-		//die;
-                if(!is_array($Input)){
-                    $Input = unserialize($Input);
-                }
-		foreach($Input as $Value){
-			$Inserts[] = '(\''.$Value.'\', \''.$_SESSION['LinkingControl'][$Config['ID']].'\')';
-			$Inputs[] = $Value;
-		}
-		$Insert = implode(',',$Inserts);
-		$InsertQuery = "INSERT INTO `".$LinkingTable."` (`to`, `control` ) VALUES ".$Insert." ;";
-		mysql_query($InsertQuery);
-		$Input = implode(',',$Inputs);
-	//echo $LinkingTable;
-	//die;
+            if(!is_array($Input)){
+                $Input = unserialize($Input);
+            }
+            return "||".implode('||', $Input)."||";
 	}
 	return $Input;
 }
 
-// Args = $Field, $table, ElementConfig 
+// Args = $Field, $table, ElementConfig
 function linked_tableSetup($Field, $Table, $ElementConfig = false){
 	global $wpdb;
 	$Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
-	
+
 	$Return = 'Table: <select name="Data[Content][_Linkedfields]['.$Field.'][Table]" id="linkedField_'.$Field.'" onchange="linked_loadfields(this.value, \''.$Field.'\', \''.$Table.'\');">';
 	$Return .= '<option value="">Select table to link to</option>';
 	$Default = '';
@@ -87,13 +80,13 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 		$Value = $Tables[0];
 		$Sel = '';
 		if($Default == $Value){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 		//if(substr($Value, 0, 5) != 'dais_'){
 			$List[] = $Value;
 			$Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
 		//}
-		
+
 	}
 	$Return .= '</select><br /><span id="linkingConfig_'.$Field.'">';
 	if(is_array($ElementConfig)){
@@ -107,7 +100,7 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 			$SingleCheck = 'checked="checked"';
 		}
 	$Return .= '<input type="checkbox" name="Data[Content][_Linkedfields]['.$Field.'][SingleSelect]" value="1" id="allowSingle_'.$Field.'" '.$SingleCheck.' /> <label for="allowSingle_'.$Field.'">Single Select</label>';
-	
+
 	// Advanced
 	$Return .= '<div class="admin_config_panel" style="text-align:right;" id="AdvancedExtraSetting_'.$Field.'">';
 	$Return .= '<div id="'.$Field.'_configPanel_advanced" class="admin_list_row3" style="text-align: left; display: none;">';
@@ -120,41 +113,41 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 			$Return .= '<select	name="Data[Content][_Linkedfields]['.$Field.'][JoinType]" >';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfields'][$Field]['JoinType'] == 'LEFT JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="LEFT JOIN" '.$Sel.'>Left Join</option>';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfields'][$Field]['JoinType'] == 'NNER JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="INNER JOIN" '.$Sel.'>Inner Join</option>';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfields'][$Field]['JoinType'] == 'RIGHT JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="RIGHT JOIN" '.$Sel.'>Right Join</option>';
 				$Sel ='';
 				if($ElementConfig['Content']['_Linkedfields'][$Field]['JoinType'] == 'JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="JOIN" '.$Sel.'>Join</option>';
 			$Return .= '</select>';
 		$Return .= '</div>';
 		// Filter WHERE Type
-		
+
 	$Return .= '</div></div>';
 	$Return .= '<input type="button" class="buttons" value="Advanced" onclick="toggle(\''.$Field.'_configPanel_advanced\');" />';
 	$Return .= '</div>';
-	
-	
-	
+
+
+
 return $Return;
 }
 function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 
         global $wpdb;
 	$Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
-        
+
     	$Return = 'Table: <select name="Data[Content][_Linkedfilterfields]['.$Field.'][Table]" id="linkedField_'.$Field.'" onchange="linked_loadfilterfields(this.value, \''.$Field.'\');">';
 	$Return .= '<option value="">Select table to link to</option>';
 	$Default = '';
@@ -168,12 +161,12 @@ function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 		$Value = $Tables[0];
 		$Sel = '';
 		if($Default == $Value){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 		//if(substr($Value, 0, 5) != 'dais_'){
 			$List[] = $Value;
 			$Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
-		
+
 	}
 	$Return .= '</select><br /><span id="linkingConfig_'.$Field.'">';
 	if(is_array($ElementConfig)){
@@ -182,7 +175,7 @@ function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 		}
 	}
 	$Return .= '</span>';
-	
+
 	// Advanced
 	$Return .= '<div class="admin_config_panel" style="text-align:right;" id="AdvancedExtraSetting_'.$Field.'">';
 	$Return .= '<div id="'.$Field.'_configPanel_advanced" class="admin_list_row3" style="text-align: left; display: none;">';
@@ -193,22 +186,22 @@ function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 			$Return .= '<select	name="Data[Content][_Linkedfilterfields]['.$Field.'][JoinType]" >';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfilterfields'][$Field]['JoinType'] == 'LEFT JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="LEFT JOIN" '.$Sel.'>Left Join</option>';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfilterfields'][$Field]['JoinType'] == 'NNER JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="INNER JOIN" '.$Sel.'>Inner Join</option>';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfilterfields'][$Field]['JoinType'] == 'RIGHT JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="RIGHT JOIN" '.$Sel.'>Right Join</option>';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfilterfields'][$Field]['JoinType'] == 'OUTER JOIN'){
-					$Sel = 'selected="selected"';	
+					$Sel = 'selected="selected"';
 				}
 				$Return .= '<option value="JOIN" '.$Sel.'>Join</option>';
 			$Return .= '</select>';
@@ -284,31 +277,31 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 	$Types = '<div class="list_row1" style="padding:3px;">Select Type:<select name="Data[Content][_Linkedfields]['.$Field.'][Type]" id="Ref_'.$Table.'">';
 		$Sel = '';
 		if($Defaults[$Field]['Type'] == 'dropdown'){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 		$Types .= '<option value="dropdown" '.$Sel.'>Dropdown</option>';
 		$Sel = '';
 		if($Defaults[$Field]['Type'] == 'autocomplete'){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 		$Types .= '<option value="autocomplete" '.$Sel.'>Autocomplete</option>';
 		$Sel = '';
 		if($Defaults[$Field]['Type'] == 'checkbox'){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 		$Types .= '<option value="checkbox" '.$Sel.'>Checkbox</option>';
 		$Sel = '';
 		if($Defaults[$Field]['Type'] == 'radio'){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 		$Types .= '<option value="radio" '.$Sel.'>Radio Group</option>';
 		$Sel = '';
 		if($Defaults[$Field]['Type'] == 'multiselect'){
-			$Sel = 'selected="selected"';	
+			$Sel = 'selected="selected"';
 		}
 	$Types .= '</select></div>';
 
-	
+
 
 return $IReturn.$VReturn.$URLField.$Types.$LocalURLField;
 }
@@ -335,7 +328,7 @@ function linked_loadAdditionalValue($Table, $Field, $Default = false, $filtered 
 		}
 	$Val .= '</select> <img src="'.WP_PLUGIN_URL.'/db-toolkit/images/cancel.png" width="16" width="16" onclick="jQuery(\'#'.$ElID.'\').remove();" /></div>';
 	}
-	
+
 	return $Val;
 }
 function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
@@ -373,11 +366,11 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 			$URL .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
 		}
 	}
-	
+
 	$RefField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Ref]" id="Ref_'.$Table.'">';
 		$RefField .= $Ref;
 	$RefField .= '</select><br />';
-	
+
 	$ValField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Value][]" id="val_'.$Table.'">';
 		$ValField .= $Val;
 	$ValField .= '</select>';
@@ -390,18 +383,18 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 			}
 		}
 	$ValField .= '</div>';
-	
-	
-	
+
+
+
 	$IDField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][ID]" id="id_'.$Table.'">';
 		$IDField .= $ID;
 	$IDField .= '</select><br />';
-	
+
 	//$URLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][URL]" id="url_'.$Table.'" onclick="jQuery(\'#localurl_'.$Table.'\').val(\'\');">';
 	//	$URLField .= '<option>none</option>';
 	//	$URLField .= $URL;
 	//$URLField .= '</select><br />';
-	
+
 	$result = mysql_query("SHOW COLUMNS FROM ".$MainTable);
 	$FilField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Filter]" id="Filter_'.$Table.'">';
 	$FilField .= '<option value="false">None</option>';
@@ -467,7 +460,7 @@ function linked_makeFilterdLinkedFilter($EID, $IDField , $ValueField, $FilterFie
 		//$Return .= '<option value="null"></option>';
 	}
 	//$Return .= '<option value="false"></option>';
-	
+
 	$Return = '<select id="filter_'.$Field.'" name="reportFilter['.$EID.']['.$Field.'][]" multiple="multiple" size="1" class="filterBoxes">';
 	$Return .= '<option></option>';
 	while($row = mysql_fetch_assoc($Res)){
@@ -492,7 +485,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 	//dump($Config);
 	$FieldTitle = '';
 	if(!empty($Config['_FieldTitle'][$Field])){
-		$FieldTitle = $Config['_FieldTitle'][$Field];	
+		$FieldTitle = $Config['_FieldTitle'][$Field];
 	}
 	if($Type == 'linked'){
 			$outList = array();
@@ -508,12 +501,12 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		$Multiple = '';
 		//dump($Config['_Linkedfields']);
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
-			$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';				
+			$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';
 		}
                 $SelectID = $EID.'-'.$Field;
                 $queryWhere = '';
                 if(!empty($Config['_Linkedfields'][$Field]['_Filter']) && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
-                    
+
                     $queryWhere = " WHERE `".$Config['_Linkedfields'][$Field]['_Filter']."` = '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
                 }
 
@@ -526,7 +519,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                 $Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
                     $Return .= '<option>Select All</option>';
-                }else{                    
+                }else{
                     $Return .= '<option></option>';
                 }
 		while($row = mysql_fetch_assoc($Res)){
@@ -546,16 +539,16 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                 }
 
                 if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
-                    $_SESSION['dataform']['OutScripts'] .= "                        
+                    $_SESSION['dataform']['OutScripts'] .= "
                         $(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
                     ";
                 }
 	}
 	if($Type == 'linkedfiltered'){
-		
+
 		$Multiple = '';
 		if(empty($Config['_Linkedfilterfields'][$Field]['SingleSelect'])){
-			//$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';				
+			//$Multiple = 'multiple="multiple" size="1" class="filterBoxes"';
 		}
 		$Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2><span id="status_'.$Field.'">';
 		if(!empty($filterSet[$Config['_Linkedfilterfields'][$Field]['ID']][0])){
@@ -571,7 +564,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		//			}
 		//		}
 		//		$Return .= '<option value="'.$row[$Config['_Linkedfilterfields'][$Field]['ID']].'" '.$Sel.'>'.$row[$Config['_Linkedfilterfields'][$Field]['Value']].'</option>';
-		//	}	
+		//	}
 			$Return .= '</select>';
 		}
 		$Return .= '</span>&nbsp;&nbsp;&nbsp;</div>';
@@ -585,10 +578,10 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                                         $(\"#filter_".$Field."\").dropdownchecklist({ firstItemChecksAll: true});
 				});
 			});
-		
+
 		";
-		
-		
+
+
 	}
 return $Return;
 }
@@ -631,7 +624,7 @@ if(!empty($_GET['q_eid'])){
 		foreach($vals as $visValues){
 			$OutString[] .= $Out[$visValues];
 		//	if($valindex == 2){
-		//		break;	
+		//		break;
 		//	}
 			$valindex++;
 		}
