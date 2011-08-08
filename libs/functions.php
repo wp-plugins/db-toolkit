@@ -260,6 +260,17 @@ function dt_styles() {
                     $isInterface = $_GET['renderinterface'];
                 }
             }
+            if(substr($_GET['page'],0,4) == 'app_'){
+                $app= get_option('_'.substr($_GET['page'],4).'_app');
+                if(!empty($app['landing'])){
+                    $isInterface = $app['landing'];
+                }else{
+                    foreach($app['interfaces'] as $interface=>$access){
+                        $isInterface = $interface;
+                    }
+                }
+
+            }
 
             if(!empty($isInterface)){
                $preInterface = get_option($isInterface);
@@ -412,11 +423,24 @@ function dt_scripts() {
     // load interface specifics
 
     if(is_admin()){
+        
         if(!empty($_GET['page']) || !empty($_GET['renderinterface'])){
             if(!empty($_GET['page'])){
                 if(substr($_GET['page'],0,8) == 'dt_intfc'){
                     $isInterface = $_GET['page'];
                 }
+                if(substr($_GET['page'],0,4) == 'app_'){
+                    $app= get_option('_'.substr($_GET['page'],4).'_app');
+                    if(!empty($app['landing'])){
+                        $isInterface = $app['landing'];
+                    }else{
+                        foreach($app['interfaces'] as $interface=>$access){
+                            $isInterface = $interface;
+                        }
+                    }
+                    
+                }
+
             }
             if(!empty($_GET['renderinterface'])){
                 if(substr($_GET['renderinterface'],0,8) == 'dt_intfc'){
