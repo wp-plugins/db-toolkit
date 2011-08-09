@@ -211,7 +211,7 @@ function dt_styles() {
         wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');        
     }
     wp_enqueue_style('interface_table_styles');
-    if(file_exists('styles/themes/'.$themeDir.'/toolbar.css')){
+    if(file_exists($themeDir.'/toolbar.css')){
         wp_register_style('custom_toolbar_style', $themeURL.'/toolbar.css');
     }else{
         wp_register_style('custom_toolbar_style', WP_PLUGIN_URL.'/db-toolkit/data_report/css/style.css');
