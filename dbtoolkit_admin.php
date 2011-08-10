@@ -628,24 +628,66 @@ if(!empty($appConfig['imageURL'])){
                 </div>
                 <div id="config" class="group" style="display: none;">
                     <h2>Configuration</h2>
-                    <form method="post" action="" enctype="multipart/form-data" id="application-switcher">
-                            <?php
-                            if(strtolower($activeApp) != 'base'){
-                            ?>
-                            <br />
-                            Application logo: <input type="file" name="appImage"><input type="submit" value="Upload" class="button">
-                            <div class="description">A 150 X 65px transparent PNG gives the best results</div>
+
+
+                        <div id="configAccord">
+                                <h3><a href="#">Logo</a></h3>
+                                <div>
+                                        
+                                            <form method="post" action="" enctype="multipart/form-data" id="application-switcher">
+                                                    <?php
+                                                    if(strtolower($activeApp) != 'base'){
+                                                    ?>
+                                                    <br />
+                                                    Application logo: <input type="file" name="appImage"><input type="submit" value="Upload" class="button">
+                                                    <div class="description">A 150 X 65px transparent PNG gives the best results</div>
 
 
 
-                            <?php
+                                                    <?php
 
 
 
 
-                            }
-                            ?>
-                    </form>
+                                                    }
+                                                    ?>
+                                            </form>
+                                        
+                                </div>
+                                <h3><a href="#">Details</a></h3>
+                                <div>
+                                        <p>
+                                        Still Coming
+                                        </p>
+                                </div>
+                                <h3><a href="#">Description</a></h3>
+                                <div>
+                                        <p>
+                                        Still Coming
+                                        </p>
+
+                                </div>
+                                <h3><a href="#">Frequently Asked Questions</a></h3>
+                                <div>
+                                        <p>
+                                        Still Coming
+                                        </p>
+
+                                </div>
+                                <h3><a href="#">Changelog</a></h3>
+                                <div>
+                                        <p>
+                                        Still Coming
+                                        </p>
+                                        <p>
+                                        Still Coming
+                                        </p>
+                                </div>
+                        </div>
+
+
+
+
                 </div>
 
 
@@ -677,6 +719,11 @@ if(!empty($appConfig['imageURL'])){
 <script type="text/javascript">
 
     jQuery(document).ready(function(){
+        jQuery( "#configAccord" ).accordion({
+            autoHeight: false,
+            navigation: true
+        });
+
 
 <?php
 if(!empty($blink)){

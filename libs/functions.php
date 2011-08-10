@@ -2051,9 +2051,10 @@ function exportApp($app, $publish=false){
     $Len = strlen($app['name']);
     $appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
 
-    $interfaces = $wpdb->get_results( "SELECT option_name, option_value FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'");
-    
-
+    //$interfaces = $wpdb->get_results( "SELECT option_name, option_value FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'");
+    foreach($app['interfaces'] as $inf=>$access){
+            $interfaces[] = $inf;
+    }
     $export = array();
     if(empty($app['imageFile']))
         $app['imageFile'] = '';
@@ -2069,8 +2070,8 @@ function exportApp($app, $publish=false){
         //$file = fopen(__DIR__.'/libs/cache/'.$name.'.itf', 'w+');
         $tables = array();
         foreach($interfaces as $interface){
-
-            $cfg = unserialize($interface->option_value);
+        
+            $cfg = get_option($interface);
             $cfg = unserialize(base64_decode($cfg['Content']));
             if(!empty($cfg['_Linkedfields'])){
                 foreach($cfg['_Linkedfields'] as $Field=>$Value){
@@ -2092,9 +2093,10 @@ function exportApp($app, $publish=false){
             //    $tables[$cfg['_main_table']] = $cfg['_main_table'];
             //}
             //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
-            $export['interfaces'][$interface->option_name] = base64_encode($interface->option_value);
+            $export['interfaces'][$interface] = get_option($interface);
         }
     }
+    
         if(!empty($tables)){
 
             foreach($tables as $table){
@@ -2121,17 +2123,34 @@ function exportApp($app, $publish=false){
         //fclose($file);
 
         //vardump($export);
+        // close off export
+
+        echo 'Export has been disabled in the BETA for now- Sorry.';
+        die;
+
+        $export['appInfo']['state'] = 'closed';
 
         $fileName = sanitize_file_name($app['name']);
-        $output = gzdeflate(base64_encode(serialize($export)),9);
+        //vardump($export);
+        //die;
+        $output = base64_encode(serialize($export));
+        //$output = gzdeflate(base64_encode(serialize($export)),9);
+
+        $appID = uniqid('dbt');
+        $template = file_get_contents(__dir__.'/plugtemplate.php');
+        $template = str_replace('{{appID}}', $appID, $template);
+
+        $output = str_replace('{{exportData}}', $output, $template);
+
 
         if(empty($publish)){
             header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
             header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
             header ("Pragma: no-cache");                          // HTTP/1.0
-            header('Content-type: application/itf');
-            header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
+            header('Content-type: application/php');
+            //header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
+            header('Content-Disposition: attachment; filename="'.$fileName.'.php"');
             print($output);
             exit;
         }else{
