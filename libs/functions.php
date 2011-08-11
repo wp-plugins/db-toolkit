@@ -289,6 +289,9 @@ function dt_styles() {
         if(!empty($preIs)){
             $stylesAdded = array();
             foreach($preIs as $interface){
+
+                   if(!is_array($interface)){
+
                    $preInterface = get_option($interface['id']);
                    if(!empty($preInterface['_CustomCSSSource'])){
                        // load scripts
@@ -300,6 +303,7 @@ function dt_styles() {
                                $stylesAdded[] = $CSS['source'];
                            }
                        }
+                   }
                    }
             }
         }
@@ -467,9 +471,14 @@ function dt_scripts() {
     }else{
        
         if(!empty($preIs)){
+            
             $scriptsAdded = array();
             foreach($preIs as $interface){
-               $preInterface = get_option($interface['id']);
+
+
+               
+             if(!is_array($interface)){
+               $preInterface = get_option($interface);
                if(!empty($preInterface['_CustomJSLibraries'])){
                    // load scripts
                    // setup scripts and styles
@@ -485,6 +494,7 @@ function dt_scripts() {
                        }
                    }
                }
+            }
             }
         }
 
@@ -2048,6 +2058,9 @@ function exportApp($app, $publish=false){
     
     //die;
     global $wpdb;
+    
+    $systemtables = array($wpdb->prefix.'commentmeta', $wpdb->prefix.'comments',$wpdb->prefix.'dbt_wplogin',$wpdb->prefix.'links',$wpdb->prefix.'options',$wpdb->prefix.'postmeta',$wpdb->prefix.'posts',$wpdb->prefix.'term_relationships',$wpdb->prefix.'term_taxonomy',$wpdb->prefix.'terms',$wpdb->prefix.'usermeta',$wpdb->prefix.'users');
+    
     $Len = strlen($app['name']);
     $appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
 
@@ -2073,6 +2086,11 @@ function exportApp($app, $publish=false){
         
             $cfg = get_option($interface);
             $cfg = unserialize(base64_decode($cfg['Content']));
+
+            if(!in_array($cfg['_main_table'], $systemtables)){
+                $tables[$cfg['_main_table']] = $cfg['_main_table'];
+            }
+
             if(!empty($cfg['_Linkedfields'])){
                 foreach($cfg['_Linkedfields'] as $Field=>$Value){
                     if(empty($tables[$Value['Table']])){
@@ -2082,8 +2100,10 @@ function exportApp($app, $publish=false){
             }
             if(!empty($cfg['_Linkedfilterfields'])){
                 foreach($cfg['_Linkedfilterfields'] as $Field=>$Value){
-                    if(empty($tables[$Value['Table']])){
-                        $tables[$Value['Table']] = $Value['Table'];
+                    if(!in_array($Value['Table'], $systemtables)){
+                        if(empty($tables[$Value['Table']])){
+                            $tables[$Value['Table']] = $Value['Table'];
+                        }
                     }
                 }
             }
@@ -2125,8 +2145,8 @@ function exportApp($app, $publish=false){
         //vardump($export);
         // close off export
 
-        echo 'Export has been disabled in the BETA for now- Sorry.';
-        die;
+        
+        //die;
 
         $export['appInfo']['state'] = 'closed';
 

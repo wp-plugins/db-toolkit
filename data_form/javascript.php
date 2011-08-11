@@ -237,7 +237,7 @@ function df_submitStart(notice){
 }
 
 function df_buildQuickCaptureForm(eid, ajaxSubmit){
-
+        
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
 		jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
