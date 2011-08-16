@@ -14,7 +14,7 @@ $FieldTypes['emailaddress'] 	= array('name' => 'Email Address'	, 'func' => 'text
 $FieldTypes['phpcodeblock'] 	= array('name' => 'PHP Code Block'	, 'func' => 'null'		, 'visible' => true, 'baseType'  => 'TEXT');
 $FieldTypes['wysiwyg'] 		= array('name' => 'Wysiwyg Editor'	, 'func' => 'text_wysiwygsetup'	, 'visible' => true, 'baseType'  => 'TEXT');
 $FieldTypes['url'] 		= array('name' => 'URL'			, 'func' => 'null'		, 'visible' => true, 'baseType'  => 'TEXT');
-//$FieldTypes['colourpicker'] 	= array('name' => 'Colour Picker'	, 'func' => 'null'		, 'visible' => true);
+$FieldTypes['colourpicker'] 	= array('name' => 'Colour Picker'	, 'func' => 'null'		, 'visible' => true);
 
 
 ?>

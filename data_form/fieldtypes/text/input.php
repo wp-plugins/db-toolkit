@@ -88,21 +88,11 @@ if($FieldSet[1] == 'url'){
 	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="" class="'.$Req.' text" />';
 }
 if($FieldSet[1] == 'colourpicker'){
-    	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" '.$WidthOverride.' />';
+    	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" style="width:60px;" '.$WidthOverride.' />';
     $_SESSION['dataform']['OutScripts'] .="
-        jQuery('#entry_".$Element['ID']."_".$Field."').ColorPicker({
-            onSubmit: function(hsb, hex, rgb, el) {
-                    jQuery(el).val(hex);
-                    jQuery(el).ColorPickerHide();
-                    jQuery(el).css('background-color', '#'+hex);
-            },
-            onBeforeShow: function () {
-                    $(this).ColorPickerSetColor(this.value);
-            },
-            onChange: function (hsb, hex, rgb) {
-                jQuery('#entry_".$Element['ID']."_".$Field."').css('background-color', '#'+hex);
-                jQuery('#entry_".$Element['ID']."_".$Field."').val(hex);
-            }
+        jQuery('#entry_".$Element['ID']."_".$Field."').miniColors({
+
+
 
         });
     ";

@@ -2082,6 +2082,7 @@ function exportApp($app, $publish=false){
         $name = uniqid('intfc');
         //$file = fopen(__DIR__.'/libs/cache/'.$name.'.itf', 'w+');
         $tables = array();
+        
         foreach($interfaces as $interface){
         
             $cfg = get_option($interface);
@@ -2145,8 +2146,7 @@ function exportApp($app, $publish=false){
         //vardump($export);
         // close off export
 
-        
-        //die;
+
 
         $export['appInfo']['state'] = 'closed';
 
