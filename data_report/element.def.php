@@ -34,7 +34,16 @@ if(!is_array($FilterLocks)){
     $FilterLocks = unserialize($FilterLocks);
 }
 
-if(!empty($FilterLocks)) {
+$isSearch = 0;
+if($Config['_ViewMode'] == 'search'){
+    $isSearch = 1;
+    if(!empty($_POST['search_search'])){
+        $isSearch = 0;
+    }
+}
+
+if(!empty($FilterLocks) && empty($isSearch)) {
+    
     $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];
     if(empty($_SESSION['reportFilters'][$Media['ID']])) {
         $_SESSION['reportFilters'][$Media['ID']] = $FilterLocks;

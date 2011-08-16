@@ -24,7 +24,7 @@ InfoBox($Config['_ReportTitle']);
 
             ?>
         <div style="padding:10px 2px 0 2px; text-align:<?php echo $ButtonAlign; ?>">
-            <input type="submit" value="Search" class="filterSearchbutton" />&nbsp;
+            <input type="submit" value="Search" class="filterSearchbutton" name="search_<?php echo $Config['_ViewMode']; ?>" />&nbsp;
                 <?php
                 if(!empty($_SESSION['reportFilters'][$Media['ID']])) {
                     //dump($_SESSION['reportFilters']);
