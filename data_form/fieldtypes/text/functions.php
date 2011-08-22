@@ -17,32 +17,32 @@ switch ($Type){
 			break;
 		case 'phpcodeblock':
 				return '<input type="button" id="codeRun_'.$Data['_return_'.$Config['_ReturnFields'][0]].'" value="Run Code" onclick="text_runCode(\''.$Field.'\', \''.$EID.'\', \''.$Data['_return_'.$Config['_ReturnFields'][0]].'\');" />';
-			break;			
+			break;
 		default:
 			$Pre = '';
 			$Suf = '';
-		
+
 			if(!empty($Config['_Prefix'][$Field])){
 				$Pre = $Config['_Prefix'][$Field];
 			}
 			if(!empty($Config['_Suffix'][$Field])){
 				$Suf = $Config['_Suffix'][$Field];
 			}
-		
+
 			if(strlen($Value) == 100 && empty($_GET['format_'.$EID])){
-				$outText = '<span title="'.htmlentities($Value).'" name="'.htmlentities($Value).'">'.substr($Value, 0 ,100).'&hellip;</span>';	
+				$outText = '<span title="'.htmlentities($Value).'" name="'.htmlentities($Value).'">'.substr($Value, 0 ,100).'&hellip;</span>';
 			}
-			
+
 			return $Pre.$Value.$Suf;
 			break;
-			
+
 		}
 }
 
 function text_postProcess($Field, $Input, $Type, $Element, $Data, $ReturnField){
     if($Type == 'emailaddress'){
 
-        
+
 
         if(!empty($Element['Content']['_forwardResult'][$Field])){
 
@@ -54,7 +54,7 @@ function text_postProcess($Field, $Input, $Type, $Element, $Data, $ReturnField){
             $Headers = 'From: '.$Element['Content']['_emailSender'][$Field] . "\r\n" .
                        'Reply-To: '.$Element['Content']['_emailSender'][$Field] . "\r\n" .
                        'X-Mailer: DB-Toolkit/'.$version['Version'];
-            
+
             $Body = "Submitted Data from ".date("r")."\r\n";
             $Body .= "=============================\r\n";
             foreach($Data as $FieldKey=>$FieldValue){
@@ -74,11 +74,11 @@ function text_postProcess($Field, $Input, $Type, $Element, $Data, $ReturnField){
 
 
 function text_presuff($Field, $Table, $Config = false){
-	
+
 	$PreLen = '98%';
 	$Pre = '';
 	$Suf = '';
-	
+
 	if(!empty($Config['Content']['_FieldLength'][$Field])){
 		$PreLen = $Config['Content']['_FieldLength'][$Field];
 	}
@@ -88,14 +88,14 @@ function text_presuff($Field, $Table, $Config = false){
 	if(!empty($Config['Content']['_Suffix'][$Field])){
 		$Suf = $Config['Content']['_Suffix'][$Field];
 	}
-       
+
 
 	$Return = 'Length: <input type="text" name="Data[Content][_FieldLength]['.$Field.']" value="'.$PreLen.'" class="textfield" size="5" style="width:100px" />&nbsp;<br />';
 	$Return .= 'Prefix: <input type="text" name="Data[Content][_Prefix]['.$Field.']" value="'.$Pre.'" class="textfield" size="5" style="width:100px" />&nbsp;<br />';
 	$Return .= ' Suffix: <input type="text" name="Data[Content][_Suffix]['.$Field.']" value="'.$Suf.'" class="textfield" size="5" style="width:100px" /><br />';
         $Return .= 'Type: <select name="Data[Content][_fieldType]['.$Field.']">';
             $type = 'text';
-            
+
                 $sel = 'selected="selected"';
                 if($Config['Content']['_fieldType'][$Field] != 'text'){
                     $sel = '';
@@ -106,11 +106,11 @@ function text_presuff($Field, $Table, $Config = false){
                     $sel = 'selected="selected"';
                 }
                 $Return .= '<option value="password" '.$sel.'>Password</option>';
-            
+
 
         $Return .= '</select>';
-       
-        
+
+
 return $Return;
 }
 function text_chartotal($Field, $Table, $Config = false){
@@ -129,7 +129,7 @@ return $Return;
 }
 
 function text_preset($Field, $Table, $Config = false){
-	
+
 	$Preset = '';
 	$PreLen = '';
 	if(!empty($Config['Content']['_FieldLength'][$Field])){
@@ -158,9 +158,9 @@ function text_emailSetup($Field, $Table, $Config = false){
 		$Pre = $Config['Content']['_emailForwardSubject'][$Field];
 	}
         $Return .= 'Email Subject: <input type="text" name="Data[Content][_emailForwardSubject]['.$Field.']" value="'.$Pre.'" class="textfield" />&nbsp;';
-                
 
-        $Pre = 'db-toolkit';       
+
+        $Pre = 'db-toolkit';
 	if(!empty($Config['Content']['_emailSender'][$Field])){
 		$Pre = $Config['Content']['_emailSender'][$Field];
 	}
@@ -223,7 +223,7 @@ function text_wysiwygsetup($Field, $Table, $Config = false){
         }
 
         foreach($Buttons as $Button){
-            
+
             ob_start();
 
             $ID = uniqid('togglebutton_');
@@ -247,7 +247,7 @@ function text_wysiwygsetup($Field, $Table, $Config = false){
                 </span>
             </div>&nbsp;
             <?php
-            $Return .= ob_get_clean();            
+            $Return .= ob_get_clean();
         }
         $Return .= '<div style="clear:both;"></div>';
         return $Return;
@@ -257,7 +257,7 @@ function text_wysiwygsetup($Field, $Table, $Config = false){
 
 function text_showFilter($Field, $Type, $Default, $Config, $EID) {
 
-    
+
     $FieldTitle = '';
     if(!empty($Config['_FieldTitle'][$Field])) {
         $FieldTitle = df_parseCamelCase($Config['_FieldTitle'][$Field]);

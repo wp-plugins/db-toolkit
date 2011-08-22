@@ -119,7 +119,7 @@ jQuery('body').append('<div id="ui-dialog-notice" title="Notice"><p><span class=
 jQuery("#ui-dialog-notice").dialog({
 	bgiframe: true,
 	resizable: false,
-	height:140,
+	height:'auto',
 	modal: true,
 	buttons: {
 		'Close': function() {

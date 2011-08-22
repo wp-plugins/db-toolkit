@@ -167,7 +167,7 @@ function dt_styles() {
             }
         }
 
-        if(!empty($post)){        
+        if(!empty($post)){
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
@@ -944,7 +944,7 @@ function dbtoolkit_viewinterface(){
 
     ?>
 <div class="wrap">
-    <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?><a class="button add-new-h2" href="admin.php?page=Database_Toolkit&interface=<?php echo $_GET['page']; ?>">Edit</a></h2>
+    <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?><a class="button add-new-h2" href="admin.php?page=dbt_builder&interface=<?php echo $_GET['page']; ?>">Edit</a></h2>
 
     <?php
     $fset = get_option('dt_set_'.$Interface['ID']);
@@ -1049,9 +1049,11 @@ function dt_process() {
                 $ReturnValue = $Return['Value'];
             }
             if(is_admin()){
+                if(!empty($Setup['Content']['_ItemViewInterface'])){
 
-                if(!empty($Setup['Content']['_ItemViewInterface'])) {
-                    $Location = 'admin.php?page=Database_Toolkit';
+
+
+                    $Location = 'admin.php?page=dbt_builder';
                 }else{
                     $Location = $_SERVER['HTTP_REFERER'];
                 }
@@ -1080,7 +1082,7 @@ function dt_process() {
                        if(!empty($RedirInterface['_ItemGroup'])){
                             $gets['page'] = $Setup['Content']['_ItemViewInterface'];
                        }else{
-                           $gets['page'] = 'Database_Toolkit';
+                           $gets['page'] = 'dbt_builder';
                            $gets['renderinterface'] = $Setup['Content']['_ItemViewInterface'];
                        }
                     }
