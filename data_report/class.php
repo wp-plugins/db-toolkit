@@ -1,5 +1,5 @@
 <?php
-
+        
 function grid_rowswitch($Row = '') {
     if ($Row == 'odd') {
         return '';
@@ -3705,7 +3705,6 @@ function xml2array($contents, $get_attributes=1, $priority = 'tag') {
 
     return($xml_array);
 }
-
 
 
 ?>

@@ -37,6 +37,7 @@
     <?php   
 
     
+    
 
     if(!empty($_SESSION['reportFilters'][$Media['ID']])){
         echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir']);

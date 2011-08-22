@@ -39,6 +39,32 @@ function dt_start() {
     if(empty($_SESSION['dataform']['OutScripts'])){
             $_SESSION['dataform']['OutScripts'] = "";
     }
+
+    if(!empty($_POST['reportFilter'])){
+            foreach($_POST['reportFilter'] as $EID=>$FilterSet){
+                    if(!empty($_POST['reportFilter']['ClearFilters'])){
+                            unset($_SESSION['reportFilters'][$EID]);
+                    }else{
+                            unset($_SESSION['reportFilters'][$EID]);
+                            $_SESSION['reportFilters'][$EID] = $FilterSet;
+                    }
+            }
+            if(!empty($_POST['reportFilter']['reportFilterLock'])){
+                    dr_lockFilters($_POST['reportFilter']['reportFilterLock']);
+                    //dump($_POST['reportFilter']);
+                    //dump($EID);
+            }
+            if(!empty($_POST['reportFilter']['reportFilterUnlock'])){
+                    dr_unlockFilters($_POST['reportFilter']['reportFilterUnlock']);
+                    //dr_lockFilters($_POST['reportFilter']['reportFilterLock']);
+                    //dump($_POST['reportFilter']);
+                    //dump($EID);
+            }
+        header("Location: ".$_SERVER['REQUEST_URI']."");
+        exit;
+    }
+
+
     /*
     require_once(DB_TOOLKIT.'libs/lib.php');
     require_once(DB_TOOLKIT.'daiselements.class.php');
@@ -57,6 +83,7 @@ function dt_headers() {
 
     include_once(DB_TOOLKIT.'data_form/headers.php');
     include_once(DB_TOOLKIT.'data_report/headers.php');
+    
     ?>
 <script type="text/javascript" >
 
