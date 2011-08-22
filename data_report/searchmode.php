@@ -1,6 +1,3 @@
-<?php
-InfoBox($Config['_ReportTitle']);
-    ?>
 <div class="report_filters_panel">
     <form id="setFilters_<?php echo $Media['ID']; ?>" name="setFilters" method="post" action="" style="margin:0;">
         <input type="hidden" id="reportFilters_<?php echo $Media['ID']; ?>" value="<?php echo $Media['ID']; ?>" name="reportFilter[<?php echo $Media['ID']; ?>][EID]" />
@@ -39,7 +36,7 @@ InfoBox($Config['_ReportTitle']);
 </div>
     <?php   
 
-    endInfoBox();
+    
 
     if(!empty($_SESSION['reportFilters'][$Media['ID']])){
         echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir']);

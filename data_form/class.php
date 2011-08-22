@@ -767,7 +767,7 @@ function df_parseCamelCase($Field) {
     $name = '';
     for($i=0; $i<strlen($Field); $i++) {
         $Char = substr($Field, $i, 1);
-        if(is_uppercase($Char) && $i > 0 && strlen($Field) >1 && (!is_uppercase(substr($Field, $i+1, 1)) && substr($Field, $i+1, 1) != '' && substr($Field, $i-1, 1) != '-' )) {
+        if(is_uppercase($Char) && $i > 0 && strlen($Field) >1 && (!is_uppercase(substr($Field, $i+1, 1)) && (substr($Field, $i+1, 1) != '' && substr($Field, $i+1, 1) != ' ') && (substr($Field, $i-1, 1) != '-' && substr($Field, $i-1, 1) != ' '))) {
             $name .= ' ';
         }
         $name .= str_replace('_', ' ', str_replace('_ ', ' ', $Char));

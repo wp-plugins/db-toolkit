@@ -50,12 +50,10 @@
                     'Data Source*' => 'datasource.php',
                     'Form Layout'=>'formlayout.php',
                     'Form Processors'=>'process.php',
-                    'View Layout'=>'viewlayout.php',
-                    'Chart Setup'=>'chartlayout.php',                    
+                    'View Layout'=>'viewlayout.php',                    
                     'Redirects' => 'redirects.php',
                     'List Template'=>'listtemplate.php',
-                    'Custom Scripts'=>'customscripts.php',
-                    //'Query Tuning'=>'querytune.php',
+                    'Custom Scripts'=>'customscripts.php',                    
                     'Import & Export'=>'importexport.php'
                 );
 

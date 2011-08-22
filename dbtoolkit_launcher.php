@@ -7,7 +7,7 @@ global $wpdb;
 $user = wp_get_current_user();
 $Interface = get_option($_GET['renderinterface']);
 if(empty($app) && !empty($_GET['renderinterface'])){
-    $app= get_option('_'.$Interface['_Application'].'_app');
+    $app= get_option('_'.sanitize_title($Interface['_Application']).'_app');
 }
 
 //$Len = strlen($app['name']);
@@ -17,13 +17,14 @@ if(empty($app) && !empty($_GET['renderinterface'])){
 
 foreach($app['interfaces'] as $interface=>$access){
     $cfg = get_option($interface);
-    if($cfg['_menuAccess'] == 'null'){
-        $cfg['_menuAccess'] = 'read';
+    
+    if($access == 'null'){
+        $access = 'read';
     }
-    if(!empty($user->allcaps[$access])){
-        if(!empty($cfg['_ItemGroup'])){
+    if(!empty($user->allcaps[$access])){        
+        if(!empty($cfg['_ItemGroup'])){            
             $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
-        }else{
+        }else{            
             if(!empty($cfg['_interfaceName'])){
                 $menus[$cfg['_interfaceName']] = $cfg['ID'];
             }
