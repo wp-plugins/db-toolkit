@@ -286,7 +286,9 @@ function is_uppercase($Char) {
     return false;
 }
 
-function df_buildQuickCaptureForm($EID) {
+function df_buildQuickCaptureForm($EID, $addQuery = false) {
+
+    parse_str($addQuery, $_GET);
     
     $Data = getelement($EID);
     //$Return = '<h2>'.$Data['Content']['_New_Item_Title'].'</h2>';

@@ -2,20 +2,7 @@
 // Functions
 function viewitem_handleInput($Field, $Input, $FieldType, $Config, $Default){
 
-    if(!empty($Config['Content']['_overRide'][$Field])){
-        if(!empty($_GET[$Config['Content']['_overRide'][$Field]])){
-            $_SESSION['viewitemFilter'][$Config['ID']][$Field] = $_GET[$Config['Content']['_overRide'][$Field]];
-        }
-    }else{
-        if(!empty($_GET[$Field])){
-            $_SESSION['viewitemFilter'][$Config['ID']][$Field] = $_GET[$Field];
-        }
-    }
 
-
-    if(!empty($_SESSION['viewitemFilter'][$Config['ID']][$Field])){
-        return $_SESSION['viewitemFilter'][$Config['ID']][$Field];
-    }
     return $Default[$Field];
 }
 

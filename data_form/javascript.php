@@ -236,11 +236,12 @@ function df_submitStart(notice){
 	jQuery(body).append('<div class="ui-overlay" id="reportpanel_block"><div class="ui-widget-overlay ui-corner-all">Loading Data</div></div>')
 }
 
-function df_buildQuickCaptureForm(eid, ajaxSubmit){
+function df_buildQuickCaptureForm(eid, ajaxSubmit, addquery){
         
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
 		jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
+
 	jQuery('#reportPanel_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
 			position: 'center',
@@ -253,7 +254,7 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit){
 			 	jQuery(".formError").remove();
 			},
 			open: function(event, ui) {
-				ajaxCall('df_buildQuickCaptureForm',eid, function(c){
+				ajaxCall('df_buildQuickCaptureForm',eid, addquery, function(c){
 					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'title', c.title);	
 					jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {
 						'Close': function() {

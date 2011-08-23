@@ -13,7 +13,10 @@ if (!empty($Config['_Hide_Toolbar'])) {
                 $ajaxSubmit = 'false';
             }
         }
-        echo '<div class="fbutton"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;" onclick="df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ');return false;">' . $Config['_New_Item_Title'] . '</span></div></div>';
+
+        //vardump($Config['_ReturnFields']);        
+
+        echo '<div class="fbutton"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;" onclick="df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;">' . $Config['_New_Item_Title'] . '</span></div></div>';
     }
 
     if (!empty($Config['_Show_Import'])) {
