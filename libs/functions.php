@@ -913,14 +913,14 @@ function dbtoolkit_admin() {
             }
         }
     }
+    if(!empty($_GET['renderinterface'])){
+        include_once(DB_TOOLKIT.'dbtoolkit_launcher.php');
+        return;
+    }
     if(empty($activeApp)){
         update_option('_dbt_activeApp', false);
         $activeApp = false;
         include_once(DB_TOOLKIT.'dbtoolkit_builder.php');        
-        return;
-    }
-    if(!empty($_GET['renderinterface'])){
-        include_once(DB_TOOLKIT.'dbtoolkit_launcher.php');
         return;
     }
     include_once(DB_TOOLKIT.'dbtoolkit_admin.php');    
