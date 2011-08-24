@@ -1,9 +1,10 @@
 <?php
 // Functions
 function viewitem_handleInput($Field, $Input, $FieldType, $Config, $Default){
-
-
-    return $Default[$Field];
+    if(!empty($Default[$Field])){
+        return $Default[$Field];
+    }
+    return $Input;
 }
 
 function viewitem_setup($Field, $Table, $Config = false){

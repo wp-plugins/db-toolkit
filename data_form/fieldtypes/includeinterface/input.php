@@ -17,7 +17,7 @@
  fieled ID's are : id="entry_'.$Element['ID'].'_'.$Field.'"
  
 */
-
+//vardump($_GET);
 if(!empty($Defaults)){
     foreach($Defaults as $Key=>$Gets){
         $_GET[$Key] = $Gets;

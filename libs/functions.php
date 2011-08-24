@@ -420,8 +420,6 @@ function dt_scripts() {
 
         wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
         wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
-        wp_register_script('highcharts', WP_PLUGIN_URL . '/db-toolkit/data_report/js/highcharts.js');
-        wp_register_script('highcharts-exporting', WP_PLUGIN_URL . '/db-toolkit/data_report/js/exporting.src.js');
 
 
         wp_enqueue_script("jquery");
@@ -440,8 +438,6 @@ function dt_scripts() {
         wp_enqueue_script('jquery-validate');
         wp_enqueue_script('swfobject');
 
-        wp_enqueue_script('highcharts');
-        wp_enqueue_script('highcharts-exporting');
     }
         /*$Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){

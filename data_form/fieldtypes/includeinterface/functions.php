@@ -33,8 +33,7 @@ function includeinterface_processValue($Value, $Type, $Field, $Config, $EID, $Da
         foreach($Data as $Key=>$Gets){
             $_GET[$Key] = $Gets;
         }
-    }
-    //vardump($_GET);
+    }    
     return dt_renderInterface($Config['_includeInterface'][$Field]);
     //return $Value;
 }
