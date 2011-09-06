@@ -887,8 +887,10 @@ function df_processInsert($EID, $Data) {
             
             $dta = $wpdb->get_row($Query, ARRAY_A);
             $outstr = array();
-            foreach($dta as $key=>$val) {
-                $outstr[] = $key.'='.$val;
+            if(!empty($dta)){
+                foreach($dta as $key=>$val) {
+                    $outstr[] = $key.'='.$val;
+                }
             }
             $Return['Value'] = implode('&', $outstr);
             $Data[$Config['_ReturnFields'][0]] = $dta[$Config['_ReturnFields'][0]];

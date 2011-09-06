@@ -46,20 +46,25 @@ function onoff_handleInput($Field, $Input, $FieldType, $Config, $Data){
 }
 
 
-function onoff_setValue($val, $id, $field, $eid){
-   
+function onoff_setValue($id, $field, $eid){
+
+
 	$Value = 0;
-	if($val == 'true'){
-		$Value = 1;
-	}
 	$element = getelement($eid);
-	$Config = $element['Content'];
+	$Config = $element['Content'];    
 	$datestamp = '';
 	if(!empty($Config['_onoff'][$field]['datestamp'])){
 		$datestamp = ", `".$Config['_onoff'][$field]['datestampField']."` = NOW()";
 	}
-	
-	
+
+        $pre = mysql_query("SELECT `".$field."` FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$id."' LIMIT 1;");
+        $data = mysql_fetch_assoc($pre);
+
+        $Value = 1;
+        if($data[$field] === '1'){
+            $Value = 0;
+        }
+
 	$query = "UPDATE `".$Config['_main_table']."` SET `".$field."` = '".mysql_real_escape_string($Value)."' ".$datestamp." WHERE `".$Config['_ReturnFields'][0]."` = '".$id."' LIMIT 1;";
 	//echo $query;
 	//die;

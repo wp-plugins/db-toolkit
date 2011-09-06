@@ -262,18 +262,22 @@ function df_buildQuickCaptureForm(eid, ajaxSubmit, addquery){
 						},
 						'Save': function() {
 							//dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
-                                                        //if(ajaxSubmit == false){
-                                                         jQuery("#data_form_"+eid+"").submit();
+                                                        //if(ajaxSubmit == false){                                                         
                                                          if(ajaxSubmit == true){
-                                                            jQuery("#data_form_"+eid+"").bind('submit', function(){
-                                                                ajaxCall('df_processAjaxForm',jQuery("#data_form_"+eid+"").serialize(), function(p){
-                                                                    //alert(p);
-                                                                    jQuery("#ui-jsDialog-"+eid+"").dialog("close");
+                                                            //alert("#ui-jsDialog-"+eid+"");
+                                                            //jQuery("#data_form_"+eid+"").bind('submit', function(){
+                                                            formData = jQuery("#data_form_"+eid+"").serialize();
+                                                                jQuery("#ui-jsDialog-"+eid+"").html('Sending...');
+                                                                jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
+                                                                ajaxCall('df_processAjaxForm',formData, function(p){
+                                                                    jQuery("#ui-jsDialog-"+eid+"").remove();
                                                                     df_loadOutScripts();
                                                                     dr_goToPage(eid, false);
-                                                                });
+                                                                });                                                                
                                                                 return false;
-                                                            })
+                                                            //})
+                                                        }else{
+                                                            jQuery("#data_form_"+eid+"").submit();
                                                         }
                                                         //alert(eid);
 						}
