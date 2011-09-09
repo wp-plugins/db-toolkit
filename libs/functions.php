@@ -410,28 +410,11 @@ function dt_scripts() {
     // queue & register scripts
         wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
         wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
-
-
-        //wp_register_script('jquery-ui-datepicker' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.datepicker.js');
-        //wp_register_script('jquery-ui-progressbar' , WP_PLUGIN_URL . '/db-toolkit/libs/ui.progressbar.js', false, false, true);
-
-        wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery.ui.js');
-
-
+        wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.min.js');
         wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
         wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
-
-
         wp_enqueue_script("jquery");
         wp_enqueue_script("jquery-ui-custom");
-        //wp_enqueue_script("jquery-ui-core");
-        //wp_enqueue_script("jquery-ui-progressbar");
-        //wp_enqueue_script("jquery-ui-tabs");
-        //wp_enqueue_script("jquery-ui-sortable");
-        //wp_enqueue_script("jquery-ui-draggable");
-        //wp_enqueue_script("jquery-ui-droppable");
-        //wp_enqueue_script("jquery-ui-dialog");
-        //wp_enqueue_script("jquery-ui-datepicker");
         wp_enqueue_script('jquery-multiselect');
         wp_enqueue_script('data_report');
         wp_enqueue_script('data_form');
@@ -2182,10 +2165,10 @@ function exportApp($app, $publish=false){
         //$output = gzdeflate(base64_encode(serialize($export)),9);
 
         $appID = uniqid('dbt');
-        $template = file_get_contents(__dir__.'/plugtemplate.php');
-        $template = str_replace('{{appID}}', $appID, $template);
+        //$template = file_get_contents(__dir__.'/plugtemplate.php');
+        //$template = str_replace('{{appID}}', $appID, $template);
 
-        $output = str_replace('{{exportData}}', $output, $template);
+        //$output = str_replace('{{exportData}}', $output, $template);
 
 
         if(empty($publish)){
@@ -2194,8 +2177,8 @@ function exportApp($app, $publish=false){
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
             header ("Pragma: no-cache");                          // HTTP/1.0
             header('Content-type: application/php');
-            //header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
-            header('Content-Disposition: attachment; filename="'.$fileName.'.php"');
+            header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
+            //header('Content-Disposition: attachment; filename="'.$fileName.'.php"');
             print($output);
             exit;
         }else{

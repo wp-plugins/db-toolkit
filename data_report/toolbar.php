@@ -5,11 +5,11 @@ if (!empty($Config['_Hide_Toolbar'])) {
     if (empty($Config['_New_Item_Hide'])) {
         $ajaxSubmit = 'true';
         if (is_admin ()) {
-            if (!empty($Config['_ItemViewInterface'])) {
+            if (empty($Config['_ItemViewInterface'])) {
                 $ajaxSubmit = 'false';
             }
         } else {
-            if (!empty($Config['_ItemViewInterface'])) {
+            if (empty($Config['_ItemViewInterface'])) {
                 $ajaxSubmit = 'false';
             }
         }
