@@ -3120,12 +3120,14 @@ function dr_cancelImport($EID) {
 
 function dt_listApps() {
 
-    $default = '';
-    if (!empty($_SESSION['activeApp'])) {
-        $default = $_SESSION['activeApp'];
-    }
-
     $appList = get_option('dt_int_Apps');
+
+    ob_start();
+    vardump($appList);
+    $out['html'] = ob_get_clean();
+
+    
+
 
     $Return = '<div style="float:left; width: 25%;">';
     $Return .= '<h3>Application</h3>';
@@ -3136,8 +3138,8 @@ function dt_listApps() {
         if ($default == $app)
             $Sel = 'selected="selected"';
 
-        if ($state == 'open')
-            $Return .= '<option value="' . $app . '" ' . $Sel . '>' . ucwords($app) . '</option>';
+        if ($state['state'] == 'open')
+            $Return .= '<option value="' . $app . '" ' . $Sel . '>' . ucwords($state['name']) . '</option>';
     }
     $Return .= '</select>';
     $Return .= '</div>';
@@ -3153,31 +3155,35 @@ function dt_listApps() {
 }
 
 function dt_listInterfaces($App) {
-    global $wpdb;
-    $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+    if(empty($App))
+        return '<h3>Please select an app</h3>';
 
+    $app = get_option('_'.$App.'_app');
+    //vardump($app);
     $Return = '<h3>' . $App . '</h3>';
 
-    foreach ($interfaces as $interface) {
-        $dta = get_option($interface['option_name']);
-        if ($dta['_Application'] == $App) {
+    foreach ($app['interfaces'] as $interface=>$access) {
+        $dta = get_option($interface);
+        
+        //if ($dta['_Application'] == $App) {
             if (empty($dta['_ItemGroup'])) {
                 $Group = '<em>ungrouped</em>';
             } else {
                 $Group = $dta['_ItemGroup'];
             }
             $interfaceGroups[$Group][] = $dta;
-        }
+        //}
     }
+    //vardump($interfaceGroups);
     if (empty($interfaceGroups)) {
         $Return .= '<div style="padding:3px;" class="highlight">No interfaces</div>';
         return $Return;
     }
     foreach ($interfaceGroups as $group => $Interface) {
-
+    
         $Return .= '<div style="padding:3px;" class="highlight">' . $group . '</div>';
         foreach ($Interface as $dta) {
-            if ($dta['_Application'] == $App) {
+            //if ($dta['_Application'] == $App) {
 
                 if ($GroupRun != $group) {
 
@@ -3190,7 +3196,7 @@ function dt_listInterfaces($App) {
                     $Return .= '<div><span class="description interfaceInserter" style="cursor:pointer;" id="' . $dta['ID'] . '">' . $dta['_ReportExtendedDescription'] . '</span></div>';
                 }
                 $Return .= '</div>';
-            }
+            //}
         }
     }
     return $Return;

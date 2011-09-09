@@ -12,6 +12,20 @@
  *
  */
 
+function app_SaveDesc($desc){
+    $active = get_option('_dbt_activeApp');
+
+    $Apps = get_option('dt_int_Apps');
+
+    $Apps[sanitize_title($active)]['description'] = stripslashes_deep($desc);
+
+    $appConfig = get_option('_'.sanitize_title($active).'_app');
+    $appConfig['description'] = stripslashes_deep($desc);
+    update_option('_'.sanitize_title($active).'_app', $appConfig);
+    update_option('dt_int_Apps', $Apps);
+    return 'Description Saved';
+}
+
 function app_update($name, $interface = false, $access = false){
     
     if(empty($name) || strtolower($name) == 'base')
@@ -131,11 +145,11 @@ function app_setLanding($app, $inf){
 
 
 
-    $appcfg = get_option('_'.$app.'_app');
-    vardump($app);
-    vardump($inf);
+    $appcfg = get_option('_'.sanitize_title($app).'_app');
+    //vardump($app);
+    //vardump($inf);
     $appcfg['landing'] = $inf;
-    update_option('_'.$app.'_app', $appcfg);
+    update_option('_'.sanitize_title($app).'_app', $appcfg);
     
 
 }

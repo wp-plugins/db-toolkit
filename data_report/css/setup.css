@@ -28,6 +28,10 @@ body.admin-bar #appTitle{
     display: block;
 }
 
+.appDescription p{
+    max-height: 40px;
+    overflow: hidden;
+}
 
 .interfaceModule:hover{
     background-color: #F1F1F1;

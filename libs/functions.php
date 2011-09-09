@@ -1810,9 +1810,7 @@ function dt_advanced_buttons(){ ?>
                     tb_show( 'Insert Interface', '#TB_inline?inlineId=db_tookitInsertInterface_Panel' );
 
                     ajaxCall('dt_listApps', function(d){
-                        if(d.app.length >0){
-                            dtLoadApp(d.app);
-                        }
+
                         jQuery('#dbToolkitInterfaceApps').html(d.html);
                         jQuery('#dbtoolkit_AppList').change(function(){
                             jQuery('#dbtoolkit_InterfaceList').html('<h3>Loading....</h3>');

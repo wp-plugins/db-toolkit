@@ -1,5 +1,14 @@
 //<script>
 
+    function app_saveDesc(){
+        text = jQuery('#appDesc').val();
+        jQuery('#appDesc').attr('disabled', true);
+        ajaxCall('app_SaveDesc', text, function(a){
+            alert(a);
+            jQuery('#appDesc').removeAttr('disabled');
+        })
+        
+    }
 
     function dt_saveInterface(str){
 

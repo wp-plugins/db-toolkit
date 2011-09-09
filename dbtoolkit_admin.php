@@ -48,8 +48,9 @@ if(!empty($_GET['renderinterface'])){
     <div class="wrap">
     <div id="icon-themes" class="icon32"></div><h2><?php _e($Title); ?>
         <?php
-            //global $user;            
-            if(!empty($user->caps['administrator']) && empty($noedit)){
+            //global $user;
+        
+            if(!empty($user->caps['administrator']) && $appConfig['state'] == 'open'){
         ?>
         <a class="button add-new-h2" href="admin.php?page=dbt_builder&interface=<?php echo $_GET['renderinterface']; ?>">Edit</a>
     <?php
@@ -469,7 +470,7 @@ if(!empty($appConfig['imageURL'])){
                 <div id="interfaces" class="group" style="display: block;">
 
                 <?php
-                
+                $blink = false;
                 if(!empty($appConfig['interfaces'])) {
                     $Groups = array();
                     foreach($appConfig['interfaces'] as $interface=>$access) {
@@ -653,36 +654,16 @@ if(!empty($appConfig['imageURL'])){
                                                     ?>
                                             </form>
                                         
-                                </div>
-                                <h3><a href="#">Details</a></h3>
-                                <div>
-                                        <p>
-                                        Still Coming
-                                        </p>
-                                </div>
+                                </div>                                
                                 <h3><a href="#">Description</a></h3>
                                 <div>
                                         <p>
-                                        Still Coming
+                                            <input type="text" name="Desc" id="appDesc" style="width:528px;" value="<?php echo $appConfig['description']; ?>" />
+                                            <input type="button" value="Save" onclick="app_saveDesc()"/>
                                         </p>
 
                                 </div>
-                                <h3><a href="#">Frequently Asked Questions</a></h3>
-                                <div>
-                                        <p>
-                                        Still Coming
-                                        </p>
-
-                                </div>
-                                <h3><a href="#">Changelog</a></h3>
-                                <div>
-                                        <p>
-                                        Still Coming
-                                        </p>
-                                        <p>
-                                        Still Coming
-                                        </p>
-                                </div>
+                                
                         </div>
 
 
@@ -725,16 +706,6 @@ if(!empty($appConfig['imageURL'])){
         });
 
 
-<?php
-if(!empty($blink)){
-    ?>
-        jQuery('#addNewInterface').effect("highlight", {}, 2000, function(s){
-            jQuery('#addNewInterface').effect("highlight", {}, 2000, function(s){
-            });
-        });
-        <?php
-}
-        ?>
 
         jQuery('#dbt-nav li a').click(function(){
             jQuery('#dbt-nav li').removeClass('current');
