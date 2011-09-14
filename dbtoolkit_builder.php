@@ -46,7 +46,9 @@ $Apps = get_option('dt_int_Apps');
 
 
                 <div id="<?php echo 'app-'.$app; ?>" class="appModule smlPanel">
+                
                 <h2><?php echo $config['name']; ?></h2>
+                
                 <div class="appDescription">
 
                 <div class="appLogo">
@@ -70,7 +72,15 @@ $Apps = get_option('dt_int_Apps');
                 </div>
 
                 <div class="appModuleButton">
-                    <a href="?page=dbt_builder&open=<?php echo $app; ?>" class="button">Open App</a>								</div>
+                    <a title="Open App to Edit" href="?page=dbt_builder&open=<?php echo $app; ?>" class="button">Open App</a>
+                    <?php
+                    $dockedClass = 'button';
+                    if(!empty($appConfig['docked'])){
+                        $dockedClass = 'button-primary';
+                    }
+                    ?>
+                    <a title="Add App to Wordpress Menu" href="#" onclick="app_dockApp('<?php echo $app; ?>'); return false;" id="app_<?php echo $app; ?>" class="<?php echo $dockedClass; ?>">Add to Sidebar</a>
+                </div>                
                 </div>
 
                 <?php

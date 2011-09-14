@@ -12,6 +12,24 @@
  *
  */
 
+function app_dockApp($App){
+    
+    $Apps = get_option('dt_int_Apps');
+    $appConfig = get_option('_'.sanitize_title($App).'_app');
+    
+    if(empty($appConfig['docked'])){
+        $appConfig['docked'] = true;
+        $Return['docked'] = true;
+    }else{
+        $appConfig['docked'] = false;
+        $Return['docked'] = false;
+    }
+    $appConfig = update_option('_'.sanitize_title($App).'_app', $appConfig);
+
+
+    return $Return;
+}
+
 function app_SaveDesc($desc){
     $active = get_option('_dbt_activeApp');
 

@@ -1,5 +1,20 @@
 //<script>
 
+    function app_dockApp(app){
+        
+        ajaxCall('app_dockApp', app, function(a){
+            if(a.docked == true){
+                jQuery('#app_'+app).removeClass('button');
+                jQuery('#app_'+app).addClass('button-primary');
+            }
+            if(a.docked == false){
+                jQuery('#app_'+app).addClass('button');
+                jQuery('#app_'+app).removeClass('button-primary');
+            }
+            //jQuery('#adminmenu').html(a.html);
+        })
+    }
+
     function app_saveDesc(){
         text = jQuery('#appDesc').val();
         jQuery('#appDesc').attr('disabled', true);

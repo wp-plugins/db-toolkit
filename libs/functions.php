@@ -619,30 +619,32 @@ function dt_menus() {
                 foreach($apps as $app=>$data){
                     $Groups = array();
                     $appSettings = get_option('_'.$app.'_app');
-                    //vardump($data);
+                    
                     // Create app menu
                     //add seperator
                     //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position)
-                    add_admin_menu_separator('25.'.$base++);
-                    $appPage = add_menu_page($data['name'], $data['name'], 'read', 'app_'.$app, "app_launcher", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png', '25.'.$base++);
+                    if(!empty($appSettings['docked'])){
+                        add_admin_menu_separator('25.'.$base++);
+                        $appPage = add_menu_page($data['name'], $data['name'], 'read', 'app_'.$app, "app_launcher", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png', '25.'.$base++);
 
-                    add_action('admin_head-'.$appPage, 'dt_headers');
-                    add_action('admin_print_scripts-'.$appPage, 'dt_scripts');
-                    add_action('admin_print_styles-'.$appPage, 'dt_styles');
-                    add_action('admin_footer-'.$appPage, 'dt_footers');
-                    if(!empty($appSettings['interfaces'])){
-                        foreach($appSettings['interfaces'] as $interface=>$access){
-                            // load interface settings and check for menus
-                            $cfg = get_option($interface);
-                            if(!empty($cfg['_ItemGroup'])){
-                                $Groups[$cfg['_ItemGroup']][] = $cfg;
-                            }else{
-                                if(!empty($cfg['_interfaceName'])){
-                                    $Groups[$cfg['_interfaceName']][] = $cfg;
+                        add_action('admin_head-'.$appPage, 'dt_headers');
+                        add_action('admin_print_scripts-'.$appPage, 'dt_scripts');
+                        add_action('admin_print_styles-'.$appPage, 'dt_styles');
+                        add_action('admin_footer-'.$appPage, 'dt_footers');
+                        if(!empty($appSettings['interfaces'])){
+                            foreach($appSettings['interfaces'] as $interface=>$access){
+                                // load interface settings and check for menus
+                                $cfg = get_option($interface);
+                                if(!empty($cfg['_ItemGroup'])){
+                                    $Groups[$cfg['_ItemGroup']][] = $cfg;
+                                }else{
+                                    if(!empty($cfg['_interfaceName'])){
+                                        $Groups[$cfg['_interfaceName']][] = $cfg;
+                                    }
                                 }
-                            }
-                            //vardump($cfg);
+                                //vardump($cfg);
 
+                            }
                         }
                     }
                     ksort($Groups);

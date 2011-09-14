@@ -1,6 +1,6 @@
 <div class="admin_config_toolbar">
     <ul class="tools_widgets">
-        <li class="root_item"><a class="parent"><strong>Applications</strong></a>
+        <li class="root_item"><a class="parent"><strong>Groups</strong></a>
             <ul id="" style="visibility: hidden; display: block;">
 
                 <?php                

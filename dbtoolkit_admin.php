@@ -618,8 +618,8 @@ if(!empty($appConfig['imageURL'])){
 
                     }
                 }else{
-                    echo '<h2>Interfaces</h2>';
-                    echo 'You have no interfaces yet, go make some!';
+                    echo '<h2>Clusters</h2>';
+                    echo 'You have no clusters yet, go make some!';
                     $blink = true;
 
                 }

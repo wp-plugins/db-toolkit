@@ -27,7 +27,10 @@ body.admin-bar #appTitle{
     text-shadow: 0 1px 0 #FFFFFF;
     display: block;
 }
-
+.appDock{
+    font-size: 1em;
+    float: right;
+}
 .appDescription p{
     max-height: 40px;
     overflow: hidden;
@@ -138,11 +141,12 @@ body.admin-bar #appTitle{
 }
 
 .appModule .appModuleButton {
-    background: none repeat scroll 0 0 #FFFFFF;
+    background: none repeat scroll 0 0 #inherit;
     bottom: 20px;
     display: block;
     left: 15px;
     position: absolute;
+    width:325px;
 }
 
 
