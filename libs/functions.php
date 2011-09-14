@@ -541,8 +541,8 @@ function dt_menus() {
         //$market = add_menu_page ('Application Marketplace', 'App Market', 'manage_options','appmarket', 'dt_appMarket', WP_PLUGIN_URL.'/db-toolkit/images/cart.png', '2.1');
         //$appMarket = add_submenu_page("appmarket", 'App Market', 'Browse Market', 'read', "appmarket");
         //$launcher = add_submenu_page("appmarket", 'Applications', 'Applications', 'read', "app_launcher", 'app_launcher');
-        //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function)
-        //add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function)
+        //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function);
+        //add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
 
         add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
