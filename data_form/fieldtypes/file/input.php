@@ -43,15 +43,96 @@ if($FieldSet[1] == 'image'){
 if($FieldSet[1] == 'file'){
 	$Return = '';
 	if(!empty($Defaults[$Field])){
-			$File = explode('|', $Defaults[$Field]);
+			$File = explode('?', $Defaults[$Field]);
 			$ext = strtolower($Dets['extension']);
 			$UniID = uniqid();
 			
 		$Return .= $Icon.'<a href="'.$File[0].'" target="_blank" >'.$File[1].'</a></div>';
-		$Return .= '<div style="padding:3px;" class="list_row1"><input type="checkbox" name="deleteImage['.$Field.']" id="image_'.$Element['ID'].'_'.$Field.'" value="1" /> <label for="image_'.$Element['ID'].'_'.$Field.'">Remove File</label></div>';
+		$Return .= '<div style="padding:3px;" class="list_row1"><input type="checkbox" name="deleteImage['.$Field.']" id="image_'.$Element['ID'].'_'.$Field.'" value="1" /> Remove File</div>';
 		
 	}
 	$Return .= '<input type="file" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'" />';
+        $Return .= '<div id="'.$Element['ID'].$Field.'_uploaded"></div>';
+
+$_SESSION['dataform']['OutScripts'] .="
+
+	var entry".$Element['ID'].$Field." = new Array();
+	var uploadComplete = false;
+	jQuery(\"#entry_".$Element['ID']."_".$Field."\").uploadify({
+		'uploader'       : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/uploadify.swf',
+		'script'	 : '?uploadify=".urlencode(base64_encode($Req.'_'.$Element['ID'].'_'.$Field))."',
+		'cancelImg'      : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/icons/uploadify-cancel.png',		
+		'auto'           : false,
+		'multi'          : false,
+		'rollover'	 : true,
+		'width'          : '102',
+		'height'	 : '26',
+		'buttonImg'      : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/icons/select.gif',
+		'onSelectOnce' 	 : function(a,b){
+			if(b.fileCount > 0){
+
+";
+if(!empty($Config['_ajaxForms'])){
+    $_SESSION['dataform']['OutScripts'] .="
+                                jQuery('#ui-jsDialog-".$Element['ID']."').dialog('option', 'buttons', {
+
+                                    'Close': function() {
+                                        jQuery(this).dialog(\"close\");
+                                    },
+                                    'Save': function() {                                        
+                                        jQuery('#entry_".$Element['ID']."_".$Field."').uploadifyUpload();
+
+                                        jQuery('#data_form_".$Element['ID']."').bind('submit', function(){
+                                            formData = jQuery('#data_form_".$Element['ID']."').serialize();
+                                            jQuery('#ui-jsDialog-".$Element['ID']."').html('Sending...');
+                                            jQuery('#ui-jsDialog-".$Element['ID']."').dialog('option', 'buttons', {});
+                                            ajaxCall('df_processAjaxForm',formData, function(p){
+                                                jQuery('#ui-jsDialog-".$Element['ID']."').remove();
+                                                df_loadOutScripts();
+                                                dr_goToPage('".$Element['ID']."', false);
+                                            });
+                                        });
+
+
+
+                                    }
+                                    
+                                });
+    ";
+}else{
+$_SESSION['dataform']['OutScripts'] .="
+                               
+				jQuery('#data_form_".$Element['ID']."').bind('submit', function(){                                
+					jQuery('#entry_".$Element['ID']."_".$Field."').uploadifyUpload();
+					if(uploadComplete == false){
+						return false;
+					}else{
+						return true;
+					}
+				});
+                                
+                                ";
+}
+$_SESSION['dataform']['OutScripts'] .="
+			}else{
+				alert('done');
+			}
+		},
+		'onComplete' : function(e,q,f,r,d) {
+				//alert(r);
+                                //jQuery('#entry_".$Element['ID']."_".$Field."').remove();
+				jQuery('#".$Element['ID'].$Field."_uploaded').append(r);
+			},
+		'onAllComplete'  : function(){                
+			uploadComplete = true;                        
+			jQuery('#data_form_".$Element['ID']."').submit();
+                        return true;
+		}
+	})
+
+
+	";
+
 }
 if($FieldSet[1] == 'mp3'){
     $Return = '';
@@ -99,7 +180,19 @@ if($FieldSet[1] == 'multi'){
 	}
 	$Return .= '</div>';
 	$Return .= '<div id="'.$Element['ID'].$Field.'_uploaded" class="uploadifyFrame"></div>';
-	$_SESSION['dataform']['OutScripts'] .="
+
+        $_SESSION['dataform']['OutScripts'] .="
+            jQuery('#".$Element['ID'].$Field."_uploaded').hide();
+            jQuery('#".$Element['ID'].$Field."_uploaded').uploadify({
+            'uploader' : '?uploadify=".urlencode(base64_encode($Req.'_'.$Element['ID'].'_'.$Field))."',
+            'swf' : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/uploadify.swf',
+            //'cancelImage' : '/uploadify/uploadify-cancel.png',
+            //'auto' : true
+            });
+
+        ";
+
+        /*$_SESSION['dataform']['OutScripts'] .="
 		
 	var entry".$Element['ID'].$Field." = new Array();
 	var uploadComplete = false;
@@ -109,7 +202,7 @@ if($FieldSet[1] == 'multi'){
 		'cancelImg'      : '".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/icons/cancel.png',
 		'queueID'        : '".$Element['ID'].$Field."',
 		'auto'           : false,
-		'rollover'		 : true,
+		'rollover'	 : true,
 		'multi'          : true,
 		'width'			 : '83',
 		'height'		 : '21',
@@ -140,7 +233,7 @@ if($FieldSet[1] == 'multi'){
 	})
 		
 		
-	";
+	";*/
 
 }
 echo $Return;

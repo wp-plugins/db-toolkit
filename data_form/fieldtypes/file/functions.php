@@ -215,50 +215,31 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 /// Uploader Processessor
 if(!empty($_GET['uploadify'])){
 
-//	dump($_FILES);
-//	dump($_REQUEST);
-//	dump($_POST);
-//	dump($_GET);
-	$El = urldecode(base64_decode($_REQUEST['uploadify']));
-	$El = explode('_', $El, 3);
-	//dump($El);
-	//echo $ID;
+        $string = base64_decode(urldecode($_GET['uploadify']));
+        $fieldData = explode('_', $string);
+        //vardump($fieldData);
+        //vardump($string);
+        //vardump($_FILES);
 
 	if(!empty($_FILES['Filedata']['size'])){
-		if(!file_exists('media')){
-			mkdir('media', 0777);	
-		}
-		if(!file_exists('media/'.date('Y-m'))){
-			mkdir('media/'.date('Y-m'), 0777);	
-		}
-		if(!file_exists('media/'.date('Y-m'))){
-			mkdir('media/'.date('Y-m'), 0777);	
-		}
-		if(!file_exists('media/'.date('Y-m').'/'.date('d'))){
-			mkdir('media/'.date('Y-m').'/'.date('d'), 0777);
-		}
-		
+
+        $path = wp_upload_dir();
 		// set filename and paths
 		$Ext = pathinfo($_FILES['Filedata']['name']);
-		$newFileName = uniqid($El[1].'_').'.'.$Ext['extension'];
-		$newLoc = 'media/'.date('Y-m').'/'.date('d').'/'.$newFileName;
-		//$GLOBALS['UploadedFile'][$Field] = $newLoc;
-		move_uploaded_file($_FILES['Filedata']['tmp_name'], $newLoc);
-		
+		$newFileName = uniqid().'.'.$Ext['extension'];
+		$newLoc = $path['path'].'/'.$newFileName;
+
+        $upload = wp_upload_bits($newFileName, null, file_get_contents($_FILES['Filedata']['tmp_name']));
+		//move_uploaded_file($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field], $newLoc);
+
 	//return $newLoc;
-	//echo '<input $newLoc.'|'.$_FILES['Filedata']['name'];
-//	dump($_FILES['Filedata']);
-	$icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" width="16" height="16" align="absmiddle" />';
-	if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif')){
-		$icon = '<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.strtolower($Ext['extension']).'.gif" width="16" height="16" align="absmiddle" />';
+        //vardump($upload);
+	//return $upload['url'].'?'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
+
+        echo '<input type="hidden" value="'.$upload['url'].'?'.$_FILES['Filedata']['name'].'" id="entry'.$string.'" name="dataForm['.$fieldData[1].'_'.$fieldData[2].']['.$fieldData[3].']">';
 	}
-	echo '<div class="uploadifyQueueItem" id="entry_'.$El[1].'_'.uniqid().'">';
-	echo '<span class="fileName">'.$icon.' '.$_FILES['Filedata']['name'].'</span>&nbsp;<span class="caption">Uploaded.</span>';
-	echo '<input type="hidden" name="dataForm['.$El[1].']['.$El[2].'][]" id="entry_'.$El[1].'_'.$El[2].'_'.uniqid().'" value="'.$newLoc.'|'.$_FILES['Filedata']['name'].'" class="'.$El[0].'" />';
-	echo '</div>';
-	}
-	mysql_close();
-	die;
+
+	exit;
 
 }
 

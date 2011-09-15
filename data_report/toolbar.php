@@ -2,14 +2,15 @@
 // Control Buttons
 if (!empty($Config['_Hide_Toolbar'])) {
     echo '<div id="report_tools_' . $Media['ID'] . '" class="report_tools list_row3">';
+    
     if (empty($Config['_New_Item_Hide'])) {
         $ajaxSubmit = 'true';
         if (is_admin ()) {
-            if (empty($Config['_ItemViewInterface'])) {
+            if (empty($Config['_ajaxForms'])) {
                 $ajaxSubmit = 'false';
             }
         } else {
-            if (empty($Config['_ItemViewInterface'])) {
+            if (empty($Config['_ajaxForms'])) {
                 $ajaxSubmit = 'false';
             }
         }

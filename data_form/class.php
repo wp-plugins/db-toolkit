@@ -604,12 +604,12 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         }
         $Shown .= '</form>';
         if(!empty($Config['_ajaxForms'])){
-        $_SESSION['dataform']['OutScripts'] .= "
+        $_SESSION['disableddataform']['OutScripts'] .= "
         //jQuery(\"#data_form_".$Element['ID']."\").submit();
         //if(ajaxSubmit == true) {
             
             jQuery(\"#data_form_".$Element['ID']."\").bind('submit', function(){
-            ajaxCall('df_processAjaxForm',jQuery(\"#data_form_".$Element['ID']."\").serialize(), function(p){
+             ajaxCall('df_processAjaxForm',jQuery(\"#data_form_".$Element['ID']."\").serialize(), function(p){
              jQuery(\"#data_form_".$Element['ID']."\")[0].reset();
                 
              df_loadOutScripts();

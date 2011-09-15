@@ -8,3 +8,11 @@
         lefticon: "FFFFFF"  
     });  
 </script>
+<?php
+
+        wp_register_script('uploadifyJS', WP_PLUGIN_URL. '/db-toolkit/data_form/fieldtypes/file/js/jquery.uploadify.min.js');
+        wp_enqueue_script("uploadifyJS");
+        wp_register_style('uploadifyCSS', WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/css/uploadify.css');
+        wp_enqueue_style('uploadifyCSS');
+
+?>
