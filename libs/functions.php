@@ -316,10 +316,10 @@ function dt_styles() {
         if(!empty($preIs)){
             $stylesAdded = array();
             foreach($preIs as $interface){
-
+                    
                    if(!is_array($interface)){
 
-                   $preInterface = get_option($interface['id']);
+                   $preInterface = get_option($interface);
                    if(!empty($preInterface['_CustomCSSSource'])){
                        // load scripts
                        // setup scripts and styles
