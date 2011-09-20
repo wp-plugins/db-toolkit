@@ -2,7 +2,7 @@
 /*
  * Core Functions Library - DB Toolkit
  * (C) David Cramer 2010 - 2011
- * 
+ *
  */
 
 require_once(DB_TOOLKIT.'libs/lib.php');
@@ -159,15 +159,15 @@ function dt_styles() {
         foreach($texts as $text){
             //vardump($text['text']);
             preg_match_all('/'.$pattern.'/s', $text['text'], $matches);
-            if(!empty($matches[3])){                
+            if(!empty($matches[3])){
                 foreach($matches[3] as $preInterface){
-                    $preIs[] = shortcode_parse_atts($preInterface);                    
+                    $preIs[] = shortcode_parse_atts($preInterface);
                 }
             }
         }
 
 
-        if(!empty($post)){        
+        if(!empty($post)){
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
@@ -175,7 +175,7 @@ function dt_styles() {
                 $op = get_option($args['id']);
                 if(!empty($op)){
                     $preIs[] = $args['id'];
-                }                
+                }
             }
         }
         }
@@ -201,14 +201,14 @@ $themeURL = get_bloginfo('template_url');
     if(file_exists($themeDir.'/table.css')) {
         wp_register_style('custom_table_style', $themeURL.'/table.css');
     }else{
-        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');        
+        wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');
     }
     wp_enqueue_style('interface_table_styles');
     if(file_exists('styles/themes/'.$themeDir.'/toolbar.css')){
         wp_register_style('custom_toolbar_style', $themeURL.'/toolbar.css');
     }else{
         wp_register_style('custom_toolbar_style', WP_PLUGIN_URL.'/db-toolkit/data_report/css/style.css');
-    }    
+    }
     wp_enqueue_style('custom_toolbar_style');
 
     // form
@@ -268,9 +268,11 @@ $themeURL = get_bloginfo('template_url');
     }else{
 
         if(!empty($preIs)){
+
             $stylesAdded = array();
             foreach($preIs as $interface){
-                   $preInterface = get_option($interface['id']);
+
+                   $preInterface = get_option($interface);
                    if(!empty($preInterface['_CustomCSSSource'])){
                        // load scripts
                        // setup scripts and styles
@@ -312,12 +314,12 @@ function dt_scripts() {
 
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         //vardump($matches);
-        
+
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
                 $args = shortcode_parse_atts($preInterface);
                 $op = get_option($args['id']);
-                
+
                 if(!empty($op)){
                     $preIs[] = $args['id'];
                 }
@@ -403,11 +405,11 @@ function dt_scripts() {
             }
         }
     }else{
-       
+
         if(!empty($preIs)){
             $scriptsAdded = array();
             foreach($preIs as $interface){
-               $preInterface = get_option($interface['id']);
+               $preInterface = get_option($interface);
                if(!empty($preInterface['_CustomJSLibraries'])){
                    // load scripts
                    // setup scripts and styles
@@ -525,9 +527,9 @@ function dt_menus() {
 
             $groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
             add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
-            
+
             for($i = 1; $i <= count($Interfaces)-1; $i++){
-                
+
                 $subPage = add_submenu_page($pageName, $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
 
                 add_action('admin_head-'.$subPage, 'dt_headers');
@@ -738,7 +740,7 @@ function dt_process() {
     }
 
     if(!empty($_POST['processKey'])) {
-    
+
 
     $_POST = stripslashes_deep($_POST);
         if($_POST['processKey'] == $_SESSION['processKey']) {
@@ -755,7 +757,7 @@ function dt_process() {
                 $EID = $_POST['dataForm']['EID'];
                 $Setup = getelement($EID);
                 unset($_POST['dataForm']['dr_update']);
-                unset($_POST['dataForm']['EID']);                
+                unset($_POST['dataForm']['EID']);
                 $Return = df_processUpdate($_POST['dataForm'], $EID);
                 dr_trackActivity('Update', $EID, $Return['Value']);
                 if(empty($Setup['Content']['_NotificationsOff'])) {
@@ -876,7 +878,7 @@ function dt_process() {
         header('Location: '.$Redirect);
         exit;
     }
-       
+
     // API Call
     //vardump($_SERVER);
     $pattern = API_getInterfaceRegex();
@@ -1177,11 +1179,11 @@ function dt_listApplications($Application){
 
 
 function dt_rendercluster($cluster){
-    
+
     $Interface = get_option($cluster);
     $cfg = unserialize(base64_decode($Interface['Content']));
     parse_str($cfg['_clusterLayout'], $layout);
-    
+
     // Build Layout Array First...
 
     if(is_admin ()){
@@ -1200,7 +1202,7 @@ function dt_rendercluster($cluster){
                         $content = array_keys($layout, $row.'_'.$col);
                         if(!empty($content)){
                             $output = '';
-                            foreach($content as $render){                                
+                            foreach($content as $render){
                                 $output .= dt_renderInterface($render);
                             }
                             echo $output;
@@ -1231,7 +1233,7 @@ function dt_rendercluster($cluster){
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface){
 
-   
+
 
     if(is_array($interface)) {
         if(!empty($interface['id'])){
@@ -1253,10 +1255,10 @@ function dt_renderInterface($interface){
     if(empty($Media)) {
         return;
     }
-    
+
     if($Media['Type'] == 'Cluster'){
         ob_start();
-        dt_rendercluster($ID);        
+        dt_rendercluster($ID);
         $Return = ob_get_clean();
         $Return = do_shortcode($Return);
 
@@ -1266,13 +1268,13 @@ function dt_renderInterface($interface){
         return $Return;
 
     }
-    //echo $Media['_Icon'];    
+    //echo $Media['_Icon'];
     if($Media['_menuAccess'] != 'null'){
         $user = wp_get_current_user();
         if(empty($user->allcaps[$Media['_menuAccess']])){
             return;
         }
-    }    
+    }
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
     $Return = '';
@@ -1282,7 +1284,7 @@ function dt_renderInterface($interface){
         return str_replace("\r\n", '', $Return);
     }
     if($Config['_ViewMode'] == 'API'){
-        include('api_details.php');        
+        include('api_details.php');
         $Return = do_shortcode($Return);
         return str_replace("\r\n", '', $Return);
     }
@@ -1322,9 +1324,9 @@ function dt_renderInterface($interface){
             $_SESSION['report_'.$interface]['LastPage'] = $newPage;
         }
     }
-    
+
     switch ($Config['_ViewMode']){
-        
+
         case 'list':
             ob_start();
                 include(DB_TOOLKIT.'data_report/listmode.php');
@@ -1349,12 +1351,12 @@ function dt_renderInterface($interface){
 
 
     if($error = mysql_error()){
-        if(is_admin()){            
+        if(is_admin()){
             $InterfaceData = get_option($Media['ID']);
             $InterfaceDataraw = base64_encode(serialize($InterfaceData));
-            
+
             if(empty($_SESSION['errorReport'][$Media['ID']][md5($InterfaceDataraw)])){
-                
+
                 ob_start();
                 echo '<h4>Error</h4>';
                 echo $error;
@@ -1378,17 +1380,17 @@ function dt_renderInterface($interface){
         }
     }
 
-    $Return = do_shortcode($Return);    
+    $Return = do_shortcode($Return);
 
     $order   = array("\r\n", "\n", "\r", "\n\n", "\r\r", "  ");
     $replace = "";
     $Return = str_replace($order, $replace, $Return);
     return $Return;
-   
+
 }
 
 function dbt_sendError($Interface, $ErrorData){
-    
+
     global $current_user;
     get_currentuserinfo();
 
@@ -1427,7 +1429,7 @@ $headers .= 'From: '.$current_user->display_name.' <'.$current_user->user_email.
 
 
 return mail($to, $subject, $message, $headers);
-    
+
 }
 
 
@@ -1949,18 +1951,18 @@ function API_getInterfaceRegex(){
         $list = array();
         foreach($interfaces as $interface){
             $interface = get_option($interface['option_name']);
-            $Config = unserialize(base64_decode($interface['Content']));            
+            $Config = unserialize(base64_decode($interface['Content']));
             if($Config['_ViewMode'] == 'API' || !empty($Config['_DataSourceFieldMap'])){
-                
+
                 if(!empty($Config['_APICallName'])){
                     $list[] = '\/'.$Config['_APICallName'].'\/';
                     $output['interfaces'][$Config['_APICallName']] = $interface['ID'];
                 }else{
                     $list[] = '\/'.$interface['ID'].'\/';
                 }
-                
+
             }
-        }        
+        }
         if(!empty($list)){
             $output['regex'] = implode('|', $list);
             return $output;
