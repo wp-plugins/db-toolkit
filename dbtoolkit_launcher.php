@@ -22,8 +22,13 @@ foreach($app['interfaces'] as $interface=>$access){
         $access = 'read';
     }
     if(!empty($user->allcaps[$access])){        
-        if(!empty($cfg['_ItemGroup'])){            
-            $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
+        if(!empty($cfg['_ItemGroup'])){
+            if(!empty($cfg['_interfaceName'])){                
+                $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
+            }else{
+                
+                $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_ReportDescription'];
+            }
         }else{            
             if(!empty($cfg['_interfaceName'])){
                 $menus[$cfg['_interfaceName']] = $cfg['ID'];
@@ -36,6 +41,7 @@ foreach($app['interfaces'] as $interface=>$access){
 <?php
     if(!empty($menus)){
         ksort($menus);
+        
         echo '<div class="appnav_toolbar">';
             echo '<ul class="tools_widgets">';
                 foreach($menus as $menu=>$group){
@@ -43,6 +49,7 @@ foreach($app['interfaces'] as $interface=>$access){
                         echo '<li class="root_item"><a class="parent hasSubs">'.$menu.'</a>';
                             echo '<ul id="'.sanitize_title($menu).'" style="visibility: hidden; display: block;">';
                             foreach($group as $interface=>$label){
+
                                 echo '<li><a href="admin.php?page='.$interface.'">'.$label.'</a></li>';
                             }
                             echo '</ul>';
