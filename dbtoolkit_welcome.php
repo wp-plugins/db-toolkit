@@ -23,8 +23,8 @@
     </div>
     <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>From the DB-Toolkit Support Forum</span></h3>
-            <div id="dbtoolkitSupportFeed" style="margin: 10px;">
+            <h3><span>From the DB-Toolkit Blog</span></h3>
+            <div id="dbtoolkitBlogFeed" style="margin: 10px;">
             Loading....
             </div>
         </div>
@@ -49,14 +49,6 @@
             </div>
         </div>
     </div>
-    <div class="metabox-holder">
-        <div id="dashboard_right_now" class="postbox">
-            <h3><span>From the DB-Toolkit Blog</span></h3>
-            <div id="dbtoolkitBlogFeed" style="margin: 10px;">
-            Loading....
-            </div>
-        </div>
-    </div>
 </div>
 
 </div>
@@ -64,10 +56,6 @@
 <script>
 
 jQuery(document).ready(function($) {
-
-    ajaxCall('core_loadSupportFeed','http://dbtoolkit.digilab.co.za/forum/feed.php', function(o){
-       jQuery('#dbtoolkitSupportFeed').html(o);
-    });
 
     ajaxCall('core_loadSupportFeed','http://dbtoolkit.digilab.co.za/feed/', function(o){
        jQuery('#dbtoolkitBlogFeed').html(o);

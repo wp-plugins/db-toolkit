@@ -1,7 +1,7 @@
 //<script>
 
     function app_dockApp(app){
-        
+
         ajaxCall('app_dockApp', app, function(a){
             if(a.docked == true){
                 jQuery('#app_'+app).removeClass('button');
@@ -11,6 +11,14 @@
                 jQuery('#app_'+app).addClass('button');
                 jQuery('#app_'+app).removeClass('button-primary');
             }
+            // alter Meny
+            jQuery.ajax({
+              url: "admin.php?page=Database_Toolkit_Welcome",
+              context: document.body,
+              success: function(data){
+                jQuery('#adminmenu').html(jQuery('#adminmenu', data).html());
+              }
+            });
             //jQuery('#adminmenu').html(a.html);
         })
     }

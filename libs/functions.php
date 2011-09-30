@@ -544,11 +544,11 @@ function dt_menus() {
         //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function);
         //add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
 
-        add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_dashboard", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
-	$Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'Dashboard', 'Dashboard', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
+        add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "Database_Toolkit_Welcome", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
+	
 
         //$adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Manage Interfaces', 'Interfaces & Clusters', 'activate_plugins', "Database_Toolkit", 'dbtoolkit_admin');
-        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Application Builder', 'App Builder', 'activate_plugins', "dbt_builder", 'dbtoolkit_admin');
+        $adminPage = add_submenu_page("Database_Toolkit_Welcome", 'Application Builder', 'App Builder', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_admin');        
 
         $addNew = add_submenu_page("Database_Toolkit_Welcome", 'Create New Interface', 'New Interface', 'activate_plugins', "Add_New", 'dbtoolkit_admin');
         $NewCluster = add_submenu_page("Database_Toolkit_Welcome", 'Create New Cluster Interface', 'New Cluster', 'activate_plugins', "New_Cluster", 'dbtoolkit_admin');
@@ -556,7 +556,7 @@ function dt_menus() {
         $Import = add_submenu_page("Database_Toolkit_Welcome", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("Database_Toolkit_Welcome", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
-
+        $Dashboard = add_submenu_page("Database_Toolkit_Welcome", 'DB-Toolkit News', 'DBT News', 'activate_plugins', "dbt_builder", 'dbtoolkit_dashboard');
 
         //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');
