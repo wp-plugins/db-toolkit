@@ -7,14 +7,11 @@
     <div class="metabox-holder">
 
         <div id="dashboard_right_now" class="postbox">
-            <h3><span>Updates in this version</span></h3>
+            <h3><span>Updates in this version 0.3.0</span></h3>
             <div style="margin: 10px;">
 
-                <p>Rebuild the management section.</p>
-                <p>Renamed "Interfaces & Clusters" to App Builder.</p>
-                <p>Refined how the apps menus work.</p>
-                <p>Give your app a logo :)</p>
-
+                <p>This version has completely changed the way apps work. An app can be described as a series of interfaces working together to form an application.</p>
+                <p>There have been a considerable amount of changes, bug fixes and system structures.</p>
 
             </div>
         </div>

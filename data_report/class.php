@@ -249,23 +249,24 @@ if (is_admin ()) {
         $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
         $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify) . '</div>';
 
-        $XAxis = '';
-        if ($Config['Content']['_xaxis'] == $Field) {
-            $XAxis = 'checked="checked"';
-        }
+        //$XAxis = '';
+        //if ($Config['Content']['_xaxis'] == $Field) {
+        //    $XAxis = 'checked="checked"';
+        //}
 
-        $chartValue = '';
-        if (!empty($Config['Content']['_chartValue'][$Field])) {
-            $chartValue = 'checked="checked"';
-        }
+        //$chartValue = '';
+        //if (!empty($Config['Content']['_chartValue'][$Field])) {
+         //   $chartValue = 'checked="checked"';
+        //}
         // Graphing x axis (single select)
-        $PreReturn[$Field] .= '<label><strong>Charting</strong></label>';
-        $PreReturn[$Field] .= '<div style="padding:3px;">X Axis: <input type="radio" name="Data[Content][_xaxis]" id="sortable_' . $Field . '" value="' . $Field . '" ' . $XAxis . ' /><br />';
+        //$PreReturn[$Field] .= '<label><strong>Charting</strong></label>';
+        //$PreReturn[$Field] .= '<div style="padding:3px;">X Axis: <input type="radio" name="Data[Content][_xaxis]" id="sortable_' . $Field . '" value="' . $Field . '" ' . $XAxis . ' /><br />';
         // Graphing legend/charted value
-        $PreReturn[$Field] .= ' Chart Item: <input type="checkbox" name="Data[Content][_chartValue][' . $Field . ']" id="sortable_' . $Field . '" value="1" ' . $chartValue . ' />';
+        //$PreReturn[$Field] .= ' Chart Item: <input type="checkbox" name="Data[Content][_chartValue][' . $Field . ']" id="sortable_' . $Field . '" value="1" ' . $chartValue . ' />';
 
 
         /// charts
+        /*
         $Sel = '';
         if (!empty($Config['Content']['_chartType'][$Field])) {
             switch ($Config['Content']['_chartType'][$Field]) {
@@ -318,7 +319,7 @@ if (is_admin ()) {
 
         $PreReturn[$Field] .= '</select>';
         $PreReturn[$Field] .= '</div>';
-
+        */
 
 
         if(empty($row))
