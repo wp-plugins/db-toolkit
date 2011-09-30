@@ -2310,23 +2310,27 @@ function core_createInterfaces($Installer){
 
 function core_createTables($Installer){
 
-    global $wpdb;
-    $apps = get_option('dt_int_Apps');
-    $data = file_get_contents($Installer);
-    $data = gzinflate($data);
-    $data = unserialize(base64_decode($data));
+    if(is_admin ()){
+        global $wpdb;
+        $apps = get_option('dt_int_Apps');
+        $data = file_get_contents($Installer);
+        $data = gzinflate($data);
+        $data = unserialize(base64_decode($data));
 
-    if(!empty($data['tables'])){
-        foreach($data['tables'] as $table=>$configData){
-            $Query = base64_decode($configData);
-            $wpdb->query($Query);
+        if(!empty($data['tables'])){
+            foreach($data['tables'] as $table=>$configData){
+                $Query = base64_decode($configData);
+                $wpdb->query($Query);
+            }
+            return true;
+        }else{
+            return true;
         }
-        return true;
-    }else{
-        return true;
+        unlink($Installer);
+        unset($_SESSION['appInstall']);
+        return false;
     }
-    unlink($Installer);
-    unset($_SESSION['appInstall']);
+
     return false;
     //vardump($data);
 }
