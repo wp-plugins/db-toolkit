@@ -24,8 +24,14 @@ if(!empty($_FILES['itfInstaller']['size'])){
         if(!empty($_SESSION['appInstall'])){
 
             $data = file_get_contents($_SESSION['appInstall']);
-            $data = gzinflate($data);
+            if($predata = @gzinflate($data)){
+                $data = $predata;
+            }
+
             $data = unserialize(base64_decode($data));
+
+            //vardump($data);
+            //die;
 
             $exisits = get_option('_'.sanitize_title($data['appInfo']['name']).'_app');
             if(!empty($exisits)){                
@@ -44,6 +50,7 @@ if(!empty($_FILES['itfInstaller']['size'])){
                     $data['appInfo']['imageFile'] = $src['file'];
                 }
                 update_option('_'.sanitize_title($data['appInfo']['name']).'_app', $data['appInfo']);
+                
             }
 
 

@@ -2245,7 +2245,7 @@ function exportApp($app, $publish=false){
         //vardump($export);
         //die;
         $output = base64_encode(serialize($export));
-        //$output = gzdeflate(base64_encode(serialize($export)),9);
+        $output = gzdeflate(base64_encode(serialize($export)),9);
 
         $appID = uniqid('dbt');
         //$template = file_get_contents(__dir__.'/plugtemplate.php');
@@ -2278,8 +2278,13 @@ function core_createInterfaces($Installer){
 
     $apps = get_option('dt_int_Apps');
     $data = file_get_contents($Installer);
-    $data = gzinflate($data);
+    if($predata = @gzinflate($data)){
+        $data = $predata;
+    }
     $data = unserialize(base64_decode($data));
+
+    //vardump($data);
+
     if(empty($apps[sanitize_title($data['application'])])){
         $apps[sanitize_title($data['application'])]['state'] = 'open';
         $apps[sanitize_title($data['application'])]['name'] = $data['application'];
@@ -2287,8 +2292,9 @@ function core_createInterfaces($Installer){
     }
     if(!empty($data['interfaces'])){
         foreach($data['interfaces'] as $interface=>$configData){
-
-            $Config = unserialize(base64_decode($configData));
+            //vardump($interface);
+            //$Config = unserialize(base64_decode($configData));
+            $Config = $configData;
             array_walk_recursive($Config, 'core_applySystemTables');
             update_option($interface, $Config);            
             app_update($Config['_Application'], $interface, $Config['_menuAccess']);
@@ -2312,9 +2318,18 @@ function core_createTables($Installer){
 
     if(is_admin ()){
         global $wpdb;
+
+        $user = wp_get_current_user();
+        if(empty($user->data->wp_capabilities['administrator'])){
+            return false;
+        }
+        
+
         $apps = get_option('dt_int_Apps');
         $data = file_get_contents($Installer);
-        $data = gzinflate($data);
+        if($predata = @gzinflate($data)){
+            $data = $predata;
+        }
         $data = unserialize(base64_decode($data));
 
         if(!empty($data['tables'])){
@@ -2340,7 +2355,9 @@ function core_populateApp($Installer){
     global $wpdb;
     $apps = get_option('dt_int_Apps');
     $data = file_get_contents($Installer);
-    $data = gzinflate($data);
+    if($predata = @gzinflate($data)){
+        $data = $predata;
+    }
     $data = unserialize(base64_decode($data));
 
     if(!empty($data['entries'])){
