@@ -82,11 +82,8 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 		if($Default == $Value){
 			$Sel = 'selected="selected"';	
 		}
-		//if(substr($Value, 0, 5) != 'dais_'){
-			$List[] = $Value;
-			$Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
-		//}
-		
+        	$List[] = $Value;
+		$Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
 	}
 	$Return .= '</select><br /><span id="linkingConfig_'.$Field.'">';
 	if(is_array($ElementConfig)){
@@ -116,11 +113,6 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 					$Sel = 'selected="selected"';	
 				}
 				$Return .= '<option value="LEFT JOIN" '.$Sel.'>Left Join</option>';
-				$Sel = '';
-				if($ElementConfig['Content']['_Linkedfields'][$Field]['JoinType'] == 'NNER JOIN'){
-					$Sel = 'selected="selected"';	
-				}
-				$Return .= '<option value="INNER JOIN" '.$Sel.'>Inner Join</option>';
 				$Sel = '';
 				if($ElementConfig['Content']['_Linkedfields'][$Field]['JoinType'] == 'RIGHT JOIN'){
 					$Sel = 'selected="selected"';	

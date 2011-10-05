@@ -635,9 +635,11 @@ function dt_menus() {
                             foreach($appSettings['interfaces'] as $interface=>$access){
                                 // load interface settings and check for menus
                                 $cfg = get_option($interface);
+                                
                                 if(!empty($cfg['_ItemGroup'])){
+                                    //vardump($cfg).'<br>';
                                     $Groups[$cfg['_ItemGroup']][] = $cfg;
-                                }else{
+                                }else{                                    
                                     if(!empty($cfg['_interfaceName'])){
                                         $Groups[$cfg['_interfaceName']][] = $cfg;
                                     }
@@ -664,6 +666,7 @@ function dt_menus() {
                             if($Interfaces[0]['_menuAccess'] == 'null'){
                                 $Interfaces[0]['_menuAccess'] = 'read';
                             }
+                            
                             $groupPage = add_menu_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "app_launcher", $icon, '25.'.$base++);
                             add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
 
@@ -675,8 +678,13 @@ function dt_menus() {
                             for($i = 1; $i <= count($Interfaces)-1; $i++){
                                 if($Interfaces[$i]['_menuAccess'] == 'null'){
                                     $Interfaces[$i]['_menuAccess'] = 'read';
-                                }                            //vardump($Interfaces[$i]);
-                                $subPage = add_submenu_page($pageName, $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_interfaceName'], $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                                }                            //vardump($Interfaces[$i]);                                
+                                if(!empty($Interfaces[$i]['_interfaceName'])){
+                                    $Title = $Interfaces[$i]['_interfaceName'];
+                                }else{
+                                    $Title = $Interfaces[$i]['_ReportDescription'];
+                                }
+                                $subPage = add_submenu_page($pageName, $Title, $Title, $Interfaces[$i]['_menuAccess'], $Interfaces[$i]['ID'], 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
 
                                 add_action('admin_head-'.$subPage, 'dt_headers');
                                 add_action('admin_print_scripts-'.$subPage, 'dt_scripts');

@@ -39,6 +39,14 @@ foreach($app['interfaces'] as $interface=>$access){
 ?>
 <h2 id="appTitle"><?php echo $app['name']; ?></h2>
 <?php
+
+    // get link of docked:
+    if(!empty($app['docked'])){
+        $Link = 'admin.php?page=';
+    }else{
+        $Link = 'admin.php?page=dbt_builder&renderinterface=';
+    }
+
     if(!empty($menus)){
         ksort($menus);
         
@@ -49,13 +57,12 @@ foreach($app['interfaces'] as $interface=>$access){
                         echo '<li class="root_item"><a class="parent hasSubs">'.$menu.'</a>';
                             echo '<ul id="'.sanitize_title($menu).'" style="visibility: hidden; display: block;">';
                             foreach($group as $interface=>$label){
-
-                                echo '<li><a href="admin.php?page='.$interface.'">'.$label.'</a></li>';
+                                echo '<li><a href="'.$Link.$interface.'">'.$label.'</a></li>';
                             }
                             echo '</ul>';
                         echo '</li>';
                     }else{
-                        echo '<li class="root_item"><a href="admin.php?page='.$group.'" class="parent">'.$menu.'</a></li>';
+                        echo '<li class="root_item"><a href="'.$Link.$group.'" class="parent">'.$menu.'</a></li>';
                     }
                 }                
             echo '</ul>';
