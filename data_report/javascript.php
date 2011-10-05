@@ -110,6 +110,13 @@
             jQuery('#formProcessList').append(p);
         });
     }
+    function df_addViewProcess(process){
+        table = jQuery('#_main_table').val();
+        jQuery('.root_item ul').hide();
+        ajaxCall('df_addViewProcess', process, table, function(p){
+            jQuery('#viewProcessList').append(p);
+        });
+    }
 
     function dt_addLibrary(){
         ajaxCall('dais_addJSLibrary', function(i){

@@ -309,7 +309,17 @@ function dt_styles() {
                        wp_enqueue_style($handle);
                    }
                }
-            }
+               $Config = unserialize(base64_decode($preInterface['Content']));
+               if(!empty($Config['_ViewProcessors'])){
+                   foreach($Config['_ViewProcessors'] as $viewProcess){
+                       if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php')){
+                           include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php');
+                       }
+                   }
+               }
+
+            }            
+
         }
     }else{
 
@@ -328,6 +338,14 @@ function dt_styles() {
                                wp_register_style($handle, $CSS['source']);
                                wp_enqueue_style($handle);
                                $stylesAdded[] = $CSS['source'];
+                           }
+                       }
+                   }
+                   $Config = unserialize(base64_decode($preInterface['Content']));
+                   if(!empty($Config['_ViewProcessors'])){
+                       foreach($Config['_ViewProcessors'] as $viewProcess){
+                           if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php')){
+                               include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php');
                            }
                        }
                    }
@@ -472,6 +490,15 @@ function dt_scripts() {
                        wp_enqueue_script($handle);
                    }
                }
+               $Config = unserialize(base64_decode($preInterface['Content']));
+               if(!empty($Config['_ViewProcessors'])){
+                   foreach($Config['_ViewProcessors'] as $viewProcess){
+                       if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php')){
+                           include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php');
+                       }
+                   }
+               }
+
             }
         }
     }else{
@@ -500,6 +527,15 @@ function dt_scripts() {
                        }
                    }
                }
+               $Config = unserialize(base64_decode($preInterface['Content']));
+               if(!empty($Config['_ViewProcessors'])){
+                   foreach($Config['_ViewProcessors'] as $viewProcess){
+                       if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php')){
+                           include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php');
+                       }
+                   }
+               }
+
             }
             }
         }
@@ -901,6 +937,8 @@ function dt_ajaxCall() {
         "linked_loadAdditionalValue" => "1",
         "app_fetchApps" => "1",
         "dr_renderField" => "1",
+        "dbte_installFieldType" => "1",
+        "df_addViewProcess" => "1"
     );
 
 
@@ -916,10 +954,9 @@ function dt_ajaxCall() {
             $func_args = array();
         }
         if(empty($allowed[$func])){
-            echo 'Access to that funciton is restricted.';
+            echo 'Access to \''.$func.'\' is restricted.';
             exit();
         }
-
     }
     if (!empty($func) && function_exists($func)) {
         header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past

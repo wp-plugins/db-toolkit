@@ -50,9 +50,10 @@
                     'Data Source*' => 'datasource.php',
                     'Form Layout'=>'formlayout.php',
                     'Form Processors'=>'process.php',
-                    'View Layout'=>'viewlayout.php',                    
-                    'Redirects' => 'redirects.php',
+                    'View Layout'=>'viewlayout.php',
+                    'View Processors' => 'viewprocess.php',
                     'List Template'=>'listtemplate.php',
+                    'Redirects' => 'redirects.php',
                     'Custom Scripts'=>'customscripts.php',                    
                     'Import & Export'=>'importexport.php'
                 );

@@ -426,6 +426,7 @@ admin_toolbar td a:hover, admin_toolbar tr a:active{
 .admin_config_panel h3{
     padding: 4px;
     margin: 0;
+    font-size: 12px;
 }
 .admin_config_toolbar{
 	padding:8px;
