@@ -260,7 +260,7 @@ function dt_styles() {
 	$Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
 	foreach($Types[0] as $Type){
 		if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php')){
-			include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php');
+			include_once(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/header.php');
 		}
 	}
 }
@@ -313,7 +313,7 @@ function dt_styles() {
                if(!empty($Config['_ViewProcessors'])){
                    foreach($Config['_ViewProcessors'] as $viewProcess){
                        if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php')){
-                           include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php');
+                           include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php');
                        }
                    }
                }
@@ -345,7 +345,7 @@ function dt_styles() {
                    if(!empty($Config['_ViewProcessors'])){
                        foreach($Config['_ViewProcessors'] as $viewProcess){
                            if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php')){
-                               include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php');
+                               include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/styles.php');
                            }
                        }
                    }
@@ -494,7 +494,7 @@ function dt_scripts() {
                if(!empty($Config['_ViewProcessors'])){
                    foreach($Config['_ViewProcessors'] as $viewProcess){
                        if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php')){
-                           include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php');
+                           include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php');
                        }
                    }
                }
@@ -531,7 +531,7 @@ function dt_scripts() {
                if(!empty($Config['_ViewProcessors'])){
                    foreach($Config['_ViewProcessors'] as $viewProcess){
                        if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php')){
-                           include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php');
+                           include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/scripts.php');
                        }
                    }
                }

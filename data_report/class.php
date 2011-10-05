@@ -726,7 +726,7 @@ function df_buildSetProcessors($Config) {
 
         if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/conf.php')) {
             include(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/conf.php');
-            include(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/functions.php');
+            include_once(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/functions.php');
 
 
 
@@ -825,16 +825,16 @@ function df_buildSetViewProcessors($Config) {
 
         if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/conf.php')) {
             include(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/conf.php');
-            include(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/functions.php');
+            include_once(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/functions.php');
 
 
-
+            $Icons = '';
             if (function_exists($func)) {
                 $class = 'button';
                 if (!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])) {
                     $class = 'button-highlighted highlight"';
                 }
-                $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+                $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
                 $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_ViewProcessors][' . $processID . '][_configPanelOpen]" ' . $Sel . ' style="display: none;">';
             }
 
@@ -917,7 +917,7 @@ function df_addProcess($processor, $table) {
 
     if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/conf.php')) {
         include(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/conf.php');
-        include(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/functions.php');
+        include_once(WP_PLUGIN_DIR . '/db-toolkit/data_form/processors/' . $processor . '/functions.php');
         $processID = uniqid('process_');
 
         $func = 'config_' . $processor;
@@ -966,7 +966,7 @@ function df_addViewProcess($processor, $table) {
 
     if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/conf.php')) {
         include(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/conf.php');
-        include(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/functions.php');
+        include_once(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors/' . $processor . '/functions.php');
         $processID = uniqid('process_');
 
         $func = 'config_' . $processor;
@@ -977,9 +977,9 @@ function df_addViewProcess($processor, $table) {
         $Return .= '<img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery(\'#' . $processID . '\').remove();" src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png">';
         $Return .= '<h3 class="fieldTypeHandle">' . $ViewTitle . '</h3>';
         $Return .= '<div class="admin_config_toolbar">';
-
+        $Icons = '';
         if (function_exists($func)) {
-            $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+            $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
             $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_ViewProcessors][' . $processID . '][_configPanelOpen]" checked="checked" style="display: none;">';
         }
 
@@ -1907,7 +1907,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         foreach($Config['_ViewProcessors'] as $viewProcess){
             
             if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
-                include(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
+                include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
                 $func = 'pre_process_'.$viewProcess['_process'];
                 $Result = $func($Result, $viewProcess, $Config, $EID);
             }

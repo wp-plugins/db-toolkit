@@ -22,11 +22,29 @@ function pre_process_googlemap($Data, $Setup, $Config, $EID){
     
     //$ReportReturn = false;   
     // return false;
+    $instance = uniqid($EID);
+
+    $Width = '';
+    if(!empty($Setup['_Width'])){
+        $Width = $Setup['_Width'];
+    }
+    if(strtolower($Width) != 'auto'){
+        $Width = 'width:'.$Width.'px;';
+    }else{
+        $Width = '';
+    }
+    $Height = '400';
+    if(!empty($Setup['_Height'])){
+        $Height = $Setup['_Height'];
+    }
+    if(strtolower($Height) != 'auto'){
+        $Height = 'height:'.$Height.'px;';
+    }
 ?>
 
 <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
 
-<div id="map_div" style="height:600px;">Loading Map</div>
+<div id="<?php echo $instance; ?>" style="<?php echo $Width.$Height;?>">Loading Map</div>
 
 
 <script>
@@ -42,7 +60,7 @@ jQuery(document).ready(function() {
                     center: results[0].geometry.location,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
             };
-            var map = new google.maps.Map(document.getElementById('map_div'), options);
+            var map = new google.maps.Map(document.getElementById('<?php echo $instance; ?>'), options);
 
 
 
@@ -50,8 +68,6 @@ jQuery(document).ready(function() {
 foreach($Data as $Row){
 
     $RowID= uniqid();
-
-
 
 ?>
                 
@@ -65,7 +81,7 @@ foreach($Data as $Row){
                     });
 
                     google.maps.event.addListener(marker<?php echo $RowID; ?>, 'click', function() {
-                        df_loadEntry('<?php echo $Row['_return_'.$Config['_ReturnFields'][0]]; ?>', '<?php echo $EID; ?>', true);
+                        df_loadEntry('<?php echo $Row['_return_'.$Config['_ReturnFields'][0]]; ?>', '<?php echo $EID; ?>', false);
                     });
 
 
@@ -133,8 +149,18 @@ global $wpdb;
     if(!empty($Config['_ViewProcessors'][$ProcessID]['_Zoom'])){
         $Zoom = $Config['_ViewProcessors'][$ProcessID]['_Zoom'];
     }
+    $Width = 'auto';
+    if(!empty($Config['_ViewProcessors'][$ProcessID]['_Width'])){
+        $Width = $Config['_ViewProcessors'][$ProcessID]['_Width'];
+    }
+    $Height = '400';
+    if(!empty($Config['_ViewProcessors'][$ProcessID]['_Height'])){
+        $Height = $Config['_ViewProcessors'][$ProcessID]['_Height'];
+    }
 
-    $Return .= '<p>Zoom Level: <input type="text" name="Data[Content][_ViewProcessors]['.$ProcessID.'][_Zoom]" value="'.$Zoom.'" style="width:20px;" /></p>';
+    $Return .= '<p>Zoom Level: <input type="text" name="Data[Content][_ViewProcessors]['.$ProcessID.'][_Zoom]" value="'.$Zoom.'" style="width:20px;" /> 1-18</p>';
+    $Return .= '<p>Width: <input type="text" name="Data[Content][_ViewProcessors]['.$ProcessID.'][_Width]" value="'.$Width.'" style="width:20px;" /> in px (leave blank for auto)</p>';
+    $Return .= '<p>Height: <input type="text" name="Data[Content][_ViewProcessors]['.$ProcessID.'][_Height]" value="'.$Height.'" style="width:20px;" /> in px (leave blank for auto)</p>';
 
 
 
