@@ -2270,7 +2270,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                             }
                                             if (!empty($Config['_ItemViewPage'])) {
                                                 // Create return link
-                                                echo 'p';
+                                                
                                                 $ReportVars = array();
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
                                                     $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
