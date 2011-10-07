@@ -336,7 +336,7 @@ class timthumb {
 			}
 			if(! $mtime){ return false; }
 
-			$iftime = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
+			$iftime = @strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 			$this->debug(3, "The conditional get's if-modified-since unixtime is $iftime");
 			if($iftime < 1){
 				$this->debug(3, "Got an invalid conditional get modified since time. Returning false.");
@@ -997,7 +997,7 @@ class timthumb {
 		if(strtolower($mimeType) == 'image/jpg'){
 			$mimeType = 'image/jpeg';
 		}
-		$gmdate_expires = gmdate ('D, d M Y H:i:s', strtotime ('now +10 days')) . ' GMT';
+		$gmdate_expires = gmdate ('D, d M Y H:i:s', @strtotime ('now +10 days')) . ' GMT';
 		$gmdate_modified = gmdate ('D, d M Y H:i:s') . ' GMT';
 		// send content headers then display image
 		header ('Content-Type: ' . $mimeType);
