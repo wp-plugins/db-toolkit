@@ -939,7 +939,7 @@ function dt_ajaxCall() {
         "dr_renderField" => "1",
         "dbte_installFieldType" => "1",
         "df_addViewProcess" => "1",
-        "dbte_installProcessor",
+        "dbte_installProcessor" => "1",
     );
 
 
