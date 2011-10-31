@@ -938,7 +938,8 @@ function dt_ajaxCall() {
         "app_fetchApps" => "1",
         "dr_renderField" => "1",
         "dbte_installFieldType" => "1",
-        "df_addViewProcess" => "1"
+        "df_addViewProcess" => "1",
+        "dbte_installProcessor",
     );
 
 
@@ -2362,10 +2363,9 @@ function core_createInterfaces($Installer){
 function core_createTables($Installer){
 
     if(is_admin ()){
-        global $wpdb;
-
+        global $wpdb;        
         $user = wp_get_current_user();
-        if(empty($user->data->wp_capabilities['administrator'])){
+        if(empty($user->caps['administrator'])){
             return false;
         }
         
@@ -2380,6 +2380,7 @@ function core_createTables($Installer){
         if(!empty($data['tables'])){
             foreach($data['tables'] as $table=>$configData){
                 $Query = base64_decode($configData);
+                echo $Query;
                 $wpdb->query($Query);
             }
             return true;
