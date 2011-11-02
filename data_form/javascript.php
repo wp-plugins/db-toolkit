@@ -56,12 +56,12 @@ if (file_exists('fieldtypes')) {
     function df_setToggle(id){
         if(jQuery('#'+id+'_check').is(':checked') == false){
             jQuery('#'+id+'_check').attr('checked', 'checked');
-            jQuery('#'+id).addClass('button-highlighted highlight');
+            jQuery('#'+id).addClass('button-highlighted');
             jQuery('#'+id).removeClass('button');
         }else{
             jQuery('#'+id+'_check').removeAttr('checked');
             jQuery('#'+id).addClass('button');
-            jQuery('#'+id).removeClass('button-highlighted highlight');
+            jQuery('#'+id).removeClass('button-highlighted');
         }
     }
     function bf_loadFieldTypePanel(el){

@@ -2,6 +2,12 @@
 /* CSS Document */
 
 
+div.fbutton .button{
+    border: 1px solid #ccc;
+}
+div.fbutton .button:hover{
+    border: 1px solid #aaa;
+}
 div.fbutton a{
     text-decoration: none;
     color: #464646;

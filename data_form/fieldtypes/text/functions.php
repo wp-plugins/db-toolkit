@@ -202,7 +202,7 @@ function text_wysiwygsetup($Field, $Table, $Config = false){
 
 
 
-        $Return = '<h5>Select Buttons for Toolbar <span class="button-highlighted highlight">Selected</span> <span class="button">Not Selected</span></h5>';
+        $Return = '<h5>Select Buttons for Toolbar <span class="button-highlighted">Selected</span> <span class="button">Not Selected</span></h5>';
         $Return .= '';
         $Return .= '<div style="clear:both;"></div>';
         if(!empty($Config['Content']['_activatedButtons'][$Field])){
@@ -229,7 +229,7 @@ function text_wysiwygsetup($Field, $Table, $Config = false){
             $ID = uniqid('togglebutton_');
 
             if(in_array($Button, $Defaults)){
-                $Selected = 'button-highlighted highlight';
+                $Selected = 'button-highlighted';
                 $Checked = 'checked="checked"';
             }else{
                 $Selected = 'button';

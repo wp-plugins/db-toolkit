@@ -12,6 +12,7 @@
 
 body.admin-bar #appTitle{
     padding-top: 28px;
+    display: none;
 }
 
 #appTitle {
@@ -755,6 +756,9 @@ h3.fieldTypeHandle{
 	position: relative;
 	z-index: 9999;
 	width: 160px;
+}
+#dbt_container #dbt-nav ul {
+	margin:0
 }
 #dbt_container #dbt-nav li {
 	margin-bottom:0

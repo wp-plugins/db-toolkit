@@ -2425,6 +2425,10 @@ function dr_rebuildApps(){
     global $wpdb;
 
     $apps = get_option('dt_int_Apps');
+    if(empty($apps)){
+        return;
+    }
+
     $newStructure = array();
     foreach($apps as $title=>$app){
         if(!is_array($app)){

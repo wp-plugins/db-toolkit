@@ -208,19 +208,19 @@ if (is_admin ()) {
             $Width = $Defaults['_WidthOverride'][$Field];
         }
         $RSel = 'checked="checked"';
-        $RClass = 'button-highlighted highlight';
+        $RClass = 'button-highlighted';
         if (empty($Config['Content']['_Required'][$Field])) {
             $RSel = '';
             $RClass = 'button';
         }
         $SSel = 'checked="checked"';
-        $SClass = 'button-highlighted highlight';
+        $SClass = 'button-highlighted';
         if (empty($Config['Content']['_Sortable'][$Field])) {
             $SSel = '';
             $SClass = 'button';
         }
         $USel = 'checked="checked"';
-        $UClass = 'button-highlighted highlight';
+        $UClass = 'button-highlighted';
         if (empty($Config['Content']['_Unique'][$Field])) {
             $USel = '';
             $UClass = 'button';
@@ -422,16 +422,16 @@ if (is_admin ()) {
 
                 if (!empty($Config['Content']['_Required'][$Field])) {
                     $RSel = 'checked="checked"';
-                    $RClass = 'button-highlighted highlight';
+                    $RClass = 'button-highlighted';
                 }
                 if (empty($Config['Content']['_Sortable'][$Field])) {
                     $SSel = 'checked="checked"';
-                    $SClass = 'button-highlighted highlight';
+                    $SClass = 'button-highlighted';
                 }
 
                 if (!empty($Config['Content']['_Unique'][$Field])) {
                     $USel = 'checked="checked"';
-                    $UClass = 'button-highlighted highlight';
+                    $UClass = 'button-highlighted';
                 }
                 if (!empty($Config['Content']['_FieldTitle'][$Field])) {
                     $Title = $Config['Content']['_FieldTitle'][$Field];
@@ -598,11 +598,11 @@ if (is_admin ()) {
             $Part = explode('_', $Default);
             if($Part[1] == 'show'){
                 $VSel = 'checked="checked"';
-                $VClass = 'button-highlighted highlight';
+                $VClass = 'button-highlighted';
             }
             if($Part[0] == 'index'){
                 $ISel = 'checked="checked"';
-                $IClass = 'button-highlighted highlight';
+                $IClass = 'button-highlighted';
             }
         }
 
@@ -732,25 +732,25 @@ function df_buildSetProcessors($Config) {
 
             $class = 'button';
             if (!empty($Config['_FormProcessors'][$processID]['_onInsert'])) {
-                $class = 'button-highlighted highlight"';
+                $class = 'button-highlighted"';
             }
             $Icons = '<span title="Run Process on Insert" onclick="df_setToggle(\'onInsert_' . $processID . '\');" id="onInsert_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-insert.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
 
             $class = 'button';
             if (!empty($Config['_FormProcessors'][$processID]['_onUpdate'])) {
-                $class = 'button-highlighted highlight"';
+                $class = 'button-highlighted"';
             }
             $Icons .= '&nbsp;<span title="Run Process on Update" onclick="df_setToggle(\'onUpdate_' . $processID . '\');" id="onUpdate_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-pencil.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
 
             $class = 'button';
             if (!empty($Config['_FormProcessors'][$processID]['_onDelete'])) {
-                $class = 'button-highlighted highlight"';
+                $class = 'button-highlighted"';
             }
             $Icons .= '&nbsp;<span title="Run Process on Delete" onclick="df_setToggle(\'onDelete_' . $processID . '\');" id="onDelete_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-delete.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
             if (function_exists($func)) {
                 $class = 'button';
                 if (!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])) {
-                    $class = 'button-highlighted highlight"';
+                    $class = 'button-highlighted"';
                 }
                 $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
                 $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_FormProcessors][' . $processID . '][_configPanelOpen]" ' . $Sel . ' style="display: none;">';
@@ -832,7 +832,7 @@ function df_buildSetViewProcessors($Config) {
             if (function_exists($func)) {
                 $class = 'button';
                 if (!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])) {
-                    $class = 'button-highlighted highlight"';
+                    $class = 'button-highlighted"';
                 }
                 $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
                 $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_ViewProcessors][' . $processID . '][_configPanelOpen]" ' . $Sel . ' style="display: none;">';
@@ -923,11 +923,11 @@ function df_addProcess($processor, $table) {
         $func = 'config_' . $processor;
 
 
-        $Icons = '<span title="Run Process on Insert" onclick="df_setToggle(\'onInsert_' . $processID . '\');" id="onInsert_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-insert.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+        $Icons = '<span title="Run Process on Insert" onclick="df_setToggle(\'onInsert_' . $processID . '\');" id="onInsert_' . $processID . '" class="button-highlighted"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-insert.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
         $Icons .= '&nbsp;<span title="Run Process on Update" onclick="df_setToggle(\'onUpdate_' . $processID . '\');" id="onUpdate_' . $processID . '" class="button"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-pencil.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
         $Icons .= '&nbsp;<span title="Run Process on Delete" onclick="df_setToggle(\'onDelete_' . $processID . '\');" id="onDelete_' . $processID . '" class="button"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-delete.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
         if (function_exists($func)) {
-            $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
+            $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
             $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_FormProcessors][' . $processID . '][_configPanelOpen]" checked="checked" style="display: none;">';
         }
         $Icons .= '<input type="checkbox" value="1" id="onInsert_' . $processID . '_check" name="Data[Content][_FormProcessors][' . $processID . '][_onInsert]" checked="checked" style="display: none;">';
@@ -979,7 +979,7 @@ function df_addViewProcess($processor, $table) {
         $Return .= '<div class="admin_config_toolbar">';
         $Icons = '';
         if (function_exists($func)) {
-            $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
+            $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
             $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_ViewProcessors][' . $processID . '][_configPanelOpen]" checked="checked" style="display: none;">';
         }
 
