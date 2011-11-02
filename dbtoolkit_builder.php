@@ -20,6 +20,7 @@ $Apps = get_option('dt_int_Apps');
         <div class="save_bar_tools">
 
             <div class="fbutton"  onclick="dr_addApplication();"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;">New Application</span></div></div>
+            <div class="fbutton"  onclick="dr_rebuildApps();"><div class="button add-new-h2"><span class="reload" style="padding-left: 20px;">Rebuild Apps index</span></div></div>
 
         </div>
         <div id="main">

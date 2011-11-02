@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit
 Requires at least: 3.1
 Tested up to: 3.2.1
-Stable tag: 0.3.0.123
+Stable tag: 0.3.0.124
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -53,6 +53,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.0.124 =
+* Added a Rebuild Apps Button on app manager. Use this if you have any interfaces not showing or have just done an upgrade.
 
 = 0.3.0.118 =
 * Fixed a bug that prevented the menu links from showing at times.

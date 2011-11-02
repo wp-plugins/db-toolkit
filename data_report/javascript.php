@@ -750,6 +750,27 @@
 
     }
 
+    function dr_rebuildApps(){
+
+
+        jQuery('#content').append('<div id="rebuildStatus" style="padding:10px;">Rebuilding Application Indexes....</div>');
+        jQuery('#dbt-apps').hide();
+
+        ajaxCall('dr_rebuildApps', function(f){
+            jQuery('#rebuildStatus').remove();
+            // alter Meny
+            jQuery.ajax({
+              url: "admin.php?page=dbt_builder",
+              context: document.body,
+              success: function(data){
+                jQuery('#dbt-apps').html(jQuery('#dbt-apps', data).html());
+                jQuery('#dbt-apps').fadeIn(500);
+              }
+            });
+        });
+
+    }
+
     function dr_addApplication(){
 
         id = Math.floor(Math.random()*9999999);
