@@ -931,6 +931,7 @@ function dt_ajaxCall() {
         "dbte_installFieldType" => "1",
         "df_addViewProcess" => "1",
         "dbte_installProcessor" => "1",
+        "dbte_installViewProcessor" => "1",
         "dr_rebuildApps" => "1",
     );
 

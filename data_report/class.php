@@ -752,7 +752,7 @@ function df_buildSetProcessors($Config) {
                 if (!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])) {
                     $class = 'button-highlighted highlight"';
                 }
-                $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+                $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
                 $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_FormProcessors][' . $processID . '][_configPanelOpen]" ' . $Sel . ' style="display: none;">';
             }
 
@@ -834,7 +834,7 @@ function df_buildSetViewProcessors($Config) {
                 if (!empty($Config['_FormProcessors'][$processID]['_configPanelOpen'])) {
                     $class = 'button-highlighted highlight"';
                 }
-                $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+                $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="' . $class . '"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
                 $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_ViewProcessors][' . $processID . '][_configPanelOpen]" ' . $Sel . ' style="display: none;">';
             }
 
@@ -927,7 +927,7 @@ function df_addProcess($processor, $table) {
         $Icons .= '&nbsp;<span title="Run Process on Update" onclick="df_setToggle(\'onUpdate_' . $processID . '\');" id="onUpdate_' . $processID . '" class="button"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-pencil.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
         $Icons .= '&nbsp;<span title="Run Process on Delete" onclick="df_setToggle(\'onDelete_' . $processID . '\');" id="onDelete_' . $processID . '" class="button"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/database-delete.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
         if (function_exists($func)) {
-            $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+            $Icons .= '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
             $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_FormProcessors][' . $processID . '][_configPanelOpen]" checked="checked" style="display: none;">';
         }
         $Icons .= '<input type="checkbox" value="1" id="onInsert_' . $processID . '_check" name="Data[Content][_FormProcessors][' . $processID . '][_onInsert]" checked="checked" style="display: none;">';
@@ -979,7 +979,7 @@ function df_addViewProcess($processor, $table) {
         $Return .= '<div class="admin_config_toolbar">';
         $Icons = '';
         if (function_exists($func)) {
-            $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px;"></span></span>';
+            $Icons = '&nbsp;<span title="Show Configuration Panel" onclick="toggle(\'config_' . $processID . '\'); df_setToggle(\'configirator_' . $processID . '\');" id="configirator_' . $processID . '" class="button-highlighted highlight"><span style="background: url(\'' . WP_PLUGIN_URL . '/db-toolkit/data_report/gear.png\') no-repeat scroll left center transparent; padding: 5px 8px 5px 20px;">Settings</span></span>';
             $Icons .= '<input type="checkbox" value="1" id="configirator_' . $processID . '_check" name="Data[Content][_ViewProcessors][' . $processID . '][_configPanelOpen]" checked="checked" style="display: none;">';
         }
 
@@ -1910,6 +1910,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
                 $func = 'pre_process_'.$viewProcess['_process'];
                 $Result = $func($Result, $viewProcess, $Config, $EID);
+                if(empty($Result)){
+                    return;
+                }
             }
             //if(file_exists($viewProcess['_process']))
         }
