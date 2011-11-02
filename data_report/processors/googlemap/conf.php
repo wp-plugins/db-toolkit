@@ -6,5 +6,4 @@
     $ViewTitle = 'Google Map';
     $ViewDesc = 'Plots Data to a Google Map.';
 
-
 ?>

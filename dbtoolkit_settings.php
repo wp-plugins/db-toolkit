@@ -46,9 +46,44 @@ $Element['Content'] = $defaults;
                 // Dynamic Listing
                 $Tabs = array(                    
                     'General Settings'=>'viewsettings.php',
-                    'Chart Setup'=>'chartlayout.php'
+                    //'Chart Setup'=>'chartlayout.php'
                 );
 
+                //Load Configs for extensions
+                $ext = array();
+
+                // View Processors
+                $viewProcessors = list_files(DB_TOOLKIT.'data_report/processors');
+                foreach($viewProcessors as $processor){
+                    if(basename($processor) == 'conf.php'){
+                        include($processor);
+                        if(!empty($ConfigFile)){
+                            
+                            if(file_exists('processors/'.basename(dirname($processor)).'/'.$ConfigFile)){
+                                $ext[$ViewTitle] = 'processors/'.basename(dirname($processor)).'/'.$ConfigFile;
+                            }
+                        }
+                        unset($ConfigFile);
+                    }
+                }
+                // Form Processors
+                $formProcessors = list_files(DB_TOOLKIT.'data_report/processors');
+                foreach($formProcessors as $processor){
+                    if(basename($processor) == 'conf.php'){
+                        include($processor);
+                        if(!empty($ConfigFile)){
+
+                            if(file_exists('processors/'.basename(dirname($processor)).'/'.$ConfigFile)){
+                                $ext[$ViewTitle] = 'processors/'.basename(dirname($processor)).'/'.$ConfigFile;
+                            }
+                        }
+                        unset($ConfigFile);
+                    }
+                }
+
+                
+                ksort($ext);
+                $Tabs = array_merge($Tabs, $ext);
                 $tabIndex = 1;
                 foreach($Tabs as $Title=>$File){
                     $Class = '';
