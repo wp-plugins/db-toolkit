@@ -9,6 +9,24 @@ $jsqueue = "";
 
 $Data = $wpdb->get_results($Query, ARRAY_A);
 
+// Run View Processes
+ob_start();
+if(!empty($Config['_ViewProcessors'])){
+
+    foreach($Config['_ViewProcessors'] as $viewProcess){
+
+        if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
+            include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
+            $func = 'pre_process_'.$viewProcess['_process'];
+            $Result = $func($Data, $viewProcess, $Config, $EID);
+        }
+        //if(file_exists($viewProcess['_process']))
+    }
+
+}
+$ViewProcess = ob_get_clean();
+
+
 ob_start();
 echo $Config['_layoutTemplate']['_Header'];
 
@@ -411,9 +429,13 @@ $preHeader = ';';
 echo $Config['_layoutTemplate']['_Footer'];
 $template = ob_get_clean();
 
-
-
-
+// Add View Processor
+if(empty($ProcessorRun)){
+    $template = str_replace('{{_ViewProcessors}}', $ViewProcess, $template);
+    $ProcessorRun = true;
+}else{
+    $template = str_replace('{{_ViewProcessors}}', '', $template);
+}
 $template = str_replace('<?php', '<?php ', $template);
 $template = str_replace('?>', ' ?>', $template);
 ob_start();

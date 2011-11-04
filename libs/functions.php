@@ -854,6 +854,36 @@ function dt_footers() {
 // Ajax System
 function dt_ajaxCall() {    
 
+    if(!function_exists('list_files')){
+        function list_files( $folder = '', $levels = 100 ) {
+                if ( empty($folder) )
+                        return false;
+
+                if ( ! $levels )
+                        return false;
+
+                $files = array();
+                if ( $dir = @opendir( $folder ) ) {
+                        while (($file = readdir( $dir ) ) !== false ) {
+                                if ( in_array($file, array('.', '..') ) )
+                                        continue;
+                                if ( is_dir( $folder . '/' . $file ) ) {
+                                        $files2 = list_files( $folder . '/' . $file, $levels - 1);
+                                        if ( $files2 )
+                                                $files = array_merge($files, $files2 );
+                                        else
+                                                $files[] = $folder . '/' . $file . '/';
+                                } else {
+                                        $files[] = $folder . '/' . $file;
+                                }
+                        }
+                }
+                @closedir( $dir );
+                return $files;
+        }
+    }
+
+
     global $ajaxAllowedFunctions;
     do_action('dt_ajaxCall');
     // Allowed php funcitons
@@ -866,10 +896,11 @@ function dt_ajaxCall() {
             include_once($file);
         }
     }
+    
     $viewProcessors = list_files(WP_PLUGIN_DIR.'/db-toolkit/data_report/processors');
     foreach($viewProcessors as $file){
         if(basename($file) == 'functions.php'){
-            include_once($file);
+           include_once($file);
         }
     }
 

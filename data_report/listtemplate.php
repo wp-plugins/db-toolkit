@@ -45,6 +45,8 @@
                         <div><strong>I will reformat this into a proper help dialog when I finialise the codes.</strong></div>
                         <strong>Dynamic Template Codes</strong> <span class="description">Can be used in all template boxes.</span>
                         <pre>
+{{_ViewProcessors}}     : View Processor
+- can be multiple instanced. so careful when placing in the loop.
 {{_ViewEdit}}           : View and Edit Icons
 {{_ViewLink}}           : View Item Link
 {{_ViewTarget}}         : javascript target interface call
