@@ -852,90 +852,28 @@ function dt_footers() {
 }
 
 // Ajax System
-function dt_ajaxCall() {
+function dt_ajaxCall() {    
 
+    global $ajaxAllowedFunctions;
     do_action('dt_ajaxCall');
     // Allowed php funcitons
     // This protect the system from getting calls to malicios php functions
-    $allowed = array(
-        "df_inlineedit" => "1",
-        "df_processAjaxForm" => "1",
-        "dr_loadInsertInterfaceBox" => "1",
-        "core_createInterfaces" => "1",
-        "core_createTables" => "1",
-        "core_populateApp" => "1",
-        "core_loadSupportFeed" => "1",
-        "dt_removeInterface" => "1",
-        "dt_listApps" => "1",
-        "dt_listInterfaces" => "1",
-        "linked_makeFilterdLinkedFilter" => "1",
-        "linked_autocomplete" => "1",
-        "linked_makeFilterdLinkedField" => "1",
-        "app_dockApp" => "1",
-        "app_SaveDesc" => "1",
-        "dt_saveInterface" => "1",
-        "dbt_sendError" => "1",
-        "dr_addListRowTemplate" => "1",
-        "dr_addListFieldTemplate" => "1",
-        "dr_exportChartImage" => "1",
-        "df_addProcess" => "1",
-        "dais_addJSLibrary" => "1",
-        "dais_addCSSLibrary" => "1",
-        "dt_saveFilterLock" => "1",
-        "dt_iconSelector" => "1",
-        "df_tableReportSetup" => "1",
-        "df_ListFields" => "1",
-        "dr_loadPassbackFields" => "1",
-        "dr_BuildReportGrid" => "1",
-        "df_searchReferenceForm" => "1",
-        "df_loadReturnFields" => "1",
-        "df_loadSortFields" => "1",
-        "df_listTables" => "1",
-        "df_vlauedFilterSetup" => "1",
-        "di_showItem" => "1",
-        "dr_callInterface" => "1",
-        "dr_BuildUpDateForm" => "1",
-        "dr_loadPageElements" => "1",
-        "dr_addTotalsField" => "1",
-        "dr_db2csv" => "1",
-        "df_deleteEntries" => "1",
-        "dr_dataSourceMapping" => "1",
-        "dr_loadFieldMapping" => "1",
-        "dt_buildNewTable" => "1",
-        "dt_buildNewField" => "1",
-        "app_createApplication" => "1",
-        "app_marketLogin" => "1",
-        "app_setLanding" => "1",
-        "df_buildFieldTypesMenu" => "1",
-        "df_tableFormSetup" => "1",
-        "df_alignmentSetup" => "1",
-        "df_controlFunc" => "1",
-        "df_enumOptions" => "1",
-        "df_sessionValueSetup" => "1",
-        "df_loadlinkedfields" => "1",
-        "df_loadlinkedfilteredfields" => "1",
-        "df_buildQuickCaptureForm" => "1",
-        "dr_importer" => "1",
-        "dr_buildImportManager" => "1",
-        "dr_cancelImport" => "1",
-        "dr_prepairImport" => "1",
-        "dr_processImport" => "1",
-        "df_loadOutScripts" => "1",
-        "df_anewFunctionToBe" => "1",
-        "text_runCode" => "1",
-        "onoff_setValue" => "1",
-        "linked_loadfields" => "1",
-        "linked_loadfilterfields" => "1",
-        "linked_loadAdditionalValue" => "1",
-        "app_fetchApps" => "1",
-        "dr_renderField" => "1",
-        "dbte_installFieldType" => "1",
-        "df_addViewProcess" => "1",
-        "dbte_installProcessor" => "1",
-        "dbte_installViewProcessor" => "1",
-        "dr_rebuildApps" => "1",
-    );
 
+    // include processors libraries
+    $formProcessors = list_files(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors');
+    foreach($formProcessors as $file){
+        if(basename($file) == 'functions.php'){
+            include_once($file);
+        }
+    }
+    $viewProcessors = list_files(WP_PLUGIN_DIR.'/db-toolkit/data_report/processors');
+    foreach($viewProcessors as $file){
+        if(basename($file) == 'functions.php'){
+            include_once($file);
+        }
+    }
+
+    
 
     $ref = parse_url(basename($_SERVER['HTTP_REFERER']));
 
@@ -948,7 +886,7 @@ function dt_ajaxCall() {
         } else {
             $func_args = array();
         }
-        if(empty($allowed[$func])){
+        if(empty($ajaxAllowedFunctions[$func])){
             echo 'Access to \''.$func.'\' is restricted.';
             exit();
         }
