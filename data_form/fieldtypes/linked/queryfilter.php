@@ -152,7 +152,12 @@
 
 
 		// Setup Where Clause in Query
-
+                //clear out empty arrays
+                for($o=0; $o<= count($_SESSION['reportFilters'][$EID][$Field])-1; $o++){
+                    if(empty($_SESSION['reportFilters'][$EID][$Field][$o])){
+                        unset($_SESSION['reportFilters'][$EID][$Field][$o]);
+                    }
+                }
                 if(!empty($_SESSION['reportFilters'][$EID][$Field])){
 
 			if($WhereTag == ''){
