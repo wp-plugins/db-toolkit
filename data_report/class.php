@@ -1905,13 +1905,15 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if(!empty($Config['_ViewProcessors'])){
 
         foreach($Config['_ViewProcessors'] as $viewProcess){
-            
-            if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
-                include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
-                $func = 'pre_process_'.$viewProcess['_process'];
-                $Result = $func($Result, $viewProcess, $Config, $EID);
-                if(empty($Result)){
-                    return;
+            if(empty($_GET['format_'.$EID])){
+                //ignore on export
+                if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
+                    include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
+                    $func = 'pre_process_'.$viewProcess['_process'];
+                    $Result = $func($Result, $viewProcess, $Config, $EID);
+                    if(empty($Result)){
+                        return;
+                    }
                 }
             }
             //if(file_exists($viewProcess['_process']))
@@ -2504,7 +2506,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 }
                 $ReportReturn .= '<span class="displaying-num">' . $nothingFound . '</span>';
             } else {
-                $ReportReturn .= '<span class="displaying-num">'.( $Start + 1) . ' - ' . $toPos . ' of ' . $Count['Total'] . ' Items</span>';
+                $footerPrefix = ( $Start + 1) . ' - ' . $toPos . ' of ';
+                if(empty($Config['_Items_Per_Page'])){
+                    $footerPrefix = '';
+                }
+                $ReportReturn .= '<span class="displaying-num">'.$footerPrefix.$Count['Total'] . ' Items</span>';
             }
             //$ReportReturn .= '<div class="reportFooter_totals">';
             if ($TotalPages > 1) {

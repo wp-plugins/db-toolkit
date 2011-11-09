@@ -204,6 +204,10 @@ function dt_buildConfigPanel($Title, $Pages, $Defaults){
 
 }
 
+function map($x, $inMin, $inMax, $outMin, $OutMax){
+  return ($x - $inMin) * ($OutMax - $outMin) / ($inMax - $inMin) + $outMin;
+}
+
 function GetDocument($page) {
     return get_permalink($page);
 }

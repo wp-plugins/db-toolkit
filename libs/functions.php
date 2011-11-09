@@ -20,7 +20,9 @@ function interface_VersionCheck() {
 function dt_start() {
     // I like sessions
     if(!session_id()) {
-        session_start();
+        
+            @session_start();
+        
     }
     // Include Libraries
 

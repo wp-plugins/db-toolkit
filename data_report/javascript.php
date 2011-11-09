@@ -108,6 +108,7 @@
         jQuery('.root_item ul').hide();        
         ajaxCall('df_addProcess', process, table, function(p){
             jQuery('#formProcessList').append(p);
+            df_loadOutScripts();
         });
     }
     function df_addViewProcess(process){
@@ -115,6 +116,7 @@
         jQuery('.root_item ul').hide();
         ajaxCall('df_addViewProcess', process, table, function(p){
             jQuery('#viewProcessList').append(p);
+            df_loadOutScripts();
         });
     }
 
