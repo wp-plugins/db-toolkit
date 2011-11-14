@@ -473,8 +473,7 @@ return $Return;
 
 // Show Filters
 
-function linked_showFilter($Field, $Type, $Default, $Config, $EID){
-	//dump($Config);
+function linked_showFilter($Field, $Type, $Default, $Config, $EID){	
 	$FieldTitle = '';
 	if(!empty($Config['_FieldTitle'][$Field])){
 		$FieldTitle = $Config['_FieldTitle'][$Field];	
@@ -489,7 +488,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 			}else{
 				$outString = $outList[0];
 			}
-			$outString = $outString.' AS out_value';
+			$outString = '`'.$outString.'` AS out_value';
 		$Multiple = '';
 		//dump($Config['_Linkedfields']);
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
@@ -504,8 +503,8 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 
 
 
-		$Res = mysql_query("SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$queryWhere." ORDER BY `out_value` ASC;");
-                if($Res == false){
+		$Res = mysql_query("SELECT `".$Config['_Linkedfields'][$Field]['ID']."`, ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$queryWhere." ORDER BY `out_value` ASC;");
+                if($Res == false){                    
                     return;
                 }
                 $Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
