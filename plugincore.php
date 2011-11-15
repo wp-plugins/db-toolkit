@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: DB-Toolkit
-Plugin URI: http://dbtoolkit.digilab.co.za
-Description: Plugin for building database table managers and data viewer interfaces.
+Plugin URI: http://dbtoolkit.co.za
+Description: Plugin for building databases, managers and viewers for custom Content Management.
 Author: David Cramer
-Version: 0.3.0.133
-Author URI: http://dbtoolkit.digilab.co.za
+Version: 0.3.0.134
+Author URI: http://dbtoolkit.co.za
 */
 
 //initilize plugin

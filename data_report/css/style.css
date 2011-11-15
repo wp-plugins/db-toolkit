@@ -61,6 +61,9 @@ div.fbutton .export {
 div.fbutton .reload{
 	background:transparent url(images/load.png) no-repeat scroll left center;
 }
+div.fbutton .install{
+	background:transparent url(images/install.png) no-repeat scroll left center;
+}
 .btnseparator{
     height: 1px;
     display: block;

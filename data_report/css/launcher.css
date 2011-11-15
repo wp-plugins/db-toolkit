@@ -2,9 +2,9 @@
     display: none;
 }
 
-body.admin-bar #appTitle{
+/*body.admin-bar #appTitle{
     padding-top: 28px;
-}
+}*/
 
 #appTitle {
     border-bottom: 1px solid #E7E7E7;

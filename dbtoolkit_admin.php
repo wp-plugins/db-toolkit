@@ -440,6 +440,7 @@ if(!empty($appConfig['imageURL'])){
             if(strtolower($activeApp) != 'base'){
             ?>
                 <div class="fbutton"><a href="?page=dbt_builder&exportApp=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export</span></div></a></div>
+                <div class="fbutton"><a href="?page=dbt_builder&exportApp=true&plugin=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export as Plugin</span></div></a></div>
             <?php
             }
             ?>
@@ -645,20 +646,25 @@ if(!empty($appConfig['imageURL'])){
 
 
 
-                                                    <?php
-
-
-
+                                                    <?php                                                        
 
                                                     }
                                                     ?>
                                             </form>
                                         
                                 </div>                                
-                                <h3><a href="#">Description</a></h3>
+                                <h3><a href="#">Application Info</a></h3>
                                 <div>
                                         <p>
-                                            <input type="text" name="Desc" id="appDesc" style="width:528px;" value="<?php echo $appConfig['description']; ?>" />
+                                                
+                                        <div style="width:80px; float:left; clear: Both;">App Name:</div><input type="text" class="appConfigPanel" name="pluginName" id="appDesc" style="width:300px;" value="<?php echo $appConfig['name']; ?>" /><br />
+                                        <div style="width:80px; float:left; clear: Both;">App URI:</div> <input type="text" class="appConfigPanel" name="pluginURI" id="appDesc" style="width:300px;" value="<?php echo $appConfig['pluginURI']; ?>" /><br />
+                                        <div style="width:80px; float:left; clear: Both;">Description:</div> <textarea class="appConfigPanel" name="pluginDesc" id="appDesc" style="width:300px; height:150px;"><?php echo $appConfig['description']; ?></textarea><br />
+                                        <div style="width:80px; float:left; clear: Both;">Version:</div> <input type="text" class="appConfigPanel" name="pluginVersion" id="appDesc" style="width:300px;" value="<?php echo $appConfig['pluginVersion']; ?>" /><br />
+                                        <div style="width:80px; float:left; clear: Both;">Author:</div> <input type="text" class="appConfigPanel" name="pluginAuthor" id="appDesc" style="width:300px;" value="<?php echo $appConfig['pluginAuthor']; ?>" /><br />
+                                        <div style="width:80px; float:left; clear: Both;">Author URI:</div> <input type="text" class="appConfigPanel" name="pluginAuthorURI" id="appDesc" style="width:300px;" value="<?php echo $appConfig['pluginAuthorURI']; ?>" /><br />
+                                            
+
                                             <input type="button" value="Save" onclick="app_saveDesc()"/>
                                         </p>
 

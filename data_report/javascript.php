@@ -24,11 +24,17 @@
     }
 
     function app_saveDesc(){
-        text = jQuery('#appDesc').val();
-        jQuery('#appDesc').attr('disabled', true);
+
+        
+        
+        text = jQuery('.appConfigPanel').serialize();
+        
+
+
+        jQuery('.appConfigPanel').attr('disabled', true);
         ajaxCall('app_SaveDesc', text, function(a){
             alert(a);
-            jQuery('#appDesc').removeAttr('disabled');
+            jQuery('.appConfigPanel').removeAttr('disabled');
         })
         
     }
@@ -105,17 +111,21 @@
 
     function df_addPRocess(process){
         table = jQuery('#_main_table').val();
+        jQuery('#.root_item a.parent').html('<img src="../wp-content/plugins/db-toolkit/images/indicator.gif" align="absmiddle" /> Loading Processor...')
         jQuery('.root_item ul').hide();        
         ajaxCall('df_addProcess', process, table, function(p){
             jQuery('#formProcessList').append(p);
+            jQuery('#.root_item a.parent').html('<strong>Processors</strong>');
             df_loadOutScripts();
         });
     }
     function df_addViewProcess(process){
         table = jQuery('#_main_table').val();
+        jQuery('#.root_item a.parent').html('<img src="../wp-content/plugins/db-toolkit/images/indicator.gif" align="absmiddle" /> Loading Processor...')
         jQuery('.root_item ul').hide();
         ajaxCall('df_addViewProcess', process, table, function(p){
             jQuery('#viewProcessList').append(p);
+            jQuery('#.root_item a.parent').html('<strong>Processors</strong>');
             df_loadOutScripts();
         });
     }

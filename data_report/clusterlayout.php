@@ -255,7 +255,7 @@ function formAddColumn(row){
 	//for(i=1; i<= cols; i++){
 	//}
 	//jQuery('#'+row+' .column').each(function(){
-		jQuery('#'+row+' .column').animate({'width' : width+'%'},1, function(){
+		jQuery('#'+row+' .column').width(width+'%').animate({},1, function(){
 		//alert('ping');
 			if(this.id == row+'_col'+(cols-1)){
 				jQuery('#'+row).append('<div style="padding:0; margin:0; width:'+width+'%; float:left;" id="'+row+'_col'+cols+'" class="column"><input id="row'+row+'_'+cols+'_control" class="'+row+'_control" name="Data[Content][_grid]['+row+'][col'+cols+']" type="hidden" value="'+width+'%" /><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div>');
@@ -290,7 +290,7 @@ function formSubtractColumn(row){
 	jQuery('#'+row+'_col'+(cols+1)+' .formportlet').appendTo('#'+row+'_col'+cols+' .formColumn');
 	//jQuery('#'+row+'_col'+(cols+1)).fadeOut(100, function(){
 		jQuery('#'+row+'_col'+(cols+1)).remove();
-		jQuery('#'+row+' .column').animate({'width' : width+'%'}, 1, function(){
+		jQuery('#'+row+' .column').width(width+'%').animate({}, 1, function(){
                         if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).attr('id'));
                             jQuery('.'+row+'_control').val(width+'%');

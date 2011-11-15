@@ -325,7 +325,7 @@ function viewAddColumn(row){
 	//for(i=1; i<= cols; i++){
 	//}
 	//jQuery('#'+row+' .columnView').each(function(){
-		jQuery('#'+row+' .columnView').animate({'width' : width+'%'},1, function(){
+		jQuery('#'+row+' .columnView').width(width+'%').animate({},1, function(){
 		//alert('ping');
 			if(this.id == row+'_viewCol'+(cols-1)){
 				jQuery('#'+row).append('<div style="padding:0; margin:0; width:'+width+'%; float:left;" id="'+row+'_viewCol'+cols+'" class="columnView"><input id="'+row+'_viewCol'+cols+'_controlView" class="'+row+'_controlView" name="Data[Content][_gridView]['+row+'][viewCol'+cols+']" type="hidden" value="'+width+'%" /><div class="ui-state-error viewGridview viewColumn" style="padding:10px; margin:10px;"></div>');
@@ -360,7 +360,7 @@ function viewSubtractColumn(row){
 	jQuery('#'+row+'_viewCol'+(cols+1)+' .viewportlet').appendTo('#'+row+'_viewCol'+cols+' .viewColumn');
 	//jQuery('#'+row+'_col'+(cols+1)).fadeOut(100, function(){
 		jQuery('#'+row+'_viewCol'+(cols+1)).remove();
-		jQuery('#'+row+' .columnView').animate({'width' : width+'%'}, 1, function(){
+		jQuery('#'+row+' .columnView').width(width+'%').animate({}, 1, function(){
                         if(jQuery(this).parent().attr('id') != 'undefined'){
                             jQuery(this).find(".positioning").val(jQuery(this).attr('id'));
                             jQuery('.'+row+'_controlView').val(width+'%');

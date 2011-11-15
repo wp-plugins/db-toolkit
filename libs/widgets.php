@@ -42,8 +42,9 @@ class interface_insert extends WP_Widget {
 		<p><label for="<?php echo $this->get_field_id('Application'); ?>">Application</label>
                     <?php
 
+                    
                         
-                        if(empty($apps) || count($apps) == 1){
+                        if(empty($apps)){
                             echo '<div>There are no apps to select from.</div>';
                         }else{
                             echo '<select class="widefat" id="'.$this->get_field_id('Application').'" name="'.$this->get_field_name('Application').'" onchange="jQuery(\'#interfaceSelector\').remove();">';

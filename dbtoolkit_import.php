@@ -22,7 +22,7 @@ if(!empty($_FILES['itfInstaller']['size'])){
     <div id="poststuff">
         <?php
         if(!empty($_SESSION['appInstall'])){
-
+       
             $data = file_get_contents($_SESSION['appInstall']);
             if($predata = @gzinflate($data)){
                 $data = $predata;
@@ -34,7 +34,7 @@ if(!empty($_FILES['itfInstaller']['size'])){
             //die;
 
             $exisits = get_option('_'.sanitize_title($data['appInfo']['name']).'_app');
-            if(!empty($exisits)){                
+            if(!empty($ewxisits)){
                 echo '<p><strong>ERROR: App is already installed.</strong></p>';
                 echo '<p id="returnLink" style="display:block;"><a href="'.$_SERVER['REQUEST_URI'].'">Back to installer</p>';
                 unset($_SESSION['appInstall']);

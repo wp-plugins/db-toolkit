@@ -18,7 +18,11 @@ if(!empty($_GET['exportApp'])){
 
     $app = get_option('_'.$activeApp.'_app');
     if($app['state'] == 'open'){
-        exportApp($app);
+        $publish = false;
+        if(!empty($_GET['plugin'])){
+            $publish = true;
+        }
+        exportApp($app, $publish);
     }
     return;
 }

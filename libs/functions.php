@@ -2161,6 +2161,7 @@ function exportApp($app, $publish=false){
     //die;
     global $wpdb;
     
+    
     $systemtables = array($wpdb->prefix.'commentmeta', $wpdb->prefix.'comments',$wpdb->prefix.'dbt_wplogin',$wpdb->prefix.'links',$wpdb->prefix.'options',$wpdb->prefix.'postmeta',$wpdb->prefix.'posts',$wpdb->prefix.'term_relationships',$wpdb->prefix.'term_taxonomy',$wpdb->prefix.'terms',$wpdb->prefix.'usermeta',$wpdb->prefix.'users');
     
     $Len = strlen($app['name']);
@@ -2255,30 +2256,63 @@ function exportApp($app, $publish=false){
         $fileName = sanitize_file_name($app['name']);
         //vardump($export);
         //die;
-        $output = base64_encode(serialize($export));
-        $output = gzdeflate(base64_encode(serialize($export)),9);
-
-        $appID = uniqid('dbt');
-        //$template = file_get_contents(__dir__.'/plugtemplate.php');
-        //$template = str_replace('{{appID}}', $appID, $template);
-
-        //$output = str_replace('{{exportData}}', $output, $template);
-
-
+        
         if(empty($publish)){
+            $output = gzdeflate(base64_encode(serialize($export)),9);
             header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
             header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
             header ("Pragma: no-cache");                          // HTTP/1.0
-            header('Content-type: application/php');
+            header('Content-type: application/itf');
             header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
             //header('Content-Disposition: attachment; filename="'.$fileName.'.php"');
             print($output);
             exit;
         }else{
+            $appID = uniqid('dbt');
+            $output = base64_encode(serialize($export));
+            $template = file_get_contents(__dir__.'/plugtemplate.php');
+            $template = str_replace('{{appID}}', $appID, $template);
+            $template = str_replace('{{appName}}', $export['appInfo']['name'], $template);
+            /*
+            Plugin Name: {{appName}}
+            Plugin URI: {{appURI}}
+            Description: {{appDescription}}
+            Author: {{appAuthor}}
+            Version: {{appVersion}}
+            Author URI: {{authorURI}}
+            */
+            $template = str_replace('{{appURI}}', $export['appInfo']['pluginURI'], $template);
+            $template = str_replace('{{appAuthor}}', $export['appInfo']['pluginAuthor'], $template);
+            $template = str_replace('{{appVersion}}', $export['appInfo']['pluginVersion'], $template);
+            $template = str_replace('{{authorURI}}', $export['appInfo']['pluginAuthorURI'], $template);
+
+
+
+            if(!empty($export['appInfo']['description'])){
+                $template = str_replace('{{appDescription}}', $export['appInfo']['description'], $template);
+            }else{
+                $template = str_replace('{{appDescription}}', 'No Description Given', $template);
+            }
+
+            $output = str_replace('{{exportData}}', $output, $template);
+
+            header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
+            header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+            header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
+            header ("Pragma: no-cache");                          // HTTP/1.0
+            header('Content-type: application/php');
+            header('Content-Disposition: attachment; filename="'.$fileName.'.php"');
             
-            $src = wp_upload_bits($fileName.'.gz', null, $output);
-            return $src;
+            
+            //vardump($current_user);
+            //vardump($export);
+            //vardump($output);
+
+            print($output);
+            exit;
+            //$src = wp_upload_bits($fileName.'.gz', null, $output);
+            //return $src;
             //vardump($upload);
             //die;
 
@@ -2294,13 +2328,14 @@ function core_createInterfaces($Installer){
     }
     $data = unserialize(base64_decode($data));
 
-    //vardump($data);
-
     if(empty($apps[sanitize_title($data['application'])])){
         $apps[sanitize_title($data['application'])]['state'] = 'open';
         $apps[sanitize_title($data['application'])]['name'] = $data['application'];
         update_option('dt_int_Apps', $apps);
     }
+
+    
+
     if(!empty($data['interfaces'])){
         foreach($data['interfaces'] as $interface=>$configData){
             //vardump($interface);
@@ -2308,7 +2343,7 @@ function core_createInterfaces($Installer){
             $Config = $configData;
             array_walk_recursive($Config, 'core_applySystemTables');
             update_option($interface, $Config);            
-            app_update($Config['_Application'], $interface, $Config['_menuAccess']);
+            app_update($data['application'], $interface, $Config['_menuAccess']);
         }
 
         // Update App Config

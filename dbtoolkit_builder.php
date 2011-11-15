@@ -1,6 +1,6 @@
 <?php
 $Apps = get_option('dt_int_Apps');
-//vardump($Apps);
+
 ?>
 <h2 id="appTitle">DB-Toolkit</h2>
 <div id="dbt_container" class="wrap poststuff">
@@ -21,6 +21,7 @@ $Apps = get_option('dt_int_Apps');
 
             <div class="fbutton"  onclick="dr_addApplication();"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;">New Application</span></div></div>
             <div class="fbutton"  onclick="dr_rebuildApps();"><div class="button add-new-h2"><span class="reload" style="padding-left: 20px;">Rebuild Apps index</span></div></div>
+            <div class="fbutton"><div class="button add-new-h2"><a href="admin.php?page=dbtools_importer"><span class="install" style="padding-left: 20px;">Install Application</span></a></div></div>
 
         </div>
         <div id="main">
@@ -41,7 +42,7 @@ $Apps = get_option('dt_int_Apps');
                     }
                     if($config['state'] == 'open'){
 
-                        $appConfig = get_option('_'.$app.'_app');
+                        $appConfig = get_option('_'.$app.'_app');                        
                         
                 ?>
 

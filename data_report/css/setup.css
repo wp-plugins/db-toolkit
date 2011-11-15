@@ -10,8 +10,7 @@
     display: none;
 }
 
-body.admin-bar #appTitle{
-    padding-top: 28px;
+body.admin-bar #appTitle{    
     display: none;
 }
 
@@ -151,7 +150,9 @@ body.admin-bar #appTitle{
 }
 
 
-
+.admin_config_toolbar .button-highlighted{
+    background-color: #b0d46b;
+}
 
 
 
@@ -708,7 +709,7 @@ h3.fieldTypeHandle{
 	z-index: 0
 }
 #dbt_container #header {
-	height: 81px;
+	height: 87px;
 	background:#dfdfdf url("images/header.png") repeat-x left top;
 	border: 1px solid #D8D8D8;
 	border-top-left-radius: 6px;

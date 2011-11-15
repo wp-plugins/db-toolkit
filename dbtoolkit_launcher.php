@@ -10,11 +10,6 @@ if(empty($app) && !empty($_GET['renderinterface'])){
     $app= get_option('_'.sanitize_title($Interface['_Application']).'_app');
 }
 
-//$Len = strlen($app['name']);
-//$appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
-
-//$itnf = $wpdb->get_results( "SELECT option_name FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'", ARRAY_A);
-
 foreach($app['interfaces'] as $interface=>$access){
     $cfg = get_option($interface);
     

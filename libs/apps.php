@@ -31,21 +31,33 @@ function app_dockApp($App){
 }
 
 function app_SaveDesc($desc){
+
+    parse_str($desc, $data);
+
     $active = get_option('_dbt_activeApp');
 
     $Apps = get_option('dt_int_Apps');
 
-    $Apps[sanitize_title($active)]['description'] = stripslashes_deep($desc);
 
+    $Apps[sanitize_title($active)]['description'] = stripslashes_deep($data['pluginDesc']);
+    $Apps[sanitize_title($active)]['name'] = stripslashes_deep($data['pluginName']);
     $appConfig = get_option('_'.sanitize_title($active).'_app');
-    $appConfig['description'] = stripslashes_deep($desc);
+
+    $appConfig['name'] = stripslashes_deep($data['pluginName']);
+    $appConfig['description'] = stripslashes_deep($data['pluginDesc']);
+    $appConfig['pluginURI'] = stripslashes_deep($data['pluginURI']);
+    $appConfig['pluginVersion'] = stripslashes_deep($data['pluginVersion']);
+    $appConfig['pluginAuthor'] = stripslashes_deep($data['pluginAuthor']);
+    $appConfig['pluginAuthorURI'] = stripslashes_deep($data['pluginAuthorURI']);
+
+
     update_option('_'.sanitize_title($active).'_app', $appConfig);
     update_option('dt_int_Apps', $Apps);
-    return 'Description Saved';
+    return 'Details Saved';
 }
 
 function app_update($name, $interface = false, $access = false){
-    
+
     if(empty($name) || strtolower($name) == 'base')
         return;
     $Apps = get_option('dt_int_Apps');
