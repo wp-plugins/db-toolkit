@@ -585,7 +585,7 @@ function dt_menus() {
         $Import = add_submenu_page("dbt_builder", 'Import Application', 'Install Application', 'activate_plugins', "dbtools_importer", 'dbtoolkit_import');
         $setup = add_submenu_page("dbt_builder", 'General Settings', 'General Settings', 'activate_plugins', "dbtools_setup", 'dbtoolkit_setup');
 
-        $Dashboard = add_submenu_page("dbt_builder", 'DB-Toolkit News', 'DBT News', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
+        $Dashboard = add_submenu_page("dbt_builder", 'DB-Toolkit News', 'Donate', 'activate_plugins', "Database_Toolkit_Welcome", 'dbtoolkit_dashboard');
 
         //$setup = add_submenu_page("Database_Toolkit", 'Bug Report', 'Bug Report', 'activate_plugins', "dbtools_bugreport", 'dbtoolkit_bugreport');
         //$setup = add_submenu_page("Database_Toolkit", 'Documentation A', 'Documention B', 'activate_plugins', "dbtools_manual", 'dbtoolkit_manual');

@@ -5,30 +5,6 @@
     <div style="clear:both;"></div>
 <div class="postbox-container" style="width:32.6%">
     <div class="metabox-holder">
-
-        <div id="dashboard_right_now" class="postbox">
-            <h3><span>Updates in this version 0.3.0</span></h3>
-            <div style="margin: 10px;">
-
-                <p>This version has completely changed the way apps work. An app can be described as a series of interfaces working together to form an application.</p>
-                <p>There have been a considerable amount of changes, bug fixes and system structures.</p>
-
-            </div>
-        </div>
-
-
-    </div>
-    <div class="metabox-holder">
-        <div id="dashboard_right_now" class="postbox">
-            <h3><span>From the DB-Toolkit Blog</span></h3>
-            <div id="dbtoolkitBlogFeed" style="margin: 10px;">
-            Loading....
-            </div>
-        </div>
-    </div>
-</div>
-<div class="postbox-container" style="width:32.6%">
-    <div class="metabox-holder">
         <div id="dashboard_right_now" class="postbox">
             <h3><span>Help DB-Toolkit Grow!</span></h3>
             <div style="margin: 10px;">
