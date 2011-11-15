@@ -1489,7 +1489,7 @@ function dt_process() {
 				// Output to browser with appropriate mime type, you choose ;)
 				//header("Content-type: text/x-csv");
 				//header("Content-type: text/csv");
-				header("Content-type: application/csv");
+				header("Content-type: application/csv charset=UTF-8");
 				header("Content-Disposition: attachment; filename=$filename");
                                 //echo '<pre>';
 
