@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.0.139
+Stable tag: 0.3.0.140
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -55,10 +55,7 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
-= 0.3.0.139 =
-* Forgot to add the check for php 5.3 for the shortcodes. I'll fix this so that any version can run;
-
-= 0.3.0.138 =
+= 0.3.0.140 =
 * Added in interface Custom Shortcodes. You can now specify a custom shortcode to an interface
 * Wrapper element definition addition to template editor.
 * lots of Bug fixes
