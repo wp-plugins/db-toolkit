@@ -2442,14 +2442,17 @@ function core_populateApp($Installer){
         }
         unlink($Installer);
         unset($_SESSION['appInstall']);
+        dr_rebuildApps();
         return true;
     }else{
         unlink($Installer);
         unset($_SESSION['appInstall']);
+        dr_rebuildApps();
         return true;
     }
     unlink($Installer);
     unset($_SESSION['appInstall']);
+    dr_rebuildApps();
     return false;
 }
 
@@ -2460,11 +2463,12 @@ function dr_rebuildApps(){
 
     $apps = get_option('dt_int_Apps');
     if(empty($apps)){
-        return;
+        return ' NOT';
     }
-
+    
     $newStructure = array();
     foreach($apps as $title=>$app){
+        
         if(!is_array($app)){
             $appConfig = array();
             $key = sanitize_title($title);
@@ -2475,9 +2479,9 @@ function dr_rebuildApps(){
             $appConfig['state'] = $app;
             $appConfig['name'] = $title;
             $appConfig['description'] = '';
-
             
-            $interfaces = $wpdb->get_results("SELECT `option_value` FROM `".$wpdb->options."` WHERE `option_value` LIKE '%_Application\";s:".strlen($title).":\"".$title."\"%'", ARRAY_A);
+            $interfaces = $wpdb->get_results("SELECT `option_value` FROM `".$wpdb->options."` WHERE `option_value` LIKE '%_Application\";s:".strlen($title).":\"".$title."\"%'", ARRAY_A);          
+            
             foreach($interfaces as $interface){
                 $interfaceData = unserialize($interface['option_value']);
                 if($interfaceData['Type'] != 'Cluster'){
@@ -2490,8 +2494,21 @@ function dr_rebuildApps(){
             }
             update_option('_'.$key.'_app', $appConfig);
         }else{
-            $newStructure[sanitize_title($title)] = $app;
-            $appConfig = get_option('_'.sanitize_title($title).'_app');
+            $key = sanitize_title($title);
+            $newStructure[$key] = $app;
+            $appConfig = get_option('_'.$key.'_app');
+            $interfaces = $wpdb->get_results("SELECT `option_value` FROM `".$wpdb->options."` WHERE `option_value` LIKE '%_Application\";s:".strlen($title).":\"".$title."\"%'", ARRAY_A);
+            foreach($interfaces as $interface){
+                $interfaceData = unserialize($interface['option_value']);
+                if($interfaceData['Type'] != 'Cluster'){
+                    $appConfig['interfaces'][$interfaceData['ID']] = $interfaceData['_menuAccess'];
+                    $appConfig['interfaces'][$interfaceData['ID']] = $interfaceData['_menuAccess'];
+                }else{
+                    $appConfig['clusters'][$interfaceData['ID']] = $interfaceData['_menuAccess'];
+                    $appConfig['clusters'][$interfaceData['ID']] = $interfaceData['_menuAccess'];
+                }
+            }
+            update_option('_'.$key.'_app', $appConfig);
         }
 
     }
@@ -2499,7 +2516,7 @@ function dr_rebuildApps(){
     update_option('dt_int_Apps', $newStructure);
     
     
-    
+    return 'done';
     
 }
 
