@@ -18,20 +18,21 @@ if(!empty($customShortCodes)){
         vardump($args);
 
     }
-    foreach($customShortCodes as $shortCode){
-        $inf = get_option($shortCode['option_name']);
-        $func = function($args, $content, $code){
-                            global $wpdb;
-                            $customShortCodes = $wpdb->get_results("SELECT `option_name`, `option_value` FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' AND `option_value` LIKE '%_shortCode%' ", ARRAY_A);
-                            if(!empty($customShortCodes[0])){
-                                $_GET = $args;
-                            }
-                            return dt_renderInterface($customShortCodes[0]['option_name']);
+    if(phpversion() >= 5.2){
+        foreach($customShortCodes as $shortCode){
+            $inf = get_option($shortCode['option_name']);
+            $func = function($args, $content, $code){
+                                global $wpdb;
+                                $customShortCodes = $wpdb->get_results("SELECT `option_name`, `option_value` FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' AND `option_value` LIKE '%_shortCode%' ", ARRAY_A);
+                                if(!empty($customShortCodes[0])){
+                                    $_GET = $args;
+                                }
+                                return dt_renderInterface($customShortCodes[0]['option_name']);
+               };
 
-           };
-        
-        add_shortcode($inf['_shortCode'], $func);
+            add_shortcode($inf['_shortCode'], $func);
 
+        }
     }
 }
 
