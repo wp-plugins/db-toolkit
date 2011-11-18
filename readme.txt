@@ -55,6 +55,9 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
+= 0.3.0.139 =
+* Forgot to add the check for php 5.3 for the shortcodes. I'll fix this so that any version can run;
+
 = 0.3.0.138 =
 * Added in interface Custom Shortcodes. You can now specify a custom shortcode to an interface
 * Wrapper element definition addition to template editor.
