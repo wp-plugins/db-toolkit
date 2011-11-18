@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.0.137
+Stable tag: 0.3.0.138
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -55,11 +55,16 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
-= 0.3.0.137 =
+= 0.3.0.138 =
 * Added in interface Custom Shortcodes. You can now specify a custom shortcode to an interface
 * Wrapper element definition addition to template editor.
 * lots of Bug fixes
 * Export foxes. Still acting up, but a little better.
+* Added in interface Custom Shortcodes. You can now specify a custom shortcode to an interface
+* Wrapper element definition addition to template editor.
+* lots of Bug fixes
+* Added the new Export to .dbt file. Its a clean format and works way better. Still can import from the older .itf
+* Removed the export as Wordpress Plugin for a little while, found a bug and need to sort it out before to many people get upset with me :).
 
 = 0.3.0.134 =
 * Compatibility for WordPress 3.3 updates.

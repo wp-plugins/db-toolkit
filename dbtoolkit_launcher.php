@@ -5,6 +5,9 @@
 //vardump($app);
 global $wpdb;
 $user = wp_get_current_user();
+if(!empty($_GET['sub'])){
+    $_GET['renderinterface'] = $_GET['sub'];
+}
 $Interface = get_option($_GET['renderinterface']);
 if(empty($app) && !empty($_GET['renderinterface'])){
     $app= get_option('_'.sanitize_title($Interface['_Application']).'_app');

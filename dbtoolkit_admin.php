@@ -440,7 +440,9 @@ if(!empty($appConfig['imageURL'])){
             if(strtolower($activeApp) != 'base'){
             ?>
                 <div class="fbutton"><a href="?page=dbt_builder&exportApp=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export</span></div></a></div>
-                <div class="fbutton"><a href="?page=dbt_builder&exportApp=true&plugin=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export as Plugin</span></div></a></div>
+                <?php
+                //<div class="fbutton"><a href="?page=dbt_builder&exportApp=true&plugin=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export as Plugin</span></div></a></div>
+                ?>
             <?php
             }
             ?>

@@ -2251,8 +2251,12 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 }
                                                 // Get permalink
                                                 // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
-                                                $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\"><strong>";
+                                                if($_GET['page']!= 'dbt_builder'){
+                                                    $PageLink = 'admin.php?page='.$_GET['page'].'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                }else{
+                                                    $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                }
+                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\">";
                                             }
                                         } else {
 
@@ -2304,7 +2308,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 }
 
 
-                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\" ><strong>";
+                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\" >";
                                             }
                                         }
                                         $ReturnFields = array();
@@ -2342,10 +2346,10 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                         }
                                         // Close link
                                         if (!empty($Config['_ItemViewPage'])) {
-                                            $PreReportReturn .= "</strong></a>";
+                                            $PreReportReturn .= "</a>";
                                         }
                                         if (!empty($Config['_ItemViewInterface'])) {
-                                            $PreReportReturn .= "</strong></a>";
+                                            $PreReportReturn .= "</a>";
                                         }
                                          if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
                                              $PreReportReturn .= "</a>";

@@ -173,8 +173,6 @@ function app_launcher(){
 
 function app_setLanding($app, $inf){
 
-
-
     $appcfg = get_option('_'.sanitize_title($app).'_app');
     //vardump($app);
     //vardump($inf);

@@ -2184,140 +2184,123 @@ function core_applySystemTables(&$value, $key){
 
 
 function exportApp($app, $publish=false){
-    
-    //die;
+
     global $wpdb;
+    $output = array();
     
+    // Export Main App Definition
+    $allApps = get_option('dt_int_Apps');
+    $appKey = sanitize_title($app['name']);
+    $output['MainApp'] = serialize($allApps[$appKey]);
     
-    $systemtables = array($wpdb->prefix.'commentmeta', $wpdb->prefix.'comments',$wpdb->prefix.'dbt_wplogin',$wpdb->prefix.'links',$wpdb->prefix.'options',$wpdb->prefix.'postmeta',$wpdb->prefix.'posts',$wpdb->prefix.'term_relationships',$wpdb->prefix.'term_taxonomy',$wpdb->prefix.'terms',$wpdb->prefix.'usermeta',$wpdb->prefix.'users');
+
+    // Export Application Settings
+    $output['AppSettings'] = serialize($app);
     
-    $Len = strlen($app['name']);
-    $appString = 's:12:"_Application";s:'.$Len.':"'.$app['name'].'"';
-
-    //$interfaces = $wpdb->get_results( "SELECT option_name, option_value FROM ".$wpdb->options." WHERE `option_value` LIKE '%".$appString ."%'");
-    foreach($app['interfaces'] as $inf=>$access){
-            $interfaces[] = $inf;
-    }
-    $export = array();
-    if(empty($app['imageFile']))
-        $app['imageFile'] = '';
-
-    if(file_exists($app['imageFile'])){
-        $export['logo'] = base64_encode(file_get_contents($app['imageFile']));
-    }
-    $export['application'] = $app['name'];
-    $export['appInfo'] = $app;
-    if(!empty($interfaces)){
-
-        $name = uniqid('intfc');
-        //$file = fopen(__DIR__.'/libs/cache/'.$name.'.itf', 'w+');
-        $tables = array();
-        
-        foreach($interfaces as $interface){
-        
-            $cfg = get_option($interface);
-            $cfg = unserialize(base64_decode($cfg['Content']));
-
-            if(!in_array($cfg['_main_table'], $systemtables)){
-                $tables[$cfg['_main_table']] = $cfg['_main_table'];
-            }
-
-            if(!empty($cfg['_Linkedfields'])){
-                foreach($cfg['_Linkedfields'] as $Field=>$Value){
-                    if(empty($tables[$Value['Table']])){
-                        $tables[$Value['Table']] = $Value['Table'];
-                    }
-                }
-            }
-            if(!empty($cfg['_Linkedfilterfields'])){
-                foreach($cfg['_Linkedfilterfields'] as $Field=>$Value){
-                    if(!in_array($Value['Table'], $systemtables)){
-                        if(empty($tables[$Value['Table']])){
-                            $tables[$Value['Table']] = $Value['Table'];
-                        }
-                    }
-                }
-            }
-            array_walk_recursive($cfg, 'core_cleanSystemTables');
-            //echo $wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'");
-            //if($wpdb->get_var("SHOW TABLES LIKE '".$cfg['_main_table']."'") != $table_name){
-            //    $tables[$cfg['_main_table']] = $cfg['_main_table'];
-            //}
-            //TODO: try get it to rename tables with prefixes using $wpdb->prefix;
-            $export['interfaces'][$interface] = get_option($interface);
+    // Export Interfaces
+    $output['Interfaces'] = array();
+    if(!empty($app['interfaces'])){
+        foreach($app['interfaces'] as $InterfaceID=>$Access){
+            $output['Interfaces'][$InterfaceID] = get_option($InterfaceID);
         }
     }
-    
+
+    // Export Clusters
+    $output['Clusters'] = array();
+    if(!empty($app['clusters'])){
+        foreach($app['clusters'] as $InterfaceID=>$Access){
+            $output['Clusters'][$InterfaceID] = serialize(get_option($InterfaceID));
+        }
+    }
+
+    // Export Logo
+    if(empty($app['imageFile'])){
+        $app['imageFile'] = '';
+    }
+    if(file_exists($app['imageFile'])){
+        $output['Logo'] = base64_encode(file_get_contents($app['imageFile']));
+    }
+
+    // Export Tables AND Prepair Interfaces
+    $tables = array();
+    $systemtables = array($wpdb->prefix.'commentmeta', $wpdb->prefix.'comments',$wpdb->prefix.'dbt_wplogin',$wpdb->prefix.'links',$wpdb->prefix.'options',$wpdb->prefix.'postmeta',$wpdb->prefix.'posts',$wpdb->prefix.'term_relationships',$wpdb->prefix.'term_taxonomy',$wpdb->prefix.'terms',$wpdb->prefix.'usermeta',$wpdb->prefix.'users');
+    foreach($app['interfaces'] as $interface=>$Access){
+
+        
+        $cfg = unserialize(base64_decode($output['Interfaces'][$interface]['Content']));
+        if(!in_array($cfg['_main_table'], $systemtables)){
+            $tables[str_replace($wpdb->prefix, '{{wp_prefix}}', $cfg['_main_table'])] = $cfg['_main_table'];
+        }
+
+        if(!empty($cfg['_Linkedfields'])){
+            foreach($cfg['_Linkedfields'] as $Field=>$Value){
+                if(empty($tables[$Value['Table']])){
+                    $tables[str_replace($wpdb->prefix, '{{wp_prefix}}', $Value['Table'])] = $Value['Table'];
+                }
+            }
+        }
+        if(!empty($cfg['_Linkedfilterfields'])){
+            foreach($cfg['_Linkedfilterfields'] as $Field=>$Value){
+                if(!in_array($Value['Table'], $systemtables)){
+                    if(empty($tables[$Value['Table']])){
+                        $tables[str_replace($wpdb->prefix, '{{wp_prefix}}', $Value['Table'])] = $Value['Table'];
+                    }
+                }
+            }
+        }
+        array_walk_recursive($cfg, 'core_cleanSystemTables');
+        $output['Interfaces'][$interface]['Content'] = base64_encode(serialize($cfg));
+        $output['Interfaces'][$interface] = serialize($output['Interfaces'][$interface]);
+    }
+    $output['Tables'] = $tables;
+  
+        // Export Table Structures and Data
         if(!empty($tables)){
-
-            foreach($tables as $table){
+            $output['Data'] = array();
+            foreach($tables as $tableKey=>$table){
                 $tableCreates = $wpdb->get_row("SHOW CREATE TABLE ".$table, ARRAY_N);
-                $export['tables'][$tableCreates[0]] = base64_encode($tableCreates[1]);
-
-                //echo $tableCreates[1];
-
-                //export data
-                $result = $wpdb->get_results("SELECT * FROM ".$table, ARRAY_A);
+                $output['Tables'][$tableKey] = base64_encode(str_replace($wpdb->prefix, '{{wp_prefix}}', $tableCreates[1]));
+                $result = $wpdb->get_results("SELECT * FROM `".$tableCreates[0]."`", ARRAY_A);
                 foreach($result as $entries){
+                    
                     $Fields = array();
                     $Values = array();
                     foreach ($entries as $field=>$value){
                         $Fields[] = '`'.$field.'`';
                         $Values[] = "'".mysql_real_escape_string($value)."'";
                     }
-                    $export['entries'][$tableCreates[0]][] = base64_encode("INSERT INTO `".$tableCreates[0]."` (".implode(',', $Fields).") VALUES (".implode(',', $Values).");");
+                    $output['Data'][] = base64_encode("INSERT INTO `".$tableKey."` (".implode(',', $Fields).") VALUES (".implode(',', $Values).");");
                 }
             }
         }
+        
+        
+        $fileName = sanitize_file_name($app['name'].'.dbt');
 
-        //fwrite($file, gzdeflate(base64_encode(serialize($export)),9));
-        //fclose($file);
-
-        //vardump($export);
-        // close off export
-
-
-
-        $export['appInfo']['state'] = 'closed';
-
-        $fileName = sanitize_file_name($app['name']);
-        //vardump($export);
-        //die;
         
         if(empty($publish)){
-            $output = gzdeflate(base64_encode(serialize($export)),9);
+            $output = gzdeflate(base64_encode(serialize($output)),9);
             header ("Expires: Mon, 21 Nov 1997 05:00:00 GMT");    // Date in the past
             header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
             header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
             header ("Pragma: no-cache");                          // HTTP/1.0
-            header('Content-type: application/itf');
-            header('Content-Disposition: attachment; filename="'.$fileName.'.itf"');
-            //header('Content-Disposition: attachment; filename="'.$fileName.'.php"');
+            header('Content-type: application/dbt');
+            header('Content-Disposition: attachment; filename="'.$fileName.'"');
             print($output);
             exit;
         }else{
             $appID = uniqid('dbt');
-            $output = base64_encode(serialize($export));
+            $output = base64_encode(serialize($output));
             $template = file_get_contents(__dir__.'/plugtemplate.php');
             $template = str_replace('{{appID}}', $appID, $template);
-            $template = str_replace('{{appName}}', $export['appInfo']['name'], $template);
-            /*
-            Plugin Name: {{appName}}
-            Plugin URI: {{appURI}}
-            Description: {{appDescription}}
-            Author: {{appAuthor}}
-            Version: {{appVersion}}
-            Author URI: {{authorURI}}
-            */
-            $template = str_replace('{{appURI}}', $export['appInfo']['pluginURI'], $template);
-            $template = str_replace('{{appAuthor}}', $export['appInfo']['pluginAuthor'], $template);
-            $template = str_replace('{{appVersion}}', $export['appInfo']['pluginVersion'], $template);
-            $template = str_replace('{{authorURI}}', $export['appInfo']['pluginAuthorURI'], $template);
+            $template = str_replace('{{appName}}', $app['name'], $template);
+            $template = str_replace('{{appURI}}', $app['pluginURI'], $template);
+            $template = str_replace('{{appAuthor}}', $app['pluginAuthor'], $template);
+            $template = str_replace('{{appVersion}}', $app['pluginVersion'], $template);
+            $template = str_replace('{{authorURI}}', $app['pluginAuthorURI'], $template);
 
-
-
-            if(!empty($export['appInfo']['description'])){
-                $template = str_replace('{{appDescription}}', $export['appInfo']['description'], $template);
+            if(!empty($app['description'])){
+                $template = str_replace('{{appDescription}}', $app['description'], $template);
             }else{
                 $template = str_replace('{{appDescription}}', 'No Description Given', $template);
             }
