@@ -1384,7 +1384,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             }
         }
     }
-    global $ReportReturn;
+    //global $ReportReturn;
     
     $ReportReturn = '';
     $Element = getelement($EID);
@@ -1828,9 +1828,21 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $Media = $Element;
         ob_start();
         $Query = dr_BuildReportGrid($EID, $Page, $SortField, $SortDir, 'sql', $limitOveride, $wherePush);
-        echo '<div id="reportPanel_'.$Media['ID'].'" class="interfaceWrapper">';
+        //$WrapperEl = 'div';
+        if(!empty($Config['_TemplateWrapper'])){
+            $WrapperEl = $Config['_TemplateWrapper'];
+        }
+        $Wrapperclasses = '';
+        if(!empty($Config['_TemplateClass'])){
+            $Wrapperclasses = $Config['_TemplateClass'];
+        }
+        if(!empty($Config['_TemplateWrapper'])){
+            echo '<'.$WrapperEl.' id="reportPanel_'.$Media['ID'].'" class="interfaceWrapper '.$Wrapperclasses.'">';
+        }
         include('templatemode.php');
-        echo '</div>';
+        if(!empty($Config['_TemplateWrapper'])){
+        echo '</'.$WrapperEl.'>';
+        }
 
         return ob_get_clean();
     }

@@ -5,7 +5,17 @@
             if (!empty($Element['Content']['_useListTemplate'])) {
                 $Sel = 'checked="checked"';
             }
+            $wapperEl = '';
+            if(!empty($Element['Content']['_TemplateWrapper'])){
+                $wapperEl = $Element['Content']['_TemplateWrapper'];
+            }
+            $wapperClass = '';
+            if(!empty($Element['Content']['_TemplateClass'])){
+                $wapperClass = $Element['Content']['_TemplateClass'];
+            }
             echo dais_customfield('checkbox', 'Use Templates', '_useListTemplate', '_useListTemplate', 'list_row1', 1, $Sel, 'Set this interface to use custom templates.');
+            echo dais_customfield('text', 'Wrapper Element', '_TemplateWrapper', '_TemplateWrapper', 'list_row1', $wapperEl, '', 'Element tag that wrappes the interface.');
+            echo dais_customfield('text', 'Wrapper Classes', '_TemplateClass', '_TemplateClass', 'list_row1', $wapperClass, '', 'Additional classes to add to the interface wrapper.');
             ?>
 
         <div id="templateTabs" class="dbtools_tabs">

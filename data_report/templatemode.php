@@ -11,19 +11,24 @@ $Data = $wpdb->get_results($Query, ARRAY_A);
 
 // Run View Processes
 ob_start();
-if(!empty($Config['_ViewProcessors'])){
+    if(!empty($Config['_ViewProcessors'])){
 
-    foreach($Config['_ViewProcessors'] as $viewProcess){
-
-        if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
-            include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
-            $func = 'pre_process_'.$viewProcess['_process'];
-            $Result = $func($Data, $viewProcess, $Config, $EID);
+        foreach($Config['_ViewProcessors'] as $viewProcess){
+            if(empty($_GET['format_'.$EID])){
+                //ignore on export
+                if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
+                    include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
+                    $func = 'pre_process_'.$viewProcess['_process'];
+                    $Data = $func($Data, $viewProcess, $Config, $EID);
+                    if(empty($Data)){
+                        return;
+                    }
+                }
+            }
+            //if(file_exists($viewProcess['_process']))
         }
-        //if(file_exists($viewProcess['_process']))
-    }
 
-}
+    }
 $ViewProcess = ob_get_clean();
 
 

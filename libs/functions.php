@@ -189,6 +189,22 @@ function dt_styles() {
 
         if(!empty($post)){
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
+
+        $shortCodes = array('interface');
+
+        global $wpdb;
+        $customShortCodes = $wpdb->get_results("SELECT `option_name`, `option_value` FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' AND `option_value` LIKE '%_shortCode%' ", ARRAY_A);
+        foreach($customShortCodes as $shortCodesIn){
+            $data = unserialize($shortCodesIn['option_value']);
+            if(!empty($data['_shortCode'])){
+
+                if (in_array($data['_shortCode'], $matches[2])) {
+                    $preIs[] = $shortCodesIn['option_name'];
+                }
+
+            }
+        }
+        
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
                 $args = shortcode_parse_atts($preInterface);
@@ -347,8 +363,6 @@ function dt_styles() {
         }
     }
 
-
-
 }
 
 //Scripts
@@ -402,7 +416,20 @@ function dt_scripts() {
 
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
         //vardump($matches);
-        
+        $shortCodes = array('interface');
+
+        global $wpdb;
+        $customShortCodes = $wpdb->get_results("SELECT `option_name`, `option_value` FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' AND `option_value` LIKE '%_shortCode%' ", ARRAY_A);
+        foreach($customShortCodes as $shortCodesIn){
+            $data = unserialize($shortCodesIn['option_value']);
+            if(!empty($data['_shortCode'])){
+
+                if (in_array($data['_shortCode'], $matches[2])) {
+                    $preIs[] = $shortCodesIn['option_name'];
+                }
+
+            }
+        }
         if (in_array('interface', $matches[2])) {
             foreach($matches[3] as $preInterface){
                 $args = shortcode_parse_atts($preInterface);

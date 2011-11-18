@@ -48,3 +48,13 @@ if (!empty($Element['_Application'])) {
                     }
 
 ?>
+<h2>Shortcode</h2>
+<?php
+
+    if(empty($Element['_shortCode']))
+        $Element['_shortCode'] = '';
+
+    echo dais_customfield('text', 'Shortcode', '_shortCode', '_shortCode', 'list_row1', $Element['_shortCode'], '', 'give this interface its own shortcode. Be careful not to overwrite existing shortcodes, so make it unique.');
+
+
+?>

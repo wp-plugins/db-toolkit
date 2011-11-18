@@ -72,7 +72,7 @@ if(!empty($_POST['Data'])) {
 
 function dt_saveCreateInterface($saveData){
     global $wpdb, $user;
-
+    
     $activeApp = get_option('_dbt_activeApp');
     
     if(empty($activeApp))
@@ -114,6 +114,10 @@ function dt_saveCreateInterface($saveData){
         $newCFG['Position'] = 0;
         $newCFG['Column'] = 0;
         $newCFG['Row'] = 0;
+    }
+    
+    if(!empty($saveData['Data']['Content']['_shortCode'])){
+        $newCFG['_shortCode'] = $saveData['Data']['Content']['_shortCode'];
     }
     if(isset($saveData['Data']['Content']['_clusterLayout'])){
         $app['clusters'][$optionTitle] = 'null';

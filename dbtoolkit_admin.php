@@ -500,7 +500,16 @@ if(!empty($appConfig['imageURL'])){
                         <div id="<?php echo $Interface['ID']; ?>" class="interfaceModule">
 
                             <div class="interfaceDets">
-                                <div>[interface id="<?php echo $Interface['ID']; ?>"]</div>
+                                <div><?php
+
+                                if(!empty($Interface['_shortCode'])){
+                                    echo '['.$Interface['_shortCode'].']';
+                                }else{
+
+
+                                ?>[interface id="<?php echo $Interface['ID']; ?>"]<?php
+                                }
+                                ?></div>
                             </div>
                             <h2><?php echo $Interface['_ReportDescription']; ?></h2>
                             <div class="interfaceDescription">
