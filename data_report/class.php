@@ -3567,7 +3567,7 @@ function dr_dataSourceMapping($url, $Config = false){
     }
 
     if(strpos(substr(strtolower($data),0,1024), 'xml')){
-        $data = xml2array($data);
+        $data = dt_xml2array($data);
     }else{
         $data = json_decode($data, true);
     }
@@ -3638,7 +3638,7 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
     $data = file_get_contents($url);
 
     if(strpos(substr(strtolower($data),0,1024), 'xml')){
-        $data = xml2array($data);
+        $data = dt_xml2array($data);
     }else{
         $data = json_decode($data, true);
     }
@@ -3700,7 +3700,7 @@ function dt_runDataSourceImport($Config){
     $data = file_get_contents($Config['_DataSourceURL']);
     
     if(strpos(substr(strtolower($data),0,1024), 'xml')){
-        $data = xml2array($data);
+        $data = dt_xml2array($data);
     }else{
         $data = json_decode($data, true);
     }
@@ -3756,7 +3756,7 @@ function dt_runDataSourceImport($Config){
 
 }
 
-function xml2array($contents, $get_attributes=1, $priority = 'tag') {
+function dt_xml2array($contents, $get_attributes=1, $priority = 'tag') {
     if(!$contents) return array();
 
     if(!function_exists('xml_parser_create')) {
