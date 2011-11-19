@@ -2197,11 +2197,16 @@ function exportApp($app, $publish=false){
     // Export Application Settings
     $output['AppSettings'] = serialize($app);
     
-    // Export Interfaces
+    // Export Interfaces and Filter Locks
     $output['Interfaces'] = array();
+    $output['FilterLocks'] = array();
     if(!empty($app['interfaces'])){
         foreach($app['interfaces'] as $InterfaceID=>$Access){
             $output['Interfaces'][$InterfaceID] = get_option($InterfaceID);
+            // check for filter locks
+            if($lockCheck = get_option('filter_Lock_'.$InterfaceID)){
+                $output['FilterLocks']['filter_Lock_'.$InterfaceID] = serialize(get_option('filter_Lock_'.$InterfaceID));
+            }
         }
     }
 
@@ -2273,7 +2278,6 @@ function exportApp($app, $publish=false){
                 }
             }
         }
-        
         
         $fileName = sanitize_file_name($app['name'].'.dbt');
 

@@ -1182,7 +1182,7 @@ function dr_processQuery($Config, $querySelects) {
             $CloneOf = $querySelects[$Select];
             if(!empty($Config['_CloneField'][$CloneOf])){
             //echo '++++ '.$Select.' ++++<br />';
-            $Select = dr_findCloneParent($Config['_CloneField'][$Select]['Master'], $Config['_CloneField'], $querySelects);            
+            $Select = dr_findCloneParent($Select, $Config['_CloneField'], $querySelects);
             }else{               
                 $Select = $CloneOf;
             }

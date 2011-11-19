@@ -137,6 +137,15 @@ if(!empty($_FILES['itfInstaller']['size'])){
                 }
                 unset($data['Interfaces']);
 
+                // Create Filter Locks if any
+                if(!empty($data['FilterLocks'])){
+                    foreach($data['FilterLocks'] as $InterfaceLock=>$cfg){
+                        $cfg = unserialize($cfg);
+                        update_option($InterfaceLock, $cfg);
+                    }
+                    unset($data['FilterLocks']);
+                }
+
                 // Create Clusters
                 foreach($data['Clusters'] as $ClusterID=>$cfg){
                     $cfg = unserialize($cfg);                    
