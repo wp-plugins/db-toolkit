@@ -29,7 +29,7 @@ if (!empty($Config['_Hide_Toolbar'])) {
     //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
     if (!empty($Config['_Show_Filters'])) {
         if (!empty($Config['_toggle_Filters'])) {
-            echo '<div class="fbutton"><div class="button add-new-h2"><span class="filterbutton" style="padding-left: 20px;" onclick="toggle(\'filterPanel_' . $Media['ID'] . '\');">Filters</span></div></div>';
+            echo '<div class="fbutton"><div class="button add-new-h2"><span class="filterbutton" style="padding-left: 20px;" onclick="jQuery(\'#filterPanel_' . $Media['ID'] . '\').toggle();">Filters</span></div></div>';
         }
     }
     //}
