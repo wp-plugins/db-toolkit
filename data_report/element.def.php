@@ -9,18 +9,10 @@ foreach($Config['_Field'] as $Key=>$Value) {
         if(!empty($Config['_overRide'][$Key])) {
             if(!isset($_GET[$Config['_overRide'][$Key]])) {
                 $Render = false;
-                if(is_admin()) {
-                    $Render = true;
-                    $TitleNotice = ' [Selected Item filter on '.$Key.' looking for '.$Config['_overRide'][$Key].']';
-                }
             }
         }else {
             if(!isset($_GET[$Key])) {
                 $Render = false;
-                if(is_admin()) {
-                    $Render = true;
-                    $TitleNotice = ' [Selected Item filter on '.$Key.' looking for '.$Key.']';
-                }
             }
         }
     }

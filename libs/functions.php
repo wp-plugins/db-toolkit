@@ -1679,10 +1679,13 @@ function dt_renderInterface($interface){
     ob_start();
         include(DB_TOOLKIT.'data_report/element.def.php');
 
-    $Return .= ob_get_clean();
+    $toolBar = ob_get_clean();
 
 
     // Load ToolBar
+    if(empty($Render)){
+        return '<div id="reportPanel_'.$Media['ID'].'"></div>';
+    }
     if($Config['_ViewMode'] == 'list'){
         ob_start();
             include(DB_TOOLKIT.'data_report/toolbar.php');
