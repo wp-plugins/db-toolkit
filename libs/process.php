@@ -7,7 +7,7 @@
 
 function dt_saveInterface($str){
     parse_str(urldecode($str), $vars);
-    stripslashes_deep($vars);
+    $vars = stripslashes_deep($vars);
     return dt_saveCreateInterface($vars);
 }
 

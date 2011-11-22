@@ -52,7 +52,7 @@
                     'Form Processors'=>'process.php',
                     'View Layout'=>'viewlayout.php',
                     'View Processors' => 'viewprocess.php',
-                    'List Template'=>'listtemplate.php',
+                    'Templates'=>'listtemplate.php',
                     'Redirects' => 'redirects.php',
                     'Custom Scripts'=>'customscripts.php',                    
                     'Import & Export'=>'importexport.php'

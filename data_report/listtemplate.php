@@ -1,21 +1,6 @@
-<h2>List Template</h2>
+<h2>Templates</h2>
 <div id="layoutTemplateArea">
             <?php
-            $Sel = '';
-            if (!empty($Element['Content']['_useListTemplate'])) {
-                $Sel = 'checked="checked"';
-            }
-            $wapperEl = '';
-            if(!empty($Element['Content']['_TemplateWrapper'])){
-                $wapperEl = $Element['Content']['_TemplateWrapper'];
-            }
-            $wapperClass = '';
-            if(!empty($Element['Content']['_TemplateClass'])){
-                $wapperClass = $Element['Content']['_TemplateClass'];
-            }
-            echo dais_customfield('checkbox', 'Use Templates', '_useListTemplate', '_useListTemplate', 'list_row1', 1, $Sel, 'Set this interface to use custom templates.');
-            echo dais_customfield('text', 'Wrapper Element', '_TemplateWrapper', '_TemplateWrapper', 'list_row1', $wapperEl, '', 'Element tag that wrappes the interface.');
-            echo dais_customfield('text', 'Wrapper Classes', '_TemplateClass', '_TemplateClass', 'list_row1', $wapperClass, '', 'Additional classes to add to the interface wrapper.');
             ?>
 
         <div id="templateTabs" class="dbtools_tabs">
@@ -34,6 +19,23 @@
                     <div id="layoutHeaderTemplate">
                         <h2>Header Template <span class="description">Placed before the interface is rendered.</span></h2>
 <?php
+            $Sel = '';
+            if (!empty($Element['Content']['_useListTemplate'])) {
+                $Sel = 'checked="checked"';
+            }
+            echo dais_customfield('checkbox', 'Enable', '_useListTemplate', '_useListTemplate', 'list_row1', 1, $Sel, 'Set this interface to use custom list templates.');
+
+            $wapperEl = '';
+            if(!empty($Element['Content']['_TemplateWrapper'])){
+                $wapperEl = $Element['Content']['_TemplateWrapper'];
+            }
+            $wapperClass = '';
+            if(!empty($Element['Content']['_TemplateClass'])){
+                $wapperClass = $Element['Content']['_TemplateClass'];
+            }
+            echo dais_customfield('text', 'Wrapper Element', '_TemplateWrapper', '_TemplateWrapper', 'list_row1', $wapperEl, '', 'Element tag that wrappes the interface.');
+            echo dais_customfield('text', 'Wrapper Classes', '_TemplateClass', '_TemplateClass', 'list_row1', $wapperClass, '', 'Additional classes to add to the interface wrapper.');
+
             $HeaderTemplate = '';
             if (!empty($Element['Content']['_layoutTemplate']['_Header'])) {
                 $HeaderTemplate = $Element['Content']['_layoutTemplate']['_Header'];
@@ -155,7 +157,7 @@ Number of items found and displayed (1 - 10 of 200 items)
 
                 </div>
                 <div id="fieldTemplate" class="setupTab">
-                <span class="description">The Field template wraps each field value is your custom code.</span>
+                <span class="description">The Field template wraps each field value is your custom code. These are always on. so this applies to both list templates and default list view.</span>
                 <br />
                 <br />
                     <div id="layoutFieldTemplate">

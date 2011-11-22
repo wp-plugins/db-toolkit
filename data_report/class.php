@@ -2306,8 +2306,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 } else {
                                                     $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }
-
-
+                                                
                                                 $PreReportReturn .= "<a href=\"" . $PageLink . "\" >";
                                             }
                                         }
@@ -2321,8 +2320,23 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                         //$PreReportReturn .= '<a href="'.getdocument($_GET['PageData']['ID']).'#'.$ReturnMix.'">'.stripslashes($outData).'</a>';
 
                                         // CREATE redirect pushing
-
+                                            if(!empty($Config['_layoutTemplate']['_Fields'][$Field])){
+                                                if(!empty($outData)){
+                                                    $before = $Config['_layoutTemplate']['_Fields'][$Field]['_before'];
+                                                    $after = $Config['_layoutTemplate']['_Fields'][$Field]['_after'];
+                                                    foreach($row as $repField=>$repValue){
+                                                        $before = str_replace('{{'.$repField.'}}', $repValue, $before);
+                                                        $after = str_replace('{{'.$repField.'}}', $repValue, $after);
+                                                    }
+                                                    $PreReportReturn .= $before;
+                                                }
+                                            }
                                             $PreReportReturn .= $outData;
+                                            if(!empty($Config['_layoutTemplate']['_Fields'][$Field])){
+                                                if(!empty($outData)){
+                                                    $PreReportReturn .= $after;
+                                                }
+                                            }
                                         
 
                                         // API Output

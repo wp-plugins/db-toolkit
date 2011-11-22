@@ -263,11 +263,9 @@ function loadFolderContents($Folder) {
 }
 
 function vardump($a) {
-    ob_start();
     echo '<pre>';
     print_r($a);
-    echo '</pre>';
-    echo nl2br(ob_get_clean());
+    echo '</pre>';    
 }
 
 function layout_listOption($ID, $Icon, $Title, $Link, $Class, $Script = false) {

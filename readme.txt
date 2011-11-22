@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.0.145
+Stable tag: 0.3.0.146
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -54,6 +54,11 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.0.146 =
+* Changed List template tab to "Templates".
+* Moved "Use List Template" to within the list template tab".
+* Set Field Templates to always on. So now they will wrap fields in both list view and template view".
 
 = 0.3.0.145 =
 * Fixed a bug that prevented dialogs in the wysiwyg from from receiving text inputs.
