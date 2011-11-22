@@ -150,7 +150,7 @@ body.admin-bar #appTitle{
 }
 
 
-.admin_config_toolbar .button-highlighted{
+.admin_config_toolbar .button-highlighted, .admin_config_panel .button-highlighted{
     background-color: #b0d46b;
 }
 

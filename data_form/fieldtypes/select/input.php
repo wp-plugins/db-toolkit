@@ -1,7 +1,7 @@
 <?php
 /// This creates the actual input fields for capturing. this will handle the occurance of the setting
 
-//vardump($Config['_SelectOptions'][$Field]);
+
 
 switch ($Config['_SelectType'][$Field]){
     case 'dropdown':
@@ -9,8 +9,8 @@ switch ($Config['_SelectType'][$Field]){
         foreach($Config['_SelectOptions'][$Field] as $optionValue){
             $sel = '';
             if(!empty($Val)){
-                if($Val == $option){
-                    $Sel = 'selected="selected"';
+                if($Val == $optionValue){
+                    $sel = 'selected="selected"';
                 }
             }
             echo '<option value="'.$optionValue.'" '.$sel.'>'.$optionValue.'</option>';
@@ -21,8 +21,8 @@ switch ($Config['_SelectType'][$Field]){
         foreach($Config['_SelectOptions'][$Field] as $optionValue){
             $sel = '';
             if(!empty($Val)){
-                if($Val == $option){
-                    $Sel = 'checked="checked"';
+                if($Val == $optionValue){
+                    $sel = 'checked="checked"';
                 }
             }
             $id= uniqid();
@@ -33,7 +33,7 @@ switch ($Config['_SelectType'][$Field]){
         if(!empty($Val)){
             $valData = unserialize($Val);
         }
-        echo $Val;
+        
         foreach($Config['_SelectOptions'][$Field] as $optionValue){
             $sel = '';
             if(!empty($valData)){

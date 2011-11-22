@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.0.144
+Stable tag: 0.3.0.145
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -55,6 +55,10 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
+= 0.3.0.145 =
+* Fixed a bug that prevented dialogs in the wysiwyg from from receiving text inputs.
+* Fixed a bug with the SELECT fieldType from working in checkbox mode.
+
 = 0.3.0.143 =
 * Fixed a clash with another plugin that made the filters button disappear when clicked.
 
@@ -77,71 +81,6 @@ A: Well you can technically use it now, however some things are still a little i
 * Added export to WordPress plugin.
 * Corrected the import so that Application Names don't get sanitized.
 * Added an Install Application Button to the app builder screen
-
-= 0.3.0.133 =
-* Fixed a bug that caused a field to not filter if a mysql reserved word is used for a field name!
-
-= 0.3.0.132 =
-* Fixed a bug that single select joins produced a blank value and returned 0 results. yes its complicated, but it works now!
-
-= 0.3.0.131 =
-* minor bug fixes with exporting and and view processors.
-
-= 0.3.0.120 =
-* minor bug fixes.
-
-= 0.3.0.129 =
-* Fixed a bug in the ajax system that disallowed for calling functions from extentions.
-
-= 0.3.0.126 =
-* Corrected a bug in the View Processors that prevents a data endpoint.
-
-= 0.3.0.125 =
-* Removed the legacy chart setup panel in general settings.
-
-= 0.3.0.124 =
-* Added a Rebuild Apps Button on app manager. Use this if you have any interfaces not showing or have just done an upgrade.
-
-= 0.3.0.118 =
-* Fixed a bug that prevented the menu links from showing at times.
-
-= 0.3.0.118 =
-* Fixed a bug that prevented importing.
-
-= 0.2.6.9 =
-* Added a new form processor: Wordpress Login. It can take two fields and use them to login the user before saving the data to the table. (password field gets ******) for security.
-* Fixed a bug that prevented Auto Values (IPAddress, UserID, TimeStamp) from running through their value processors.
-* Fixed a bug that prevented the wysiwyg fieldtype from loading.
-
-= 0.2.6.8 =
-* yet more bug fixes. mainly on the form layout and view layout builder
-
-= 0.2.6.7 =
-* fixed a bug that stopped page redirect from working.
-
-= 0.2.6.6 =
-* Left some test code in last update - removed it- sorry
-
-= 0.2.6.6 =
-* Left some test code in last update - removed it- sorry
-
-= 0.2.6.5 =
-* Corrected a few bugs that prevented images from showing in view/edit mode.
-* Other bugs on layout builder corrected
-
-= 0.2.6.4 =
-* Fixed a bug in the clusters that echoed out the layout string.
-
-= 0.2.6.2 =
-* Fixed a rare bug that made the multi-select filter overlap the page.
-
-= 0.2.6.1 =
-* Fixed the View Template and Layout
-* Cleaned up the style sheets to better match WP3.2
-* Updated jQueryUI style
-* Fixed a few bux with editing, dialogs, refresh, toolbars and layout forms.
-* Removed the "Filters" title and changed the filter fields titles to be wrapped in h2 tags. (looks much cleaner);
-* misc bug fixes.
 
 
 == Upgrade Notice ==

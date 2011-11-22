@@ -273,8 +273,7 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 			$FieldTitle = '';
 			if(!empty($Config['_FieldTitle'][$Field])){
 				$FieldTitle = df_parseCamelCase($Field);	
-			}
-	
+                        }
 			$Class = '';
 			$DateFrom = '';//date('Y-m-d', strtotime('last week'));
 			if(!empty($Default[$Field][0])){
