@@ -1613,7 +1613,6 @@ function dt_rendercluster($cluster){
 
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface){   
-        
     if(is_array($interface)) {
         if(!empty($interface['id'])){
             unset($_SESSION['viewitemFilter'][$interface['id']]);
@@ -1630,11 +1629,10 @@ function dt_renderInterface($interface){
         $ID = $interface;
     }
     $Media = get_option($ID);
-
     if(empty($Media)) {
         return;
     }
-    
+
     if($Media['Type'] == 'Cluster'){
         ob_start();
         dt_rendercluster($ID);        
@@ -1647,7 +1645,7 @@ function dt_renderInterface($interface){
         return $Return;
 
     }
-    //echo $Media['_Icon'];    
+    
     if($Media['_menuAccess'] != 'null'){
         $user = wp_get_current_user();
         if(empty($user->allcaps[$Media['_menuAccess']])){

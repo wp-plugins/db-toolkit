@@ -19,7 +19,10 @@ if(!empty($customShortCodes)){
         $customShortCodes = $wpdb->get_results("SELECT `option_name`, `option_value` FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' AND `option_value` LIKE '%_shortCode%' AND `option_value` LIKE '%".$code."%'  ", ARRAY_A);
 
         if(!empty($customShortCodes[0])){
-            $_GET = $args;
+            //$_GET = $args;
+            if(is_array($args)){
+                array_merge($_GET, $args);
+            }
             return dt_renderInterface($customShortCodes[0]['option_name']);
         }
     }

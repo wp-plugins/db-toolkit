@@ -266,7 +266,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                         }
 
                         $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
-
+                        
                         $viewTarget = "dr_pushResult('".$Config['_ItemViewInterface']."', '".$sendString."');";
                     }
 
