@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.0.147
+Stable tag: 0.3.0.148
 
 DB-Toolkit allows you to create content, content managers and viewers
 
@@ -54,6 +54,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.0.148 =
+* Fixed a bug with the custom shortcode not accepting additional arguments.
 
 = 0.3.0.146 =
 * Bug Fixes!
