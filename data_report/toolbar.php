@@ -151,7 +151,7 @@ if (!empty($Config['_Show_Filters'])) {
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button add-new-h2">
-                    <span class="closefilter" style="padding-left: 20px;" onclick="toggle('filterPanel_<?php echo $Media['ID']; ?>'); return false; ">Close Filters</span>
+                    <span class="closefilter" style="padding-left: 20px;" onclick="jQuery('#filterPanel_<?php echo $Media['ID']; ?>').toggle(); return false; ">Close Filters</span>
                 </div>
             </div>
 <?php

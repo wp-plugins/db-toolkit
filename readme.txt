@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.000
+Stable tag: 0.3.1.001
 
 DB-Toolkit enables you to build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -23,7 +23,13 @@ Please join the support forum on http://dbtoolkit.co.za/forum/ and I'll do my be
 
 
 =Some Features=
-* Field-by-field data type handling makes data management very powerful and flexible.,* Data exporting in PDF and CSV.,* Create API's to connect to your data. This allows you to build mobile apps that feed from your content.,* Multi Interface Layouts using clusters,* Build custom content managers, like galleries, contact lists, application forms, employee databases... and so on.,* Import data from an XML or CSV source,* Visually build forms that capture data to a database existing or not.
+* Field-by-field data type handling makes data management very powerful and flexible.
+* Data exporting in PDF and CSV.
+* Create API's to connect to your data. This allows you to build mobile apps that feed from your content.
+* Multi Interface Layouts using clusters.
+* Build custom content managers, like galleries, contact lists, application forms, employee databases... and so on.
+* Import data from an XML or CSV source
+* Visually build forms that capture data to a database existing or not.
 
 == Installation ==
 
@@ -50,6 +56,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.1.000 =
+* fixed a bug with the close filter toggle dying off in conflict to another plugin.
 
 = 0.3.1.000 =
 * Major Update with the fieldtypes that solved a lot of internal problems.
