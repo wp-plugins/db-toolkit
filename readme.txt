@@ -55,6 +55,12 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
+= 0.3.1.000 =
+* Major Update with the fieldtypes that solved a lot of internal problems.
+* Internal Style Update to better suit WordPress 3.3
+* Lots of bugfixes
+* Made changes for something BIG!
+
 = 0.3.0.148 =
 * Fixed a bug with the custom shortcode not accepting additional arguments.
 
