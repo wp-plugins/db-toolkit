@@ -78,7 +78,7 @@ if($FieldSet[1] == 'linked'){
 			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC;";
 			$Res = mysql_query($QuerySQL);
 			//cho $QuerySQL;
-			$Return = '<select style="float:left;" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.'">';
+			$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.'">';
 			if(empty($Defaults[$Field])){
 				$Return .= '<option value=""></option>';
 			}
