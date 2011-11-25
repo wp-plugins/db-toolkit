@@ -6,28 +6,24 @@ Requires at least: 3.1
 Tested up to: 3.3
 Stable tag: 0.3.1.000
 
-DB-Toolkit allows you to create content, content managers and viewers
+DB-Toolkit enables you to build additional Content Management Structures and Database Applications right into your WordPress Site.
 
 == Description ==
 
-UPDATE: DB-Toolkit is now in Beta :)
+DB-Toolkit is a plugin that enables you to build additional Content Management Structures and Database Applications right into your website.
 
-DB-Toolkit allows you to build web applications within Wordpress by means of databases.
-From manager interfaces to capture forms to content viewers or almost any type.
+You can build Capture Forms, Reports, your own plugins, Image Galleries, Sliders, Databases, staff management, Hotel Booking systems... Any Data based application.
+
+By defining the kinds of data you are wanting to work with, you can create an almost endless range of content, manageable from its own interfaces and screens. Controlled by both backend (administrators) and frontend (public users) interfaces and forms.
+
 DB-Toolkit is not a simple plugin and has a steep learning curve, but the results are very rewarding.
 
 There is a tutorial series on http://dbtoolkit.co.za to explain the fundamentals on using the system its a few versions old so the interfaces do look a little different.
 Please join the support forum on http://dbtoolkit.co.za/forum/ and I'll do my best to answer any questions and help troubleshoot problems.
 
 
-Some Features:
-    *Field-by-field data type handling makes data management very powerful and flexible.
-    *Data exporting in PDF and CSV
-    *Create API's to connect to your data. This allows you to build mobile apps that feed from your content.
-    *Multi Interface Layouts using clusters
-    *Build custom content managers, like galleries, contact lists, application forms, employee databases... and so on.
-    *Import data from an XML or CSV source
-    *Visually build forms that capture data to a database existing or not.
+=Some Features=
+* Field-by-field data type handling makes data management very powerful and flexible.,* Data exporting in PDF and CSV.,* Create API's to connect to your data. This allows you to build mobile apps that feed from your content.,* Multi Interface Layouts using clusters,* Build custom content managers, like galleries, contact lists, application forms, employee databases... and so on.,* Import data from an XML or CSV source,* Visually build forms that capture data to a database existing or not.
 
 == Installation ==
 
