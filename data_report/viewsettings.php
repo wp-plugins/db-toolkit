@@ -66,7 +66,7 @@
                     if(!empty($Element['Content']['_Hide_FilterLock'])) {
                         $Sel = 'checked="checked"';
                     }
-                    echo dais_customfield('checkbox', 'Show Filter Lock', '_Hide_FilterLock', '_Hide_FilterLock', 'list_row2' , 1 , $Sel, 'Render the Filter Lock button. the filterlock allows you to preset the filters for the interface.');
+                    echo dais_customfield('checkbox', 'Hide Filter Lock', '_Hide_FilterLock', '_Hide_FilterLock', 'list_row2' , 1 , $Sel, 'Render the Filter Lock button. the filterlock allows you to preset the filters for the interface.');
                     $Sel = '';
                     if(!empty($Element['Content']['_toggle_Filters'])) {
                         $Sel = 'checked="checked"';

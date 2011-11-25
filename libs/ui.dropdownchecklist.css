@@ -1,52 +1,24 @@
-.ui-dropdownchecklist {
-        -moz-border-radius:4px 4px 4px 4px;
-        margin-top: 1px;
-	height: 20px;
-	border: 1px solid #ddd;
-	border-right: 0;
-	background: #fff url(dropdown.png) no-repeat center right;
-}
-.ui-dropdownchecklist-hover, .ui-dropdownchecklist-active {
-	background-image: url(dropdown_hover.png);
-	border-color: #5794bf;
-}
+.ui-multiselect { margin-top: 1px; padding:3px 0 3px 4px; text-align:left }
+.ui-multiselect span { overflow: hidden; }
+.ui-multiselect span.ui-icon { float:right }
+.ui-multiselect-single .ui-multiselect-checkboxes input { position:absolute !important; top: auto !important; left:-9999px; }
+.ui-multiselect-single .ui-multiselect-checkboxes label { padding:5px !important }
 
-.ui-dropdownchecklist-text {
-	font-size: 1em;
-	height: 20px;
-	line-height: 20px;
-	margin-right: 17px; /* background dropdown.png image */
-        padding-left: 6px;
-}
+.ui-multiselect-header { margin-bottom:3px; padding:3px 0 3px 4px }
+.ui-multiselect-header ul { font-size:0.9em }
+.ui-multiselect-header ul li { float:left; padding:0 10px 0 0 }
+.ui-multiselect-header a { text-decoration:none }
+.ui-multiselect-header a:hover { text-decoration:underline }
+.ui-multiselect-header span.ui-icon { float:left }
+.ui-multiselect-header li.ui-multiselect-close { float:right; text-align:right; padding-right:0 }
 
-.ui-dropdownchecklist-dropcontainer {
-	background-color: #fff;
-	border: 1px solid #999;
-}
+.ui-multiselect-menu { display:none; padding:3px; position:absolute; z-index:10000 }
+.ui-multiselect-checkboxes { position:relative /* fixes bug in IE6/7 */; overflow-y:scroll }
+.ui-multiselect-checkboxes label { cursor:default; display:block; border:1px solid transparent; padding:3px 1px }
+.ui-multiselect-checkboxes label input { position:relative; margin-right:4px; }
+.ui-multiselect-checkboxes li { clear:both; font-size:0.9em; padding-right:3px }
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align:center; font-weight:bold; border-bottom:1px solid }
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display:block; padding:3px; margin:1px 0; text-decoration:none }
 
-.ui-dropdownchecklist-item {
-
-    padding: 3px 5px;
-    border-bottom: 1px dashed #cfcfcf;
-}
-
-.ui-dropdownchecklist-item-hover {
-	background-color: #39f;
-}
-
-.ui-dropdownchecklist-item-disabled label {
-	color: #ccc;
-}
-
-.ui-dropdownchecklist-item-hover .ui-dropdownchecklist-text {
-	color: #fff;
-}
-
-.ui-dropdownchecklist-group {
-	font-weight: bold;
-	font-style: italic;
-}
-
-.ui-dropdownchecklist-indent {
-	padding-left: 20px;
-}
+/* remove label borders in IE6 because IE6 does not support transparency */
+* html .ui-multiselect-checkboxes label { border:none }

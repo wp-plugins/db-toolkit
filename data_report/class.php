@@ -122,6 +122,21 @@ if (is_admin ()) {
         return false;
     }
 
+    function df_IconToggle($Field, $Name, $Icon, $Defaults = false){
+        $ISel = 'checked="checked"';
+        $IClass = 'button-highlighted';
+        if (empty($Defaults['_'.$Name][$Field])) {
+            $ISel = '';
+            $IClass = 'button';
+        }
+
+        $return = ' &nbsp;<span class="' . $IClass . '" id="'.$Name.'_' . $Field . '" onclick="df_setToggle(\''.$Name.'_' . $Field . '\');" title="'.$Name.'"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/'.$Icon.') left center no-repeat; padding:5px 8px;"></span></span>';
+        $return .= '<input style="display:none;" type="checkbox" name="Data[Content][_'.$Name.'][' . $Field . ']" id="'.$Name.'_' . $Field . '_check" ' . $ISel . ' />';
+    
+        return $return;
+
+    }
+
     function df_makeFieldConfigBox($Field, $Config, $Defaults = false) {
         global $wpdb;
 
@@ -248,80 +263,8 @@ if (is_admin ()) {
         //$PreReturn[$Field] .= '<label><strong>Alignment</strong></label>';
         $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
         $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify) . '</div>';
-
-        //$XAxis = '';
-        //if ($Config['Content']['_xaxis'] == $Field) {
-        //    $XAxis = 'checked="checked"';
-        //}
-
-        //$chartValue = '';
-        //if (!empty($Config['Content']['_chartValue'][$Field])) {
-         //   $chartValue = 'checked="checked"';
-        //}
-        // Graphing x axis (single select)
-        //$PreReturn[$Field] .= '<label><strong>Charting</strong></label>';
-        //$PreReturn[$Field] .= '<div style="padding:3px;">X Axis: <input type="radio" name="Data[Content][_xaxis]" id="sortable_' . $Field . '" value="' . $Field . '" ' . $XAxis . ' /><br />';
-        // Graphing legend/charted value
-        //$PreReturn[$Field] .= ' Chart Item: <input type="checkbox" name="Data[Content][_chartValue][' . $Field . ']" id="sortable_' . $Field . '" value="1" ' . $chartValue . ' />';
-
-
-        /// charts
-        /*
-        $Sel = '';
-        if (!empty($Config['Content']['_chartType'][$Field])) {
-            switch ($Config['Content']['_chartType'][$Field]) {
-                case 'line':
-                    $Sel = 'line';
-                    break;
-                case 'bar':
-                    $Sel = 'bar';
-                    break;
-                case 'column':
-                    $Sel = 'column';
-                    break;
-                case 'spline':
-                    $Sel = 'spline';
-                    break;
-                case 'area':
-                    $Sel = 'area';
-                    break;
-            }
-        }
-
-        $PreReturn[$Field] .= ' Chart Type: ';
-        $PreReturn[$Field] .= '<select name="Data[Content][_chartType][' . $Field . ']" >';
-        $PreReturn[$Field] .= '<option value="line" ';
-        if ($Sel == 'line') {
-            $PreReturn[$Field] .= 'selected="selected"';
-        };
-        $PreReturn[$Field] .= '>Line</option>';
-        $PreReturn[$Field] .= '<option value="bar" ';
-        if ($Sel == 'bar') {
-            $PreReturn[$Field] .= 'selected="selected"';
-        };
-        $PreReturn[$Field] .= '>Bar</option>';
-        $PreReturn[$Field] .= '<option value="column" ';
-        if ($Sel == 'column') {
-            $PreReturn[$Field] .= 'selected="selected"';
-        };
-        $PreReturn[$Field] .= '>Column</option>';
-        $PreReturn[$Field] .= '<option value="spline" ';
-        if ($Sel == 'spline') {
-            $PreReturn[$Field] .= 'selected="selected"';
-        };
-        $PreReturn[$Field] .= '>Spline</option>';
-        $PreReturn[$Field] .= '<option value="area" ';
-        if ($Sel == 'area') {
-            $PreReturn[$Field] .= 'selected="selected"';
-        };
-        $PreReturn[$Field] .= '>Area</option>';
-
-
-        $PreReturn[$Field] .= '</select>';
-        $PreReturn[$Field] .= '</div>';
-        */
-
-
+        
+        
         if(empty($row))
             $row = false;
         
@@ -331,12 +274,15 @@ if (is_admin ()) {
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $UClass . '" id="unique_' . $Field . '" onclick="df_setToggle(\'unique_' . $Field . '\');" title="Unique"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $RClass . '" id="required_' . $Field . '" onclick="df_setToggle(\'required_' . $Field . '\');" title="Required"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $SClass . '" id="issortable_' . $Field . '" onclick="df_setToggle(\'issortable_' . $Field . '\');" title="Sortable"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
+        
+        //$PreReturn[$Field] .= df_IconToggle($Field, 'Indexes', 'open-bookmark.png', $Config['Content']);
 
         $PreReturn[$Field] .= '<div class="widefat" id="' . $Field . '_FieldTypePanel" style="display:none; text-align:left; margin:10px 0;"></div>';
 
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Unique][' . $Field . ']" id="unique_' . $Field . '_check" ' . $USel . ' />';
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Required][' . $Field . ']" id="required_' . $Field . '_check" ' . $RSel . ' />';
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Sortable][' . $Field . ']" id="issortable_' . $Field . '_check" ' . $SSel . ' />';
+        
         $PreReturn[$Field] .= '</div><div class="admin_config_panel" style="text-align:right;" id="ExtraSetting_' . $Field . '">';
         unset($Types);
         $Types = explode('_', $Defaults['_Field'][$Field]);
@@ -363,7 +309,7 @@ if (is_admin ()) {
             return;
         }
         global $wpdb;
-
+        
         if ($Column == 'Linking') {
 
             $result = mysql_query("SHOW COLUMNS FROM " . $Table);
@@ -507,6 +453,7 @@ if (is_admin ()) {
         if ($EID == 'false') {
 
             $Defaults = $Config['Content'];
+            $Config['Content']['_main_table'] = $Table;
             //dump($Defaults);
             if (!empty($Defaults['_FormLayout'])) {
                 parse_str($Defaults['_FormLayout'], $Columns);
@@ -1483,7 +1430,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if (empty($Config['_UseListViewTemplate'])) {
         $tableClass = 'class="data_report_Table"';
         if (is_admin ()) {
-            $tableClass = 'class="widefat"';
+            $tableClass = 'class="widefat data_report_Table_admin"';
         }
         $ReportReturn .= '<table width="100%" border="0" cellspacing="0" cellpadding="4" ' . $tableClass . ' id="data_report_' . $EID . '" style="cursor:default;">';
         //Start Headers Row

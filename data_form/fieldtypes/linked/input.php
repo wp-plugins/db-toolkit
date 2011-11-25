@@ -78,7 +78,7 @@ if($FieldSet[1] == 'linked'){
 			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC;";
 			$Res = mysql_query($QuerySQL);
 			//cho $QuerySQL;
-			$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.'">';
+			$Return = '<select style="float:left;" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.'">';
 			if(empty($Defaults[$Field])){
 				$Return .= '<option value=""></option>';
 			}
@@ -93,6 +93,20 @@ if($FieldSet[1] == 'linked'){
 				$Return .= '<option value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" '.$Sel.' >'.$lrow['outValue'].'</option>';
 			}
 			$Return .= '</select>';
+                        // add insert Auto button!
+                        //$Return .= '<div class="fbutton"><div class="button add-new-h2"><span onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadEntries);return false;" style="padding-left: 20px;" class="add">Add Entry</span></div></div>';
+
+                        $_SESSION['dataform']['OutScripts'] .="
+
+                            
+
+                        ";
+
+
+
+
+
+
 		break;
 		case "autocomplete":
 			$Det[$Config['_Linkedfields'][$Field]['ID']] = '';

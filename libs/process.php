@@ -131,33 +131,53 @@ function dt_saveCreateInterface($saveData){
     if(!empty($saveData['Data']['Content']['_Field'])){
 
         
-
+        // Fetch Fields
+        $tableData = $wpdb->get_results("DESCRIBE `".$saveData['Data']['Content']['_main_table']."`", ARRAY_A);
+        $FieldConfig = array();
+        foreach($tableData as $FieldData){
+            $FieldConfig[$FieldData['Field']] = $FieldData['Type'];
+        }
+        
         foreach($saveData['Data']['Content']['_Field'] as $Field=>$Value){
             // Make Sure the Fields EXIST and is not a clone!
             if(substr($Field, 0, 2) != '__'){
-                $wpdb->query("SELECT `".$Field."` FROM `".$saveData['Data']['Content']['_main_table']."` LIMIT 1;");
-                if(mysql_errno() == '1054'){
 
-                    $baseType = 'VARCHAR( 255 )';
-                    $type = explode('_', $saveData['Data']['Content']['_Field'][$Field]);
-
-                    if(!empty($type[1])){
-                        if(file_exists(DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php')){
-                            include (DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php');
-                            if(!empty($FieldTypes[$type[1]]['baseType'])){
-                                $baseType = $FieldTypes[$type[1]]['baseType'];
-                            }
+                //Load Fields Base Type
+                $type = explode('_', $saveData['Data']['Content']['_Field'][$Field]);
+                
+                if(!empty($type[1])){
+                    if(file_exists(DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php')){
+                        include (DB_TOOLKIT.'data_form/fieldtypes/'.$type[0].'/conf.php');
+                        if(!empty($FieldTypes[$type[1]]['baseType'])){
+                            $baseType = $FieldTypes[$type[1]]['baseType'];
+                        }else{
+                            $baseType = 'VARCHAR( 255 )';
                         }
                     }
-
-                    $wpdb->query("ALTER TABLE `".$saveData['Data']['Content']['_main_table']."` ADD `".$Field."` ".$baseType." NOT NULL ");
-                    echo mysql_error();
+                }else{
+                    $baseType = 'int(11)';
                 }
+                if(empty($FieldConfig[$Field])){                   
+                    $wpdb->query("ALTER TABLE `".$saveData['Data']['Content']['_main_table']."` ADD `".$Field."` ".$baseType." NOT NULL ");
+
+                }else{
+                    // check types
+                    if($FieldConfig[$Field] != $baseType){
+                        //$wpdb->query("ALTER TABLE `".$saveData['Data']['Content']['_main_table']."` CHANGE `".$Field."` `".$Field."` ".$baseType."");
+                    }
+                }
+                unset($FieldConfig[$Field]);
 
                 $Indexes[$Field]['Visibility'] = 'hide';
                 $Indexes[$Field]['Indexed'] = 'noindex';
             }
         }
+        // Drop unwanted Fields
+        //
+        // DISABLED - very very dangerous as you'll loose data!
+        //
+        //vardump($FieldConfig);
+        //die;
         if(!empty($saveData['Data']['Content']['_IndexType'])){
             foreach($saveData['Data']['Content']['_IndexType'] as $Field=>$Setting){
                 if(!empty($Setting['Visibility'])){

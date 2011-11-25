@@ -135,7 +135,7 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
                                     
                                     $Vars = build_query($Vars);
 
-                                    $Source = WP_PLUGIN_URL.'/db-toolkit/libs/timthumb.php?src='.urlencode($Value[0]).'&'.$Vars;
+                                    $Source = WP_PLUGIN_URL.'/db-toolkit/libs/timthumb.php?src='.urlencode(trim($Value[0])).'&'.$Vars;
                                     if(!empty($Config['_IconURLOnly'][$Field])){
                                         return $Source;
                                     }

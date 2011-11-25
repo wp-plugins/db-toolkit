@@ -7,6 +7,7 @@
             <ul class="content-box-tabs">
                 <li><a href="#listTemplate">Row/Entry Template</a></li>
                 <li><a href="#fieldTemplate">Field Template</a></li>
+                <li><a href="#toolbarTemplate">Toolbar Template</a></li>
             </ul>
             <div id="listTemplate" class="setupTab">
 
@@ -16,8 +17,7 @@
 
                 <div id="layoutContentTemplate">
 
-                    <div id="layoutHeaderTemplate">
-                        <h2>Header Template <span class="description">Placed before the interface is rendered.</span></h2>
+                    <div id="layoutHeaderTemplate">                        
 <?php
             $Sel = '';
             if (!empty($Element['Content']['_useListTemplate'])) {
@@ -41,6 +41,7 @@
                 $HeaderTemplate = $Element['Content']['_layoutTemplate']['_Header'];
             }
 ?>
+                        <h2>Header Template <span class="description">Placed before the interface is rendered.</span></h2>
                         <textarea class="headerFooterTemplate" name="Data[Content][_layoutTemplate][_Header]"><?php echo $HeaderTemplate; ?></textarea>
                         <!-- Header Template Area -->
                     </div>
@@ -157,6 +158,7 @@ Number of items found and displayed (1 - 10 of 200 items)
 
                 </div>
                 <div id="fieldTemplate" class="setupTab">
+                    <h2>Field Templates</h2>
                 <span class="description">The Field template wraps each field value is your custom code. These are always on. so this applies to both list templates and default list view.</span>
                 <br />
                 <br />
@@ -195,6 +197,53 @@ Number of items found and displayed (1 - 10 of 200 items)
 
 
                 </div>
+
+            </div>
+                <div id="toolbarTemplate" class="setupTab">
+                <div class="warning">Toolbar templates are currently not available. Will be back in the next version :D</div>
+                <h2>Toolbar Template</h2>
+                <span class="description">Allows you to customise the toolbar.</span>
+                <br />                                
+                <div class="row_helpPanel" style="display:none;">                    
+                    <strong>Dynamic Toolbar Codes</strong>
+                    <span class="description">All the <strong>button</strong> codes, can be used in the row/entry templates as well.</span>
+                    <pre>
+{{_button_addItem}}             :Add Item Button
+{{_button_reload}}              :Content reload button
+{{_button_selectAll}}           :Select all button
+{{_button_unselect}}            :Unselect button
+{{_button_deleteSelected}}      :Delete Selected items button
+{{_button_export_pdf}}          :PDF Export button
+{{_button_export_csv}}          :CSV Export button
+{{_button_applyFilters}}        :Apply filters button
+{{_button_clearFilters}}        :Clear filters button
+{{_button_lockFilters}}         :lock/unlock filter button
+
+{{_filter_keyword}}             :Keyword Search Filter
+{{_filter_show_<em>field</em>}}          :Render the filter input for <em>field</em>
+
+
+                    </pre>
+
+                    
+                </div>
+                <br />
+                <img align="absmiddle" style="float: right; padding: 5px; cursor: pointer;" onclick="jQuery('.row_helpPanel').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/help.png">
+                <?php
+
+                $Sel = '';
+                if (!empty($Element['Content']['_useListTemplate'])) {
+                    $Sel = 'checked="checked"';
+                }
+                echo dais_customfield('checkbox', 'Enable', '_useToolbarTemplate', '_useToolbarTemplate', 'list_row1', 1, $Sel, 'Set this interface to use the custom toolbar templates.');
+
+
+                $ToolbarTemplate = '';
+                    if (!empty($Element['Content']['_layoutTemplate']['_Toolbar'])) {
+                        $ToolbarTemplate = $Element['Content']['_layoutTemplate']['_Toolbar'];
+                    }
+                ?>
+                <textarea class="headerFooterTemplate" name="Data[Content][_layoutTemplate][_Toolbar]"><?php echo $FooterTemplate; ?></textarea>
 
             </div>
         </div>

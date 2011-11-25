@@ -1,5 +1,8 @@
 <?php
 
+global $ajaxAllowedFunctions;
+$ajaxAllowedFunctions['linked_setReloadField'] = 1;
+
 function linked_processValue($Value, $Type, $Field, $Config, $EID, $Data){
 //vardump($Data);
         if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
@@ -104,6 +107,18 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 	$Return .= '<h3>Advanced Config</h3>';
 	$Return .= '<div class="admin_config_panel">';
 
+        // Associate an Interface for adding a new item.
+        /*
+        $Return .= '<div class="admin_config_panel"><span class="Description">Associate an Interface for adding new items inline.</span></div>';
+
+        $addInt = '';
+        if(!empty($ElementConfig['Content']['_Linkedfields'][$Field]['_addInterface'])){
+            $addInt = $ElementConfig['Content']['_Linkedfields'][$Field]['_addInterface'];
+        }
+
+        $Return .= linked_interfaceBrowser($Field);
+        */
+
 		// Content
 		//Join Type
 		$Return .= '<div class="list_row1"> Join Type: ';
@@ -135,6 +150,34 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 	
 return $Return;
 }
+
+
+function linked_interfaceBrowser($Field, $defaultInterface = false){
+    global $wpdb;
+    $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+
+    $Return = 'Interface: <select name="Data[Content][_Linkedfields]['.$Field.'][_addInterface]" >';
+    $Return .= '<option value=""></option>';
+    foreach($interfaces as $Interface){
+        $Data = get_option($Interface['option_name']);
+        //echo $Data['_interfaceName'].'<br />';
+        $Sel = '';
+        if(!empty($defaultInterface)){
+            if($defaultInterface == $Interface['option_name']){
+                $Sel = 'selected="selected"';
+            }
+        }
+        $Return .= '<option value="'.$Interface['option_name'].'" '.$Sel.'>'.$Data['_Application'].' => '.$Data['_ReportDescription'].'</option>';
+
+        //vardump($Data);
+    }
+    $Return .= '</select>';
+
+    //vardump($interfaces);
+    return $Return;
+
+}
+
 function linked_tablefilteredSetup($Field, $Table, $ElementConfig = false){
 
         global $wpdb;
@@ -334,58 +377,45 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 					$Sel = 'selected="selected"';
 				}
 			}
-			$Ref .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+			$Ref .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$Table.'.'.$row['Field'].'</option>';
 			$Sel = '';
-			if(!empty($Defaults[$Field]['Value'])){
-				if($Defaults[$Field]['Value'] == $row['Field']){
+			if(!empty($Defaults[$Field]['Value'][0])){
+				if($Defaults[$Field]['Value'][0] == $row['Field']){
 					$Sel = 'selected="selected"';
 				}
 			}
-			$Val .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+			$Val .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$Table.'.'.$row['Field'].'</option>';
 			$Sel = '';
 			if(!empty($Defaults[$Field]['ID'])){
 				if($Defaults[$Field]['ID'] == $row['Field']){
 					$Sel = 'selected="selected"';
 				}
 			}
-			$ID .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-			$Sel = '';
-			if(!empty($Defaults[$Field]['URL'])){
-				if($Defaults[$Field]['URL'] == $row['Field']){
-					$Sel = 'selected="selected"';
-				}
-			}
-			$URL .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+			$ID .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$Table.'.'.$row['Field'].'</option>';
+
 		}
 	}
 	
 	$RefField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Ref]" id="Ref_'.$Table.'">';
 		$RefField .= $Ref;
-	$RefField .= '</select><br />';
-	
+	$RefField .= '</select><span class="description">Value thats saved into the database</span><br />';
+
+
 	$ValField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Value][]" id="val_'.$Table.'">';
 		$ValField .= $Val;
 	$ValField .= '</select>';
-	$ValField  .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/nadd.png" width="16" width="16" id="addbtn_'.$Field.'" onclick="linked_addReturn(\''.$Table.'\', \''.$Field.'\', 1);" />';
+
+
+	$ValField  .= '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/nadd.png" width="16" width="16" id="addbtn_'.$Field.'" onclick="linked_addReturn(\''.$Table.'\', \''.$Field.'\', 1);" /> <span class="description">The Value that the user sees.</span>';
 	$ValField .= '<div id="'.$Field.'_additionalValues">';
 		$TotalValues = count($Defaults[$Field]['Value'])-1;
-		if($TotalValues > 1){
-			for($VF = 1; $VF <= $TotalValues; $VF++){
-				$VReturn .= linked_loadAdditionalValue($Table, $Field, $Defaults[$Field]['Value'][$VF], true);
+		if($TotalValues >= 1){                    
+			for($VF = 1; $VF <= $TotalValues; $VF++){                            
+				$ValField .= linked_loadAdditionalValue($Table, $Field, $Defaults[$Field]['Value'][$VF], true);
 			}
 		}
 	$ValField .= '</div>';
 	
-	
-	
-	$IDField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][ID]" id="id_'.$Table.'">';
-		$IDField .= $ID;
-	$IDField .= '</select><br />';
-	
-	//$URLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][URL]" id="url_'.$Table.'" onclick="jQuery(\'#localurl_'.$Table.'\').val(\'\');">';
-	//	$URLField .= '<option>none</option>';
-	//	$URLField .= $URL;
-	//$URLField .= '</select><br />';
 	
 	$result = mysql_query("SHOW COLUMNS FROM ".$MainTable);
 	$FilField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Filter]" id="Filter_'.$Table.'">';
@@ -398,7 +428,7 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 					$Sel = 'selected="selected"';
 				}
 			}
-			$FilField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+			$FilField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$MainTable.'.'.$row['Field'].'</option>';
 			$Sel = '';
 			if(!empty($Defaults[$Field]['LocalURL'])){
 				if($Defaults[$Field]['LocalURL'] == $row['Field']){
@@ -408,12 +438,14 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 			$LURL .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
 		}
 	}
-	$FilField .= '</select><br />';
-	//$LocalURLField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][LocalURL]" id="localurl_'.$Table.'" onclick="jQuery(\'#url_'.$Table.'\').val(\'\');">';
-	//	$LocalURLField .= '<option>none</option>';
-	//	$LocalURLField .= $LURL;
-	//$LocalURLField .= '</select><br />';
-return 'Reference Field: '.$RefField.' Value Field:  '.$ValField.'  Filter Field:  '.$IDField.' Select Filter: '.$FilField.'';// URL Field: '.$URLField.' LocalURL Field: '.$LocalURLField;
+	$FilField .= '</select><br /><span class="description">The Fields that the WHERE is applied</span><br />';
+
+
+	$IDField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][ID]" id="id_'.$Table.'">';
+		$IDField .= $ID;
+	$IDField .= '</select>';
+
+return 'Reference Field: '.$RefField.' Value Field:  '.$ValField.'  WHERE :  '.$IDField.' = '.$FilField.'';// URL Field: '.$URLField.' LocalURL Field: '.$LocalURLField;
 }
 
 function linked_loadtableFields($Table, $MainTable, $Field, $Default, $EID){
@@ -429,7 +461,12 @@ function linked_makeFilterdLinkedField($IDField , $ValueField, $FilterField, $Fi
 	if(empty($Default)){
 		//$Return .= '<option value="null"></option>';
 	}
-	//$Return .= '<option value="false"></option>';
+        $preTitle = '';
+        if(mysql_num_rows($Res) < 1){
+            
+            $preTitle = 'No items found';
+        }
+	$Return .= '<option value="false">'.$preTitle.'</option>';
 	while($row = mysql_fetch_assoc($Res)){
 		$Sel = '';
 		if(!empty($Default)){
@@ -524,14 +561,17 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 		}
 		$Return .= '</select></div>';
 
-                $firstItem = 'true';
+                $firstItem = 'false';
                 if(!empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
                     $firstItem = 'false';
                 }
 
                 if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
-                    $_SESSION['dataform']['OutScripts'] .= "                        
-                        jQuery(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
+                    //$_SESSION['dataform']['OutScripts'] .= "
+                    //    jQuery(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
+                    //";
+                    $_SESSION['dataform']['OutScripts'] .= "
+                        jQuery(\"#".$SelectID."\").multiselect();
                     ";
                 }
 	}

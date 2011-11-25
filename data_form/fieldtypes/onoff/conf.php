@@ -8,7 +8,7 @@ $isVisible = true;
 $FieldTypes = array();
 
 // FieldType ID				  Type name					Setup function for insert/setup	    is field a visible or hidden field				
-$FieldTypes['onoff'] = array('name' => 'On-Off Toggle','func' => 'onoff_timestamp', 'visible' => true, 'baseType'  => 'INT( 1 )');
+$FieldTypes['onoff'] = array('name' => 'On-Off Toggle','func' => 'onoff_timestamp', 'visible' => true, 'baseType'  => 'INT(1)');
 
 
 ?>

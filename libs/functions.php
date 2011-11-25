@@ -140,16 +140,19 @@ function dt_headers() {
 }
 
 //styles
-function dt_styles() {
+function dt_styles($preIs = false) {
+
 
     if(!is_admin()){
         global $post;
         $pattern = get_shortcode_regex();
 
         $texts = get_option('widget_text');
-        $preIs = array();
+        if(empty($preIs)){
+            $preIs = array();
+        }
         foreach($texts as $text){
-        $preIs = array();
+        
         $ilc_widget_active = get_option('sidebars_widgets');
 
         unset($ilc_widget_active['wp_inactive_widgets']);
@@ -242,7 +245,7 @@ function dt_styles() {
 
     // report
     if(file_exists($themeDir.'/table.css')) {
-        wp_register_style('custom_table_style', $themeURL.'/table.css');
+        wp_register_style('interface_table_styles', $themeURL.'/table.css');
     }else{
         wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');        
     }
@@ -257,10 +260,15 @@ function dt_styles() {
     // form
 	if(file_exists($themeDir.'/form.css')){
             wp_register_style('form_style', $themeDir.'/form.css');
+            wp_enqueue_style('form_style');
         }else{
             wp_register_style('form_style', WP_PLUGIN_URL.'/db-toolkit/data_form/css/form.css');
+            // adding uniform :D
+            wp_register_style('form_style_uniform', WP_PLUGIN_URL.'/db-toolkit/data_form/css/uniform.aristo.css');
+            //wp_enqueue_style('form_style');
+            wp_enqueue_style('form_style_uniform');
         }
-        wp_enqueue_style('form_style');
+        
         /*
         //<link rel="stylesheet" type="text/css" media="screen" href="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/css/ui.timepickr.css" />
         <script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_form/js/ui.timepickr.js"></script>
@@ -366,7 +374,7 @@ function dt_styles() {
 }
 
 //Scripts
-function dt_scripts() {
+function dt_scripts($preIs = false) {
 
     if(!is_admin()){
         global $post;
@@ -374,7 +382,9 @@ function dt_scripts() {
         $pattern = get_shortcode_regex();
         $texts = get_option('widget_text');
         if(!empty($texts)){
-        $preIs = array();
+            if(empty($preIs)){
+                $preIs = array();
+            }
         $ilc_widget_active = get_option('sidebars_widgets');
         
         unset($ilc_widget_active['wp_inactive_widgets']);
@@ -451,12 +461,14 @@ function dt_scripts() {
         wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.min.js');
         wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
         wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
+        wp_register_script('jquery-uniform', WP_PLUGIN_URL . '/db-toolkit/data_form/js/jquery.uniform.min.js');
         wp_enqueue_script("jquery");
         wp_enqueue_script("jquery-ui-custom");
         wp_enqueue_script('jquery-multiselect');
         wp_enqueue_script('data_report');
         wp_enqueue_script('data_form');
         wp_enqueue_script('jquery-validate');
+        wp_enqueue_script('jquery-uniform');
         wp_enqueue_script('swfobject');
 
     }
@@ -695,16 +707,17 @@ function dt_menus() {
                                 if(!empty($cfg['_ItemGroup'])){
                                     //vardump($cfg).'<br>';
                                     $Groups[$cfg['_ItemGroup']][] = $cfg;
-                                }else{                                    
+                                }else{
+                                    //vardump($cfg);
                                     if(!empty($cfg['_interfaceName'])){
-                                        $Groups[$cfg['_interfaceName']][] = $cfg;
+                                        $MainSubs[] = $cfg;
                                     }
                                 }
                                 //vardump($cfg);
 
                             }
                         }
-                    }
+                    
                     ksort($Groups);
                     if(!empty($Groups)){
                             //vardump($Groups);
@@ -752,9 +765,44 @@ function dt_menus() {
                         $m++;
                         }
 
-
-
                     }
+                    // Add Menues from THe Main Subs
+                    // These are items without a group.
+
+                    
+                    if(!empty($MainSubs)){
+                        // find landing page
+                        foreach($MainSubs as $Key=>$Interface){
+                            if($Interface['ID'] == $appSettings['landing']){
+                                if(!empty($Interface['_interfaceName'])){
+                                    $Title = $Interface['_interfaceName'];
+                                }else{
+                                    $Title = $Interface['_ReportDescription'];
+                                }
+                                $subPage = add_submenu_page('app_'.$app, $Title, $Title, $Interface['_menuAccess'], 'app_'.$app, 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                                add_action('admin_head-'.$subPage, 'dt_headers');
+                                add_action('admin_print_scripts-'.$subPage, 'dt_scripts');
+                                add_action('admin_print_styles-'.$subPage, 'dt_styles');
+                                add_action('admin_footer-'.$subPage, 'dt_footers');
+                                unset($MainSubs[$Key]);
+                            }
+                        }
+                        foreach($MainSubs as $Interface){
+                            if(!empty($Interface['_interfaceName'])){
+                                $Title = $Interface['_interfaceName'];
+                            }else{
+                                $Title = $Interface['_ReportDescription'];
+                            }
+
+                            $subPage = add_submenu_page('app_'.$app, $Title, $Title, $Interface['_menuAccess'], $Interface['ID'], 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                            add_action('admin_head-'.$subPage, 'dt_headers');
+                            add_action('admin_print_scripts-'.$subPage, 'dt_scripts');
+                            add_action('admin_print_styles-'.$subPage, 'dt_styles');
+                            add_action('admin_footer-'.$subPage, 'dt_footers');
+
+                        }
+                    }
+                  }
 
                 }
             }

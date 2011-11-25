@@ -152,10 +152,44 @@ if(is_admin()) {
         $Return = '';
         $Type = explode('_', $Defaults[$Field]);
         //$Return = $Type[0];
+        global $wpdb;
+        $exisitngFields = $wpdb->get_results("SHOW FIELDS FROM `".$Table."`", ARRAY_A);
         
+        foreach($exisitngFields as $curField){
+            if($curField['Field'] == $Field){
+                $FieldType = $curField['Type'];
+            }
+        }
+        $Title = 'Ignore Field';
+        $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
         if($Defaults[$Field] == 'hidden' || empty($Defaults[$Field])){
+            /*
+            // Auto Select the BEST fieldtype for the JOB!
+            $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
             $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Default Value</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            foreach($Types[0] as $Type) {
+                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php')) {
+                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php');
+                    foreach($FieldTypes as $possField=>$conf){
+                        if(strtolower($conf['baseType']) == $FieldType){
+                        
+                        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png')) {
+                            $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png';
+                        }
+                        echo $Icon.'<br>';
+                        $Defaults[$Field] = $Type[1].'_'.$possField;
+                        $func = $conf['func'];
+                        $Title = $conf['name'];
+                        break;
+                        }
+                    }
+                }
+            }
+             * 
+             */
+            
+            
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$Title.'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
             return $Return;
         }
@@ -167,7 +201,7 @@ if(is_admin()) {
 
             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/conf.php');
             //vardump($FieldTypes[$Type[0]]);
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$FieldTypes[$Type[1]]['name'].'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$FieldTypes[$Type[1]]['name'].'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
 
         }
@@ -175,8 +209,16 @@ if(is_admin()) {
     }
 
 
-    function df_buildFieldTypesMenu($Field){
+    function df_buildFieldTypesMenu($Field, $Table){
     
+        global $wpdb;
+        $exisitngFields = $wpdb->get_results("SHOW FIELDS FROM `".$Table."`", ARRAY_A);
+        $fields = array();
+        foreach($exisitngFields as $curField){
+            $fields[$curField['Field']] = $curField['Type'];
+        }
+
+        
 
         $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
         //$Return = '<select name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" >';
@@ -185,6 +227,9 @@ if(is_admin()) {
         //$Return .= '<option value="hidden" onclick="df_noOptions(\''.$Field.'\');">Auto</option>';
         //$Return .= '</optgroup>';
         $Return = '';
+        if(!empty($fields[$Field])){
+            //$Return .= '<div class="warning" style="font-weight:normal;">Changing FieldTypes on existing data may result in data loss. <div style="padding:3px; cursor:pointer;"><a onclick="jQuery(\'.inComp\').toggle(); return false;">Show All FieldTypes</a></div></div>';
+        }
         
         $Return .= '<div style="width:33.33333%; float:left;">';
         //$Return .= '<div style="">';
@@ -192,7 +237,7 @@ if(is_admin()) {
         $Return .= '<div style="" id="_default_'.$Field.'">';
             $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/wand.png';
             $Return .= '<div style="padding:3px;">';
-            $Return .= '<a href="#" id="'.$Field.'_hidden" onclick="return df_setOptions(\''.$Field.'\', \'null\', \'hidden\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Default Value</span></a>';
+            $Return .= '<a href="#" id="'.$Field.'_hidden" onclick="return df_setOptions(\''.$Field.'\', \'null\', \'hidden\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> Ignore Field</span></a>';
             $Return .= '</div>';
         $Return .= '</div>';
         $Return .= '</div>';
@@ -211,17 +256,42 @@ if(is_admin()) {
                 $Return .= '<div style="padding:3px;  cursor:default;" class="admin_config_toolbar"><span style="background: url('.$CIcon.') left center no-repeat; padding:5px 20px;"> '.$FieldTypeTitle.'</span></div>';
                 $Return .= '<div id="folder_'.$Type[1].'_'.$Field.'" style="padding-left:5px;">';
                 ksort($FieldTypes);
+                $used = 0;
                 foreach($FieldTypes as $Key=>$FieldSet) {
-                    //$Return .= $FieldSet['name'].'<br />';
-                    $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/insert.png';
-                    if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png')) {
-                        $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png';
+                    $fieldDisplay = "block";
+                    $fieldClass = '';
+
+                    /*
+                    $fieldDisplay = "none";
+                    $fieldClass = 'inComp';
+                    if(!empty($fields[$Field])){
+                        if(strtolower($FieldSet['baseType']) == strtolower($fields[$Field])){
+                            $fieldDisplay = "block";
+                            $fieldClass = '';
+                            $used++;
+                        }
+                    }else{
+                       $fieldDisplay = "block";
+                       $fieldClass = '';
+                       $used++;
                     }
-                    $Return .= '<div style="padding:4px;">';
-                    $Return .= '<a href="#" id="'.$Field.'_'.$Type[1].'_'.$Key.'" onclick="return df_setOptions(\''.$Field.'\', \''.$FieldSet['func'].'\', \''.$Type[1].'_'.$Key.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 20px;"> '.$FieldSet['name'].'</span></a>';
-                    $Return .= '</div>';
+                    */
+
+                        $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/insert.png';
+                        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png')) {
+                            $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/'.$Type[1].'_'.$Key.'.png';
+                        }
+                        $Return .= '<div style="padding:4px; display:'.$fieldDisplay.';" class="'.$fieldClass.'">';
+                        $Return .= '<a href="#" id="'.$Field.'_'.$Type[1].'_'.$Key.'" onclick="return df_setOptions(\''.$Field.'\', \''.$FieldSet['func'].'\', \''.$Type[1].'_'.$Key.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 20px;"> '.$FieldSet['name'].'</span></a>';
+                        $Return .= '</div>';
+                    
 
                 }
+                //if(empty($used)){
+                //    $Return .= '<div style="padding:4px;" class="inComp">';
+                //    $Return .= '<span class="description">No compatible fieldtypes</span>';
+                //    $Return .= '</div>';
+               //}
                 $Return .= '</div>';
                 $Return .= '</div>';
             }
