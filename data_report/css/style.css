@@ -8,6 +8,7 @@
 
 .fbutton {
     float: left;
+    padding: 3px 0;
 }
 .fbutton .button {
     color: #6e6e6e;
@@ -114,7 +115,7 @@
     border-top: 1px solid #D2D2D2;
     clear: both;
     position: relative;
-    padding: 10px 10px 5px;
+    padding: 8px 4px 2px;
     margin: 10px 0 0 0 !important;
 }
 .report_filters_panel{
@@ -126,7 +127,7 @@
 }
 .filterpanels .list_row3{
     background: none repeat scroll 0 0 #f9f9f9;
-    padding: 10px 10px 5px;
+    padding: 8px 4px 2px;
     margin-bottom: 0 !important;
     border-bottom: 1px solid #D2D2D2;
 }
@@ -141,4 +142,8 @@
 }
 .report_filters_panel h2{
     margin: 0 !important;
+}
+/* fix table margin on top */
+.data_report_Table_admin{
+    margin-top: 10px;
 }
