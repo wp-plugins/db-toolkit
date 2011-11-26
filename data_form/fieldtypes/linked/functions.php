@@ -567,9 +567,6 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                 }
 
                 if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
-                    //$_SESSION['dataform']['OutScripts'] .= "
-                    //    jQuery(\"#".$SelectID."\").dropdownchecklist({ firstItemChecksAll: ".$firstItem."});
-                    //";
                     $_SESSION['dataform']['OutScripts'] .= "
                         jQuery(\"#".$SelectID."\").multiselect();
                     ";
