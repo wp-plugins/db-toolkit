@@ -110,7 +110,7 @@ function select_showFilter($Field, $Type, $Default, $Config, $EID) {
     $Return .= '</div>';
 
     $_SESSION['dataform']['OutScripts'] .= "
-        jQuery(\"#filter_".$EID."_".$UID."\").dropdownchecklist({ firstItemChecksAll: false});
+        jQuery(\"#filter_".$EID."_".$UID."\").multiselect();
     ";
 
 

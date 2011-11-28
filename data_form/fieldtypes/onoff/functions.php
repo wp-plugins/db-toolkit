@@ -135,7 +135,7 @@ function onoff_showFilter($Field, $Type, $Default, $Config, $EID){
 
 	$Return .= $Out.'</select>&nbsp;&nbsp;&nbsp;</div>';
      $_SESSION['dataform']['OutScripts'] .= "
-        jQuery(\"#filter_".$Field."\").dropdownchecklist({ firstItemChecksAll: true});
+        jQuery(\"#filter_".$Field."\").multiselect();
     ";
 
 	
