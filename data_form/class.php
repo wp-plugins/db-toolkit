@@ -309,7 +309,8 @@ function df_processAjaxForm($Input){
 
     ob_start();
     parse_str($Input, $Data);
-    //vardump($Data);
+    $Data = stripslashes_deep($Data);
+    
     if(!empty($Data['processKey'])) {
         $Data = stripslashes_deep($Data);
         if($Data['processKey'] == $_SESSION['processKey']) {            
@@ -451,21 +452,34 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $Element = getelement($Config['_Edit_Element_Reference']);
         $Config = $Element['Content'];
     }
-    /*
-	if($Out = array_search(array('userbase', 'userbasegroup'), $Data['_Field'])){
-		$AdminGroup = array($Data['_AdminGroup'][$Out]);
-		if(!userbase_authenticate(false)){
-			userbase_authenticate(true);
-			return;
-		}
-	}
-    */   
+    
     if(!empty($Defaults) && !empty($Config['_Show_Edit'])) {
+
         $EditID = $Defaults;
-        $defRes = mysql_query("SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."';");
-        $Query = "SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."';";
+        // userbase lockdown
+        $hardFilter = '';
+        if(!empty($Config['_UserBaseFilter'])){
+            global $user_ID;
+            if(!empty($user_ID)){
+                $harfilter = '';
+                foreach($Config['_UserBaseFilter'] as $userField=>$yes){
+                    $hardFilter .= ' AND `'.$userField.'` = \''.$user_ID.'\' ';
+                }
+            }else{
+                // return hahaha no change matee!
+                $Output['width'] = 220;
+                $Output['html'] = '<div style="warning">That does not belong to you!</div>';
+                return $Output;
+            }
+        }
+        
+        $defRes = mysql_query("SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."' ".$hardFilter.";");
+        $Query = "SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."' ".$hardFilter.";";
         if(mysql_num_rows($defRes) == 0) {
-            return "Invalid Entry";
+            $Output['width'] = 220;
+            $Output['html'] = '<div style="warning">That does not belong to you!</div>';
+            return $Output;
+            
         }
         //$Defaults = mysql_fetch_assoc($defRes);
         $Defaults = $wpdb->get_results($Query, ARRAY_A);

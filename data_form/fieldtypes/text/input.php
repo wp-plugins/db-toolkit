@@ -1,7 +1,6 @@
 <?php
 /// This creates the actual input fields for capturing. this will handle the occurance of the setting
 
-
 if($FieldSet[1] == 'singletext'){
 	$WidthOverride = '';
         
@@ -33,7 +32,7 @@ if($FieldSet[1] == 'telephonenumber'){
 }
 if($FieldSet[1] == 'textarea'){
         
-	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textbox ">'.htmlentities($Val).'</textarea>';
+	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textbox ">'.$Val.'</textarea>';
 
         if(!empty($Config['_CharLength'][$Field])){
         $_SESSION['dataform']['OutScripts'] .="
@@ -59,7 +58,7 @@ if($FieldSet[1] == 'textarea'){
 
 }
 if($FieldSet[1] == 'textarealarge'){
-	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textboxlarge ">'.htmlentities($Val).'</textarea>';
+	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textboxlarge ">'.$Val.'</textarea>';
 }
 if($FieldSet[1] ==  'phpcodeblock'){
 	echo '<textarea id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" class="'.$Req.' textboxcode ">'.$Val.'</textarea>';

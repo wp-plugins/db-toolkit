@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.003
+Stable tag: 0.3.1.004
 
 DB-Toolkit enables you to build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -56,6 +56,10 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.1.004 =
+* fixed a security problem that could allow a user to edit an entry belonging to someone else.
+* Fixed a bug on edit forms that broke international characters.
 
 = 0.3.1.003 =
 * fixed a bug with filters not showing on some fields.
