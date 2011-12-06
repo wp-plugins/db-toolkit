@@ -668,14 +668,24 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                     $ButtonText = $Config['_UpdateButtonText'];
                 }
             }
+            $ButtonClass = 'button-primary';
+            if(!empty($Config['_SubmitButtonClass'])) {
+                $ButtonClass = $Config['_SubmitButtonClass'];
+            }
+
+            if(!empty($_GET[$Config['_ReturnFields'][0]])) {
+                if(!empty($Config['_UpdateButtonClass'])) {
+                    $ButtonClass = $Config['_UpdateButtonClass'];
+                }
+            }
             $ButtonAlign = 'center';
             if(!empty($Config['_SubmitAlignment'])) {
                 $ButtonAlign = $Config['_SubmitAlignment'];
             }
 
-            $Shown .= '<div style="text-align: '.$ButtonAlign.';" class="buttonbar"><input type="submit" name="captureEntry" id="button" value="'.$ButtonText.'" class="button-primary" />';
+            $Shown .= '<div style="text-align: '.$ButtonAlign.';" class="buttonbar"><input type="submit" name="captureEntry" id="button" value="'.$ButtonText.'" class="'.$ButtonClass.'" />';
             if(!empty($Config['_ShowReset'])) {
-                $Shown .= '&nbsp;<input type="reset" name="Reset" id="button" class="button" value="Reset Form" />';
+                $Shown .= '&nbsp;<input type="reset" name="Reset" id="button" class="'.$ButtonClass.'" value="Reset Form" />';
             }
             $Shown .= '</div>';
         }
