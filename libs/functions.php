@@ -177,19 +177,20 @@ function dt_styles($preIs = false) {
                 }
             }
         }
-        foreach($ilc_widget_active as $sidebar=>$widgets){
-            if(is_array($widgets)){                
-                foreach($widgets as $widget){
-                    if(is_active_sidebar($sidebar)){
-                        if(substr($widget, 0, 10) == 'interface-'){
-                            $interfaces = get_option('widget_interface');
-                            $preIs[] = $interfaces[substr($widget,10)]['Interface'];
+        if(!empty($ilc_widget_active)){
+            foreach($ilc_widget_active as $sidebar=>$widgets){
+                if(is_array($widgets)){
+                    foreach($widgets as $widget){
+                        if(is_active_sidebar($sidebar)){
+                            if(substr($widget, 0, 10) == 'interface-'){
+                                $interfaces = get_option('widget_interface');
+                                $preIs[] = $interfaces[substr($widget,10)]['Interface'];
+                            }
                         }
                     }
                 }
             }
         }
-
         if(!empty($post)){
         preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
 
@@ -410,15 +411,16 @@ function dt_scripts($preIs = false) {
                 }
             }
         }
-        
-        foreach($ilc_widget_active as $sidebar=>$widgets){
-            if(is_array($widgets)){
-                foreach($widgets as $widget){
-                    
-                    if(substr($widget, 0, 10) == 'interface-'){
-                        if(is_active_sidebar($sidebar)){
-                            $interfaces = get_option('widget_interface');
-                            $preIs[] = $interfaces[substr($widget,10)]['Interface'];
+        if(!empty($ilc_widget_active)){
+            foreach($ilc_widget_active as $sidebar=>$widgets){
+                if(is_array($widgets)){
+                    foreach($widgets as $widget){
+
+                        if(substr($widget, 0, 10) == 'interface-'){
+                            if(is_active_sidebar($sidebar)){
+                                $interfaces = get_option('widget_interface');
+                                $preIs[] = $interfaces[substr($widget,10)]['Interface'];
+                            }
                         }
                     }
                 }
