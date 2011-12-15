@@ -13,7 +13,7 @@
             }
             // alter Meny
             jQuery.ajax({
-              url: "admin.php?page=Database_Toolkit_Welcome",
+              url: "admin.php?page=dbt_apps",
               context: document.body,
               success: function(data){
                 jQuery('#adminmenu').html(jQuery('#adminmenu', data).html());

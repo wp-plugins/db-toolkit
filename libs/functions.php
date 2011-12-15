@@ -260,7 +260,7 @@ function dt_styles($preIs = false) {
 
     // form
 	if(file_exists($themeDir.'/form.css')){
-            wp_register_style('form_style', $themeDir.'/form.css');
+            wp_register_style('form_style', $themeURL.'/form.css');
             wp_enqueue_style('form_style');
         }else{
             wp_register_style('form_style', WP_PLUGIN_URL.'/db-toolkit/data_form/css/form.css');

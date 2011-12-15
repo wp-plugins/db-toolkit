@@ -15,6 +15,45 @@ add_action('admin_init', 'dt_admin_init');
 add_action('admin_menu', 'dt_menus');
 add_action('wp_ajax_dt_ajaxCall', 'dt_ajaxCall');
 
+// Hook into the page loading to get the scripts and
+// styles for the shortcodes used on a post or page.
+add_action('wp_head', 'shortcodesOnPost');
+function shortcodesOnPost(){
+    // get the post data
+    global $post;
+    // get the shortcode regex
+    $pattern = get_shortcode_regex();
+    // run regex on the content to find all the shortcodes being used
+    preg_match_all('/'.$pattern.'/s', $post->post_content, $matches);
+    // only if there are matches
+    if(!empty($matches)){
+
+        //loop through the results
+        //$matches[3] contains the atts
+        //$matches[2] contains the shortcode name
+        //$matches[5] contains the shortcode Data
+        foreach($matches[3] as $key=>$arg){
+
+            $shortcode = $matches[2][$key];
+            //check to see if the found code is mine :)
+            if($shortcode == 'myShortCode'){
+                // Parse the attributes to an array
+                $data = shortcode_parse_atts($arg);
+                // get the shortcode content
+                $content = $matches[5][$key];
+
+                // wp_enqueue_script
+                // wp_enqueue_style
+                // for the specific shortcodes used
+            }
+
+        }
+    }
+}
+
+
+
+
 // Add actions to front end
 if(basename($_SERVER['PHP_SELF']) == 'index.php'){
     add_action('wp_head', 'dt_headers');

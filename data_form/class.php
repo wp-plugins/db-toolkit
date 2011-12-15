@@ -631,7 +631,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         $Form .= '<div id="'.$Field.'">';
                                         $tabStarted = true;
                                     }
-                                    if(!empty($Config['_SectionBreak'][$Field])){
+                                    /*if(!empty($Config['_SectionBreak'][$Field])){
                                         $Form .= "<div class=\"sectionbreak\">\n";
                                         if(!empty($Config['_SectionBreak'][$Field]['Title'])){
                                             $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
@@ -640,7 +640,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                             $Form .= "<span class=\"description\">".$Config['_SectionBreak'][$Field]['Caption']."</span>\n";
                                         }
                                         $Form .= "</div>\n";
-                                    }
+                                    }*/
                                     $Form .= '&nbsp;';
                                 }
                             }
@@ -689,8 +689,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             }
             $Shown .= '</div>';
         }
-        if(!empty($Defaults)) {
-            //vardump($Defaults);
+        if(!empty($Defaults)) {            
             $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
             $Hidden .= '<input type="hidden" name="dr_update" value="1" />';
             $Hidden .= '<input type="hidden" name="dataForm[EID]" value="'.$Element['ID'].'" />';

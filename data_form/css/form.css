@@ -4,6 +4,7 @@
 .formular{
 	font-family:arial,helvetica,sans-serif;
 	font-size:1em;
+        padding-top: 10px;
 	/*background-color:#FFF;*/
 }
 .formular .form-gen-row{
@@ -43,11 +44,7 @@
 
 /* Section Breaks */
 .formular .sectionbreak{
-	padding:4px 0 4px 5px;	
-	padding:3px 3px 2px !important;
-	background-color:#f8f8f8;
-        border-bottom: 1px solid #efefef;
-        border-top: 1px solid #efefef;
+	padding:10px 3px 2px !important;
 
 }
 
