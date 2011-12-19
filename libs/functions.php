@@ -882,45 +882,72 @@ function dt_adminMenus() {
 
 
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
-    if(!empty($interfaces)) {
-        foreach($interfaces as $interface) {
+    
+    $Apps = get_option('dt_int_Apps');    
 
-            $cfg = get_option($interface['option_name']);
-             if($cfg['_menuAccess'] == 'null'){
-                $cfg['_menuAccess'] = 'read';
-             }
+    foreach($Apps as $App=>$dta){
 
-            if(!empty($user->allcaps[$cfg['_menuAccess']])){
-                if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
-                    $Groups[$cfg['_ItemGroup']][] = $cfg;
+        $AppData = get_option('_'.$App.'_app');
+
+        //if(!empty($AppData['docked'])){
+            
+            // add to menu list
+            foreach($AppData['interfaces'] as $interface=>$access){
+                if($cfg['_menuAccess'] == 'null'){
+                   $cfg['_menuAccess'] = 'read';
                 }
+                $cfg = get_option($interface);
+                if(!empty($AppData['docked'])){                    
+                    $cfg['_Docked'] = $AppData['docked'];
+                }
+                if(!empty($user->allcaps[$cfg['_menuAccess']])){
+                    if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
+                        $Groups[$cfg['_ItemGroup']][] = $cfg;
+                    }
 
+                }
             }
-        }
+        //}
 
-        if(empty($Groups)){
-            return;
-        }
-        foreach($Groups as $Group=>$Interfaces){
+    }
 
-            // check capability
-            if(current_user_can($Interfaces[0]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
-                // group link
-                //$groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
-                //add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
-                //echo $Group.' - ';
-                //vardump($Interfaces);
 
-                $wp_admin_bar->add_menu( array( 'id' => $Interfaces[0]['ID'], 'title' => $Group, 'href' => get_admin_url().'admin.php?page='.$Interfaces[0]['ID'] ) );
 
-                for($i = 0; $i <= count($Interfaces)-1; $i++){
-                    if(current_user_can($Interfaces[$i]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
-                        $wp_admin_bar->add_menu( array( 'parent' => $Interfaces[0]['ID'], 'title' => $Interfaces[$i]['_interfaceName'], 'href' => get_admin_url().'admin.php?page='.$Interfaces[$i]['ID'] ) );
+
+
+        if(!empty($Groups)){       
+        
+            foreach($Groups as $Group=>$Interfaces){
+                
+                // check capability
+                if(current_user_can($Interfaces[0]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
+                    // group link
+                    //$groupPage = add_object_page($Group, $Group, $Interfaces[0]['_menuAccess'], $pageName, "dbtoolkit_viewinterface", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png');
+                    //add_submenu_page($pageName, $Interfaces[0]['_interfaceName'], $Interfaces[0]['_interfaceName'], $Interfaces[0]['_menuAccess'], $pageName, 'dbtoolkit_viewinterface');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
+                    //echo $Group.' - ';
+                    if(!empty($Interfaces[0]['_Docked'])){
+                        $pageLink = 'admin.php?page=';
+                    }else{
+                        $pageLink = 'admin.php?page=dbt_builder&renderinterface=';
+                    }
+
+                    $wp_admin_bar->add_menu( array( 'id' => $Interfaces[0]['ID'], 'title' => $Group, 'href' => get_admin_url().$pageLink.$Interfaces[0]['ID'] ) );
+
+                    for($i = 0; $i <= count($Interfaces)-1; $i++){
+                        
+                        if(!empty($Interfaces[$i]['_Docked'])){
+                            $pageLink = 'admin.php?page=';
+                        }else{
+                            $pageLink = 'admin.php?page=dbt_builder&renderinterface=';
+                        }
+
+                        if(current_user_can($Interfaces[$i]['_menuAccess']) && !empty($Interfaces[0]['_SetAdminMenu'])){
+                            $wp_admin_bar->add_menu( array( 'parent' => $Interfaces[0]['ID'], 'title' => $Interfaces[$i]['_interfaceName'], 'href' => get_admin_url().$pageLink.$Interfaces[$i]['ID'] ) );
+                        }
                     }
                 }
             }
         }
-    }
 
 }
 

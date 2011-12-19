@@ -77,11 +77,13 @@ $Apps = get_option('dt_int_Apps');
                     <a title="Open App to Edit" href="?page=dbt_builder&open=<?php echo $app; ?>" class="button">Open App</a>
                     <?php
                     $dockedClass = 'button';
+                    $title = 'Dock';
                     if(!empty($appConfig['docked'])){
                         $dockedClass = 'button-primary';
+                        $title = 'Undock';
                     }
                     ?>
-                    <a title="Add App to Wordpress Menu" href="#" onclick="app_dockApp('<?php echo $app; ?>'); return false;" id="app_<?php echo $app; ?>" class="<?php echo $dockedClass; ?>">Add to Sidebar</a>
+                    <a title="Add App to Wordpress Menu" href="#" onclick="app_dockApp('<?php echo $app; ?>'); return false;" id="app_<?php echo $app; ?>" class="<?php echo $dockedClass; ?>"><?php echo $title; ?></a>
                 </div>                
                 </div>
 

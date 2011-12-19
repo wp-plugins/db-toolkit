@@ -6,17 +6,20 @@
             if(a.docked == true){
                 jQuery('#app_'+app).removeClass('button');
                 jQuery('#app_'+app).addClass('button-primary');
+                jQuery('#app_'+app).html('Undock');
             }
             if(a.docked == false){
                 jQuery('#app_'+app).addClass('button');
                 jQuery('#app_'+app).removeClass('button-primary');
+                jQuery('#app_'+app).html('Dock');
             }
             // alter Meny
             jQuery.ajax({
-              url: "admin.php?page=dbt_apps",
+              url: "admin.php?page=dbt_builder",
               context: document.body,
               success: function(data){
                 jQuery('#adminmenu').html(jQuery('#adminmenu', data).html());
+                jQuery('#wpadminbar').html(jQuery('#wpadminbar', data).html());
               }
             });
             //jQuery('#adminmenu').html(a.html);
