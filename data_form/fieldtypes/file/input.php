@@ -53,7 +53,7 @@ if($FieldSet[1] == 'file'){
 	}
 	$Return .= '<input type="file" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'" />';
         $Return .= '<div id="'.$Element['ID'].$Field.'_uploaded"></div>';
-
+if(!empty($Config['_ajaxForms'])){
 $_SESSION['dataform']['OutScripts'] .="
 
 	var entry".$Element['ID'].$Field." = new Array();
@@ -114,8 +114,6 @@ $_SESSION['dataform']['OutScripts'] .="
                                 ";
 }
 $_SESSION['dataform']['OutScripts'] .="
-			}else{
-				alert('done');
 			}
 		},
 		'onComplete' : function(e,q,f,r,d) {
@@ -132,7 +130,7 @@ $_SESSION['dataform']['OutScripts'] .="
 
 
 	";
-
+}
 }
 if($FieldSet[1] == 'mp3'){
     $Return = '';
