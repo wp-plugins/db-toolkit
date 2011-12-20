@@ -600,6 +600,7 @@ function dt_menus() {
     global $wpdb;
     global $menu;
 
+    //$inStealth = get_option('dbtStealth');
 
     $user = wp_get_current_user();
 
@@ -614,7 +615,7 @@ function dt_menus() {
         //$launcher = add_submenu_page("appmarket", 'Applications', 'Applications', 'read', "app_launcher", 'app_launcher');
         //add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function);
         //add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
-
+        //if(empty($inStealth)){
         add_menu_page("DB-Toolkit", "DB-Toolkit", 'activate_plugins', "dbt_builder", "dbtoolkit_admin", WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png');
 	
 
@@ -679,7 +680,7 @@ function dt_menus() {
             add_action('admin_footer-'.$Dashboard, 'dt_footers');
 
 	////add_submenu_page("Database_Toolkit", 'Setup', 'Setup', 'read', "General Settings", 'dbtoolkit_setup');
-
+       // }
        
             $apps = get_option('dt_int_Apps');
             unset($apps['base']);
@@ -884,33 +885,33 @@ function dt_adminMenus() {
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
     
     $Apps = get_option('dt_int_Apps');    
+    if(is_array($Apps)){
+        foreach($Apps as $App=>$dta){
 
-    foreach($Apps as $App=>$dta){
+            $AppData = get_option('_'.$App.'_app');
 
-        $AppData = get_option('_'.$App.'_app');
+            //if(!empty($AppData['docked'])){
 
-        //if(!empty($AppData['docked'])){
-            
-            // add to menu list
-            foreach($AppData['interfaces'] as $interface=>$access){
-                if($cfg['_menuAccess'] == 'null'){
-                   $cfg['_menuAccess'] = 'read';
-                }
-                $cfg = get_option($interface);
-                if(!empty($AppData['docked'])){                    
-                    $cfg['_Docked'] = $AppData['docked'];
-                }
-                if(!empty($user->allcaps[$cfg['_menuAccess']])){
-                    if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
-                        $Groups[$cfg['_ItemGroup']][] = $cfg;
+                // add to menu list
+                foreach($AppData['interfaces'] as $interface=>$access){
+                    if($cfg['_menuAccess'] == 'null'){
+                       $cfg['_menuAccess'] = 'read';
                     }
+                    $cfg = get_option($interface);
+                    if(!empty($AppData['docked'])){
+                        $cfg['_Docked'] = $AppData['docked'];
+                    }
+                    if(!empty($user->allcaps[$cfg['_menuAccess']])){
+                        if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
+                            $Groups[$cfg['_ItemGroup']][] = $cfg;
+                        }
 
+                    }
                 }
-            }
-        //}
+            //}
 
+        }
     }
-
 
 
 

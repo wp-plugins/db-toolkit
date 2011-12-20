@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.009
+Stable tag: 0.3.1.010
 
 DB-Toolkit enables you to build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -56,6 +56,9 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.1.010 =
+* Fixed a small error notification bug in menu list.
 
 = 0.3.1.009 =
 * Fixed the admin bar "access denied" bug.
@@ -109,24 +112,6 @@ A: Well you can technically use it now, however some things are still a little i
 
 = 0.3.0.142 =
 * Fixed a bug in the .dbt export that didn't include filterlocks in the exported file.
-
-= 0.3.0.141 =
-* Added in interface Custom Shortcodes. You can now specify a custom shortcode to an interface
-* Wrapper element definition addition to template editor.
-* lots of Bug fixes
-* Export fixes. Still acting up, but a little better.
-* Added in interface Custom Shortcodes. You can now specify a custom shortcode to an interface
-* Wrapper element definition addition to template editor.
-* lots of Bug fixes
-* Added the new Export to .dbt file. Its a clean format and works way better. Still can import from the older .itf
-* Removed the export as Wordpress Plugin for a little while, found a bug and need to sort it out before to many people get upset with me :).
-
-= 0.3.0.134 =
-* Compatibility for WordPress 3.3 updates.
-* Added export to WordPress plugin.
-* Corrected the import so that Application Names don't get sanitized.
-* Added an Install Application Button to the app builder screen
-
 
 == Upgrade Notice ==
 
