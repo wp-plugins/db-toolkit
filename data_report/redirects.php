@@ -20,7 +20,7 @@
         echo dais_customfield('radio', 'No Redirect', '_ItemViewPage', '_ItemViewPage', 'list_row1' , 0, $Sel);
         if(empty($Element['Content']['_ItemViewPage']))
             $Element['Content']['_ItemViewPage'] = '';
-        
+        $PageList = array();
         $PageList[] = $Element['Content']['_ItemViewPage'];
         echo dais_page_selector('s', $PageList, false, '_ItemViewPage');
         EndInfoBox();

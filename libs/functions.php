@@ -145,6 +145,13 @@ function dt_styles($preIs = false) {
 
     if(!is_admin()){
         global $post;
+
+        $isBound = get_option('_dbtbinding_'.$post->ID);
+        if(!empty($isBound)){
+            $preIs[] = $isBound;
+            $post->post_content .= dt_renderInterface($isBound);
+        }
+        //$post->post_content = 'orange?';
         $pattern = get_shortcode_regex();
 
         $texts = get_option('widget_text');
@@ -381,6 +388,11 @@ function dt_scripts($preIs = false) {
     if(!is_admin()){
         global $post;
         //$te = wp_get_sidebars_widgets();
+        // check page bindings
+        $isBound = get_option('_dbtbinding_'.$post->ID);
+        if(!empty($isBound)){
+            $preIs[] = $isBound;
+        }
         $pattern = get_shortcode_regex();
         $texts = get_option('widget_text');
         if(!empty($texts)){
@@ -893,19 +905,21 @@ function dt_adminMenus() {
             //if(!empty($AppData['docked'])){
 
                 // add to menu list
-                foreach($AppData['interfaces'] as $interface=>$access){
-                    if($cfg['_menuAccess'] == 'null'){
-                       $cfg['_menuAccess'] = 'read';
-                    }
-                    $cfg = get_option($interface);
-                    if(!empty($AppData['docked'])){
-                        $cfg['_Docked'] = $AppData['docked'];
-                    }
-                    if(!empty($user->allcaps[$cfg['_menuAccess']])){
-                        if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
-                            $Groups[$cfg['_ItemGroup']][] = $cfg;
+                if(is_array($AppData['interfaces'])){
+                    foreach($AppData['interfaces'] as $interface=>$access){
+                        if($cfg['_menuAccess'] == 'null'){
+                           $cfg['_menuAccess'] = 'read';
                         }
+                        $cfg = get_option($interface);
+                        if(!empty($AppData['docked'])){
+                            $cfg['_Docked'] = $AppData['docked'];
+                        }
+                        if(!empty($user->allcaps[$cfg['_menuAccess']])){
+                            if(!empty($cfg['_ItemGroup']) && !empty($cfg['_SetAdminMenu'])) {
+                                $Groups[$cfg['_ItemGroup']][] = $cfg;
+                            }
 
+                        }
                     }
                 }
             //}
@@ -1901,7 +1915,13 @@ function dt_removeInterface($Interface) {
     
         if(key_exists($Interface,  $app['interfaces'])){
             unset($app['interfaces'][$Interface]);
+            // delete extras
 
+            //delete bindings
+            $infCfg = get_option($Interface);
+            if(!empty($infCfg['_ItemBound'])){
+                delete_option('_dbtbinding_'.$infCfg['_ItemBound']);
+            }
             delete_option($Interface);
             delete_option('filter_Lock_'.$Interface);
             delete_option('dt_set_'.$Interface);
@@ -1913,6 +1933,11 @@ function dt_removeInterface($Interface) {
         if(key_exists($Interface,  $app['clusters'])){
             unset($app['clusters'][$Interface]);
 
+            //delete bindings
+            $infCfg = get_option($Interface);
+            if(!empty($infCfg['_ItemBound'])){
+                delete_option('_dbtbinding_'.$infCfg['_ItemBound']);
+            }
             delete_option($Interface);
             delete_option('filter_Lock_'.$Interface);
             delete_option('dt_set_'.$Interface);
@@ -2306,7 +2331,7 @@ function exportApp($app, $publish=false){
         $output['Logo'] = base64_encode(file_get_contents($app['imageFile']));
     }
 
-    // Export Tables AND Prepair Interfaces
+    // Export Tables, Prepare Interfaces and Page Bindings
     $tables = array();
     $systemtables = array($wpdb->prefix.'commentmeta', $wpdb->prefix.'comments',$wpdb->prefix.'dbt_wplogin',$wpdb->prefix.'links',$wpdb->prefix.'options',$wpdb->prefix.'postmeta',$wpdb->prefix.'posts',$wpdb->prefix.'term_relationships',$wpdb->prefix.'term_taxonomy',$wpdb->prefix.'terms',$wpdb->prefix.'usermeta',$wpdb->prefix.'users');
     foreach($app['interfaces'] as $interface=>$Access){
@@ -2333,9 +2358,28 @@ function exportApp($app, $publish=false){
                 }
             }
         }
+
+        // Export Page Bindings
+        if(!empty($cfg['_ItemBoundPage'])){
+            $page = get_page($cfg['_ItemBoundPage']);
+            $output['Bindings'][$interface] = $page->post_name;
+            unset($cfg['_ItemBoundPage']);
+        }
+        //vardump($cfg);
+        //die;
+        // Export Page Dependencies
+        if(!empty($cfg['_ItemViewPage'])){
+            $page = get_page($cfg['_ItemViewPage']);
+            $output['Dependencies'][$page->post_name][] = $interface;
+            //unset($cfg['_ItemViewPage']);
+        }
+
         array_walk_recursive($cfg, 'core_cleanSystemTables');
         $output['Interfaces'][$interface]['Content'] = base64_encode(serialize($cfg));
         $output['Interfaces'][$interface] = serialize($output['Interfaces'][$interface]);
+
+
+
     }
     $output['Tables'] = $tables;
   
@@ -2358,7 +2402,8 @@ function exportApp($app, $publish=false){
                 }
             }
         }
-        
+
+
         $fileName = sanitize_file_name($app['name'].'.dbt');
 
         

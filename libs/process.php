@@ -72,7 +72,7 @@ if(!empty($_POST['Data'])) {
 
 function dt_saveCreateInterface($saveData){
     global $wpdb, $user;
-    
+
     $activeApp = get_option('_dbt_activeApp');
     
     if(empty($activeApp))
@@ -245,7 +245,35 @@ function dt_saveCreateInterface($saveData){
         header('location: '.$_SERVER['REQUEST_URI'].'&interface='.$optionTitle);
         die;
     }
-    
+
+    // check Page Bindings
+    if(!empty($saveData['Data']['Content']['_ItemBoundPage'])){
+        //check previous binding and remove//
+        $oldOptions = get_option($optionTitle);
+        if(!empty($oldOptions)){
+            // remove bindings if there are any
+            $oldOptions = unserialize(base64_decode($oldOptions['Content']));
+            if(!empty($oldOptions['_ItemBoundPage'])){
+                delete_option('_dbtbinding_'.$oldOptions['_ItemBoundPage']);
+            }
+        }
+        //check previous binding
+        $OldBinding = get_option('_dbtbinding_'.$saveData['Data']['Content']['_ItemBoundPage']);
+        if(!empty($OldBinding)){
+            //unbind old interface
+            $prvBindingCFG = get_option($OldBinding);
+            $prvBindingCFG['Content'] = unserialize(base64_decode($prvBindingCFG['Content']));
+            if($prvBindingCFG['Content']['_ItemBoundPage'] == $saveData['Data']['Content']['_ItemBoundPage']){
+                $prvBindingCFG['Content']['_ItemBoundPage'] = 0;
+                $prvBindingCFG['Content'] = base64_encode(serialize($prvBindingCFG['Content']));
+                update_option($OldBinding, $prvBindingCFG);
+            }
+        }
+        update_option('_dbtbinding_'.$saveData['Data']['Content']['_ItemBoundPage'], $optionTitle, false);
+        $newCFG['_ItemBound'] = $saveData['Data']['Content']['_ItemBoundPage'];
+    }
+
+
     update_option($optionTitle, $newCFG);
     update_option('_'.$activeApp.'_app', $app);
     //vardump($app);

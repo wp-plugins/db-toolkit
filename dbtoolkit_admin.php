@@ -482,13 +482,13 @@ if(!empty($appConfig['imageURL'])){
                         if(empty($cfg['_Application'])){
                             $cfg['_Application'] = 'Base';
                         }
-                        if(sanitize_title($cfg['_Application']) == $activeApp){
+                        //if(sanitize_title($cfg['_Application']) == $activeApp){
                             $GroupName = '__Ungrouped';
                             if(!empty($cfg['_ItemGroup'])){
                                 $GroupName = $cfg['_ItemGroup'];
                             }
                             $Groups[$GroupName][] = $cfg;
-                        }
+                        //}
                     }
                     ksort($Groups);
                     foreach($Groups as $Group=>$data){
@@ -538,7 +538,16 @@ if(!empty($appConfig['imageURL'])){
                             </div>
 
                             <div class="interfaceActions">Landing: <input type="radio" name="<?php echo 'landing_'.$activeApp; ?>" id="rdo_<?php echo $Interface['ID']; ?>" value="<?php echo $Interface['ID']; ?>" onclick="app_setLanding('<?php echo $activeApp; ?>', '<?php echo $Interface['ID']; ?>');" <?php echo $landing; ?> /> | <a href="admin.php?page=dbt_builder&interface=<?php echo $Interface['ID']; ?>">Edit</a> | <a href="admin.php?page=dbt_builder&renderinterface=<?php echo $Interface['ID']; ?>">View</a> | <a href="admin.php?page=dbt_builder&duplicateinterface=<?php echo $Interface['ID']; ?>">Duplicate</a> | <a href="#" onclick="dt_deleteInterface('<?php echo $Interface['ID']; ?>'); return false;">Delete</a></div>
-                            <div class="interfaceSettings">Type: <strong><?php echo $Config['_ViewMode']; ?></strong> | Table: <strong><?php echo $Config['_main_table']; ?></strong> | Permission: <strong><?php echo $Interface['_menuAccess']; ?></strong></div>
+                            <div class="interfaceSettings">Type: <strong><?php echo $Config['_ViewMode']; ?></strong> | Table: <strong><?php echo $Config['_main_table']; ?></strong> | Permission: <strong><?php echo $Interface['_menuAccess']; ?></strong>
+                            <?php
+                            if(!empty($Interface['_ItemBound'])){
+                                $page= get_page($Interface['_ItemBound']);
+                                echo ' | Bound to: <strong>'.$page->post_title.'</strong>';
+                            }
+
+                            ?>
+
+                            </div>
                             
                         </div>
 
@@ -570,13 +579,13 @@ if(!empty($appConfig['imageURL'])){
                         if(empty($cfg['_Application'])){
                             $cfg['_Application'] = 'Base';
                         }
-                        if(sanitize_title($cfg['_Application']) == $activeApp){
+                        //if(sanitize_title($cfg['_Application']) == $activeApp){
                             $GroupName = '__Ungrouped';
                             if(!empty($cfg['_ItemGroup'])){
                                 $GroupName = $cfg['_ItemGroup'];
                             }
                             $Groups[$GroupName][] = $cfg;
-                        }
+                        //}
                     }
                     ksort($Groups);
                     foreach($Groups as $Group=>$data){

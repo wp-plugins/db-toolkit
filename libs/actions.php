@@ -64,4 +64,33 @@ if(basename($_SERVER['PHP_SELF']) == 'index.php'){
     add_action('wp_dashboard_setup', 'dt_remove_dashboard_widgets' );
 }
 
+/*
+add_action('admin_init', 'dbt_stealthMode');
+function dbt_stealthMode(){
+    add_settings_field('dbt_stealth' , 'Enable DBT Stealth Mode' ,'dbtForm_Stealth' , 'general' , 'default');
+    register_setting('general','dbtStealth');
+}
+
+function dbtForm_Stealth(){
+
+    $Default = get_option('dbtStealth');
+    
+    $sel = '';
+    if(!empty($Default)){
+        $sel= 'checked="checked"';
+    }
+    echo '<input type="checkbox" value="1" id="dbtStealth" name="dbtStealth" '.$sel.'> Put DB-Toolkit into Stealth Mode. (Disabled the Builder and Editor. Docked apps still active.)';
+}
+
+
+
+add_filter('page_row_actions','filter_Enhance', 1, 2);
+
+    function filter_Enhance($actions, $post){
+
+        $newAction['enhance'] = '<a title="Edit this item" href="edit.php?post_type=page&page=dais&post='.$post->ID.'">Enhance</a>';
+        return array_slice($actions, 0, 2) + $newAction + array_slice($actions, 1);
+       
+    }
+    */
 ?>

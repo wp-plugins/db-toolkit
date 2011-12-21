@@ -21,7 +21,7 @@ if(!in_array( 'db-toolkit/plugincore.php', apply_filters( 'active_plugins', get_
                 return;
         ?>
         <div id="message" class="error">
-            <h3>{{appName}} requires DB-Toolkit to be installed and Activated. <a title="More information about DB Toolkit 0.3.0.133" class="thickbox" href="http://localhost/wordpress/wp-admin/plugin-install.php?tab=plugin-information&amp;plugin=db-toolkit&amp;TB_iframe=true&amp;width=640&amp;height=496">Details</a></h3>
+            <h3>{{appName}} requires DB-Toolkit to be installed and Activated. <a title="More information about DB Toolkit 0.3.0.133" class="thickbox" href="plugin-install.php?tab=plugin-information&amp;plugin=db-toolkit&amp;TB_iframe=true&amp;width=640&amp;height=496">Details</a></h3>
         </div>
         <?php
     }

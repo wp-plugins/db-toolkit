@@ -54,6 +54,7 @@
                     'View Processors' => 'viewprocess.php',
                     'Templates'=>'listtemplate.php',
                     'Redirects' => 'redirects.php',
+                    'Bindings' => 'bindings.php',
                     'Custom Scripts'=>'customscripts.php',                    
                     'Import & Export'=>'importexport.php'
                 );

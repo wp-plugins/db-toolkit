@@ -72,10 +72,10 @@
                     echo '</div>';
 
                     echo '<div id="row1Control" class="formRow" style="width: 10%; padding-top: 12px; float: left;">';
-                        echo '<img height="16" width="16" onclick="formSetupColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/cog.png">';
-                        echo '<img height="16" width="16" onclick="formAddColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/add.png">';
-                        echo '<img height="16" width="16" onclick="formSubtractColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/delete.png">';
-                        echo '<img height="16" width="16" onclick="formRemoveColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="http://localhost/wordpress/wp-content/plugins/db-toolkit/data_report/no.png">';
+                        echo '<img height="16" width="16" onclick="formSetupColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/cog.png">';
+                        echo '<img height="16" width="16" onclick="formAddColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/add.png">';
+                        echo '<img height="16" width="16" onclick="formSubtractColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/delete.png">';
+                        echo '<img height="16" width="16" onclick="formRemoveColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/no.png">';
                     echo '</div>';
 
                 echo '</div>';

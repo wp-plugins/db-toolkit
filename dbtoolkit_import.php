@@ -22,6 +22,7 @@ if(!empty($_FILES['itfInstaller']['size'])){
     <div id="poststuff">
         <?php
         if(!empty($_SESSION['appInstall'])){
+            global $user_ID;
             
             $pth = pathinfo($_SESSION['appInstall']);
             
@@ -108,6 +109,13 @@ if(!empty($_FILES['itfInstaller']['size'])){
                 // Extract Main App Definition and Settings
                 $data['MainApp'] = unserialize($data['MainApp']);
                 $data['AppSettings'] = unserialize($data['AppSettings']);
+                if(empty($data['MainApp'])){
+                    $data['MainApp']['state'] = $data['AppSettings']['state'];
+                    $data['MainApp']['name'] = $data['AppSettings']['name'];
+                    $data['MainApp']['description'] = $data['AppSettings']['description'];
+                }
+                //vardump($data);
+                //die;
 
                 // Get App Key
                 $appKey = sanitize_title($data['MainApp']['name']);
@@ -181,17 +189,148 @@ if(!empty($_FILES['itfInstaller']['size'])){
                     dbDelta($query);
                 }
                 unset($data['Data']);
+                $complete = true;
+
+                    if(!empty($data['Bindings'])){
+                        if(!empty($_POST['pageSettings'])){
+                            
+                            $complete = false;                            
+                            foreach($data['Bindings'] as $interface=>$pagename){
+
+                                if($_POST['page_'.$interface] == 'newpage'){
+                                    $new_post = array(
+                                        'post_title' => $pagename,
+                                        'post_content' => '',
+                                        'post_status' => 'publish',
+                                        'post_date' => date('Y-m-d H:i:s'),
+                                        'post_author' => $user_ID,
+                                        'post_type' => 'page'
+                                    );
+                                    $post_id = wp_insert_post($new_post);
+                                }else{
+                                    $post_id = $_POST['binding'][$interface];
+                                }
+                                // update binding with new page ID
+                                // check Page Bindings
+                                //check previous binding
+                                $OldBinding = get_option('_dbtbinding_'.$post_id);
+                                if(!empty($OldBinding)){
+                                    //unbind old interface
+                                    $prvBindingCFG = get_option($OldBinding);
+                                    $prvBindingCFG['Content'] = unserialize(base64_decode($prvBindingCFG['Content']));
+                                    if($prvBindingCFG['Content']['_ItemBoundPage'] == $post_id){
+                                        $prvBindingCFG['Content']['_ItemBoundPage'] = 0;
+                                        $prvBindingCFG['Content'] = base64_encode(serialize($prvBindingCFG['Content']));
+                                        update_option($OldBinding, $prvBindingCFG);
+                                    }
+                                }
+                                //bind interface to new page//
+                                $oldOptions = get_option($interface);
+                                if(!empty($oldOptions)){
+                                    // remove bindings if there are any
+                                    $oldOptions['Content'] = unserialize(base64_decode($oldOptions['Content']));
+                                    $oldOptions['Content']['_ItemBoundPage'] = $post_id;
+                                    $oldOptions['Content'] = base64_encode(serialize($oldOptions['Content']));
+                                    $oldOptions['_ItemBound'] = $post_id;
+                                    update_option($interface, $oldOptions);
+                                }
+
+                                update_option('_dbtbinding_'.$post_id, $interface, false);
+
+                                // Check Dependicies and change redirects
+                                if(is_array($data['Dependencies'][$pagename])){
+                                    foreach($data['Dependencies'][$pagename] as $redirectInterface){
+                                        $redirectCFG = get_option($redirectInterface);
+                                        $redirectCFG['Content'] = unserialize(base64_decode($redirectCFG['Content']));
+                                        $redirectCFG['Content']['_ItemViewPage'] = $post_id;
+                                        $redirectCFG['Content'] = base64_encode(serialize($redirectCFG['Content']));
+                                        update_option($redirectInterface, $redirectCFG);
+                                    }
+                                }
+
+                            }
 
 
-                // Create Main App Settings                
-                update_option('_'.$appKey.'_app', $data['AppSettings']);
-                unset($data['AppSettings']);
+                            $complete = true;
+                        }else{
+                            $pageList = array();
+                            $complete = false;
+                            echo '<h2 style="margin-bottom:0;">Page Setup</h2>';
+                            echo '<span class="description">These are pages that the application use to display content. You can assign them to new pages, or let the installer create them for you.</span>';
+                            echo '<br /><br /><form name="importApplication" enctype="multipart/form-data" method="POST" action="'.$_SERVER['REQUEST_URI'].'">';
+                            foreach($data['Bindings'] as $interface=>$pagename){
+                                $icfg = get_option($interface);
+                                //vardump($icfg);
+                                //titles
+                                echo '<div style="width:200px; float:left;  padding-right:20px; border-right:1px dashed #ccc;">';
+                                echo '<div><strong>'.$icfg['_ReportDescription'].'</strong></div>';
+                                echo '<span class="description">'.$icfg['_ReportExtendedDescription'].'&nbsp;</span>';
+                                echo '</div>';
+                                // settings
+                                echo '<div style="width:400px; float:left; padding-left:20px;">';
+                                echo '<div style="padding:3px;"><input type="radio" id="newpage_'.$interface.'" name="page_'.$interface.'" value="newpage" checked="checked" /><label for="newpage_'.$interface.'"> Create a new page called: <strong>'.$pagename.'</strong></label></div>';
+                                echo '<div style="padding:3px;"><input type="radio" id="existingpage_'.$interface.'" name="page_'.$interface.'" value="existing" /><label for="existingpage_'.$interface.'"> Use existing Page: '.wp_dropdown_pages( "name=binding[".$interface."]&echo=0&show_option_none=-select-").'</label></div>';
+                                echo '</div>';
+                                echo '<div style="clear:both;padding:15px 0;"></div>';
+                                $pageList[$pagename] = $interface;
 
-                // Clear Session and end off.
-                unset($_SESSION['appInstall']);
-                echo '<p><strong>Installation Complete.</strong></p>';
-                echo '<p id="returnLink" style="display:block;"><a href="'.$_SERVER['REQUEST_URI'].'">Back to installer</p>';
-                
+                            }
+                            //if(empty($data['Dependencies'])){
+                                echo '<input type="submit" value="Save Setting" name="pageSettings" class="button">';
+                                echo '</form>';
+                            //}
+                        }
+                    }
+                    // check redirect pages (dependencies)
+                    /*
+                    if(!empty($data['Dependencies'])){
+                        $complete = false;
+                        if(!empty($_POST['pageSettings'])){
+
+                            
+                            
+
+                        }else{
+                            $complete = false;
+                            echo '<h2>Link Pages</h2>';
+                            echo '<span class="description">These are pages that the application pages link to.<br />You can assign them to new pages, or let the installer create them for you.</span>';
+                            echo '<br /><br />';
+                            foreach($data['Dependencies'] as $interface=>$pagename){
+                                $icfg = get_option($interface);
+                                //vardump($icfg);
+                                //titles
+                                echo '<div style="width:200px; float:left;  padding-right:20px; border-right:1px dashed #ccc;">';
+                                echo '<div><strong>'.$icfg['_ReportDescription'].'</strong></div>';
+                                echo '<span class="description">'.$icfg['_ReportExtendedDescription'].'&nbsp;</span>';
+                                echo '</div>';
+                                // settings
+                                echo '<div style="width:400px; float:left; padding-left:20px;">';
+                                echo '<div style="padding:3px;"><input type="radio" id="newpage_'.$interface.'" name="page_'.$interface.'" value="newpage" checked="checked" /><label for="newpage_'.$interface.'"> Create a new page called: <strong>'.$pagename.'</strong></label></div>';
+                                echo '<div style="padding:3px;"><input type="radio" id="existingpage_'.$interface.'" name="page_'.$interface.'" value="existing" /><label for="existingpage_'.$interface.'"> Use existing Page: '.wp_dropdown_pages( "name=binding[".$interface."]&echo=0&show_option_none=-select-").'</label></div>';
+                                echo '</div>';
+                                echo '<div style="clear:both;padding:15px 0;"></div>';
+
+                            }
+                            echo '<input type="submit" value="Save Setting" name="pageSettings" class="button">';
+                            echo '</form>';
+                            
+                            vardump($data);
+                            die;
+                        }
+                    }
+                    */
+
+                    if(!empty($complete)){
+
+                        // Create Main App Settings
+                        update_option('_'.$appKey.'_app', $data['AppSettings']);
+                        unset($data['AppSettings']);
+
+                        // Clear Session and end off.
+                        unset($_SESSION['appInstall']);
+                        echo '<p><strong>Installation Complete.</strong></p>';
+                        echo '<p id="returnLink" style="display:block;"><a href="'.$_SERVER['REQUEST_URI'].'">Back to installer</p>';
+                    }
 
             }
 
@@ -208,3 +347,19 @@ if(!empty($_FILES['itfInstaller']['size'])){
         ?>
     </div>
 </div>
+
+<?php
+/*
+                        global $user_ID;
+                        $new_post = array(
+                            'post_title' => $pagename,
+                            'post_content' => '',
+                            'post_status' => 'publish',
+                            'post_date' => date('Y-m-d H:i:s'),
+                            'post_author' => $user_ID,
+                            'post_type' => 'page'
+                        );
+                        $post_id = wp_insert_post($new_post);
+
+ */
+?>

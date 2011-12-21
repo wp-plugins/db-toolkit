@@ -116,7 +116,7 @@ function dais_pagetree($SelectType = 'S', $Default=0, $Name = 'My Pages', $callb
         $InputType = 'radio';
         $SelectLight = 'bglight';
     }
-    $Result = $wpdb->get_results( "SELECT ID, post_title FROM $wpdb->posts WHERE post_parent = $ID AND post_type='page'" );
+    $Result = $wpdb->get_results( "SELECT ID, post_title FROM $wpdb->posts WHERE post_parent = $ID AND post_type='page' AND post_status = 'publish'" );
     //$Result = mysql_query($Query);
     $Row = 'list_row2';
     $Tree = '';
