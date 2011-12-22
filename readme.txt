@@ -6,7 +6,7 @@ Requires at least: 3.1
 Tested up to: 3.3
 Stable tag: 0.3.1.017
 
-DB-Toolkit enables you to build additional Content Management Structures and Database Applications right into your WordPress Site.
+Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
 == Description ==
 
@@ -22,7 +22,8 @@ There is a tutorial series on http://dbtoolkit.co.za to explain the fundamentals
 Please join the support forum on http://dbtoolkit.co.za/forum/ and I'll do my best to answer any questions and help troubleshoot problems.
 
 
-=Some Features=
+Some Features
+
 * Field-by-field data type handling makes data management very powerful and flexible.
 * Data exporting in PDF and CSV.
 * Create API's to connect to your data. This allows you to build mobile apps that feed from your content.
