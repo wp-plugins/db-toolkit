@@ -61,6 +61,7 @@ A: Well you can technically use it now, however some things are still a little i
 * Bugfixes around the way custom scripts are loaded. moved them to a per page area instead for better stability.
 * additional Nav fixes
 * additional toolbar fixes
+* fixed a bug that prevented the removal of a custom shortcode
 
 = 0.3.1.015 =
 * Bugfixes, url mapping corrected.
