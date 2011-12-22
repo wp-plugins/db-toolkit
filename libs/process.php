@@ -118,6 +118,10 @@ function dt_saveCreateInterface($saveData){
     
     if(!empty($saveData['Data']['Content']['_shortCode'])){
         $newCFG['_shortCode'] = $saveData['Data']['Content']['_shortCode'];
+    }else{
+        if(!empty($newCFG['_shortCode'])){
+            unset($newCFG['_shortCode']);
+        }
     }
     if(isset($saveData['Data']['Content']['_clusterLayout'])){
         $app['clusters'][$optionTitle] = 'null';
