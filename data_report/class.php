@@ -1425,7 +1425,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     
     foreach ($Config['_Field'] as $Field => $Type) {
         if(empty($Type)){
-            $querySelects[$Field] = $Field;
+            //$querySelects[$Field] = $Field;
         }
         // explodes to:
         // [0] = Field plugin dir
@@ -1570,10 +1570,12 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $queryWhere[] = "prim.`" . $Field . "` = '" . $_SESSION['reportFilters'][$EID][$Field] . "'";
             }
         }
+        
         // Run Filters that have been set through each field type
         if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/queryfilter.php')) {
             include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/queryfilter.php');
         }
+
 
         if (!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
             if ($WhereTag == '') {
