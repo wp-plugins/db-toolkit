@@ -545,7 +545,9 @@ function dt_scripts($preIs = false) {
                        }
                    }
                }
-
+                if(!empty($Config['_customFooterJavaScript'])){
+                    $_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
+                }
             }
         }
     }else{
@@ -561,7 +563,7 @@ function dt_scripts($preIs = false) {
                $preInterface = get_option($interface);
                if(!empty($preInterface['_CustomJSLibraries'])){
                    // load scripts
-                   // setup scripts and styles
+                   // setup scripts and styles                   
                    foreach($preInterface['_CustomJSLibraries'] as $handle=>$script){
                        if(array_search($script['location'], $scriptsAdded) === false){
                            $in_footer = false;
@@ -569,7 +571,7 @@ function dt_scripts($preIs = false) {
                                $in_footer = true;
                            }
                            wp_register_script($handle, $script['source'], false, false, $in_footer);
-                           wp_enqueue_script($handle);
+                           wp_enqueue_script($handle);                           
                            $scriptsAdded[] = $script['location'];
                        }
                    }
@@ -582,11 +584,13 @@ function dt_scripts($preIs = false) {
                        }
                    }
                }
+                if(!empty($Config['_customFooterJavaScript'])){
+                    $_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
+                }
 
             }
             }
-        }
-
+        }        
     }
 
 }
@@ -701,6 +705,7 @@ function dt_menus() {
             $base = 1;
             if(!empty($apps)){
                 foreach($apps as $app=>$data){
+                    $MainSubs = array();
                     $Groups = array();
                     $appSettings = get_option('_'.$app.'_app');
                     
@@ -710,11 +715,11 @@ function dt_menus() {
                     if(!empty($appSettings['docked'])){
                         add_admin_menu_separator('25.'.$base++);
                         $appPage = add_menu_page($data['name'], $data['name'], 'read', 'app_'.$app, "app_launcher", WP_PLUGIN_URL.'/db-toolkit/data_report/table.png', '25.'.$base++);
-
+                        
                         add_action('admin_head-'.$appPage, 'dt_headers');
                         add_action('admin_print_scripts-'.$appPage, 'dt_scripts');
                         add_action('admin_print_styles-'.$appPage, 'dt_styles');
-                        add_action('admin_footer-'.$appPage, 'dt_footers');
+                        add_action('admin_footer-'.$appPage, 'dt_footers');                        
                         if(!empty($appSettings['interfaces'])){
                             foreach($appSettings['interfaces'] as $interface=>$access){
                                 // load interface settings and check for menus
@@ -809,7 +814,7 @@ function dt_menus() {
                             }else{
                                 $Title = $Interface['_ReportDescription'];
                             }
-
+                            
                             $subPage = add_submenu_page('app_'.$app, $Title, $Title, $Interface['_menuAccess'], $Interface['ID'], 'app_launcher');//admin.php?page=Database_Toolkit&renderinterface='.$interface['option_name']);
                             add_action('admin_head-'.$subPage, 'dt_headers');
                             add_action('admin_print_scripts-'.$subPage, 'dt_scripts');

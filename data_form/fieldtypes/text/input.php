@@ -84,7 +84,7 @@ if($FieldSet[1] == 'wysiwyg'){
     ";
 }
 if($FieldSet[1] == 'url'){
-	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="" class="'.$Req.' text" />';
+	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" />';
 }
 if($FieldSet[1] == 'colourpicker'){
     	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="text" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' text" style="width:60px;" '.$WidthOverride.' />';

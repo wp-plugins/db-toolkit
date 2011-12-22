@@ -607,36 +607,46 @@ function dr_unlockFilters($EID) {
 function dr_buildInterfaceList() {
 
     global $wpdb;
-    $app = get_option('_dbt_activeApp');
-    $appConfig = get_option('_'.$app.'_app');
-    foreach ($appConfig['interfaces'] as $interface=>$access) {
-        $cfg = get_option($interface);
-        if(empty($cfg['_itemGroup'])){
-            $cfg['_itemGroup'] = 'uncategorised';
-        }
-        $appGroups[$cfg['_itemGroup']][] = $cfg;
-    }
-    
-    foreach ($appGroups as $app => $state) {
-        
+    $apps = get_option('dt_int_Apps');
+    //vardump($apps);
+    foreach($apps as $app=>$settings){
+
+        // for each App
         $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
-        $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" /> ' . $app . '</a>';
+        $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" />'.$settings['name'].'</a>';
+        $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
 
-        if (!empty($appGroups[$app])) {
-            $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
-            $Return .= "<li class=\"title\"><h2>" . $app . "</h2></li>";
-            foreach ($appGroups[$app] as $interface) {
-                //vardump($interface);
-                $IIcon = WP_PLUGIN_URL . '/db-toolkit/data_report/plus-button.png';
-                $Return .= '<li><a onclick="formSetup_InsertInterface(\'' . $interface['ID'] . '\');"><img src="' . $IIcon . '" align="absmiddle" /> ' . $interface['_ReportDescription'] . '</a>';
+            $appConfig = get_option('_'.$app.'_app');
+            $appGroups = array();
+            foreach ($appConfig['interfaces'] as $interface=>$access) {
+                $cfg = get_option($interface);                
+                if(empty($cfg['_ItemGroup'])){
+                    $cfg['_ItemGroup'] = 'uncategorised';
+                }
+                $appGroups[$cfg['_ItemGroup']][] = $cfg;
             }
-            $Return .= '</ul>';
-        }
+            $Return .= "<li class=\"title\"><h2>Category</h2></li>";
+            foreach ($appGroups as $app => $state) {
 
+                $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
+                $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" /> ' . $app . '</a>';
+
+                if (!empty($appGroups[$app])) {
+                    $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
+                    $Return .= "<li class=\"title\"><h2>" . $app . "</h2></li>";
+                    foreach ($appGroups[$app] as $interface) {
+                        //vardump($interface);
+                        $IIcon = WP_PLUGIN_URL . '/db-toolkit/data_report/plus-button.png';
+                        $Return .= '<li><a onclick="formSetup_InsertInterface(\'' . $interface['ID'] . '\');"><img src="' . $IIcon . '" align="absmiddle" /> ' . $interface['_ReportDescription'] . '<div><span class="description">' . $interface['_ReportExtendedDescription'] . '</span></div></a>';
+                    }
+                    $Return .= '</ul>';
+                }
+
+                $Return .= '</li>';
+            }
+        $Return .= '</ul>';
         $Return .= '</li>';
     }
-
-
     return $Return;
 }
 
@@ -1768,9 +1778,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
     // Select Query
     //$Query = "SELECT count(b.Country) as TotalCountry, ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n GROUP BY b.Country \n ".$orderStr." \n ".$queryLimit.";"
-    if(!empty($Config['_customFooterJavaScript'])){
-        $_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
-    }
+
     if(!empty($Config['_useListTemplate']) && empty($Format)){
         $Media = $Element;
         ob_start();
