@@ -12,24 +12,25 @@ $Interface = get_option($_GET['renderinterface']);
 if(empty($app) && !empty($_GET['renderinterface'])){
     $app= get_option('_'.sanitize_title($Interface['_Application']).'_app');
 }
+if(is_array($app)){
+    foreach($app['interfaces'] as $interface=>$access){
+        $cfg = get_option($interface);
 
-foreach($app['interfaces'] as $interface=>$access){
-    $cfg = get_option($interface);
-    
-    if($access == 'null'){
-        $access = 'read';
-    }
-    if(!empty($user->allcaps[$access])){        
-        if(!empty($cfg['_ItemGroup'])){
-            if(!empty($cfg['_interfaceName'])){                
-                $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
+        if($access == 'null'){
+            $access = 'read';
+        }
+        if(!empty($user->allcaps[$access])){
+            if(!empty($cfg['_ItemGroup'])){
+                if(!empty($cfg['_interfaceName'])){
+                    $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_interfaceName'];
+                }else{
+
+                    $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_ReportDescription'];
+                }
             }else{
-                
-                $menus[$cfg['_ItemGroup']][$cfg['ID']] = $cfg['_ReportDescription'];
-            }
-        }else{            
-            if(!empty($cfg['_interfaceName'])){
-                $menus[$cfg['_interfaceName']] = $cfg['ID'];
+                if(!empty($cfg['_interfaceName'])){
+                    $menus[$cfg['_interfaceName']] = $cfg['ID'];
+                }
             }
         }
     }

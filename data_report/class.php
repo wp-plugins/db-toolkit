@@ -52,7 +52,7 @@ if (is_admin ()) {
             return;
         }
 
-        $result = mysql_query("SHOW COLUMNS FROM " . $Table);
+        $result = mysql_query("SHOW COLUMNS FROM `". $Table."`");
         if (mysql_num_rows($result) > 0) {
             $TotalsField = '';
             while ($row = mysql_fetch_assoc($result)) {
@@ -312,7 +312,7 @@ if (is_admin ()) {
         
         if ($Column == 'Linking') {
 
-            $result = mysql_query("SHOW COLUMNS FROM " . $Table);
+            $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
             if (mysql_num_rows($result) > 0) {
                 $Row = 'list_row4';
                 while ($row = mysql_fetch_assoc($result)) {
@@ -459,7 +459,7 @@ if (is_admin ()) {
                 parse_str($Defaults['_FormLayout'], $Columns);
             }
             $Return = '';
-            $result = mysql_query("SHOW COLUMNS FROM " . $Table);
+            $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
             if (mysql_num_rows($result) > 0) {
                 $Row = 'list_row4';
                 while ($row = mysql_fetch_assoc($result)) {
@@ -3599,7 +3599,7 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
 
    global $wpdb;
    
-    $tablefields = $wpdb->get_results("SHOW COLUMNS FROM ".$table, ARRAY_N);
+    $tablefields = $wpdb->get_results("SHOW COLUMNS FROM `".$table."`", ARRAY_N);
 
     
     $select = '<select id="Data[Content][_DataSourceFieldMap][{{Field}}]" name="Data[Content][_DataSourceFieldMap][{{Field}}]">';

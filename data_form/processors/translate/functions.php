@@ -119,7 +119,7 @@ function config_translate($ProcessID, $Table, $Config = false){
 
 
 
-    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
+    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM `".$Table."`", ARRAY_N);
     
     $Return .= '<p><strong>Fields to Translate</strong></p>';
     

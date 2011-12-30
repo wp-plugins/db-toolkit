@@ -250,7 +250,7 @@ return $Return;
 function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
         global $wpdb;
         $WhereField .= '<option value=""></option>';
-	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
 			$Sel = '';
@@ -342,7 +342,7 @@ return $IReturn.$VReturn.$URLField.$Types.$LocalURLField;
 }
 function linked_loadAdditionalValue($Table, $Field, $Default = false, $filtered = false){
 	$ElID = rand(1, 999999);
-	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	//$Return = '<input type="hidden" name="Data[Content]['.$Field.']" value="'.$Table.'" id="linkedTableRef_'.LinkedField.'" />';
 	$Val = '';
 	if (mysql_num_rows($result) > 0) {
@@ -367,7 +367,7 @@ function linked_loadAdditionalValue($Table, $Field, $Default = false, $filtered 
 	return $Val;
 }
 function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
-	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	//$Return = '<input type="hidden" name="Data[Content]['.$Field.']" value="'.$Table.'" id="linkedTableRef_'.LinkedField.'" />';
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
@@ -417,7 +417,7 @@ function linked_loadfilterfields($Table, $Field, $MainTable, $Defaults = false){
 	$ValField .= '</div>';
 	
 	
-	$result = mysql_query("SHOW COLUMNS FROM ".$MainTable);
+	$result = mysql_query("SHOW COLUMNS FROM `".$MainTable."`");
 	$FilField = '<select name="Data[Content][_Linkedfilterfields]['.$Field.'][Filter]" id="Filter_'.$Table.'">';
 	$FilField .= '<option value="false">None</option>';
 	if (mysql_num_rows($result) > 0) {

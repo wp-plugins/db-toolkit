@@ -174,6 +174,7 @@ body.admin-bar #appTitle{
 	margin:0;
 	padding: 0;
 	position:relative;
+        z-index: 999999;
 }
 .tools_widgets .root_item{
 	display:inline;
@@ -188,9 +189,10 @@ body.admin-bar #appTitle{
 .tools_widget ul{
 	margin:0;
 	padding:0;
+        z-index: 9999999;
 }
 .tools_widgets li a.parent {
-	color: #;
+	
 	line-height:24px;
 	text-shadow:0 1px 0 #FFF;
         padding:0 10px 0 10px;
@@ -230,7 +232,7 @@ body.admin-bar #appTitle{
 	margin:0;
 	padding:0;
 	background:#fff;
-	width:215px;
+	min-width:215px;
 	z-index:60;
 	box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.3);
 
@@ -260,6 +262,8 @@ body.admin-bar #appTitle{
 .tools_widgets ul ul {
 	left:100%;
 	top:0px;
+        max-height: 500px;
+        overflow: auto;
 }
 .tools_widgets ul span.description{
     font-size: 0.9em;
@@ -267,7 +271,10 @@ body.admin-bar #appTitle{
 .tools_widgets ul li:hover > a {
 	color: #fff;
         background-color: #808080;
-        text-shadow:0 1px 0 #333;
+        text-shadow:0 1px 0 #333;        
+}
+#footer {
+    
 }
 .tools_widgets ul li:hover > a span.description{
     color: #e5e5e5;

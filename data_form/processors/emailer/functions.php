@@ -69,7 +69,7 @@ function config_emailer($ProcessID, $Table, $Config = false){
     $Return = '<p>Email Address: <input type="text" value="'.$rval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_recipient]" /></p>';
     $Return .= '<p>Email Subject: <input type="text" value="'.$sval.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_subject]" /></p>';
 
-    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
+    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM `".$Table."`", ARRAY_N);
     $Sender = '<option value="">Self</option>';
 
     

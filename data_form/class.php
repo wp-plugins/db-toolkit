@@ -24,30 +24,106 @@ if(is_admin()) {
     }
     function df_listTables($TableReference, $JFunc = 'alert', $Default = false, $Req = false) {
 
+global $wpdb;
+
+        if(empty($Value))
+            $Value = '';
+        //$Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
+        //$Return .= '<a tabindex="0" href="#database-tables" class="button" id="hierarchybreadcrumb">Select Database & Table</a>';
+
+        $refTitle = 'Select Database & Table';
+        if(!empty($Default)){
+            $refTitle = 'Table: '.str_replace('`', '', $Default).': Change';
+        }
+
+        $Return .= '<ul class="tools_widgets">';        
+        $Return .= '<li class="root_item"><a class="parent hasSubs" id="tableReferance">'.$refTitle.'</a>';
+        $Return .= '<ul>';
+        $databases = $wpdb->get_results("show databases", ARRAY_N);
+
         
+        foreach($databases as $database) {
+            if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
+
+                $class="";
+                if($database[0] == DB_NAME){
+                    $class="highlight";
+                }
+
+                $Return .= '<li><a class="'.$class.'" ><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/db.png" align="absmiddle" /> '.$database[0].'</a>';
+                $Return .= '<ul>';
+                $Data = $wpdb->get_results( "SHOW TABLES FROM ".$database[0], ARRAY_N);
+                $Return .= '<li class="title"><h2>'.$database[0].'</h2><li>';
+                foreach($Data as $Tables) {
+                    //vardump($Tables);
+                    //if(strpos($Tables[0], $wpdb->prefix.'dbt_') === false){
+                        $Value = $Tables[0];
+                        $Sel = '';
+                        if($Default == $Value) {
+                            $Sel = 'selected="selected"';
+                        }
+                        //if(substr($Value, 0, 5) != 'dais_'){
+                        $List[] = $Value;
+                        //$Return .= '<option value="'.$database[0].'`.`'.$Value.'" '.$Sel.'>&nbsp;&nbsp;'.$Value.'</option>';
+                        $Return .= '<li><a href="#" onclick="jQuery(\'#'.$TableReference.'\').val(\''.$database[0].'`.`'.$Value.'\'); jQuery(\'#tableReferance\').html(\'Table: '.$database[0].'.'.$Value.' : Change\'); '.$JFunc.'(\''.$TableReference.'\'); jQuery(\'.root_item ul\').hide();"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/table.png" align="absmiddle" /> '.$Value.'</a></li>';
+                        //}
+                    //}
+
+                }
+                $Return .= '</ul>';
+                $Return .= '</li>';
+            }
+        }
+
+        $Return .= '</ul>';
+        $Return .= '</li>';
+
+        $Return .= '<li class="root_item">&nbsp;</li>';
+        $Return .= '<li class="root_item">&nbsp;</li>';
+        $Return .= '<li class="root_item"><a class="parent button" href="#" onclick="dt_addNewTable(\''.DB_NAME.'\'); return false;">Create New Table</a></li>';
+
+        $Return .= '</ul>';
+
+        $Return .= '<div style="clear:both;"><input type="hidden" value="'.$Default.'" name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');" /></div>';
+        return $Return;
+
+
+
+        /// old select method
         
         global $wpdb;
         
-        $Data = $wpdb->get_results( "SHOW TABLES", ARRAY_N);
         if(empty($Value))
             $Value = '';
-        $Return = 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
+        $Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
         $Return .= '<option value="">'.$Value.'</option>';
-        foreach($Data as $Tables) {
-            //vardump($Tables);
-            //if(strpos($Tables[0], $wpdb->prefix.'dbt_') === false){
-                $Value = $Tables[0];
-                $Sel = '';
-                if($Default == $Value) {
-                    $Sel = 'selected="selected"';
-                }
-                //if(substr($Value, 0, 5) != 'dais_'){
-                $List[] = $Value;
-                $Return .= '<option value="'.$Value.'" '.$Sel.'>'.$Value.'</option>';
-                //}
-            //}
 
+        $databases = $wpdb->get_results("show databases", ARRAY_N);
+        
+
+        foreach($databases as $database) {
+            if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
+                $Return .= '<optgroup label="'.$database[0].'">';
+                $Data = $wpdb->get_results( "SHOW TABLES FROM ".$database[0], ARRAY_N);
+                foreach($Data as $Tables) {
+                    //vardump($Tables);
+                    //if(strpos($Tables[0], $wpdb->prefix.'dbt_') === false){
+                        $Value = $Tables[0];
+                        $Sel = '';
+                        if($Default == $Value) {
+                            $Sel = 'selected="selected"';
+                        }
+                        //if(substr($Value, 0, 5) != 'dais_'){
+                        $List[] = $Value;
+                        $Return .= '<option value="'.$database[0].'`.`'.$Value.'" '.$Sel.'>&nbsp;&nbsp;'.$Value.'</option>';
+                        //}
+                    //}
+
+                }
+                $Return .= '</optgroup>';
+            }
         }
+
         $Return .= '</select> <a href="#" onclick="dt_addNewTable(); return false;">Add New</a>';
         return $Return;
     }
@@ -60,7 +136,7 @@ if(is_admin()) {
         //include('configs/upc.cfg.php');
         ob_start();
         echo '<span class="captions">Required</span>';
-        $result = mysql_query("SHOW COLUMNS FROM ".$Table);
+        $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
         if (mysql_num_rows($result) > 0) {
             $Row = 'list_row2';
             while ($row = mysql_fetch_assoc($result)) {
@@ -114,7 +190,7 @@ if(is_admin()) {
         if(empty($Table)){
             return;
         }        
-        $result = mysql_query("SHOW COLUMNS FROM ".$Table);
+        $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
         $Return = '<select name="Data[Content]['.$Name.']" id="Return_'.$Table.'">';
         //$Return .= '<option value="false">None</option>';
         if (mysql_num_rows($result) > 0) {

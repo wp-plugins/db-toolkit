@@ -60,7 +60,7 @@ function config_akismet($ProcessID, $Table, $Config = false){
     }
 
     $Return = '<p>Akismet API Key: <input type="text" value="'.$val.'" name="Data[Content][_FormProcessors]['.$ProcessID.'][_APIKey]" /></p>';
-    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
+    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM `".$Table."`", ARRAY_N);
 
     $spam = '<option value=""></option>';
     $name = '<option value=""></option>';

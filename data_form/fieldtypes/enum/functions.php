@@ -9,7 +9,7 @@ function enum_showFilter($Field, $Type, $Default, $Config, $EID){
 
 	$Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2>';
 	// ------ //
-	$result = mysql_query("SHOW COLUMNS FROM ".$Config['_main_table']);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Config['_main_table']."`");
 	if(mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
 			if($row['Field'] == $Field){

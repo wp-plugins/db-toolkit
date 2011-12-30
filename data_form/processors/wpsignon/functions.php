@@ -35,7 +35,7 @@ function config_wpsignon($ProcessID, $Table, $Config = false){
     
     global $wpdb;
 
-    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
+    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM `".$Table."`", ARRAY_N);
     
     $Return .= '<h2>Login Fields</h2>';
 

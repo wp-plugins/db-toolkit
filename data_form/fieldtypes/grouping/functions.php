@@ -41,7 +41,7 @@ function grouping_setup($Field, $Table, $Config=false){
     
     
     global $wpdb;
-    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM ".$Table, ARRAY_N);
+    $Fields = $wpdb->get_results( "SHOW COLUMNS FROM `".$Table."`", ARRAY_N);
     $Return = '<div style="padding:3px;" class="list_row1">';
     $Return .= 'Grouping Action: <select name="Data[Content][_GroupingFields]['.$Field.'][Action]">';
     $Sel = '';

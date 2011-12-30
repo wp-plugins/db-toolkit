@@ -116,7 +116,7 @@ function math_loadfields($Table, $Field, $Defaults = false, $Media = false){
 
         
         $Config = $Media['Content'];       
-	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
 			$Sel = '';
@@ -223,7 +223,7 @@ return $IReturn.$VReturn;
 }
 function math_loaddates($Table, $Field, $Config){
 
-	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	if (mysql_num_rows($result) > 0) {
                 $IDReturn .= '<option value="NOW" >NOW</option>';
                 $ValueReturn .= '<option value="NOW" >NOW</option>';

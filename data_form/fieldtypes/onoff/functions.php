@@ -80,7 +80,7 @@ function onoff_timestamp($Field, $Table, $Config = false){
         if(empty($Table)){
             $Table = $Config['Content']['_main_table'];
         }
-	$result = mysql_query("SHOW COLUMNS FROM ".$Table);
+	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	$Sel = '';
 	if(!empty($Config['Content']['_onoff'][$Field]['datestamp'])){
 		$Sel = 'checked="checked"';	

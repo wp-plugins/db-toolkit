@@ -683,14 +683,14 @@
 
 
 
-    function dt_addNewTable(){
+    function dt_addNewTable(db){
 
         id = Math.floor(Math.random()*9999999);
 
 	if(jQuery("#ui-jsDialog-"+id).length == 1){
             jQuery("#ui-jsDialog-"+id).remove();
 	}
-	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'" title="Create Table"><p><label>Name</lable><input type="text" id="'+id+'_newTable" value="" style="width:98%;" /></p></div>');
+	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'" title="Create Table"><p>This will add a new table to `<strong>'+db+'</strong>`</p><p><label>Name</lable><input type="text" id="'+id+'_newTable" value="" style="width:98%;" /></p></div>');
 	jQuery("#ui-jsDialog-"+id).dialog({
             position: 'center',
             title: 'New Table',
