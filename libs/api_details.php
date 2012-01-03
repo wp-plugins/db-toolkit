@@ -60,6 +60,7 @@ $APIKey = md5($Media['ID']. $Config['_APISeed']);
             <th scope="row">Methods</th>
             <td>
                 <ul>
+                    <?php if(!empty ($Config['_APIMethodSearch'])){ ?><li>list : GET <span class="description">Retrieves an array of all entries matching the field Search for (requires a fieldname get with query text. field needs to be indexed.</span></li><?php } ?>
                     <?php if(!empty ($Config['_APIMethodList'])){ ?><li>list : GET <span class="description">Retrieves an array of all entries.</span></li><?php } ?>
                     <?php if(!empty ($Config['_APIMethodFetch'])){ ?><li>fetch : GET <span class="description">Retrieves a single item. Requires itemID variable.</span></li><?php } ?>
                     <?php if(!empty ($Config['_APIMethodInsert'])){ ?><li>insert : POST <span class="description">Inserts a single item.</span></li><?php } ?>
