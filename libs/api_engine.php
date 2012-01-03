@@ -127,7 +127,35 @@
     }
     if (!empty($Method)) {
         switch ($Method) {
-            default:
+            
+            case 'search':
+                if(empty($Config['_APIMethodSearch'])){
+                    api_Deny();
+                    exit;
+                }
+                if (!empty($Format)) {
+                    if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
+                        api_Deny();
+                    }
+                    header("content-type: text/" . strtolower($Format));
+                        //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
+                    $Return = false;
+                    if($Format == 'html'){
+                        $Format = false;
+                    }
+                    include PLUGINDIR.'/db-toolkit/data_report/element.def.php';
+                    if(!empty($_GET)){
+                    // Convert the search strings
+                        foreach($_GET as $gkey=>$val){
+                            $_SESSION['reportFilters'][$interfaceID][$gkey] = $val;
+                        }
+                    }
+                    
+                    echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
+                    
+                    exit;
+                }
+                break;
             case 'list':
                 if(empty($Config['_APIMethodList'])){
                     api_Deny();

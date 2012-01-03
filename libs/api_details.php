@@ -121,9 +121,9 @@ $APIKey = md5($Media['ID']. $Config['_APISeed']);
             <th scope="row">Return Types</th>
             <td>
                 <ul>                    
-                    <?php if(!empty ($Config['_APIMethodList'])){
+                    <?php if(!empty ($Config['_APIMethodSearch'])){
                      ?>
-                    <li>list : <span class="description">entries array( entry array(
+                    <li>search : <span class="description">entries array( entry array(
                     <?php
                         $Fields = array();
                         foreach($Config['_IndexType'] as $Field=>$Index){
@@ -134,6 +134,23 @@ $APIKey = md5($Media['ID']. $Config['_APISeed']);
                                 $Fields[] = $Field;
                     
                             }                        
+                        }
+                        echo implode(' , ', $Fields);
+                    }
+                    ?>) )</span></li>
+                    <?php if(!empty ($Config['_APIMethodList'])){
+                     ?>
+                    <li>list : <span class="description">entries array( entry array(
+                    <?php
+                        $Fields = array();
+                        foreach($Config['_IndexType'] as $Field=>$Index){
+
+                            $viewtype = explode('_', $Index);
+                            if($viewtype[1] == 'show'){
+
+                                $Fields[] = $Field;
+
+                            }
                         }
                         echo implode(' , ', $Fields);
                     }

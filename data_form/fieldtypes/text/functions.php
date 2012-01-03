@@ -108,6 +108,30 @@ function text_presuff($Field, $Table, $Config = false){
                 $Return .= '<option value="password" '.$sel.'>Password</option>';
 
 
+        $Return .= '</select><br />';
+        $Return .= 'Filter Mode: <select name="Data[Content][_filterMode]['.$Field.']">';
+            
+
+                $sel = 'selected="selected"';
+                if($Config['Content']['_filterMode'][$Field] != 'mid'){
+                    $sel = '';
+                }
+                $Return .= '<option value="mid" '.$sel.'>% query %</option>';
+
+                $sel = 'selected="selected"';
+                if($Config['Content']['_filterMode'][$Field] != 'before'){
+                    $sel = '';
+                }
+                $Return .= '<option value="before" '.$sel.'>% query</option>';
+                
+                $sel = 'selected="selected"';
+                if($Config['Content']['_filterMode'][$Field] != 'after'){
+                    $sel = '';
+                }
+                $Return .= '<option value="after" '.$sel.'>query %</option>';
+
+
+
         $Return .= '</select>';
 
 

@@ -27,6 +27,11 @@ echo dais_customfield('text', 'Sharedsecret Seed', '_APISeed', '_APISeed', 'list
 <h2>Methods</h2>
 <?php
 $Sel = '';
+if(!empty($Element['Content']['_APIMethodSearch'])) {
+    $Sel = 'checked="checked"';
+}
+echo dais_customfield('checkbox', 'Search', '_APIMethodSearch', '_APIMethodList', 'list_row2' , 1, $Sel, 'Searches according to the specified field in GET.');
+$Sel = '';
 if(!empty($Element['Content']['_APIMethodList'])) {
     $Sel = 'checked="checked"';
 }

@@ -1310,7 +1310,7 @@ function dr_exportChartImage($chartData) {
 
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false) {
 
-
+    
 //Filters will be picked up via Session value
 // Set Vars
     if(empty($Page)){

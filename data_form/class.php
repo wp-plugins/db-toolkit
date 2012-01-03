@@ -24,8 +24,8 @@ if(is_admin()) {
     }
     function df_listTables($TableReference, $JFunc = 'alert', $Default = false, $Req = false) {
 
-global $wpdb;
-
+    global $wpdb;
+        /*
         if(empty($Value))
             $Value = '';
         //$Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
@@ -87,7 +87,7 @@ global $wpdb;
         $Return .= '<div style="clear:both;"><input type="hidden" value="'.$Default.'" name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');" /></div>';
         return $Return;
 
-
+        */
 
         /// old select method
         
@@ -98,13 +98,13 @@ global $wpdb;
         $Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
         $Return .= '<option value="">'.$Value.'</option>';
 
-        $databases = $wpdb->get_results("show databases", ARRAY_N);
+        //$databases = $wpdb->get_results("show databases", ARRAY_N);
         
 
-        foreach($databases as $database) {
-            if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
-                $Return .= '<optgroup label="'.$database[0].'">';
-                $Data = $wpdb->get_results( "SHOW TABLES FROM ".$database[0], ARRAY_N);
+        //foreach($databases as $database) {
+            //if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
+                //$Return .= '<optgroup label="'.$database[0].'">';
+                $Data = $wpdb->get_results( "SHOW TABLES FROM ".DB_NAME, ARRAY_N);
                 foreach($Data as $Tables) {
                     //vardump($Tables);
                     //if(strpos($Tables[0], $wpdb->prefix.'dbt_') === false){
@@ -115,16 +115,16 @@ global $wpdb;
                         }
                         //if(substr($Value, 0, 5) != 'dais_'){
                         $List[] = $Value;
-                        $Return .= '<option value="'.$database[0].'`.`'.$Value.'" '.$Sel.'>&nbsp;&nbsp;'.$Value.'</option>';
+                        $Return .= '<option value="'.$Value.'" '.$Sel.'>&nbsp;&nbsp;'.$Value.'</option>';
                         //}
                     //}
 
                 }
-                $Return .= '</optgroup>';
-            }
-        }
+                //$Return .= '</optgroup>';
+            //}
+        //}
 
-        $Return .= '</select> <a href="#" onclick="dt_addNewTable(); return false;">Add New</a>';
+        $Return .= '</select> <a href="#" onclick="dt_addNewTable(\''.DB_NAME.'\'); return false;">Add New</a>';
         return $Return;
     }
 
