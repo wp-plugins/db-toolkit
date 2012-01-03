@@ -7,9 +7,11 @@ if(!empty($_SESSION['reportFilters'][$EID][$Field])){
 	if($WhereTag == ''){
 		$WhereTag = " WHERE ";
 	}
-
-	$queryWhere[] = 'prim.'.$Field." IN ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
-
+        if(is_array($_SESSION['reportFilters'][$EID][$Field])){
+            $queryWhere[] = 'prim.'.$Field." IN ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+        }else{
+            $queryWhere[] = 'prim.'.$Field." = '".$_SESSION['reportFilters'][$EID][$Field]."'";
+        }
         if(!empty($Format)){
             if($Format == 'pdf'){
                 $apiOutput['filters'][$Field] = implode('\',\'', $_SESSION['reportFilters'][$EID][$Field]);

@@ -152,7 +152,9 @@
                     }
                     
                     echo dr_BuildReportGrid($interfaceID, $Page, false, false, strtolower($Format), $Limit, $Return);
-                    
+                        foreach($_GET as $gkey=>$val){
+                            unset($_SESSION['reportFilters'][$interfaceID][$gkey]);
+                        }
                     exit;
                 }
                 break;
