@@ -7,11 +7,11 @@
 
 
     // Custom Taxonomy Code
-    add_action( 'init', 'build_taxonomies', 0 );
+    //add_action( 'init', 'build_taxonomies', 0 );
 
-    function build_taxonomies() {
-    register_taxonomy( 'member', 'post', array( 'hierarchical' => FALSE, 'label' => 'Members', 'query_var' => true, 'rewrite' => true ) );
-    }  
+    //function build_taxonomies() {
+    //register_taxonomy( 'member', 'post', array( 'hierarchical' => FALSE, 'label' => 'Members', 'query_var' => true, 'rewrite' => true ) );
+    //}
 
 
 
