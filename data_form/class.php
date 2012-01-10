@@ -23,9 +23,9 @@ if(is_admin()) {
         return 'No Config Options Available';
     }
     function df_listTables($TableReference, $JFunc = 'alert', $Default = false, $Req = false) {
-
+    /*
     global $wpdb;
-        /*
+        
         if(empty($Value))
             $Value = '';
         //$Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
@@ -52,7 +52,7 @@ if(is_admin()) {
 
                 $Return .= '<li><a class="'.$class.'" ><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/db.png" align="absmiddle" /> '.$database[0].'</a>';
                 $Return .= '<ul>';
-                $Data = $wpdb->get_results( "SHOW TABLES FROM ".$database[0], ARRAY_N);
+                $Data = $wpdb->get_results( "SHOW TABLES FROM `".$database[0]."`", ARRAY_N);
                 $Return .= '<li class="title"><h2>'.$database[0].'</h2><li>';
                 foreach($Data as $Tables) {
                     //vardump($Tables);
@@ -104,7 +104,7 @@ if(is_admin()) {
         //foreach($databases as $database) {
             //if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
                 //$Return .= '<optgroup label="'.$database[0].'">';
-                $Data = $wpdb->get_results( "SHOW TABLES FROM ".DB_NAME, ARRAY_N);
+                $Data = $wpdb->get_results( "SHOW TABLES FROM `".DB_NAME."`", ARRAY_N);
                 foreach($Data as $Tables) {
                     //vardump($Tables);
                     //if(strpos($Tables[0], $wpdb->prefix.'dbt_') === false){
@@ -511,6 +511,95 @@ function set_iso($string) {
     }
 }
 
+function df_reloadFormField($EID, $Field, $Default = false){
+    global $wpdb;
+
+    $source = explode('|', $Field);
+    $Element = getelement($source[0]);
+    $Config = $Element['Content'];
+    $Field = $source[1];
+
+    if(!empty($Default)){
+        parse_str($Default, $Defaults);
+        foreach($Defaults as $default){
+            $Defaults[$Field] = $default;
+            break;
+        }
+    }
+
+
+    $FieldSet = explode('_', $Config['_Field'][$Field]);
+
+
+        $name = df_parseCamelCase($Field);
+        if(!empty ($Config['_FieldTitle'][$Field])){
+            $name = $Config['_FieldTitle'][$Field];
+        }
+        $Req = false;
+        if(!empty($Config['_Required'][$Field])) {
+            $name = '<span style="color:#ff0000;">*</span>'.$name;
+            $Req = 'validate[required]';
+        }
+        if(!empty($Config['_Unique'][$Field])) {
+            if(!empty($Req)) {
+                $Req = 'validate[required, ajax[ajaxUnique]]';
+            }else {
+                $Req = 'validate[optional, ajax[ajaxUnique]]';
+            }
+        }
+
+
+
+    if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
+
+        $Pre = "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>\n";
+        ob_start();
+        if(!empty($Defaults[$Field])){
+            $Val = esc_attr($Defaults[$Field]);
+        }else{
+            $Val = '';
+        }
+        if(!empty($Config['_readOnly'][$Field])){
+            $func = $FieldSet[0].'_processValue';
+            if(function_exists($func)){
+                echo $func($Val, $FieldSet[1], $Field, $Config, $Element['ID'], $Defaults);
+            }
+        }else{
+            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+        }
+        $Pre .= ob_get_clean();
+        $Pre .= "<div class=\"caption\" id=\"caption_".$Element['ID']."_".$Field."\">\n";
+        $Pre .= $Config['_FieldCaption'][$Field].'&nbsp';
+        $Pre .= "</div>\n";
+        
+
+    }else{
+
+        // load auto mode
+        $Pre = '<td id="'.$Element['ID'].'_'.$Field.'" nowrap="nowrap" width="30%" style="text-align:right;background-color:inherit; border:inherit;padding:3px;" valign="top"><strong>'.$name.'&nbsp;</strong></td>';
+        $Pre .= '<td class="'.$Row.'" style="background-color:inherit; border:inherit;padding:3px;" valign="top">';
+        //df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
+        ob_start();
+        include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+        $Pre .= ob_get_clean();
+        // Caption
+        $Pre .= '<div class="caption">';
+            if(!empty ($Config['_FieldCaption'][$Field])){
+               $Pre .= $Config['_FieldCaption'][$Field];
+            }else{
+                $Pre .= '&nbsp;';
+            }
+        $Pre .= '</div>';
+
+        $Pre .= '</td>';
+    }
+
+    $Output['html'] = $Pre;
+    $Output['element'] = 'form-field-'.$Field;
+    return $Output;
+}
+
+// TODO: rebuild this to be better!!!
 function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
     global $wpdb;
@@ -519,10 +608,6 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     //vardump($Config);
     if(!empty($Config['_FormLayout'])) {
         parse_str($Config['_FormLayout'], $Columns);
-        if(empty($Columns['FieldList_left'])) {
-            //	unset($Columns);
-            //	unset($Config['_FormLayout']);
-        }
     }
     if(!empty($Config['_Edit_Element_Reference'])) {
         $Element = getelement($Config['_Edit_Element_Reference']);
@@ -577,7 +662,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     }
     $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
     $Hidden .= '<input type="hidden" name="action" id="action" value="true" />';
-    $Hidden .= '<input type="hidden" name="dataForm['.$Element['ID'].'][_control_'.uniqid().']" id="processKey" value="'.$_SESSION['processKey'].'" />';
+    $Hidden .= '<input type="hidden" name="dataForm['.$Element['ID'].'][_control_'.uniqid().']" id="processKey_inner" value="'.$_SESSION['processKey'].'" />';
 
 
     /// attempt to place in here
@@ -592,6 +677,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 		";
     }
     $Form = '';
+
+    // Build Form layout
     if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
         parse_str($Config['_gridLayout'], $Layout);
         
@@ -766,7 +853,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             $Shown .= '</div>';
         }
         if(!empty($Defaults)) {            
-            $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
+            //$Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
             $Hidden .= '<input type="hidden" name="dr_update" value="1" />';
             $Hidden .= '<input type="hidden" name="dataForm[EID]" value="'.$Element['ID'].'" />';
             $Hidden .= '<input type="hidden" name="dataForm['.$Config['_ReturnFields'][0].']" value="'.$EditID.'" />';
@@ -797,6 +884,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         return $Output;
     }
 
+
+    // Build auto form
     $Shown = '<table width="100%" border="0" cellspacing="0" class="captureForm" cellpadding="0">';
     if(!empty($Config['_Required'])) {
         $_SESSION['dataform']['OutScripts'] .= "
@@ -845,7 +934,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             if(substr($Field,0, 2) != '__' || !empty($FieldTypes[$FieldSet[1]]['cloneview'])) {
                 if(!empty($FieldTypes[$FieldSet[1]]['visible'])) {
 
-                    $Pre = '<tr class="'.$Row.'" style="padding:3px;">';
+                    $Pre = '<tr class="'.$Row.'" style="padding:3px;" id="form-field-'.$Field.'">';
                     $Pre .= '<td id="'.$Element['ID'].'_'.$Field.'" nowrap="nowrap" class="'.$Row.'" width="30%" style="text-align:right;background-color:inherit; border:inherit;padding:3px;" valign="top"><strong>'.$name.'&nbsp;</strong></td>';
                     $Pre .= '<td class="'.$Row.'" style="background-color:inherit; border:inherit;padding:3px;" valign="top">';
                     //df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
