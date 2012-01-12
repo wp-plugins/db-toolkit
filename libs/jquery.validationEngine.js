@@ -55,7 +55,7 @@
 						"alertText":"* No special caracters allowed"},	
 					"ajaxUnique":{
 						"file":"?validatorUniques=true",
-						"alertTextOk":"* Entry does not exist",
+						"alertTextOk":"* Available",
 						"alertTextLoad":"* Verifying...",
 						"alertText":"* Entry exists."},	
 					"ajaxName":{

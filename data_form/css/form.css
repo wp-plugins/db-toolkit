@@ -5,6 +5,7 @@
 	font-family:arial,helvetica,sans-serif;
 	font-size:1em;
         padding-top: 10px;
+        color: #666;
 	/*background-color:#FFF;*/
 }
 .formular .form-gen-row{
@@ -30,6 +31,11 @@
 	font-weight:bold;
 	display:block;
 	margin-bottom:2px;
+}
+.formular label.entrylabel{
+	font-weight:normal;	
+	padding: 2px;
+        margin: 0;
 }
 .formular label em{
 	color:#C00;
@@ -69,7 +75,8 @@
 
 .formular input.text, .formular textarea.textbox, .formular textarea.textboxlarge, .formular input.date, .formular select, .formular textarea.textboxcode{
 	border:1px solid #DDDDDD;
-	padding:2px;
+	padding:3px;
+        margin-top:2px;
 	float:left;
 }
 .formular select{

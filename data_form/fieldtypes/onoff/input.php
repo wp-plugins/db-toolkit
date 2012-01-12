@@ -20,5 +20,6 @@ $Sel = '';
 if($Defaults[$Field] == 1){
 	$Sel = 'checked="checked"';
 }
-echo '<input type="checkbox" id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" value="1" '.$Sel.' />';
+echo '<div style="padding:3px;"><input type="checkbox" id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" value="1" '.$Sel.' /><label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'">'.$Config['_FieldCaption'][$Field].'</label></div>';
+$Config['_FieldCaption'][$Field] = '';
 ?>

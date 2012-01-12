@@ -6,13 +6,13 @@
  *
  */
 
-        wp_register_script('ckEditor', WP_PLUGIN_URL. '/db-toolkit/data_form/fieldtypes/text/ckeditor/ckeditor.js');
+        wp_register_script('ckEditor', WP_PLUGIN_URL. '/db-toolkit/data_form/fieldtypes/text/ckeditor/ckeditor.js', 'jquery', false, true);
         wp_enqueue_script("ckEditor");
         wp_register_style('ckEditorCSS', WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/text/ckeditor/skins/kama/editor.css');
         wp_enqueue_style('ckEditorCSS');
 
 
-        wp_register_script('miniColors', WP_PLUGIN_URL. '/db-toolkit/data_form/fieldtypes/text/js/jquery.miniColors.min.js');
+        wp_register_script('miniColors', WP_PLUGIN_URL. '/db-toolkit/data_form/fieldtypes/text/js/jquery.miniColors.min.js', 'jquery', false, true);
         wp_enqueue_script("miniColors");
         wp_register_style('miniColorsCSS', WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/text/js/jquery.miniColors.css');
         wp_enqueue_style('miniColorsCSS');

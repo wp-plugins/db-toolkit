@@ -28,11 +28,11 @@ if($FieldSet[1] == 'linked'){
 						$Sel = 'checked="checked"';
 					}
 				}
-				$Return .= '<div style="width:32%; float:left;"><label for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' />'.$lrow['outValue'].'</label></div>';
+				$Return .= '<div style="padding:3px;"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' /><label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'">'.$lrow['outValue'].'</label></div>';
 				$checkindex++;
 			}
 			//$Return .= '</select>';
-		$Return .= '<div style="clear:both;"></div>';	
+		
 		break;
 		case "multiselect":
 				$concatvalues = array();
@@ -94,8 +94,12 @@ if($FieldSet[1] == 'linked'){
 			}
 			$Return .= '</select>';
                         // add insert Auto button!
-                        //$Return .= '<div class="fbutton"><div class="button add-new-h2"><span onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadEntries);return false;" style="padding-left: 20px;" class="add">Add Entry</span></div></div>';
 
+                        // get the linked interfaces add entry button title
+                        if(!empty($Config['_Linkedfields'][$Field]['_addInterface'])){
+                        $linkInterface = getelement($Config['_Linkedfields'][$Field]['_addInterface']);                        
+                            $Return .= '<div class="fbutton"><div class="button add-new-h2"><span onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadField);return false;" style="padding-left: 20px;" class="add">'.$linkInterface['Content']['_New_Item_Title'].'</span></div></div>';
+                        }
                         $_SESSION['dataform']['OutScripts'] .="
 
                             

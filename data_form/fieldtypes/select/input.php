@@ -26,7 +26,7 @@ switch ($Config['_SelectType'][$Field]){
                 }
             }
             $id= uniqid();
-            echo '<div style="clear:both;"><input type="radio" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> '.$optionValue.'</div>';
+            echo '<div style="clear:both;"><input type="radio" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> <label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'">'.$optionValue.'</label></div>';
         }
         break;
     case 'checkbox':
@@ -43,7 +43,7 @@ switch ($Config['_SelectType'][$Field]){
                 }
             }
             $id= uniqid();
-            echo '<div style="clear:both;"><input type="checkbox" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> '.$optionValue.'</div>';
+            echo '<div style="clear:both;"><input type="checkbox" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> <label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'">'.$optionValue.'</label></div>';
         }
         break;
 }

@@ -272,7 +272,8 @@ function dt_styles($preIs = false) {
         }else{
             wp_register_style('form_style', WP_PLUGIN_URL.'/db-toolkit/data_form/css/form.css');
             // adding uniform :D
-            wp_register_style('form_style_uniform', WP_PLUGIN_URL.'/db-toolkit/data_form/css/uniform.aristo.css');
+            //wp_register_style('form_style_uniform', WP_PLUGIN_URL.'/db-toolkit/data_form/css/aristo/uniform.aristo.css');
+            wp_register_style('form_style_uniform', WP_PLUGIN_URL.'/db-toolkit/data_form/css/uniform/uniform.default.css');
             //wp_enqueue_style('form_style');
             wp_enqueue_style('form_style_uniform');
             wp_enqueue_style('form_style');

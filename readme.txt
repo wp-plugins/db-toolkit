@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.021
+Stable tag: 0.3.1.023
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -58,7 +58,10 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
-= 0.3.1.020 =
+= 0.3.1.023 =
+* Did some form updates. All forms are now styled with uniform to make it look better.
+
+= 0.3.1.021 =
 * Fixed a bug that prevented naming a field 'order' and setting it as the sort field.
 
 = 0.3.1.020 =

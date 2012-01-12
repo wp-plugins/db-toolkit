@@ -89,7 +89,8 @@
         "dbte_installProcessor" => "1",
         "dbte_installViewProcessor" => "1",
         "dr_rebuildApps" => "1",
-        "pinger" => "1"
+        "pinger" => "1",
+        "df_reloadFormField" => "1"
     );
 
 function dt_buildConfigPanel($Title, $Pages, $Defaults){

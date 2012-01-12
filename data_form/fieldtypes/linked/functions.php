@@ -108,7 +108,7 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
 	$Return .= '<div class="admin_config_panel">';
 
         // Associate an Interface for adding a new item.
-        /*
+        //*
         $Return .= '<div class="admin_config_panel"><span class="Description">Associate an Interface for adding new items inline.</span></div>';
 
         $addInt = '';
@@ -116,8 +116,8 @@ function linked_tableSetup($Field, $Table, $ElementConfig = false){
             $addInt = $ElementConfig['Content']['_Linkedfields'][$Field]['_addInterface'];
         }
 
-        $Return .= linked_interfaceBrowser($Field);
-        */
+        $Return .= linked_interfaceBrowser($Field,$ElementConfig['ID'], $addInt );
+        //*/
 
 		// Content
 		//Join Type
@@ -152,23 +152,28 @@ return $Return;
 }
 
 
-function linked_interfaceBrowser($Field, $defaultInterface = false){
+function linked_interfaceBrowser($Field, $current, $defaultInterface = false){
+
     global $wpdb;
     $interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
+
+
 
     $Return = 'Interface: <select name="Data[Content][_Linkedfields]['.$Field.'][_addInterface]" >';
     $Return .= '<option value=""></option>';
     foreach($interfaces as $Interface){
-        $Data = get_option($Interface['option_name']);
-        //echo $Data['_interfaceName'].'<br />';
-        $Sel = '';
-        if(!empty($defaultInterface)){
-            if($defaultInterface == $Interface['option_name']){
-                $Sel = 'selected="selected"';
-            }
-        }
-        $Return .= '<option value="'.$Interface['option_name'].'" '.$Sel.'>'.$Data['_Application'].' => '.$Data['_ReportDescription'].'</option>';
 
+        if($Interface['option_name'] != $current){
+            $Data = get_option($Interface['option_name']);
+            //echo $Data['_interfaceName'].'<br />';
+            $Sel = '';
+            if(!empty($defaultInterface)){
+                if($defaultInterface == $Interface['option_name']){
+                    $Sel = 'selected="selected"';
+                }
+            }
+            $Return .= '<option value="'.$Interface['option_name'].'" '.$Sel.'>'.$Data['_Application'].' => '.$Data['_ReportDescription'].'</option>';
+        }
         //vardump($Data);
     }
     $Return .= '</select>';

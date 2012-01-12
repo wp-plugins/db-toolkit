@@ -34,23 +34,7 @@ if($FieldSet[1] == 'date'){
 					});
 					jQuery('.ui-datepicker').css('z-index','9999');
 			";
-			/*
-			jQuery('#".$FieldID."').DatePicker({
-					format:'Y-m-d',
-					date: jQuery('#".$FieldID."').val(),
-					current: jQuery('#".$FieldID."').val(),
-					starts: 1,
-					position: 'right',
-					onBeforeShow: function(){
-						jQuery('#".$FieldID."').DatePickerSetDate(jQuery('#".$FieldID."').val(), true);
-					},
-					onChange: function(formated, dates){
-						jQuery('#".$FieldID."').val(formated);
-					}
-				});
 
-				";
-				*/
 }
 if($FieldSet[1] == 'datetime'){
 	$DateVal = date('Y-m-d H:i');
@@ -60,10 +44,7 @@ if($FieldSet[1] == 'datetime'){
 		}
 	$Return = '<div style="float:left;"><input name="dataForm['.$Element['ID'].']['.$Field.'][date]" id="entry_'.$Element['ID'].'_'.$Field.'_date" size="11" maxlength="25" type="text" value="'.$DateTime[0].'" class="'.$Req.' date" style="float:none;" /><div class="caption">Date</div></div><div style="float:left;">&nbsp;<input name="dataForm['.$Element['ID'].']['.$Field.'][time]" id="entry_'.$Element['ID'].'_'.$Field.'_time" size="5" maxlength="25" type="text" value="'.$DateTime[1].'" class="'.$Req.' date" style="float:none;" /><div class="caption">Time</div></div>';
 
-	$_SESSION['dataform']['OutScripts'] .= "
-	//jQuery('#entry_".$Element['ID']."_".$Field."_time').timepickr({
-     //   convention: 24	});	
-	
+	$_SESSION['dataform']['OutScripts'] .= "	
 	jQuery(\"#entry_".$Element['ID']."_".$Field."_date\").datepicker({
 		dateFormat: 'yy-mm-dd',
 		changeMonth: true,
@@ -84,12 +65,6 @@ if($FieldSet[1] == 'timepicker'){
 			$DateVal = $Defaults[$Field];
 		}
 	$Return = '<input name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" size="5" maxlength="25" type="text" value="'.$DateVal.'" class="'.$Req.' date" />';
-	$_SESSION['dataform']['OutScripts'] .= "
-	jQuery('#entry_".$Element['ID']."_".$Field."').timepickr({
-        convention: 24,
-		trigger: 'click'
-	});	
-	";
 }
 
 if($FieldSet[1] == 'timestamp'){

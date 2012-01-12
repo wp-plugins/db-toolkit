@@ -4,10 +4,11 @@
 if($FieldSet[1] == 'coordinates'){
 	$Out['Lat'] = '';
 	$Out['Lon'] = '';
-	if(!empty($Val)){
-		$Out = explode('|', $Val);
+        $Out = explode('|', $Val);
+	if(count($Out) == 2){
+		
 		$Out['Lat'] = $Out[0];
-		$Out['Lon'] = $Out[1];
+		$Out['Lon'] = $Out[1];                
 	}
 	echo '<div style="width:50%; float:left;"><div style="padding:0 5px 0 0;"><input name="dataForm['.$Element['ID'].']['.$Field.'][Lat]" type="'.$Type.'" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Out['Lat'].'" class="'.$Req.' text" />';
 	echo '<div class="caption">Latitude</div></div></div>';

@@ -5,16 +5,6 @@
  *
  */
 
-
-    // Custom Taxonomy Code
-    //add_action( 'init', 'build_taxonomies', 0 );
-
-    //function build_taxonomies() {
-    //register_taxonomy( 'member', 'post', array( 'hierarchical' => FALSE, 'label' => 'Members', 'query_var' => true, 'rewrite' => true ) );
-    //}
-
-
-
 // admin menus ! :D
 add_action( 'admin_bar_menu', 'dt_adminMenus', 1000);
 

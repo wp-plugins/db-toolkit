@@ -235,6 +235,13 @@ if (file_exists('fieldtypes')) {
 	jQuery(body).append('<div class="ui-overlay" id="reportpanel_block"><div class="ui-widget-overlay ui-corner-all">Loading Data</div></div>')
     }
 
+    function linked_reloadField(eid, ajaxSubmit, addquery, returnVal){
+        
+        ajaxCall('df_reloadFormField', eid, addquery, returnVal.Value, function(p){
+           jQuery('#'+p.element).html(p.html);
+        });
+    }
+
     function df_buildQuickCaptureForm(eid, ajaxSubmit, addquery, callback){
         
         
@@ -272,6 +279,12 @@ if (file_exists('fieldtypes')) {
                                 jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
                                 ajaxCall('df_processAjaxForm',formData, function(p){
                                     jQuery("#ui-jsDialog-"+eid+"").remove();
+                                    
+                                    //load callback
+                                    if (typeof callback == 'function') { // make sure the callback is a function
+                                        callback.call(this, eid, ajaxSubmit, addquery, p); // brings the scope to the callback
+                                    }
+
                                     df_loadOutScripts();
                                     dr_goToPage(eid, false);
                                 });
@@ -282,11 +295,12 @@ if (file_exists('fieldtypes')) {
                             }else{
                                 jQuery("#data_form_"+eid+"").submit();
                             }
+
                             //alert(eid);
                         }
                     });
                     jQuery("#ui-jsDialog-"+eid+"").html(c.html);
-                    //jQuery("#ui-jsDialog-"+eid+" select, #ui-jsDialog-"+eid+" input:checkbox, #ui-jsDialog-"+eid+" input:radio, #ui-jsDialog-"+eid+" input:file").uniform();
+                    jQuery("#ui-jsDialog-"+eid+" select, #ui-jsDialog-"+eid+" input:checkbox, #ui-jsDialog-"+eid+" input:radio, #ui-jsDialog-"+eid+" input:file").uniform();
                     if(c.script){
                         eval(c.script);
                     }
@@ -294,10 +308,6 @@ if (file_exists('fieldtypes')) {
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
                     df_loadOutScripts();
-                    if (typeof callback == 'function') { // make sure the callback is a function
-                        callback.call(this, eid, ajaxSubmit, addquery); // brings the scope to the callback
-                    }
-
                 });
             },
             close: function(event, ui) {
