@@ -1640,7 +1640,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // create sort fields
     if (!empty($Config['_SortField'])) {
         if (!empty($querySelects[$_SESSION['report_' . $EID]['SortField']])) {
-            $orderStr = 'ORDER BY ' . $_SESSION['report_' . $EID]['SortField'] . ' ' . $_SESSION['report_' . $EID]['SortDir'];
+            $orderStr = 'ORDER BY `' . $_SESSION['report_' . $EID]['SortField'] . '` ' . $_SESSION['report_' . $EID]['SortDir'];
         } else {
             $orderStr = 'ORDER BY prim.`' . $Config['_SortField'] . '` ' . $Config['_SortDirection'] . '';
         }
