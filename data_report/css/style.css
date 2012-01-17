@@ -147,3 +147,42 @@
 .data_report_Table_admin{
     margin-top: 10px;
 }
+
+.report_notification{
+    display: block;
+    clear:both;
+    padding:8px;
+    margin: 2px;
+    border-radius:3px;
+}
+
+.report_notification.error{
+	background:#ffe0e0;
+	padding-left:20px;
+	margin:2px 0;
+	border:1px solid #ffc1c1;
+}
+.report_notification.notice{
+	background:#FFFFCC;
+	padding-left:20px;
+	margin:2px 0;
+	border:1px solid #FFCC66;
+}
+.report_notification.warning{
+	background:#ffe0e0 url('images/exclamation.png') 2px no-repeat;
+	padding-left:20px;
+	margin:2px 0;
+	border:1px solid #ffc1c1;
+}
+.report_notification.loading{
+	background:#efefef url('images/load.gif') 2px no-repeat;
+	padding-left:20px;
+	margin:2px 0;
+	border:1px solid #ccc;
+}
+.report_notification.success{
+	background: #d0e6c1 url('images/accept.png') 2px no-repeat;
+	padding-left:20px;
+	margin:2px 0;
+	border:1px solid #77b64e;
+}

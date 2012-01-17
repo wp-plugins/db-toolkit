@@ -151,7 +151,17 @@ if($FieldSet[1] == 'mp3'){
 
 	}
 	$Return .= '<input type="file" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'" />';
-    
+       $_SESSION['dataform']['OutScripts'] .="
+        jQuery(document).ready(function($) {
+            AudioPlayer.setup(\"".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/player.swf\", {
+                width: '100%',
+                initialvolume: 100,
+                transparentpagebg: \"yes\",
+                left: \"000000\",
+                lefticon: \"FFFFFF\"
+            });
+         });
+         ";
 }
 
 

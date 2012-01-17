@@ -163,7 +163,18 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 						soundFile: \"".$File[0]."\",
 						titles: \"".$File[1]."\"
 					});
-				";                               
+
+				";
+                               $_SESSION['dataform']['OutScripts'] .="
+                                jQuery(document).ready(function($) {
+                                    AudioPlayer.setup(\"".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/player.swf\", {
+                                        width: '100%',
+                                        initialvolume: 100,
+                                        transparentpagebg: \"yes\",
+                                        left: \"000000\",
+                                        lefticon: \"FFFFFF\"
+                                    });
+                                 });";
 				return $ReturnData;
 				break;
 			case 'file';

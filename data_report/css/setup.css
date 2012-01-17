@@ -470,42 +470,7 @@ admin_toolbar td a:hover, admin_toolbar tr a:active{
 .admin_list_row1:hover, .admin_list_row2:hover, .admin_list_row3:hover, .admin_list_row3:hover{
 
 }
-.error{
-	background:#ffe0e0;
-	padding-left:20px;
-	margin:2px 0;
-	border-bottom:1px solid #ffc1c1;
-	border-top:1px solid #ffc1c1;
-}
-.notice{
-	background:#FFFFCC;
-	padding-left:20px;
-	margin:2px 0;
-	border-bottom:1px solid #FFCC66;
-	border-top:1px solid #FFCC66;
-}
-.warning{
-	background:#ffe0e0;
-	padding-left:20px;
-	margin:2px 0;
-	border-bottom:1px solid #ffc1c1;
-	border-top:1px solid #ffc1c1;
-}
-.loading{
-	background:#efefef;
-	padding-left:20px;
-	margin:2px 0;
-	border-bottom:1px solid #ccc;
-	border-top:1px solid #ccc;
-}
-.success{
-	background:#d0e6c1;
-	padding-left:20px;
-	margin:2px 0;
-	border-bottom:1px solid #77b64e;
-	border-top:1px solid #77b64e;
 
-}
 .captions{
 	font-family: "lucida grande", "lucida sans unicode", tahoma, verdana, arial, sans-serif;
 	font-size: 6pt;

@@ -1628,7 +1628,7 @@ function dt_process() {
 
 
 		}
-
+                
 
                 if($exportFormat == 'template'){
                     echo dt_renderInterface($Media['ID']);
@@ -1711,7 +1711,7 @@ function dt_rendercluster($cluster){
 
 
 // Render interface from shortcode to front end and view
-function dt_renderInterface($interface){   
+function dt_renderInterface($interface){
     if(is_array($interface)) {
         if(!empty($interface['id'])){
             unset($_SESSION['viewitemFilter'][$interface['id']]);
