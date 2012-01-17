@@ -678,6 +678,12 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     }
     $Form = '';
 
+    // setup uniform
+    if(!empty($Config['_ShowUniform'])){
+        $_SESSION['dataform']['OutScripts'] .= "
+            jQuery(\".formular select, .formular input:checkbox, .formular input:radio, .formular input:file\").uniform();
+        ";
+    }
     // Build Form layout
     if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
         parse_str($Config['_gridLayout'], $Layout);
@@ -861,8 +867,6 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $Shown .= '</form>';
         if(!empty($Config['_ajaxForms'])){
         $_SESSION['disableddataform']['OutScripts'] .= "
-        //jQuery(\"#data_form_".$Element['ID']."\").submit();
-        //if(ajaxSubmit == true) {
             
             jQuery(\"#data_form_".$Element['ID']."\").bind('submit', function(){
              ajaxCall('df_processAjaxForm',jQuery(\"#data_form_".$Element['ID']."\").serialize(), function(p){
@@ -872,7 +876,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             });
             return false;
             })
-        //}
+
         ";
         }
         // if ajax Forms

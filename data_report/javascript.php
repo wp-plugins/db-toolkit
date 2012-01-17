@@ -568,7 +568,7 @@
                         }
                     });
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").html(c.html);
-                    jQuery("#ui-jsDialog-"+id+"-"+eid+" select, #ui-jsDialog-"+id+"-"+eid+" input:checkbox, #ui-jsDialog-"+id+"-"+eid+" input:radio, #ui-jsDialog-"+id+"-"+eid+" input:file").uniform();
+                    //jQuery("#ui-jsDialog-"+id+"-"+eid+" select, #ui-jsDialog-"+id+"-"+eid+" input:checkbox, #ui-jsDialog-"+id+"-"+eid+" input:radio, #ui-jsDialog-"+id+"-"+eid+" input:file").uniform();
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'width', parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'position', 'center');
                     df_loadOutScripts();

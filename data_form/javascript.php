@@ -300,7 +300,7 @@ if (file_exists('fieldtypes')) {
                         }
                     });
                     jQuery("#ui-jsDialog-"+eid+"").html(c.html);
-                    jQuery("#ui-jsDialog-"+eid+" select, #ui-jsDialog-"+eid+" input:checkbox, #ui-jsDialog-"+eid+" input:radio, #ui-jsDialog-"+eid+" input:file").uniform();
+                    //jQuery("#ui-jsDialog-"+eid+" select, #ui-jsDialog-"+eid+" input:checkbox, #ui-jsDialog-"+eid+" input:radio, #ui-jsDialog-"+eid+" input:file").uniform();
                     if(c.script){
                         eval(c.script);
                     }
