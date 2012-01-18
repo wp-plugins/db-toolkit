@@ -28,6 +28,6 @@ echo '<div style="padding:3px;"><input type="checkbox" id="entry_'.$Element['ID'
 
 echo "<label class=\"form-gen-lable entrylabel\" style=\"display:inline !important\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>";
 
-echo '<div class="caption">'.$Config['_FieldCaption'][$Field].'</div></div>';
+echo '</div>';
 $Config['_FieldCaption'][$Field] = '';
 ?>
