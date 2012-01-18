@@ -49,28 +49,28 @@ function onoff_handleInput($Field, $Input, $FieldType, $Config, $Data){
 function onoff_setValue($id, $field, $eid){
 
 
-	$Value = 0;
+   global $wpdb;
+
 	$element = getelement($eid);
-	$Config = $element['Content'];    
-	$datestamp = '';
-	if(!empty($Config['_onoff'][$field]['datestamp'])){
-		$datestamp = ", `".$Config['_onoff'][$field]['datestampField']."` = NOW()";
-	}
+	$Config = $element['Content'];
 
-        $pre = mysql_query("SELECT `".$field."` FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$id."' LIMIT 1;");
-        $data = mysql_fetch_assoc($pre);
+        $Data[$Config['_ReturnFields'][0]] = $id;
+        $Data[$Config['_ReturnFields'][0]] = $id;
 
-        $Value = 1;
-        if($data[$field] === '1'){
-            $Value = 0;
+        $Values = $wpdb->get_results("SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$id."' LIMIT 1;", ARRAY_A);
+
+        if(empty($Values[0][$field])){
+            $Values[0][$field] = 1;
+        }else{
+            $Values[0][$field] = 0;
         }
+        $Data[$eid] = $Values[0];
+        unset($Data[$eid][$Config['_ReturnFields'][0]]);
+        df_processupdate($Data, $eid);
 
-	$query = "UPDATE `".$Config['_main_table']."` SET `".$field."` = '".mysql_real_escape_string($Value)."' ".$datestamp." WHERE `".$Config['_ReturnFields'][0]."` = '".$id."' LIMIT 1;";
-	//echo $query;
-	//die;
-	mysql_query($query);
-	//dump($Config);
-	return;
+
+   return;
+
 }
 
 

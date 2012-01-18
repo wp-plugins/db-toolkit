@@ -768,7 +768,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                             }
                                             $Form .= ob_get_clean();
                                             $Form .= "<div class=\"caption\" id=\"caption_".$Element['ID']."_".$Field."\">\n";
-                                            $Form .= $Config['_FieldCaption'][$Field].'&nbsp';
+                                            $Form .= $Config['_FieldCaption'][$Field];
                                             $Form .= "</div>\n";
                                         $Form .= "</div>\n";
                                     }else{
@@ -810,7 +810,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         }
                                         $Form .= "</div>\n";
                                     }*/
-                                    $Form .= '&nbsp;';
+                                    $Form .= '';
                                 }
                             }
                          if(!empty($tabStarted)){
@@ -950,7 +950,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                         if(!empty ($Config['_FieldCaption'][$Field])){
                            $Pre .= $Config['_FieldCaption'][$Field];
                         }else{
-                            $Pre .= '&nbsp;';
+                            $Pre .= '';
                         }
                     $Pre .= '</div>';
 
