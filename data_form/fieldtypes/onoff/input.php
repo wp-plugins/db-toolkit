@@ -16,10 +16,18 @@
  field names are : name="dataForm['.$Element['ID'].']['.$Field.']"
  fieled ID's are : id="entry_'.$Element['ID'].'_'.$Field.'"
 */
+
+
+$Form = str_replace("<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>", "", $Form);
+
 $Sel = '';
 if($Defaults[$Field] == 1){
 	$Sel = 'checked="checked"';
 }
-echo '<div style="padding:3px;"><input type="checkbox" id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" value="1" '.$Sel.' /><label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'">'.$Config['_FieldCaption'][$Field].'</label></div>';
+echo '<div style="padding:3px;"><input type="checkbox" id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" value="1" '.$Sel.' /> ';
+
+echo "<label class=\"form-gen-lable entrylabel\" style=\"display:inline !important\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>";
+
+echo '<div class="caption">'.$Config['_FieldCaption'][$Field].'</div></div>';
 $Config['_FieldCaption'][$Field] = '';
 ?>
