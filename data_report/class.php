@@ -2305,8 +2305,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                         if (!empty($Format)) {
                                             // XML Output
                                             if (strtolower($Format) == 'xml') {
-                                                //$apiOut .= "			<" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
-                                                $apiOut .= "	<" . $Field . ">" .htmlentities(stripslashes($outData)). "</" . $Field . ">\n";
+                                                if(!is_integer($var)){
+                                                    $apiOut .= "        <" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
+                                                }else{
+                                                    $apiOut .= "	<" . $Field . ">" .stripslashes($outData). "</" . $Field . ">\n";
+                                                }
                                             }
                                             // json Output
                                             if (strtolower($Format) == 'json') {
@@ -2315,7 +2318,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                             }
                                             // PDF output
                                             if (strtolower($Format) == 'pdf') {
-                                                $apiOutput[$pdfIndex][$Field] = htmlentities(stripslashes($outData));
+                                                $apiOutput[$pdfIndex][$Field] = stripslashes($outData);
                                                 if (!empty($_SESSION['reportFilters'][$EID][$Field])) {
                                                     $apiOutput['filters'][$Field][stripslashes($outData)] = stripslashes($outData);
                                                 }
