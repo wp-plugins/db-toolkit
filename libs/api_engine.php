@@ -130,13 +130,13 @@
         $formatType = strtolower($Format);
         switch ($formatType) {
             case 'xml':
-                header('Content-type: text/xml; charset=UTF-8');
+                header('Content-type: text/xml; charset=utf-8');
                 break;
             case 'json':
-                header('Content-type: text/json; charset=UTF-8');
+                header('Content-Type: text/javascript; charset=utf-8');
                 break;
             case 'html':
-                header('Content-type: text/html; charset=UTF-8');
+                header('Content-type: text/html; charset=utf-8');
                 break;
         }
         switch ($Method) {

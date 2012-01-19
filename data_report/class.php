@@ -2310,7 +2310,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                             }
                                             // json Output
                                             if (strtolower($Format) == 'json') {
-                                                $apiOutput['entries'][$jsonIndex][$Field] = htmlentities(stripslashes($outData));
+                                                $apiOutput['entries'][$jsonIndex][$Field] = $outData;
+                                                //echo $outData;
                                             }
                                             // PDF output
                                             if (strtolower($Format) == 'pdf') {
@@ -2719,7 +2720,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         // json Output
         if (strtolower($Format) == 'json') {
             //$apiOutput;
-            return json_encode($apiOutput);
+            //vardump($apiOutput);
+            return json_encode($apiOutput);            
         }
         // PDF Output
         if (strtolower($Format) == 'pdf') {
