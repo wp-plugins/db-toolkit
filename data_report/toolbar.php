@@ -1,7 +1,13 @@
 <?php
 // Control Buttons
 if (!empty($Config['_Hide_Toolbar'])) {
-    echo '<div id="report_tools_' . $Media['ID'] . '" class="report_tools list_row3">';
+
+    $customClass= '';
+    if(!empty($Config['_toolbarClass'])){
+        $customClass= $Config['_toolbarClass'];
+    }
+
+    echo '<div id="report_tools_' . $Media['ID'] . '" class="report_tools list_row3 '.$customClass.'">';
     
     if (empty($Config['_New_Item_Hide'])) {
         $ajaxSubmit = 'true';
@@ -92,19 +98,29 @@ if (!empty($Config['_Show_Filters'])) {
         }
     }
 
+
+    $customClass= '';
+    if(!empty($Config['_filterbarClass'])){
+        $customClass= $Config['_filterbarClass'];
+    }
+    $customClassButtonBar= '';
+    if(!empty($Config['_filterbuttonbarClass'])){
+        $customClassButtonBar= $Config['_filterbuttonbarClass'];
+    }
+
     //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
 ?>
     <div class="filterpanels" id="filterPanel_<?php echo $Media['ID']; ?>" style="visibility:visible; display:<?php echo $FilterVisiable; ?>;">
 
         <form id="setFilters_<?php echo $Media['ID']; ?>" name="setFilters" method="post" action="" style="margin:0;">
             <input type="hidden" id="reportFilters_<?php echo $Media['ID']; ?>" value="<?php echo $Media['ID']; ?>" name="reportFilter[<?php echo $Media['ID']; ?>][EID]" />
-            <div class="report_filters_panel">
+            <div class="report_filters_panel <?php echo $customClass; ?>">
 <?php
     echo dr_BuildReportFilters($Config, $Media['ID'], $Filters);
 ?>
                 <div style="clear:both"></div>
             </div>
-            <div class="list_row3" style="clear:both;">
+            <div class="list_row3 <?php echo $customClassButtonBar; ?>" style="clear:both;">
                 <div class="fbutton">
                     <div class="button add-new-h2">
                         <span class="applyfilter" style="padding-left: 20px;" onclick="jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();">Apply Filters</span>

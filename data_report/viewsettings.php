@@ -152,15 +152,23 @@
                     }
                     echo dais_customfield('checkbox', 'Show Footer Bar', '_Show_Footer', '_Show_Footer', 'list_row1' , 1, $Sel, 'Render the footer which holds the page and items count.');
                     
+                    echo '<h2>Style Classes</h2>';
+                    echo dais_customfield('text', 'Submit Button Class', '_SubmitButtonClass', '_SubmitButtonClass', 'list_row1' , $Element['Content']['_SubmitButtonClass'], '', 'Set the insert entry button style class.');
+                    echo dais_customfield('text', 'Update Button Class', '_UpdateButtonClass', '_UpdateButtonClass', 'list_row2' , $Element['Content']['_UpdateButtonClass'], '', 'Set the update entry button style class. ');
+                    echo dais_customfield('text', 'List Table Class', '_ListTableClass', '_ListTableClass', 'list_row2' , $Element['Content']['_ListTableClass'], '', 'Set the class for the default list table. ');
+                    echo dais_customfield('text', 'Form Class', '_FormClass', '_FormClass', 'list_row2' , $Element['Content']['_FormClass'], '', 'Set the class for the form. ');
+                    echo dais_customfield('text', 'Toolbar Class', '_toolbarClass', '_toolbarClass', 'list_row2' , $Element['Content']['_toolbarClass'], '', 'Set the class for the toolbar. ');
+                    echo dais_customfield('text', 'Filter Bar Class', '_filterbarClass', '_filterbarClass', 'list_row2' , $Element['Content']['_filterbarClass'], '', 'Set the class for the filters bar. ');
+                    echo dais_customfield('text', 'Filter Button Bar Class', '_filterbuttonbarClass', '_filterbuttonbarClass', 'list_row2' , $Element['Content']['_filterbuttonbarClass'], '', 'Set the class for the filter buttons bar. ');
+
+
                     echo '<h2>Notification & Buttons</h2>';
                     echo dais_customfield('text', 'Insert Success Text', '_InsertSuccess', '_InsertSuccess', 'list_row1' , $Element['Content']['_InsertSuccess'], '', 'Set the successful insert entry dialog message.');
                     echo dais_customfield('text', 'Update Success Text', '_UpdateSuccess', '_UpdateSuccess', 'list_row2' , $Element['Content']['_UpdateSuccess'], '', 'Set the successful update entry dialog message.');
                     echo dais_customfield('text', 'Insert Fail Text', '_InsertFail', '_InsertFail', 'list_row1' , $Element['Content']['_InsertFail'], '', 'Set the failed entry insert dialog message.');
                     echo dais_customfield('text', 'Update Fail Text', '_UpdateFail', '_UpdateFail', 'list_row2' , $Element['Content']['_UpdateFail'], '', 'Set the failed entry update dialog message.');
-                    echo dais_customfield('text', 'Submit Button Text', '_SubmitButtonText', '_SubmitButtonText', 'list_row1' , $Element['Content']['_SubmitButtonText'], '', 'Set the insert entry button label.');
-                    echo dais_customfield('text', 'Submit Button Class', '_SubmitButtonClass', '_SubmitButtonClass', 'list_row1' , $Element['Content']['_SubmitButtonClass'], '', 'Set the insert entry button style class.');
+                    echo dais_customfield('text', 'Submit Button Text', '_SubmitButtonText', '_SubmitButtonText', 'list_row1' , $Element['Content']['_SubmitButtonText'], '', 'Set the insert entry button label.');                    
                     echo dais_customfield('text', 'Update Button Text', '_UpdateButtonText', '_UpdateButtonText', 'list_row2' , $Element['Content']['_UpdateButtonText'], '', 'Set the update entry button label. ');
-                    echo dais_customfield('text', 'Update Button Class', '_UpdateButtonClass', '_UpdateButtonClass', 'list_row2' , $Element['Content']['_UpdateButtonClass'], '', 'Set the update entry button style class. ');
                     echo dais_customfield('text', 'Edit Form Title', '_EditFormText', '_EditFormText', 'list_row1' , $Element['Content']['_EditFormText'], '', 'Set the insert entry dialog title.');
                     echo dais_customfield('text', 'View Form Title', '_ViewFormText', '_ViewFormText', 'list_row1' , $Element['Content']['_ViewFormText'], '', 'Set the update entry dialog title.');
                     echo dais_customfield('text', 'No results text', '_NoResultsText', '_NoResultsText', 'list_row1' , $Element['Content']['_NoResultsText'], '', 'Set the "no items found" message.');

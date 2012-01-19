@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.027
+Stable tag: 0.3.1.028
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,13 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.1.028 =
+* Added a new FieldType - Tagging! pretty cool but is beta, please tell me what you think and what changes if you need any.
+* Added sort field to the join table fieldtype - you can now specify the field and direction to sort the joined table results by.
+* Fixed encoding to utf-8 for API output on both json and xml.
+* Fixed the on/off toggle bug that allowed you to toggle entries when editing is disabled
+* Added the ability to add custom CSS classes to list table, toolbar, filterbar and filter button bar for better customization.
 
 = 0.3.1.027 =
 * Added form processing to the toggle fieldtype. Data changed will new be processed using normal form processors.

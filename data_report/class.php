@@ -1438,9 +1438,14 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // Start Table
     // Check for template
     if (empty($Config['_UseListViewTemplate'])) {
-        $tableClass = 'class="data_report_Table"';
+        $customClass= '';
+        if(!empty($Config['_ListTableClass'])){
+            $customClass= $Config['_ListTableClass'];
+        }
+
+        $tableClass = 'class="data_report_Table '.$customClass.'"';
         if (is_admin ()) {
-            $tableClass = 'class="widefat data_report_Table_admin"';
+            $tableClass = 'class="widefat data_report_Table_admin '.$customClass.'"';
         }
         $ReportReturn .= '<table width="100%" border="0" cellspacing="0" cellpadding="4" ' . $tableClass . ' id="data_report_' . $EID . '" style="cursor:default;">';
         //Start Headers Row

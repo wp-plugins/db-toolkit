@@ -5,13 +5,18 @@
 if($FieldSet[1] == 'linked'){
 	switch($Config['_Linkedfields'][$Field]['Type']){
 		case "checkbox":
+                    $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC";
+                    if(!empty($Config['_Linkedfields'][$Field]['_Sort'])){
+                        $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['_Sort']."` ".$Config['_Linkedfields'][$Field]['_SortDir']."";
+
+                    }
                     
 				$concatvalues = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$concatvalues[] = $outValue;
 				}
 				$outString = 'CONCAT('.implode(',\' \',',$concatvalues).') as outValue';
-				$Query = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC;";
+				$Query = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$Ordering.";";
 			$Res = mysql_query($Query);
 			//$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'">';
 			//if(empty($Defaults[$Field])){
@@ -70,12 +75,20 @@ if($FieldSet[1] == 'linked'){
 		break;
 		case "dropdown":
 
+
+
+                    $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC";
+                    if(!empty($Config['_Linkedfields'][$Field]['_Sort'])){
+                        $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['_Sort']."` ".$Config['_Linkedfields'][$Field]['_SortDir']."";
+
+                    }
+
 				$values = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$values[] = $outValue;
 				}
 				$outString = 'CONCAT('.implode(',\' \',',$values).') as outValue';
-			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC;";
+			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$Ordering.";";
 			$Res = mysql_query($QuerySQL);
 			//cho $QuerySQL;
 			$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.'">';

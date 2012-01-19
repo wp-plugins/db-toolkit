@@ -656,7 +656,13 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     if(!empty($Config['_FormMode']) && !empty($Config['_ItemViewPage'])) {
         $SubmitURL = getdocument($Config['_ItemViewPage']);
     }
-    $Hidden = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular" id="data_form_'.$Element['ID'].'" >';
+
+    $customClass= '';
+    if(!empty($Config['_FormClass'])){
+        $customClass= $Config['_FormClass'];
+    }
+
+    $Hidden = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular '.$customClass.'" id="data_form_'.$Element['ID'].'" >';
     if(empty($_SESSION['processKey'])) {
         $_SESSION['processKey'] = uniqid(rand(100, 999).'_processKey_');
     }

@@ -255,6 +255,7 @@ return $Return;
 function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
         global $wpdb;
         $WhereField .= '<option value=""></option>';
+        $SortField .= '<option value=""></option>';
 	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
 	if (mysql_num_rows($result) > 0) {
 		while ($row = mysql_fetch_assoc($result)){
@@ -279,6 +280,19 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
 				}
 			}
 			$WhereField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
+			$Sel = '';
+			if(!empty($Defaults[$Field]['_Sort'])){
+				if($Defaults[$Field]['_Sort'] == $row['Field']){
+					$Sel = 'selected="selected"';
+				}
+			}else{
+                            if(!empty($Defaults[$Field]['Value'])){
+                                    if($Defaults[$Field]['Value'][0] == $row['Field']){
+                                            $Sel = 'selected="selected"';
+                                    }
+                            }
+                        }
+			$SortField .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
 
 		}
 	}
@@ -303,12 +317,31 @@ function linked_loadfields($Table, $Field, $MainTable, $Defaults = false){
                 $VReturn .= '<select name="Data[Content][_Linkedfields]['.$Field.'][_Filter]" id="linkedField_'.$Field.'_filter" >';
                     $VReturn .= $WhereField;
                 $VReturn .= '</select> = ';
+
                 $value = '';
                 if(!empty($Defaults[$Field]['_FilterBy'])){
                     $value = $Defaults[$Field]['_FilterBy'];
                 }
                 $VReturn .= '<input type="text" name="Data[Content][_Linkedfields]['.$Field.'][_FilterBy]" value="'.$value.'" class="textfield" size="15" />';
 
+                $VReturn .= '</div>';
+                
+                $VReturn .= '<div class="list_row1" style="padding:3px;"> Sort by: ';
+                $VReturn .= '<select name="Data[Content][_Linkedfields]['.$Field.'][_Sort]" id="linkedField_'.$Field.'_sort" >';
+                    $VReturn .= $SortField;
+                $VReturn .= '</select>  ';
+                $VReturn .= '<select name="Data[Content][_Linkedfields]['.$Field.'][_SortDir]" id="linkedField_'.$Field.'_dir">';
+                    $Sel = '';
+                    if($Defaults[$Field]['_SortDir'] == 'ASC'){
+                            $Sel = 'selected="selected"';
+                    }
+                    $VReturn .= '<option value="ASC" '.$Sel.'>Ascending</option>';
+                    $Sel = '';
+                    if($Defaults[$Field]['_SortDir'] == 'DESC'){
+                            $Sel = 'selected="selected"';
+                    }
+                    $VReturn .= '<option value="DESC" '.$Sel.'>Descending</option>';
+                    $VReturn .= '</select>  ';
                 $VReturn .= '</div>';
 
 

@@ -33,8 +33,11 @@ function onoff_processValue($Value, $Type, $Field, $Config, $EID, $Data){
 	if($Value == 1){
 		$Sel = 'checked="checked"';
 	}
-	$Return = '<input type="checkbox" id="onOff_'.$EID.'_'.$Data['_return_'.$Config['_ReturnFields'][0]].'" name="onOff['.$EID.']['.$Field.']" value="1" '.$Sel.' onchange="onoff_toggleInline(\''.$EID.'\', \''.$Field.'\', \''.$Data['_return_'.$Config['_ReturnFields'][0]].'\');" />';
-        
+        if(!empty($Config['_Show_Edit'])){
+            $Return = '<input type="checkbox" id="onOff_'.$EID.'_'.$Data['_return_'.$Config['_ReturnFields'][0]].'" name="onOff['.$EID.']['.$Field.']" value="1" '.$Sel.' onchange="onoff_toggleInline(\''.$EID.'\', \''.$Field.'\', \''.$Data['_return_'.$Config['_ReturnFields'][0]].'\');" />';
+        }else{
+            $Return = '<input type="checkbox" id="onOff_'.$EID.'_'.$Data['_return_'.$Config['_ReturnFields'][0]].'" name="onOff['.$EID.']['.$Field.']" value="1" '.$Sel.' disabled="disabled" />';
+        }
 	
 	//$Return .= $EID;
 	

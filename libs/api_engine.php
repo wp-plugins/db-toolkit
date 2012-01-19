@@ -56,7 +56,7 @@
                            echo json_encode($output);
                            exit;
                        }else{
-                           echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+                           echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n";
                            echo "   <result>fail</error>\r\n";
                            echo "   <error>Access Denied</error>\r\n";
                            echo "</xml>";
@@ -73,7 +73,7 @@
                        echo json_encode($output);
                        exit;
                    }else{
-                       echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+                       echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n";
                        echo "   <result>fail</error>\r\n";
                        echo "   <error><![CDATA[".$user->get_error_message()."]]></error>\r\n";
                        echo "</xml>";
@@ -88,7 +88,7 @@
                         $output['token'] = $token;
                         echo json_encode($output);
                     }else{
-                       echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+                       echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n";
                        echo "   <result>success</error>\r\n";
                        echo "   <error>".$token."</error>\r\n";
                        echo "</xml>";
@@ -126,6 +126,19 @@
         }
     }
     if (!empty($Method)) {
+        
+        $formatType = strtolower($Format);
+        switch ($formatType) {
+            case 'xml':
+                header('Content-type: text/xml; charset=UTF-8');
+                break;
+            case 'json':
+                header('Content-type: text/json; charset=UTF-8');
+                break;
+            case 'html':
+                header('Content-type: text/html; charset=UTF-8');
+                break;
+        }
         switch ($Method) {
             
             case 'search':
@@ -137,7 +150,7 @@
                     if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
                         api_Deny();
                     }
-                    header("content-type: text/" . strtolower($Format));
+                    //header("content-type: text/" . strtolower($Format));
                         //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
                     $Return = false;
                     if($Format == 'html'){
@@ -167,7 +180,8 @@
                     if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
                         api_Deny();
                     }
-                    header("content-type: text/" . strtolower($Format));
+
+                    //header("content-type: text/" . strtolower($Format));
                         //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
                     $Return = false;
                     if($Format == 'html'){
@@ -187,7 +201,7 @@
                     if (strtolower($Format) != 'xml' && strtolower($Format) != 'json' && strtolower($Format) != 'html') {
                         api_Deny();
                     }
-                    header("content-type: text/" . strtolower($Format));
+                    //header("content-type: text/" . strtolower($Format));
                         //($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false)
                     $Return = false;
                     if(!empty($_GET['itemID'])){
@@ -277,7 +291,7 @@ function api_dencode_string($str) {
 
 function api_Deny() {
     mysql_close();
-    header("content-type: text/html");
+    //header("content-type: text/html");
     echo 'Access Denied';
     exit;
 }
