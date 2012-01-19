@@ -2305,7 +2305,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                         if (!empty($Format)) {
                                             // XML Output
                                             if (strtolower($Format) == 'xml') {
-                                                if(!is_integer($var)){
+                                                if(!is_integer($outData)){
                                                     $apiOut .= "        <" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
                                                 }else{
                                                     $apiOut .= "	<" . $Field . ">" .stripslashes($outData). "</" . $Field . ">\n";
