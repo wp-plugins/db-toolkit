@@ -1712,6 +1712,7 @@ function dt_rendercluster($cluster){
 
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface){
+    
     if(is_array($interface)) {
         if(!empty($interface['id'])){
             unset($_SESSION['viewitemFilter'][$interface['id']]);
@@ -1753,6 +1754,19 @@ function dt_renderInterface($interface){
     }    
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
+
+    // get the $_GET['returnVars']
+    if(!empty($_GET['_returnVars'])){
+        
+        if(!empty($Config['_ReturnFields'])){
+            foreach($Config['_ReturnFields'] as $returnKey=>$ReturnVal){
+                $_GET[$ReturnVal] = $_GET['_returnVars'][$returnKey];
+            }
+
+        }
+
+    }
+
     $Return = '';
     //check if there is a table
     if(empty($Config['_main_table'])){
