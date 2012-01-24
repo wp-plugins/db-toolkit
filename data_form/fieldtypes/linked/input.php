@@ -153,11 +153,12 @@ if($FieldSet[1] == 'linked'){
 			}
 			//$FieldID = uniqid('check_'.$Field);
 			//$Return .= '<input type="text" id="autocomplete_'.$FieldID.'" class="textfield" value="'.$Det[$IDField].' ['.$Det[$ValueField].']" /><input type="hidden" name="dataForm['.$ElementID.']['.$Field.']" id="autocomplete_'.$FieldID.'_value" value="'.$Det[$IDField].'" class="'.$Req.'" />';
-			$Return .= '<input type="text" id="entry_'.$Element['ID'].'_'.$Field.'_view" class="'.$Req.' text" value="'.$VisDef.'" style="width:95%;" /><input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Det[$Config['_Linkedfields'][$Field]['ID']].'" />';
+			$Return .= '<input type="text" id="entry_'.$Element['ID'].'_'.$Field.'_view" class="'.$Req.' text" value="'.$VisDef.'" style="width:95%;" autocomplete="off" /><input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Det[$Config['_Linkedfields'][$Field]['ID']].'" />';
 
 
 
                        $_SESSION['dataform']['OutScripts'] .="
+
                         jQuery('#entry_".$Element['ID']."_".$Field."_view').autocomplete({
                                 source: function( request, response ) {
                                     //alert(request.term);

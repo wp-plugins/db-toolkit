@@ -23,37 +23,37 @@ if (!empty($Config['_Hide_Toolbar'])) {
 
         //vardump($Config['_ReturnFields']);        
 
-        echo '<div class="fbutton"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;" onclick="df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;">' . $Config['_New_Item_Title'] . '</span></div></div>';
+        echo '<div class="fbutton"><div class="button add-new-h2"><span class="add"  onclick="df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;">' . $Config['_New_Item_Title'] . '</span></div></div>';
     }
 
     if (!empty($Config['_Show_Import'])) {
         echo '<div class="btnseparator"></div>';
-        echo '<div class="fbutton"><div class="button add-new-h2"><span class="import" style="padding-left: 20px;" onclick="df_buildImportForm(\'' . $Media['ID'] . '\');return false;">Import</span></div></div>';
+        echo '<div class="fbutton"><div class="button add-new-h2"><span class="import"  onclick="df_buildImportForm(\'' . $Media['ID'] . '\');return false;">Import</span></div></div>';
         echo '<div class="btnseparator"></div>';
     }
 
     //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
     if (!empty($Config['_Show_Filters'])) {
         if (!empty($Config['_toggle_Filters'])) {
-            echo '<div class="fbutton"><div class="button add-new-h2"><span class="filterbutton" style="padding-left: 20px;" onclick="jQuery(\'#filterPanel_' . $Media['ID'] . '\').toggle();">Filters</span></div></div>';
+            echo '<div class="fbutton"><div class="button add-new-h2"><span class="filterbutton"  onclick="jQuery(\'#filterPanel_' . $Media['ID'] . '\').toggle();">Filters</span></div></div>';
         }
     }
     //}
     if (!empty($Config['_showReload'])) {
         echo '<div class="btnseparator"></div>';
-        echo '<div class="fbutton" id="liveView_' . $Media['ID'] . '"><div class="button add-new-h2"><span class="reload" style="padding-left: 20px;" onclick="dr_goToPage(\'' . $Media['ID'] . '\', false);">Reload</span></div></div>';
-        //echo '<div class="fbutton"><div class="reloadLiveOff"><span class="reload" style="padding-left: 20px;" onclick="dr_goToPage(\''.$Media['ID'].'\', false);">Reload</span></div></div>';
+        echo '<div class="fbutton" id="liveView_' . $Media['ID'] . '"><div class="button add-new-h2"><span class="reload"  onclick="dr_goToPage(\'' . $Media['ID'] . '\', false);">Reload</span></div></div>';
+        //echo '<div class="fbutton"><div class="reloadLiveOff"><span class="reload"  onclick="dr_goToPage(\''.$Media['ID'].'\', false);">Reload</span></div></div>';
     }
 
     //dr_selectAll
     if (!empty($Config['_Show_Delete'])) {
         echo '<div class="btnseparator"></div>';
         if (!empty($Config['_Show_Select'])) {
-            echo '<div class="fbutton"><div class="button add-new-h2"><span class="selectall" style="padding-left: 20px;" onclick="dr_selectAll(\'' . $Media['ID'] . '\');">Select All</span></div></div>';
-            echo '<div class="fbutton"><div class="button add-new-h2"><span class="unselectall" style="padding-left: 20px;" onclick="dr_deSelectAll(\'' . $Media['ID'] . '\');">Unselect All</span></div></div>';
+            echo '<div class="fbutton"><div class="button add-new-h2"><span class="selectall"  onclick="dr_selectAll(\'' . $Media['ID'] . '\');">Select All</span></div></div>';
+            echo '<div class="fbutton"><div class="button add-new-h2"><span class="unselectall"  onclick="dr_deSelectAll(\'' . $Media['ID'] . '\');">Unselect All</span></div></div>';
             echo '<div class="btnseparator"></div>';
         }
-        echo '<div class="fbutton"><div class="button add-new-h2"><span class="delete" style="padding-left: 20px;" onclick="dr_deleteEntries(\'' . $Media['ID'] . '\');">Delete Selected</span></div></div>';
+        echo '<div class="fbutton"><div class="button add-new-h2"><span class="delete"  onclick="dr_deleteEntries(\'' . $Media['ID'] . '\');">Delete Selected</span></div></div>';
     }
 
 
@@ -61,17 +61,17 @@ if (!empty($Config['_Hide_Toolbar'])) {
         if(empty($Global))
             $Global = false;
         echo '<div class="btnseparator"></div>';
-        echo '<div class="fbutton"><div class="button add-new-h2" onclick="dr_exportReport(\'?format_' . $Media['ID'] . '=pdf\', \'' . $Media['ID'] . '\',\'' . $Global . '\');"><span class="export" style="padding-left: 20px;">Export PDF</span></div></div>';
+        echo '<div class="fbutton"><div class="button add-new-h2" onclick="dr_exportReport(\'?format_' . $Media['ID'] . '=pdf\', \'' . $Media['ID'] . '\',\'' . $Global . '\');"><span class="export" >Export PDF</span></div></div>';
 
 
 
         echo '<div class="btnseparator"></div>';
-        echo '<div class="fbutton"><div class="button add-new-h2"><a href="?format_' . $Media['ID'] . '=csv" target="_blank"><span class="export" style="padding-left: 20px;">Export CSV</span></a></div></div>';
+        echo '<div class="fbutton"><div class="button add-new-h2"><a href="?format_' . $Media['ID'] . '=csv" target="_blank"><span class="export" >Export CSV</span></a></div></div>';
     }
 
 
     //echo '<div class="btnseparator ui-dialog-tile" style="display:none;"></div>';
-    //echo '<div class="fbutton ui-dialog-tile" style="display:none;"><div class="button add-new-h2"><span class="selectall" style="padding-left: 20px;" onclick="dialog_tile();">Tile Dialogs</span></div></div>';
+    //echo '<div class="fbutton ui-dialog-tile" style="display:none;"><div class="button add-new-h2"><span class="selectall"  onclick="dialog_tile();">Tile Dialogs</span></div></div>';
 
     if (!empty($Config['_Show_Plugins'])) {
         $ListButtons = loadFolderContents(WP_PLUGIN_DIR . '/db-toolkit/data_report/plugins');
@@ -123,14 +123,14 @@ if (!empty($Config['_Show_Filters'])) {
             <div class="list_row3 <?php echo $customClassButtonBar; ?>" style="clear:both;">
                 <div class="fbutton">
                     <div class="button add-new-h2">
-                        <span class="applyfilter" style="padding-left: 20px;" onclick="jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();">Apply Filters</span>
+                        <span class="applyfilter"  onclick="jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();">Apply Filters</span>
                 </div>
             </div>
 
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button add-new-h2">
-                    <span class="delete" style="padding-left: 20px;" onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />Clear Filters</span>
+                    <span class="delete"  onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />Clear Filters</span>
                 </div>
             </div>
 <?php
@@ -141,7 +141,7 @@ if (!empty($Config['_Show_Filters'])) {
                         <div class="btnseparator"></div>
                         <div class="fbutton">
                             <div class="button add-new-h2">
-                                <span class="lockfilterfilter" style="padding-left: 20px;" onclick="jQuery('#lockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterLock]" id="lockFilters_<?php echo $Media['ID']; ?>" value="" />Lock Filters</span>
+                                <span class="lockfilterfilter"  onclick="jQuery('#lockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterLock]" id="lockFilters_<?php echo $Media['ID']; ?>" value="" />Lock Filters</span>
                             </div>
                         </div>
 <?php
@@ -151,7 +151,7 @@ if (!empty($Config['_Show_Filters'])) {
                         <div class="btnseparator"></div>
                         <div class="fbutton">
                             <div class="button add-new-h2">
-                                <span class="unlockfilterfilter" style="padding-left: 20px;" onclick="jQuery('#unlockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterUnlock]" id="unlockFilters_<?php echo $Media['ID']; ?>" value="" />Unlock Filters</span>
+                                <span class="unlockfilterfilter"  onclick="jQuery('#unlockFilters_<?php echo $Media['ID']; ?>').val('<?php echo $Media['ID']; ?>'); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[reportFilterUnlock]" id="unlockFilters_<?php echo $Media['ID']; ?>" value="" />Unlock Filters</span>
                             </div>
                         </div>
 <?php
@@ -167,7 +167,7 @@ if (!empty($Config['_Show_Filters'])) {
             <div class="btnseparator"></div>
             <div class="fbutton">
                 <div class="button add-new-h2">
-                    <span class="closefilter" style="padding-left: 20px;" onclick="jQuery('#filterPanel_<?php echo $Media['ID']; ?>').toggle(); return false; ">Close Filters</span>
+                    <span class="closefilter"  onclick="jQuery('#filterPanel_<?php echo $Media['ID']; ?>').toggle(); return false; ">Close Filters</span>
                 </div>
             </div>
 <?php

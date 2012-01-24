@@ -1106,9 +1106,13 @@ function dr_findCloneParent($Clone, $Clones, $querySelects){
 
     if(!empty($Clones[$Clone]['Master'])){
         //echo $Clones[$Clone]['Master'].' - ';
-        $Clone = $querySelects[$Clones[$Clone]['Master']];
+        if(!empty($querySelects[$Clones[$Clone]['Master']])){
+            $Clone = $querySelects[$Clones[$Clone]['Master']];
+        }else{
+            $Clone = $querySelects['_return_'.$Clones[$Clone]['Master']];
+        }
         //echo '|'.$Clone.'|';
-        if(!empty($Clones[$Clone])){
+        if (substr($Clone, 0, 2) == '__') {
             $Clone = dr_findCloneParent($Clone, $Clones, $querySelects);
         }
     }
@@ -1216,100 +1220,11 @@ function dr_processQuery($Config, $querySelects) {
 return $Selects;
 }
 
-function dr_exportChartImage($chartData) {
+function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false, $getOverride = false) {
 
-    define('BATIK_PATH', WP_PLUGIN_DIR . '/db-toolkit/data_report/chartexport/batik-rasterizer.jar');
-
-///////////////////////////////////////////////////////////////////////////////
-
-    $charts = array_chunk($chartData, 4);
-
-    foreach ($charts as $chartData) {
-        $type = 'image/jpeg'; //$chartData[1]['value'];//$_POST['type'];
-        $svg = (string) $chartData[3]['value']; //$_POST['svg'];
-        $filename = (string) $chartData[0]['value']; //$_POST['filename'];
-        $setWidth = (int) 1800; //$chartData[2]['value'];//$_POST['width'];
-// prepare variables
-        if (!$filename)
-            $filename = 'chart';
-        if (get_magic_quotes_gpc ()) {
-            $svg = stripslashes($svg);
-        }
-
-
-
-        $tempName = md5(rand());
-
-// allow no other than predefined types
-        if ($type == 'image/png') {
-            $typeString = '-m image/png';
-            $ext = 'png';
-        } elseif ($type == 'image/jpeg') {
-            $typeString = '-m image/jpeg';
-            $ext = 'jpg';
-        } elseif ($type == 'application/pdf') {
-            $typeString = '-m application/pdf';
-            $ext = 'pdf';
-        } elseif ($type == 'image/svg+xml') {
-            $ext = 'svg';
-        }
-        if (!file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_report/chartexport/charts')) {
-            mkdir(WP_PLUGIN_DIR . '/db-toolkit/data_report/chartexport/charts');
-        }
-        $outfile = WP_PLUGIN_DIR . '/db-toolkit/data_report/chartexport/charts/' . $tempName . '.' . $ext;
-
-        if (isset($typeString)) {
-
-            // size
-            if ($setWidth) {
-                $width = (int) $setWidth;
-                if ($width)
-                    $width = "-w $width";
-            }
-
-            // generate the temporary file
-            if (!file_put_contents($tempName . '.svg', $svg)) {
-                die("Couldn't create temporary file. Check that the directory permissions for
-			the /temp directory are set to 777.");
-            }
-
-            // do the conversion
-
-            $output = shell_exec("java -jar " . BATIK_PATH . " " . $typeString . " -d " . $outfile . " " . $width . " " . $tempName . ".svg");
-
-            // catch error
-            if (!is_file($outfile) || filesize($outfile) < 10) {
-                echo "<pre>$output</pre>";
-                echo "Error while converting SVG";
-                die;
-            }
-
-            // stream it
-            else {
-                //header("Content-Disposition: attachment; filename=$filename.$ext");
-                //header("Content-Type: $type");
-                //echo file_get_contents($outfile);
-
-
-                $file = fopen(WP_PLUGIN_DIR . '/db-toolkit/data_report/chartexport/charts/' . $filename . '.' . $ext, 'w+');
-                fwrite($file, file_get_contents($outfile));
-                fclose($file);
-            }
-
-            // delete it
-            unlink($tempName . ".svg");
-            unlink($outfile);
-
-            $files[] = WP_PLUGIN_URL . '/db-toolkit/data_report/chartexport/charts/' . $filename . '.' . $ext;
-
-            // SVG can be streamed directly back
-        }
+    if(!empty($getOverride)){
+        parse_str($getOverride, $_GET);
     }
-    return $files;
-}
-
-function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false) {
-
     
 //Filters will be picked up via Session value
 // Set Vars

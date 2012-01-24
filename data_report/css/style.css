@@ -41,7 +41,7 @@
     text-decoration: none;
 }
 .fbutton .button span{
-    padding: 2px;
+    padding: 2px 2px 2px 20px;
 }
 .fbutton .button:hover {
     color: #333;

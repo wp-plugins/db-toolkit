@@ -265,7 +265,7 @@ if(is_admin()) {
              */
             
             
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$Title.'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$Title.'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/images/indicator.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
             return $Return;
         }
@@ -277,7 +277,7 @@ if(is_admin()) {
 
             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[0].'/conf.php');
             //vardump($FieldTypes[$Type[0]]);
-            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$FieldTypes[$Type[1]]['name'].'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/loading.gif" align="absmiddle" /></span>';
+            $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$FieldTypes[$Type[1]]['name'].'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/images/indicator.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
 
         }
@@ -381,7 +381,7 @@ if(is_admin()) {
     // End Edit mode check
 }
 
-function df_processAjaxForm($Input){
+function df_processAjaxForm($Input, $addQuery = false){
 
     ob_start();
     parse_str($Input, $Data);
@@ -417,6 +417,9 @@ function df_processAjaxForm($Input){
             }
         }
     }
+    if(!empty($addQuery)){
+        $Return['addQuery'] = $addQuery;
+    }
     //vardump($Return);
     return $Return;
 
@@ -447,6 +450,15 @@ function df_buildQuickCaptureForm($EID, $addQuery = false) {
     $Data['_ActiveProcess'] = 'insert';
     $Out = df_BuildCaptureForm($Data);
     $Out['title'] = $Data['Content']['_New_Item_Title'];
+    if(!empty($addQuery)){
+        $Out['addQuery'] = $addQuery;
+    }
+
+    if($Data['Content']['_ViewMode'] != 'form'){
+        $Out['script'] = $_SESSION['dataform']['OutScripts'];
+        unset($_SESSION['dataform']['OutScripts']);
+    }
+    
     //$Return = df_BuildCaptureForm($Data);
     return $Out;//$Return;
 }
@@ -1237,7 +1249,7 @@ function df_loadOutScripts() {
     $Return = '';
     if(!empty($_SESSION['dataform']['OutScripts'])) {
         $Return .= $_SESSION['dataform']['OutScripts'];
-        unset($_SESSION['dataform']['OutScripts']);
+        $_SESSION['dataform']['OutScripts'] = '';
     }
 
     return $Return;

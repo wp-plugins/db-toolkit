@@ -176,7 +176,7 @@ if (file_exists('fieldtypes')) {
         });
 	jQuery('#ExtraSetting_'+field).html('');
 	if(func != 'null'){
-            jQuery('#ExtraSetting_'+field).html(' <img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Config...');
+            jQuery('#ExtraSetting_'+field).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Config...');
             ajaxCall('df_controlFunc',field, jQuery('#_main_table').val(), func, function(x){
                 jQuery('#ExtraSetting_'+field).html('&nbsp;'+x);
                 jQuery('#ExtraSetting_'+field).fadeIn();
@@ -194,20 +194,20 @@ if (file_exists('fieldtypes')) {
     }
 
     function df_sessionvalueChange(id){
-	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Session Value Setup');
+	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Session Value Setup');
 	ajaxCall('df_sessionValueSetup',id, function(tf){
             jQuery('#ExtraSetting_'+id).html(' => '+tf+'<span id="extrasettings_'+id+'"></span>');
 	});
     }
 
     function df_linkedTableSelector(id, req){
-	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Tables');
+	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Tables');
 	ajaxCall('df_listTables',id, 'df_loadLikedFields', true, false, req, function(tf){
             jQuery('#ExtraSetting_'+id).html(' => '+tf+'<span id="extrasettings_'+id+'"></span>');
 	});
     }
     function df_linkedfilteredTableSelector(id, req){
-	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Tables');
+	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Tables');
 	ajaxCall('df_listTables',id, 'df_loadFilteredLikedFields', true, false, req, function(tf){
             jQuery('#ExtraSetting_'+id).html(' => '+tf+'<span id="extrasettings_'+id+'"></span>');
 	});
@@ -215,7 +215,7 @@ if (file_exists('fieldtypes')) {
 
     function df_loadLikedFields(id){
 	table = jQuery('#'+id).val();
-	jQuery('#extrasettings_'+id).html(' <img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');
+	jQuery('#extrasettings_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');
 	ajaxCall('df_loadlinkedfields',table,id,function(lr){
             //alert(id);
             jQuery('#extrasettings_'+id).html(' => '+lr);
@@ -224,7 +224,7 @@ if (file_exists('fieldtypes')) {
     function df_loadFilteredLikedFields(id){
 	table = jQuery('#'+id).val();
 	main = jQuery('#_main_table').val();
-	jQuery('#extrasettings_'+id).html(' <img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');
+	jQuery('#extrasettings_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');
 	ajaxCall('df_loadlinkedfilteredfields',table,id, main,function(lr){
             //alert(id);
             jQuery('#extrasettings_'+id).html(' => '+lr);
@@ -249,7 +249,7 @@ if (file_exists('fieldtypes')) {
             jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
 
-	jQuery('body').append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery('body').append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
             position: 'center',
             autoResize: true,
@@ -277,7 +277,7 @@ if (file_exists('fieldtypes')) {
                                 formData = jQuery("#data_form_"+eid+"").serialize();
                                 jQuery("#ui-jsDialog-"+eid+"").html('Sending...');
                                 jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
-                                ajaxCall('df_processAjaxForm',formData, function(p){
+                                ajaxCall('df_processAjaxForm',formData, addquery, function(p){
                                     jQuery("#ui-jsDialog-"+eid+"").remove();
                                     
                                     //load callback
@@ -285,8 +285,8 @@ if (file_exists('fieldtypes')) {
                                         callback.call(this, eid, ajaxSubmit, addquery, p); // brings the scope to the callback
                                     }
 
-                                    df_loadOutScripts();
-                                    dr_goToPage(eid, false);
+                                    df_loadOutScripts();                                    
+                                    dr_goToPage(eid, false, false, addquery);
                                 });
                                 
                                 return false;
@@ -306,8 +306,7 @@ if (file_exists('fieldtypes')) {
                     }
                     //alert(parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
-                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
-                    df_loadOutScripts();
+                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');                    
                 });
             },
             close: function(event, ui) {
@@ -323,7 +322,7 @@ if (file_exists('fieldtypes')) {
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
-	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
             position: 'center',
             autoResize: true,
@@ -366,7 +365,7 @@ if (file_exists('fieldtypes')) {
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
-	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
             position: 'center',
             autoResize: true,
@@ -412,7 +411,7 @@ if (file_exists('fieldtypes')) {
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
-	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery('#report_tools_'+eid).append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
 	jQuery("#ui-jsDialog-"+eid+"").dialog({
             position: 'center',
             autoResize: true,

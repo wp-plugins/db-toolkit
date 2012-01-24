@@ -18,6 +18,9 @@
 	padding:0 5px;
 	margin:0;
 }
+.formular .form-gen-field-wrapper input[type=checkbox]{
+    margin-top: 17px;
+}
 .formular input, .formular select, .formular textarea{
 	font-size:12px;
 	font-family:arial,helvetica,sans-serif;

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.030
+Stable tag: 0.3.1.031
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,12 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.1.031 =
+* Set the interface to reset its state on save, this should solve the problems with sessions when changing the sort.
+* Added the current url query to be passed back to the ajax form submissions and refreshes. This will improve the ajax interactions and maintain filtered states.
+* Altered the CSS a little on the toolbar. This is so that it will be easier to customise the styling for front end.
+* Altered the custom CSS loader only to load the themes toolbar, forms and table css on front end and not backend. looked messy!
 
 = 0.3.1.030 =
 * Minor bug fixes that would otherwise be not noticed.

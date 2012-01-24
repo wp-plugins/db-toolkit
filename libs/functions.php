@@ -25,10 +25,6 @@ function dt_start() {
         
     }
     // Include Libraries
-
-    if(empty($_SESSION['dataform']['OutScripts'])){
-        $_SESSION['dataform']['OutScripts'] = '';
-    }
     if(empty($_SESSION['dataform']['OutScripts'])){
             $_SESSION['dataform']['OutScripts'] = "";
     }
@@ -252,13 +248,13 @@ function dt_styles($preIs = false) {
 
 
     // report
-    if(file_exists($themeDir.'/table.css')) {
+    if(file_exists($themeDir.'/table.css') && !is_admin()) {
         wp_register_style('interface_table_styles', $themeURL.'/table.css');
     }else{
         wp_register_style('interface_table_styles', WP_PLUGIN_URL . '/db-toolkit/data_report/css/table.css');        
     }
     wp_enqueue_style('interface_table_styles');
-    if(file_exists($themeDir.'/toolbar.css')){
+    if(file_exists($themeDir.'/toolbar.css') && !is_admin()){
         wp_register_style('custom_toolbar_style', $themeURL.'/toolbar.css');
     }else{
         wp_register_style('custom_toolbar_style', WP_PLUGIN_URL.'/db-toolkit/data_report/css/style.css');
@@ -266,7 +262,7 @@ function dt_styles($preIs = false) {
     wp_enqueue_style('custom_toolbar_style');
 
     // form
-	if(file_exists($themeDir.'/form.css')){
+	if(file_exists($themeDir.'/form.css') && !is_admin()){
             wp_register_style('form_style', $themeURL.'/form.css');
             wp_enqueue_style('form_style');
         }else{
@@ -973,10 +969,10 @@ function dt_adminMenus() {
 }
 
 //Footers
-function dt_footers() {
-    require_once(DB_TOOLKIT.'footers.php');
+function dt_footers() {    
     require_once(DB_TOOLKIT.'data_report/footers.php');
     require_once(DB_TOOLKIT.'data_form/footers.php');
+    require_once(DB_TOOLKIT.'footers.php');
 }
 
 // Ajax System
@@ -1329,9 +1325,6 @@ function dt_process() {
     if(!empty($_POST['importKey'])) {
 
         $_POST = stripslashes_deep($_POST);
-        $_SESSION['dataform']['OutScripts'] .= "
-          //df_buildImportManager(eid);
-        ";
         if(empty($_FILES['fileImport']['size'])){
             $_SESSION['dataform']['OutScripts'] .= "
               df_buildImportForm('".$_POST['importInterface']."');
@@ -1843,7 +1836,7 @@ function dt_renderInterface($interface){
     }
 
 
-    if($error = mysql_error()){
+    if($error = mysql_error() && $Config['_ViewMode'] != 'form'){
         if(is_admin()){            
             $InterfaceData = get_option($Media['ID']);
             $InterfaceDataraw = base64_encode(serialize($InterfaceData));
@@ -1864,6 +1857,9 @@ function dt_renderInterface($interface){
                     echo '<div id="interfaceError" class="notice" style="padding:5px;">'.mysql_error().'</div>';
                 }else{
                     echo '<div id="interfaceError" class="notice" style="padding:5px;">An error has been detected while building this interface. Would you like to submit an error report to the developer? <input type="button" class="button" value="Send Report" onclick="dbt_sendError(\''.$Media['ID'].'\', \''.  base64_encode($error).'\');" /></div>';
+                    
+                        
+                        
                 }
             }
         }

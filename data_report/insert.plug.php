@@ -7,7 +7,7 @@
 	.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }
 	.ui-sortable-placeholder * { visibility: hidden; }
 	</style>
-<img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_form/loading.gif" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
+<img src="'.WP_PLUGIN_DIR.'/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
 <img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/arrow_out.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
 <img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/tag.png" width="16" height="16" alt="loading" align="absmiddle" style="display:none" />
 <input type="hidden" name="Data[Content][_FormLayout]" cols="50" rows="10" id="_FormLayout" />
