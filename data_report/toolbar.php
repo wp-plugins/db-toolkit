@@ -126,7 +126,9 @@ if (!empty($Config['_Show_Filters'])) {
                         <span class="applyfilter"  onclick="jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();">Apply Filters</span>
                 </div>
             </div>
-
+<?php
+if(!empty($_SESSION['reportFilters'][$Media['ID']])){
+?>
             <div class="btnseparator"></div><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />
             <div class="fbutton">
                 <div class="button add-new-h2">
@@ -134,6 +136,7 @@ if (!empty($Config['_Show_Filters'])) {
                 </div>
             </div>
 <?php
+}
             if (is_admin ()) {
                 if (empty($Config['_Hide_FilterLock'])) {
                     if (empty($_SESSION['lockedFilters'][$Media['ID']])) {
