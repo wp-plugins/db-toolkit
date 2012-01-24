@@ -127,10 +127,10 @@ if (!empty($Config['_Show_Filters'])) {
                 </div>
             </div>
 
-            <div class="btnseparator"></div>
+            <div class="btnseparator"></div><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />
             <div class="fbutton">
                 <div class="button add-new-h2">
-                    <span class="clearfilter"  onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();"><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />Clear Filters</span>
+                    <span class="clearfilter"  onclick="jQuery('#clearFilters_<?php echo $Media['ID']; ?>').val(1); jQuery('#setFilters_<?php echo $Media['ID']; ?>').submit();">Clear Filters</span>
                 </div>
             </div>
 <?php
