@@ -446,6 +446,92 @@ $template = str_replace('?>', ' ?>', $template);
 ob_start();
 eval(' ?> '.$template.' <?php ');
 $Output = do_shortcode(do_shortcode(do_shortcode(do_shortcode(ob_get_clean()))));
+
+
+// Process toolbars buttons
+
+    //    echo
+    //if(!empty($Config['_useToolbarTemplate'])){
+        $Template = $Output;
+        // Replace Codes with Buttons
+
+
+        //For Add Item - Only if showed
+        if (empty($Config['_New_Item_Hide'])) {
+            $ajaxSubmit = 'true';
+            if (is_admin ()) {
+                if (empty($Config['_ajaxForms'])) {
+                    $ajaxSubmit = 'false';
+                }
+            } else {
+                if (empty($Config['_ajaxForms'])) {
+                    $ajaxSubmit = 'false';
+                }
+            }
+
+            $Template = str_replace('{{_button_addItem}}', dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;','add'), $Template);
+        }else{
+            $Template = str_replace('{{_button_addItem}}', '', $Template);
+        }
+
+        // replace import button
+        if (!empty($Config['_Show_Import'])) {
+            //{{_button_import}}
+            $Template = str_replace('{{_button_import}}', dr_toolbarButton('Import', 'df_buildImportForm(\'' . $Media['ID'] . '\');return false;', 'import'), $Template);
+        }else{
+            $Template = str_replace('{{_button_import}}', '', $Template);
+        }
+
+        //replace {{_button_toggleFilters}}
+        if (!empty($Config['_Show_Filters'])) {
+            $Template = str_replace('{{_button_toggleFilters}}', dr_toolbarButton('Filters', 'jQuery(\'#filterPanel_' . $Media['ID'] . '\').toggle();', 'filterbutton'), $Template);
+        }else{
+            $Template = str_replace('{{_button_toggleFilters}}', '', $Template);
+        }
+
+        // replace {{_button_reload}}
+        if (!empty($Config['_showReload'])) {
+                $Template = str_replace('{{_button_reload}}', dr_toolbarButton('Reload', 'dr_goToPage(\'' . $Media['ID'] . '\', false, false);', 'reload'), $Template);
+        }else{
+
+        }
+
+        // replace {{_button_selectAll}}
+        if (!empty($Config['_Show_Delete'])) {
+            if (!empty($Config['_Show_Select'])) {
+                $Template = str_replace('{{_button_selectAll}}', dr_toolbarButton('Select All', 'dr_selectAll(\'' . $Media['ID'] . '\');', 'selectall'), $Template);
+                $Template = str_replace('{{_button_unselect}}', dr_toolbarButton('Unselect All', 'dr_deSelectAll(\'' . $Media['ID'] . '\');', 'unselectall'), $Template);
+            }else{
+                $Template = str_replace('{{_button_selectAll}}', '', $Template);
+                $Template = str_replace('{{_button_unselect}}', '', $Template);
+            }
+
+            $Template = str_replace('{{_button_deleteSelected}}', dr_toolbarButton('Delete Selected', 'dr_deleteEntries(\'' . $Media['ID'] . '\');"', 'delete'), $Template);
+        }else{
+            $Template = str_replace('{{_button_selectAll}}', '', $Template);
+            $Template = str_replace('{{_button_unselect}}', '', $Template);
+            $Template = str_replace('{{_button_deleteSelected}}', '', $Template);
+        }
+
+
+        //replace {{_button_export_pdf}} and {{_button_export_csv}}
+        if (!empty($Config['_Show_Export'])) {
+            if(empty($Global))
+                $Global = false;
+
+            $Template = str_replace('{{_button_export_pdf}}', dr_toolbarButton('Export PDF', 'dr_exportReport(\'?format_' . $Media['ID'] . '=pdf\', \'' . $Media['ID'] . '\',\'' . $Global . '\');', 'export'), $Template);
+            $Template = str_replace('{{_button_export_csv}}', dr_toolbarButton('Export CSV', false, 'export', '?format_' . $Media['ID'] . '=csv'), $Template);
+        }else{
+            $Template = str_replace('{{_button_export_pdf}}', '', $Template);
+            $Template = str_replace('{{_button_export_csv}}', '', $Template);
+        }
+
+
+
+
+        $Output = $Template;
+    //}
+//vardump($Config);
 echo $Output;
 
 

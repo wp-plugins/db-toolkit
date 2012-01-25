@@ -591,6 +591,26 @@ if (is_admin ()) {
     // End Admin Functions
 }
 
+function dr_toolbarButton($Title, $Script = false, $Class = 'noicon', $Link = false, $Target = '_blank'){
+
+    $onClick = '';
+    if(!empty($Script)){
+        $onClick = 'onClick="'.$Script.'"';
+    }
+    $linkStart = '';
+    $linkEnd = '';
+    if(!empty($Link)){
+        $linkStart = '<a href="'.$Link.'" target="'.$Target.'">';
+        $linkEnd = '</a>';
+    }
+    
+    
+    return '<span class="fbutton"><div class="button add-new-h2" '.$onClick.'>'.$linkStart.'<span class="'.$Class.'">'.$Title.'</span>'.$linkEnd.'</div></span>';
+}
+function dr_toolbarSeperator(){
+    return;
+    return '<div class="btnseparator"></div>';
+}
 function dr_lockFilters($EID) {
     //   vardump($_SESSION['reportFilters']);
     $setFilters = serialize($_SESSION['reportFilters'][$EID]);

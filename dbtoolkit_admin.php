@@ -433,21 +433,20 @@ if(!empty($appConfig['imageURL'])){
             <div class="clear"></div>
         </div>
         <div class="save_bar_tools">
-
-            <div class="fbutton"><a href="admin.php?page=Add_New"><div class="button add-new-h2" id="addNewInterface"><span class="add" style="padding-left: 20px;">New Interface</span></div></a></div>
-            <div class="fbutton"><a href="admin.php?page=New_Cluster"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;">New Cluster</span></div></a></div>
+            <span class="fbutton" style="float:right;"><a href="?page=dbt_builder&delete=<?php echo $activeApp; ?>" onclick="return confirm('Are you sure you want to delete this App and all its interfaces? It\'s permanent!')"><div class="button add-new-h2"><span class="delete" style="padding-left: 20px;">Delete Application</span></div></a></span>
+            <span class="fbutton"><a href="admin.php?page=Add_New"><div class="button add-new-h2" id="addNewInterface"><span class="add" style="padding-left: 20px;">New Interface</span></div></a></span>
+            <span class="fbutton"><a href="admin.php?page=New_Cluster"><div class="button add-new-h2"><span class="add" style="padding-left: 20px;">New Cluster</span></div></a></span>
             <?php
             if(strtolower($activeApp) != 'base'){
             ?>
-                <div class="fbutton"><a href="?page=dbt_builder&exportApp=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export</span></div></a></div>
+                <span class="fbutton"><a href="?page=dbt_builder&exportApp=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export</span></div></a></span>
                 <?php
                 //<div class="fbutton"><a href="?page=dbt_builder&exportApp=true&plugin=true"><div class="button add-new-h2"><span class="export" style="padding-left: 20px;" >Export as Plugin</span></div></a></div>
                 ?>
             <?php
             }
             ?>
-            <div class="fbutton"><a href="?page=dbt_builder&close=<?php echo $activeApp; ?>"><div class="button add-new-h2"><span class="closefilter" style="padding-left: 20px;">Close Application</span></div></a></div>
-            <div class="fbutton" style="float:right;"><a href="?page=dbt_builder&delete=<?php echo $activeApp; ?>" onclick="return confirm('Are you sure you want to delete this App and all its interfaces? It\'s permanent!')"><div class="button add-new-h2"><span class="delete" style="padding-left: 20px;">Delete Application</span></div></a></div>
+            <span class="fbutton"><a href="?page=dbt_builder&close=<?php echo $activeApp; ?>"><div class="button add-new-h2"><span class="closefilter" style="padding-left: 20px;">Close Application</span></div></a></span>            
 
 
         </div>

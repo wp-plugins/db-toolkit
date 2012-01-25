@@ -14,7 +14,7 @@
 
 function pre_process_wpregister($Data, $Setup, $Config){
 
-
+global $wpdb;
     //notification mail email and name change
     $_SESSION['wpregister_SetupVars'] = $Setup;
 
@@ -74,6 +74,12 @@ function pre_process_wpregister($Data, $Setup, $Config){
 
     //clear out temp
     unset($_SESSION['wpregister_SetupVars']);
+
+    if($Config['_main_table'] == $wpdb->users){
+        $Data['__fail__'] = true;
+        $Data['__error__'] = 'Registration Complete.';
+        return $Data;
+    }
 
 return $Data;
 }

@@ -200,7 +200,7 @@ Number of items found and displayed (1 - 10 of 200 items)
 
             </div>
                 <div id="toolbarTemplate" class="setupTab">
-                <div class="warning">Toolbar templates are currently not available. Will be back in the next version :D</div>
+                
                 <h2>Toolbar Template</h2>
                 <span class="description">Allows you to customise the toolbar.</span>
                 <br />                                
@@ -209,30 +209,29 @@ Number of items found and displayed (1 - 10 of 200 items)
                     <span class="description">All the <strong>button</strong> codes, can be used in the row/entry templates as well.</span>
                     <pre>
 {{_button_addItem}}             :Add Item Button
+{{_button_import}}              :Import from CSV button
+{{_button_toggleFilters}}       :Show Filter Panel Toggle button
 {{_button_reload}}              :Content reload button
 {{_button_selectAll}}           :Select all button
 {{_button_unselect}}            :Unselect button
 {{_button_deleteSelected}}      :Delete Selected items button
 {{_button_export_pdf}}          :PDF Export button
 {{_button_export_csv}}          :CSV Export button
-{{_button_applyFilters}}        :Apply filters button
-{{_button_clearFilters}}        :Clear filters button
-{{_button_lockFilters}}         :lock/unlock filter button
 
-{{_filter_keyword}}             :Keyword Search Filter
-{{_filter_show_<em>field</em>}}          :Render the filter input for <em>field</em>
-
-
-                    </pre>
-
+                    </pre>                    
                     
                 </div>
-                <br />
+                <span class="description">All buttons have a float:right style associated unless using a custom stylesheet in your theme. in which case you control it.</span>
+                <span class="description">This was bad on my side, but will correct it soon. So be sure to clear:left within your styling, for now.</span>
+                <br /><br />
+                <span class="description">If a button is disabled in general settings, it wont be rendered.</span>
+                <br /><br />
                 <img align="absmiddle" style="float: right; padding: 5px; cursor: pointer;" onclick="jQuery('.row_helpPanel').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/help.png">
                 <?php
 
                 $Sel = '';
-                if (!empty($Element['Content']['_useListTemplate'])) {
+
+                if (!empty($Element['Content']['_useToolbarTemplate'])) {
                     $Sel = 'checked="checked"';
                 }
                 echo dais_customfield('checkbox', 'Enable', '_useToolbarTemplate', '_useToolbarTemplate', 'list_row1', 1, $Sel, 'Set this interface to use the custom toolbar templates.');
@@ -243,7 +242,7 @@ Number of items found and displayed (1 - 10 of 200 items)
                         $ToolbarTemplate = $Element['Content']['_layoutTemplate']['_Toolbar'];
                     }
                 ?>
-                <textarea class="headerFooterTemplate" name="Data[Content][_layoutTemplate][_Toolbar]"><?php echo $FooterTemplate; ?></textarea>
+                <textarea class="headerFooterTemplate" name="Data[Content][_layoutTemplate][_Toolbar]"><?php echo $ToolbarTemplate; ?></textarea>
 
             </div>
         </div>
