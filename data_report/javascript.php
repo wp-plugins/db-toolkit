@@ -537,7 +537,7 @@
         });
     }
 
-    function dr_BuildUpDateForm(eid, rid, ismodal){
+    function dr_BuildUpDateForm(eid, rid, ajaxSubmit){
     
 		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
                 

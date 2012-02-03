@@ -5,6 +5,9 @@ function text_handleInput($Field, $Input, $FieldType, $Config, $Default){
 		return $Config['Content']['_Preset'][$Field];
 	}
         if($FieldType == 'password'){
+            if(empty($Input) && !empty($Default[$Field])){
+                return $Default[$Field];
+            }
             return md5($Input);
         }
 	return $Input;

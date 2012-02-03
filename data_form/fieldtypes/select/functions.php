@@ -30,6 +30,29 @@ function select_setup($Field, $Table, $Config = false){
         
         $Return = '<div style="padding:5px;">';
 
+            $Return .= 'Display Type: <select name="Data[Content][_DisplayType]['.$Field.']" >';
+
+            $sel = '';
+            if(!empty($Config['Content']['_DisplayType'][$Field])){
+                if($Config['Content']['_DisplayType'][$Field] == 'stacked'){
+                    $sel = 'selected="selected"';
+                }
+            }
+            $Return .= '<option value="stacked" '.$sel.'>Stacked</option>';
+
+            $sel = '';
+            if(!empty($Config['Content']['_DisplayType'][$Field])){
+                if($Config['Content']['_DisplayType'][$Field] == 'inline'){
+                    $sel = 'selected="selected"';
+                }
+            }
+            $Return .= '<option value="inline" '.$sel.'>Inline</option>';
+
+            
+            $Return .= '</select>';
+        $Return .= '</div>';
+        $Return .= '<div style="padding:5px;">';
+
             $Return .= 'Select Type: <select name="Data[Content][_SelectType]['.$Field.']" >';
 
             $sel = '';

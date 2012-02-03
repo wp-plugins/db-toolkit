@@ -1,13 +1,3 @@
-.miniColors-trigger {
-	height: 22px;
-	width: 22px;
-	background: url(images/trigger.png) center no-repeat;
-	vertical-align: middle;
-	margin: 0.2em .25em 0;
-	display: inline-block;
-	outline: none;
-}
-
 .miniColors-selector {
 	position: absolute;
 	width: 175px;

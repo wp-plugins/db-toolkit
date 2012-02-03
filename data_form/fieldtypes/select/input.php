@@ -25,8 +25,18 @@ switch ($Config['_SelectType'][$Field]){
                     $sel = 'checked="checked"';
                 }
             }
+
+            $dislpayType = '';
+            
+            if(!empty($Config['_DisplayType'][$Field])){
+                if($Config['_DisplayType'][$Field] == 'inline'){
+                    $dislpayType = 'inline';
+                }
+
+            }
+
             $id= uniqid();
-            echo '<div style="clear:both;"><input type="radio" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> <label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'">'.$optionValue.'</label></div>';
+            echo '<label class="radio '.$dislpayType.'" for="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'"><input type="radio" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> '.$optionValue.'</label>';
         }
         break;
     case 'checkbox':
@@ -42,8 +52,17 @@ switch ($Config['_SelectType'][$Field]){
                     $sel = 'checked="checked"';
                 }
             }
+
+            $dislpayType = '';
+
+            if(!empty($Config['_DisplayType'][$Field])){
+                if($Config['_DisplayType'][$Field] == 'inline'){
+                    $dislpayType = 'inline';
+                }
+
+            }
             $id= uniqid();
-            echo '<div style="clear:both;"><input type="checkbox" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> <label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'">'.$optionValue.'</label></div>';
+            echo '<label class="checkbox '.$dislpayType.'" for="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'"><input type="checkbox" value="'.$optionValue.'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$id.'" '.$sel.' class="'.$Req.'" /> '.$optionValue.'</label>';
         }
         break;
 }

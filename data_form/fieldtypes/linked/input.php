@@ -33,11 +33,46 @@ if($FieldSet[1] == 'linked'){
 						$Sel = 'checked="checked"';
 					}
 				}
-				$Return .= '<div style="padding:3px;"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' /><label class="entrylabel" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'">'.$lrow['outValue'].'</label></div>';
+				$Return .= '<label class="entrylabel checkbox" style="background-color:inherit;" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.' " '.$Sel.' />'.$lrow['outValue'].'</label>';
 				$checkindex++;
 			}
 			//$Return .= '</select>';
 		
+		break;
+		case "radio":
+                    $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC";
+                    if(!empty($Config['_Linkedfields'][$Field]['_Sort'])){
+                        $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['_Sort']."` ".$Config['_Linkedfields'][$Field]['_SortDir']."";
+
+                    }
+
+				$concatvalues = array();
+				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
+					$concatvalues[] = $outValue;
+				}
+				$outString = 'CONCAT('.implode(',\' \',',$concatvalues).') as outValue';
+				$Query = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$Ordering.";";
+			$Res = mysql_query($Query);
+			//$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'">';
+			//if(empty($Defaults[$Field])){
+				//$Return .= '<option value=""></option>';
+			//}
+                        //$DefaultChecks = explode(',' $Defaults[$Field]);
+			$checkindex = 0;
+			$Return = '';
+			while($lrow = mysql_fetch_assoc($Res)){
+				$Sel = '';
+				if(!empty($Defaults[$Field])){
+					$DefaultArray = core_cleanArray(explode(',',$Defaults[$Field]));
+					if(in_array($lrow[$Config['_Linkedfields'][$Field]['ID']], $DefaultArray)){
+						$Sel = 'checked="checked"';
+					}
+				}
+				$Return .= '<label class="entrylabel radio" style="background-color:inherit;" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="radio" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.' " '.$Sel.' />'.$lrow['outValue'].'</label>';
+				$checkindex++;
+			}
+			//$Return .= '</select>';
+
 		break;
 		case "multiselect":
 				$concatvalues = array();
@@ -63,7 +98,7 @@ if($FieldSet[1] == 'linked'){
 					}
 				}
 				//$Return .= '<option value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" '.$Sel.' >'.$lrow['outValue'].'</option>';
-				$Return .= '<div style="width:200px; float:left;"><label for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' />'.$lrow['outValue'].'</label></div>';
+				$Return .= '<label class="checkbox" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' />'.$lrow['outValue'].'</label>';
 				$checkindex++;
 				
 			}
@@ -91,7 +126,7 @@ if($FieldSet[1] == 'linked'){
 			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$Ordering.";";
 			$Res = mysql_query($QuerySQL);
 			//cho $QuerySQL;
-			$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.'">';
+			$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'">';
 			if(empty($Defaults[$Field])){
 				$Return .= '<option value=""></option>';
 			}
@@ -153,7 +188,7 @@ if($FieldSet[1] == 'linked'){
 			}
 			//$FieldID = uniqid('check_'.$Field);
 			//$Return .= '<input type="text" id="autocomplete_'.$FieldID.'" class="textfield" value="'.$Det[$IDField].' ['.$Det[$ValueField].']" /><input type="hidden" name="dataForm['.$ElementID.']['.$Field.']" id="autocomplete_'.$FieldID.'_value" value="'.$Det[$IDField].'" class="'.$Req.'" />';
-			$Return .= '<input type="text" id="entry_'.$Element['ID'].'_'.$Field.'_view" class="'.$Req.' text" value="'.$VisDef.'" style="width:95%;" autocomplete="off" /><input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Det[$Config['_Linkedfields'][$Field]['ID']].'" />';
+			$Return .= '<input type="textfield" id="entry_'.$Element['ID'].'_'.$Field.'_view" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'" value="'.$VisDef.'" autocomplete="off" /><input type="hidden" name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Det[$Config['_Linkedfields'][$Field]['ID']].'" />';
 
 
 
@@ -208,13 +243,13 @@ echo $Return;
 
 if($FieldSet[1] == 'linkedfiltered'){
 	//linked_makeFilterdLinkedField('".$Config['_Linkedfilterfields'][$Field]['Ref']."', '".$Config['_Linkedfilterfields'][$Field]['Value']."','".$Config['_Linkedfilterfields'][$Field]['Filter']."', this.value, '".$Config['_Linkedfilterfields'][$Field]['Table']."'
-		$Ent = '<option>Select '.df_parseCamelCase($Config['_Linkedfilterfields'][$Field]['Filter']).' First</option>';
+		$Ent = '<option>Select '.$Config['_FieldTitle'][$Config['_Linkedfilterfields'][$Field]['Filter']].' First</option>';
 		$Dis = 'disabled="disabled"';
 		if(!empty($Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']])){
 				$Ent = linked_makeFilterdLinkedField($Config['_Linkedfilterfields'][$Field]['Ref'], "CONCAT(".implode(",' ',",$Config['_Linkedfilterfields'][$Field]['Value']).") AS _Value_Field",$Config['_Linkedfilterfields'][$Field]['ID'], $Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']], $Config['_Linkedfilterfields'][$Field]['Table'], $Defaults[$Field]);
 				$Dis = '';
 		}
-	$Return = '<select id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="" class="'.$Req.'" '.$Dis.'>';
+	$Return = '<select id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'" '.$Dis.'>';
 		$Return .= $Ent;
 	$Return .= '</select><span id="entry_status_'.$Element['ID'].'_'.$Field.'"></span>';
 	$_SESSION['dataform']['OutScripts'] .= "

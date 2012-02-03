@@ -13,7 +13,7 @@ if($FieldSet[1] == 'enum'){
 		return;	
 	}
 	preg_match_all("/'(.*?)'/", $Enum, $Vals);
-	$Out = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'">';
+	$Out = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'">';
 	$Out .= '<option value="">Select an option</option>';
 	foreach($Vals[1] as $Value){
 		$Sel = '';
@@ -23,9 +23,6 @@ if($FieldSet[1] == 'enum'){
 		$Out .= '<option value="'.$Value.'" '.$Sel.' >'.$Value.'</option>';
 	}
 	$Out .= '</select>';
-	$_SESSION['dataform']['OutScripts'] .= "
-		//jQuery('select#entry_".$Element['ID']."_".$Field."').selectmenu();
-	";
 
 echo $Out;
 }

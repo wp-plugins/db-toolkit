@@ -615,6 +615,9 @@ function df_reloadFormField($EID, $Field, $Default = false){
 function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
     global $wpdb;
+
+    include_once DB_TOOLKIT.'/data_form/phpscaffold.php';
+
     $Script = '';
     $Config = $Element['Content'];
     //vardump($Config);
@@ -674,15 +677,6 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $customClass= $Config['_FormClass'];
     }
 
-    $Hidden = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular '.$customClass.'" id="data_form_'.$Element['ID'].'" >';
-    if(empty($_SESSION['processKey'])) {
-        $_SESSION['processKey'] = uniqid(rand(100, 999).'_processKey_');
-    }
-    $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
-    $Hidden .= '<input type="hidden" name="action" id="action" value="true" />';
-    $Hidden .= '<input type="hidden" name="dataForm['.$Element['ID'].'][_control_'.uniqid().']" id="processKey_inner" value="'.$_SESSION['processKey'].'" />';
-
-
     /// attempt to place in here
     ### DONT FORGET VALIDATION!!!!
     if(!empty($Config['_Required'])) {
@@ -703,147 +697,132 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         ";
     }
     // Build Form layout
-    if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
-        parse_str($Config['_gridLayout'], $Layout);
-        
-        foreach($Config['_grid'] as $row=>$cols){
-            $Form .= "<div style=\"clear: both;\" class=\"form-gen-row\" id=\"pg-form-".$row."\">\n";
-                foreach($cols as $col=>$width){
-                    // place tabs header
-                    
-                    $Form .= "<div class=\"form-".$row."-".$col."\" style=\"float: left; overflow: hidden; width: ".$width.";\">\n";
-                        $Form .= "<div id=\"pg-form-".$row."-".$col."\" class=\"form-gen-row form-gen-col form-col-".$col."\">\n";
+    $formStack = 'form-vertical';
 
 
-                            $contentKeys = array_keys($Layout, $row.'_'.$col);
-
-                            /// Put down Tab Headers
-                            $isTabs = false;
-                            foreach($contentKeys as $tabKey=>$tabID){
-                                
-                                if(substr($tabID,0,4) == '_tab'){
-                                    if($isTabs == false){
-                                        $Form .= '<ul>';
-                                        $isTabs = true;
-                                        $Script .= "
-                                            jQuery('#pg-form-".$row."-".$col."').tabs();
-                                        ";
-                                        $_SESSION['dataform']['OutScripts'] .="
-                                            jQuery('#pg-form-".$row."-".$col."').tabs();
-                                        ";
-
-                                    }
-                                    $Form .= "<li><a href=\"#".$tabID."\">".$Config['_Tab'][$tabID]['Title']."</a></li>";
-                                }
-                            }
-                            if($isTabs == true){
-                                $Form .= '</ul>';
-                            }
-                            //vardump($contentKeys);
-
-                            // check for section breaks                            
-                            
-                            foreach($contentKeys as $Field){                                
-                                $Field = str_replace('Field_', '', $Field);
-                                
-                                $FieldSet = explode('_', $Config['_Field'][$Field]);
-                                if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
-                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
-
-                                    // Validation Check
-                                    $Req = false;
-                                    $name = $Config['_FieldTitle'][$Field];
-                                    if(!empty($Config['_Required'][$Field])){
-                                            $name = $name.' <em>(required)</em>';
-                                            $Req = 'validate[required]';
-                                    }
-                                    if(!empty($Config['_Unique'][$Field])){
-                                            if(!empty($Req)){
-                                                    $Req = 'validate[required, ajax[ajaxUnique]]';
-                                            }else{
-                                                    $Req = 'validate[optional, ajax[ajaxUnique]]';
-                                            }
-                                    }
-
-
-                                    if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
-                                        // Check if is visible or not
-                                        $Form .= "<div class=\"form-gen-field-wrapper\" id=\"form-field-".$Field."\">\n";
-                                        $Form .= "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>\n";
-                                            ob_start();
-                                            if(!empty($Defaults[$Field])){
-                                                $Val = esc_attr($Defaults[$Field]);
-                                            }else{
-                                                $Val = '';
-                                            }
-                                            if(!empty($Config['_readOnly'][$Field])){
-                                                $func = $FieldSet[0].'_processValue';
-                                                if(function_exists($func)){
-                                                    echo $func($Val, $FieldSet[1], $Field, $Config, $Element['ID'], $Defaults);
-                                                }
-                                            }else{
-                                                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
-                                            }
-                                            $Form .= ob_get_clean();
-                                            $Form .= "<div class=\"caption\" id=\"caption_".$Element['ID']."_".$Field."\">\n";
-                                            $Form .= $Config['_FieldCaption'][$Field];
-                                            $Form .= "</div>\n";
-                                        $Form .= "</div>\n";
-                                    }else{
-                                        if(empty($FieldTypes[$FieldSet[1]]['visible'])){
-                                            ob_start();
-                                            $Val = esc_attr($Defaults[$Field]);
-                                            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
-                                            $Hidden .= ob_get_clean();
-                                        }
-                                    }
-
-                                }else{
-                                    if(!empty($Config['_SectionBreak'][$Field])){
-                                        $Form .= "<div class=\"sectionbreak\">\n";
-                                        if(!empty($Config['_SectionBreak'][$Field]['Title'])){
-                                            $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
-                                        }
-                                        if(!empty($Config['_SectionBreak'][$Field]['Caption'])){
-                                            $Form .= "<span class=\"description\">".$Config['_SectionBreak'][$Field]['Caption']."</span>\n";
-                                        }
-                                        $Form .= "</div>\n";
-                                    }
-                                    if(!empty($Config['_Tab'][$Field])){
-                                        
-                                        if(!empty($tabStarted)){
-                                            $Form .= '</div>';
-                                        }
-                                        //vardump($Config['_Tab'][$Field]);
-                                        $Form .= '<div id="'.$Field.'">';
-                                        $tabStarted = true;
-                                    }
-                                    /*if(!empty($Config['_SectionBreak'][$Field])){
-                                        $Form .= "<div class=\"sectionbreak\">\n";
-                                        if(!empty($Config['_SectionBreak'][$Field]['Title'])){
-                                            $Form .= "<h2>".$Config['_SectionBreak'][$Field]['Title']."</h2>\n";
-                                        }
-                                        if(!empty($Config['_SectionBreak'][$Field]['Caption'])){
-                                            $Form .= "<span class=\"description\">".$Config['_SectionBreak'][$Field]['Caption']."</span>\n";
-                                        }
-                                        $Form .= "</div>\n";
-                                    }*/
-                                    $Form .= '';
-                                }
-                            }
-                         if(!empty($tabStarted)){
-                             $Form .= "</div>";
-                             $tabStarted = false;
-                         }
-                        $Form .= "</div>\n";
-                    $Form .= "</div>\n";
-                }
-            $Form .= "</div>\n";
+    if(empty($Config['_grid']) || !empty($Config['_disableLayoutEngineform'])) {
+        $formStack = 'form-horizontal';
+        $Config['_grid']['row1']['col1'] = '100%';
+        $Config['_gridLayout'] = '';
+        $Layout = array();
+        foreach($Config['_Field'] as $Key=>$val){
+            $Layout[$Key] = 'row1_col1';
         }
+        $Config['_gridLayout'] = true;
+    }
 
-        $Form .= '<div style="clear:left;"></div>';
-        $Shown = '';
+    if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
+        if(empty($Layout)){
+            parse_str($Config['_gridLayout'], $Layout);
+        }
         
+        $Hidden = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular '.$formStack.' '.$customClass.'" id="data_form_'.$Element['ID'].'" >';
+        if(empty($_SESSION['processKey'])) {
+            $_SESSION['processKey'] = uniqid(rand(100, 999).'_processKey_');
+        }
+        $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
+        $Hidden .= '<input type="hidden" name="action" id="action" value="true" />';
+        $Hidden .= '<input type="hidden" name="dataForm['.$Element['ID'].'][_control_'.uniqid().']" id="processKey_inner" value="'.$_SESSION['processKey'].'" />';
+
+
+        $FormLayout = new Layout('fluid');
+        //$FormLayout->debug();
+        $tmpLayout = array();
+        $fildLocations = array();
+        $columnCounter = 1;
+        $rowIndex = 1;
+        $layoutData = array();
+        //apply validation script
+        if(!empty($Config['_Required'])) {
+            $_SESSION['dataform']['OutScripts'] .= "
+                jQuery('#data_form_".$Element['ID']."').validationEngine({
+                  success :  false,
+                  failure : function() {}
+                 });
+            ";
+        }
+        foreach($Config['_grid'] as $Columns){
+            $tmpStr = array();
+            $columnIndex = 1;
+            foreach($Columns as $Column){
+                $columnSpan = round($Column*12/100);
+                $tmpStr[] = $columnSpan;
+                $Fields = array_keys($Layout, 'row'.$rowIndex.'_col'.$columnIndex);
+                // insert input fields
+                // check the config for visibility
+                if(!empty($Fields)){
+                    foreach($Fields as $Field){
+                        
+                        $Req = false;                        
+                        if(!empty($Config['_Required'][$Field])) {                            
+                            $Req = 'validate[required]';
+                        }
+                        if(!empty($Config['_Unique'][$Field])) {
+                            if(!empty($Req)) {
+                                $Req = 'validate[required, ajax[ajaxUnique]]';                                
+                            }else {
+                                $Req = 'validate[optional, ajax[ajaxUnique]]';
+                            }
+                        }
+
+                        if(empty($Config['_FormFieldWidth'][$Field])){
+                            $Config['_FormFieldWidth'][$Field] = 'input-medium';
+                        }
+                        $Field = str_replace('Field_', '', $Field);
+                        $FieldSet = explode('_', $Config['_Field'][$Field]);
+                        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
+                            $name = $Config['_FieldTitle'][$Field];
+                            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                            if(!empty($Defaults[$Field])){
+                                $Val = esc_attr($Defaults[$Field]);
+                            }else{
+                                $Val = '';
+                            }
+                            if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
+                                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                                ob_start();
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                                    $inputField = '<div class="control-group">';
+                                    $inputField .= '<label class="control-label">'.$name.'</label>';
+                                    $inputField .= '<div class="controls">';
+                                    $inputField .= ob_get_clean();
+                                    if(!empty($Config['_FieldCaption'][$Field])){
+                                        $inputField .= '<p class="help-block">'.$Config['_FieldCaption'][$Field].'</p>';
+                                    }
+                                    $inputField .= '</div>';
+                                    $inputField .= '</div>';
+
+                                $FormLayout->append($inputField, $columnCounter);
+                            }
+                        }else{
+                            // Check for tabs and section breaks
+                            // remember to close them before form renders.
+                            if(substr($Field,0,4) == '_tab'){
+                                //its a tab!
+                                
+
+                            }
+                            $FormLayout->append('&nbsp;', $columnCounter);
+                        }
+
+
+
+                    }
+                }
+                
+                $columnCounter++;
+                $columnIndex++;
+            }
+
+            $tmpLayout[] = implode(':', $tmpStr);
+
+         $rowIndex++;
+        }
+        
+        $FormLayout->setLayout(implode('|', $tmpLayout));
+
+
+        $buttonBar = '';
         if(!empty($Config['_FormMode']) || ($Config['_ViewMode'] == 'form' || empty($Config['_grid']))) {
             $ButtonText = 'Submit';
             if(!empty($Config['_SubmitButtonText'])) {
@@ -870,179 +849,34 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                 $ButtonAlign = $Config['_SubmitAlignment'];
             }
 
-            $Shown .= '<div style="text-align: '.$ButtonAlign.';" class="buttonbar"><input type="submit" name="captureEntry" id="button" value="'.$ButtonText.'" class="'.$ButtonClass.'" />';
+
+            $buttonBar .= '<div style="text-align: '.$ButtonAlign.';" class="form-actions">';
+            $buttonBar .= '<button type="submit" name="captureEntry" id="submit_'.$Element['ID'].'" class="btn '.$ButtonClass.'">'.$ButtonText.'</button>';
             if(!empty($Config['_ShowReset'])) {
-                $Shown .= '&nbsp;<input type="reset" name="Reset" id="button" class="'.$ButtonClass.'" value="Reset Form" />';
+                $buttonBar .= ' <button type="reset" name="Reset" id="reset_'.$Element['ID'].'" class="btn '.$ButtonClass.'">Reset</button>';
             }
-            $Shown .= '</div>';
+            $buttonBar .= '</div>';
         }
-        if(!empty($Defaults)) {            
-            //$Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
+        if(!empty($Defaults)) {
+            $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
             $Hidden .= '<input type="hidden" name="dr_update" value="1" />';
             $Hidden .= '<input type="hidden" name="dataForm[EID]" value="'.$Element['ID'].'" />';
             $Hidden .= '<input type="hidden" name="dataForm['.$Config['_ReturnFields'][0].']" value="'.$EditID.'" />';
         }
-        $Shown .= '</form>';
-        if(!empty($Config['_ajaxForms'])){
-        $_SESSION['disableddataform']['OutScripts'] .= "
-            
-            jQuery(\"#data_form_".$Element['ID']."\").bind('submit', function(){
-             ajaxCall('df_processAjaxForm',jQuery(\"#data_form_".$Element['ID']."\").serialize(), function(p){
-             jQuery(\"#data_form_".$Element['ID']."\")[0].reset();
-                
-             df_loadOutScripts();
-            });
-            return false;
-            })
 
-        ";
-        }
-        // if ajax Forms
+        //vardump($layoutString);
+        //vardump($layoutData);
+        //vardump($Config['_grid']);
+
+        $Form = $FormLayout->renderLayout();
 
 
         $Output['width'] = $Config['_popupWidth'];
-        $Output['html'] = $Hidden.$Form.$Shown;
+        $Output['html'] = $Hidden.$Form.$buttonBar;
         $Output['script'] = $Script;
         return $Output;
     }
 
-
-    // Build auto form
-    $Shown = '<table width="100%" border="0" cellspacing="0" class="captureForm" cellpadding="0">';
-    if(!empty($Config['_Required'])) {
-        $_SESSION['dataform']['OutScripts'] .= "
-			jQuery('#data_form_".$Element['ID']."').validationEngine({
-			  success :  false,
-			  failure : function() {}
-			 });
-
-		";
-    }
-    $LeftColumn = '';
-    $RightColumn = '';
-    $FarRightColumn = '';
-    $LIndex = 0;
-    $RIndex = 0;
-
-
-    foreach($Config['_Field'] as $Field=>$Type) {
-        $Row = dais_rowSwitch($Row);
-        $name = df_parseCamelCase($Field);
-        if(!empty ($Config['_FieldTitle'][$Field])){
-            $name = $Config['_FieldTitle'][$Field];
-        }
-        $Req = false;
-        if(!empty($Config['_Required'][$Field])) {
-            $name = '<span style="color:#ff0000;">*</span>'.$name;
-            $Req = 'validate[required]';
-        }
-        if(!empty($Config['_Unique'][$Field])) {
-            if(!empty($Req)) {
-                $Req = 'validate[required, ajax[ajaxUnique]]';
-            }else {
-                $Req = 'validate[optional, ajax[ajaxUnique]]';
-            }
-        }
-        //if(file_exists(
-        $FieldSet = explode('_',$Type);
-
-        if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php')) {
-            include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
-            $Val = '';
-            if(!empty($Defaults[$Field])) {
-                $Val = stripslashes($Defaults[$Field]);
-            }
-            //vardump($FieldTypes[$FieldSet[1]]);
-            if(substr($Field,0, 2) != '__' || !empty($FieldTypes[$FieldSet[1]]['cloneview'])) {
-                if(!empty($FieldTypes[$FieldSet[1]]['visible'])) {
-
-                    $Pre = '<tr class="'.$Row.'" style="padding:3px;" id="form-field-'.$Field.'">';
-                    $Pre .= '<td id="'.$Element['ID'].'_'.$Field.'" nowrap="nowrap" class="'.$Row.'" width="30%" style="text-align:right;background-color:inherit; border:inherit;padding:3px;" valign="top"><strong>'.$name.'&nbsp;</strong></td>';
-                    $Pre .= '<td class="'.$Row.'" style="background-color:inherit; border:inherit;padding:3px;" valign="top">';
-                    //df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
-                    ob_start();
-                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
-                    $Pre .= ob_get_clean();
-                    // Caption
-                    $Pre .= '<div class="caption">';
-                        if(!empty ($Config['_FieldCaption'][$Field])){
-                           $Pre .= $Config['_FieldCaption'][$Field];
-                        }else{
-                            $Pre .= '';
-                        }
-                    $Pre .= '</div>';
-
-                    $Pre .= '</td>';
-                    $Pre .= '</tr>';
-
-                    /// Columns
-                    $RightColumn .= $Pre;
-                }else {
-                    $Row = dais_rowSwitch($Row);
-                    ob_start();
-                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
-                    $Hidden .= ob_get_clean();
-                }
-            }
-            unset($FieldTypes);
-            //echo 'p';
-        }
-    }
-
-
-
-
-
-
-    $Shown .= '<table width="100%" border="0" cellspacing="0" class="captureframe" cellpadding="0">
-		<tr>';
-    $Output['width'] = 300;
-
-    $Shown .= '<td valign="top">';
-    $Shown .= '<table width="100%" border="0" cellspacing="0" cellpadding="2">';
-    $Shown .= $RightColumn;
-    $Shown .= '</table>';
-    $Shown .= '</td>';
-    $Output['width'] = $Output['width']+100;
-
-
-    $Shown .= '</tr>';
-    $Shown .= '</table>';
-
-
-    $Shown .= '</table>';
-    
-    if($Config['_ViewMode'] == 'form') {
-        
-        $ButtonText = 'Submit';
-        if(!empty($Config['_SubmitButtonText'])) {
-            $ButtonText = $Config['_SubmitButtonText'];
-        }
-        if(!empty($_GET[$Config['_ReturnFields'][0]])) {
-            if(!empty($Config['_UpdateButtonText'])) {
-                $ButtonText = $Config['_UpdateButtonText'];
-            }
-        }
-        $ButtonAlign = 'center';
-        if(!empty($Config['_SubmitAlignment'])) {
-            $ButtonAlign = $Config['_SubmitAlignment'];
-        }
-
-        $Shown .= '<div style="text-align: '.$ButtonAlign.';" class="buttonbar"><input type="submit" name="captureEntry" id="button" value="'.$ButtonText.'" class="button-primary" />';
-        if(!empty($Config['_ShowReset'])) {
-            $Shown .= '&nbsp;<input type="reset" name="Reset" id="reset" class="button"  value="Reset Form" />';
-        }
-        $Shown .= '</div>';
-    }
-    if(!empty($Defaults)) {
-        $Hidden .= '<input type="hidden" name="processKey" id="processKey" value="'.$_SESSION['processKey'].'" />';
-        $Hidden .= '<input type="hidden" name="dr_update" value="1" />';
-        $Hidden .= '<input type="hidden" name="dataForm[EID]" value="'.$Element['ID'].'" />';
-        $Hidden .= '<input type="hidden" name="dataForm['.$Config['_ReturnFields'][0].']" value="'.$EditID.'" />';
-    }
-    $Shown .= '</form>';
-    $Output['html'] = $Hidden.$Shown;
-    return $Output;
 }
 
 function df_parseCamelCase($Field) {

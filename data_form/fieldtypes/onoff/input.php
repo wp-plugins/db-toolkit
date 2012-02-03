@@ -18,16 +18,15 @@
 */
 
 
-$Form = str_replace("<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>", "", $Form);
-
 $Sel = '';
 if($Defaults[$Field] == 1){
 	$Sel = 'checked="checked"';
 }
-echo '<div style="padding:3px;"><input type="checkbox" id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" value="1" '.$Sel.' /> ';
+echo "<label class=\"checkbox entrylabel\" style=\"background-color:inherit;\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">";
+echo '<input type="checkbox" id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" value="1" '.$Sel.' /> ';
 
-echo "<label class=\"form-gen-lable entrylabel\" style=\"display:inline !important\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>";
+echo $Config['_onoff'][$Field]['helper']."</label>";
 
-echo '</div>';
-$Config['_FieldCaption'][$Field] = '';
+
+
 ?>

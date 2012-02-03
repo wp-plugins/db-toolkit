@@ -16,6 +16,7 @@
  field names are : name="dataForm['.$Element['ID'].']['.$Field.']"
  fieled ID's are : id="entry_'.$Element['ID'].'_'.$Field.'"
 */
+
 $Sel = '';
 if($Defaults[$Field] == 1){
 	$Sel = 'checked="checked"';

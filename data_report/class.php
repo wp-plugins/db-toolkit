@@ -256,13 +256,20 @@ if (is_admin ()) {
         if (!empty($Config['Content']['_Justify'][$Field])) {
             $Justify = $Config['Content']['_Justify'][$Field];
         }
+        $fieldFormWidth = '';
+        if (!empty($Config['Content']['_FormFieldWidth'][$Field])) {
+            $fieldFormWidth = $Config['Content']['_FormFieldWidth'][$Field];
+        }
         //$PreReturn[$Field] .= '<label><strong>Lable</strong></label>';
 
         $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="' . $Title . '" name="Data[Content][_FieldTitle][' . $Field . ']" /> ';
-        $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" /></div>';
+        $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" />';
+        $PreReturn[$Field] .= df_FormWidthSetup($Field, $fieldFormWidth);
+        $PreReturn[$Field] .= '</div>';
         //$PreReturn[$Field] .= '<label><strong>Alignment</strong></label>';
-        $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
-        $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify) . '</div>';
+        $PreReturn[$Field] .= '<div style="padding:3px;">List Column Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
+        $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify).'</div>';
+        
         
         
         if(empty($row))
@@ -396,8 +403,10 @@ if (is_admin ()) {
                 }
             }            
             $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="' . $Title . '" name="Data[Content][_FieldTitle][' . $Field . ']" /> ';
-            $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" /></div>';
-            $PreReturn[$Field] .= '<div style="padding:3px;">Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
+            $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" />';
+            $PreReturn[$Field] .= df_FormWidthSetup($Field, $fieldFormWidth);
+            $PreReturn[$Field] .= '</div>';
+            $PreReturn[$Field] .= '<div style="padding:3px;">List Column Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
             $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify) . '</div>';
             //$PreReturn[$Field] .= '<div class="admin_list_row2">Unique: <input type="checkbox" name="Data[Content][_Unique]['.$Field.']" id="unique_'.$Field.'" '.$USel.' /></div>';
             //$PreReturn[$Field] .= '<div class="admin_list_row1">Reguired: </div>';
@@ -1059,6 +1068,64 @@ function df_alignmentSetup($id, $Default = false) {
         $Sel = 'selected="selected"';
     }
     $Return .= '<option value="Right" ' . $Sel . '>Right</option>';
+    $Return .= '</select>';
+    //'<input type="text" name="Data[Content][ImageSizeI]['.$id.']" value="100" class="textfield" size="3" maxlength="3" /> ';
+    return $Return;
+}
+
+function df_FormWidthSetup($id, $Default = false) {
+    if(empty($Default)){
+        $Default = 'input-medium';
+    }
+    $Return = ' Form Field Size: <select name="Data[Content][_FormFieldWidth][' . $id . ']" id="FormFieldWidth_' . $id . '_settings">';
+    $Return .= '<optgroup label="Preset Sizes">';
+    $Sel = '';
+    if ($Default == 'input-mini') {
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="input-mini" ' . $Sel . '>Mini</option>';
+
+    $Sel = '';
+    if ($Default == 'input-small') {
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="input-small" ' . $Sel . '>Small</option>';
+    
+    $Sel = '';
+    if ($Default == 'input-medium') {
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="input-medium" ' . $Sel . '>Medium</option>';
+
+    $Sel = '';
+    if ($Default == 'input-large') {
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="input-large" ' . $Sel . '>Large</option>';
+
+    $Sel = '';
+    if ($Default == 'input-xlarge') {
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="input-xlarge" ' . $Sel . '>XLarge</option>';
+
+    $Sel = '';
+    if ($Default == 'input-xxlarge') {
+        $Sel = 'selected="selected"';
+    }
+    $Return .= '<option value="input-xxlarge" ' . $Sel . '>XXLarge</option>';
+
+    $Return .= '</optgroup>';
+    $Return .= '<optgroup label="Incremental">';
+   
+        for($i=1; $i<=12; $i++){
+            $Sel = '';
+            if ($Default == 'span'.$i) {
+                $Sel = 'selected="selected"';
+            }            
+            $Return .= '<option value="span'.$i.'" ' . $Sel . '>Span '.$i.'</option>';
+        }
+    $Return .= '</optgroup>';
     $Return .= '</select>';
     //'<input type="text" name="Data[Content][ImageSizeI]['.$id.']" value="100" class="textfield" size="3" maxlength="3" /> ';
     return $Return;
