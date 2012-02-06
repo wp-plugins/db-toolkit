@@ -742,15 +742,19 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
             ";
         }
         foreach($Config['_grid'] as $Columns){
+
             $tmpStr = array();
             $columnIndex = 1;
             foreach($Columns as $Column){
+                $tabs = '';
+                $sections = '';
                 $columnSpan = round($Column*12/100);
                 $tmpStr[] = $columnSpan;
                 $Fields = array_keys($Layout, 'row'.$rowIndex.'_col'.$columnIndex);
                 // insert input fields
                 // check the config for visibility
                 if(!empty($Fields)){
+                    $fieldIndex = 1;
                     foreach($Fields as $Field){
                         
                         $Req = false;                        
@@ -771,6 +775,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                         $Field = str_replace('Field_', '', $Field);
                         $FieldSet = explode('_', $Config['_Field'][$Field]);
                         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
+                            
                             $name = $Config['_FieldTitle'][$Field];
                             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
                             if(!empty($Defaults[$Field])){
@@ -780,7 +785,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                             }
                             if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
                                 include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
-                                ob_start();
+                                    ob_start();
                                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $inputField = '<div class="control-group">';
                                     $inputField .= '<label class="control-label">'.$name.'</label>';
@@ -794,24 +799,56 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
                                 $FormLayout->append($inputField, $columnCounter);
                             }
-                        }else{
+                        }else{                            
                             // Check for tabs and section breaks
                             // remember to close them before form renders.
                             if(substr($Field,0,4) == '_tab'){
                                 //its a tab!
-                                
+                                if(empty($tabStarted)){
+                                    $tabs = '<div id="tabs_row_'.$rowIndex.'_col_'.$columnCounter.'"><ul>';
+                                    $tabStarted = true;
+                                }
+                                $tabs .= '<li><a href="#'.$Field.'">'.$Config['_Tab'][$Field]['Title'].'</a></li>';
 
+                                // start tab content
+                                if(!empty($tabContentStarted)){
+                                    $FormLayout->append('</div>', $columnCounter);                                    
+                                }
+                                $FormLayout->append('<div id="'.$Field.'">', $columnCounter);
+                                $tabContentStarted = true;
+                            }elseif(substr($Field,0,5) == '_html'){
+                                //$FormLayout->append(, $columnCounter);
+                                $FormLayout->append($Config['_html'][$Field]['Title'], $columnCounter);
                             }
-                            $FormLayout->append('&nbsp;', $columnCounter);
+                            
                         }
-
-
-
+                                       
+                    $fieldIndex++;
                     }
                 }
-                
+                if(!empty($tabStarted)){
+                    // end off tabs
+                    $tabs .= '</ul>';
+                    $tabStarted = false;
+                    // send tab headers to top of column
+                    $FormLayout->prepend($tabs, $columnCounter);
+
+                    //end last tab content
+                    $FormLayout->append('</div>', $columnCounter);
+                    $tabContentStarted = false;
+                    // send ending of tabs to end of column
+                    $FormLayout->append('</div>', $columnCounter);
+
+                    // Send Out Script to activate tabs
+                    $_SESSION['dataform']['OutScripts'] .= "
+                        jQuery(\"#tabs_row_".$rowIndex."_col_".$columnCounter."\" ).tabs();
+                    ";
+                }
+
+
                 $columnCounter++;
                 $columnIndex++;
+
             }
 
             $tmpLayout[] = implode(':', $tmpStr);

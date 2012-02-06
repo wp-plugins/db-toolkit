@@ -91,12 +91,25 @@ function file_handleInput($Field, $Input, $FieldType, $Config, $predata){
 		//$urlLoc = $path['url'].'/'.$newFileName;
 		$GLOBALS['UploadedFile'][$Field] = $newLoc;
 
-        $upload = wp_upload_bits($newFileName, null, file_get_contents($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field]));
+                $upload = wp_upload_bits($_FILES['dataForm']['name'][$Config['ID']][$Field], null, file_get_contents($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field]));
 		//move_uploaded_file($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field], $newLoc);
 		
 	//return $newLoc;
-        
-	return $upload['url'].'?'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
+
+        if($FieldType == 'image'){
+
+            $imageWidth = ($Config['Content']['_ImageSizeX'][$Field] == 'auto' ? '0' : $Config['Content']['_ImageSizeX'][$Field]);
+            $imageHeight = ($Config['Content']['_ImageSizeY'][$Field] == 'auto' ? '0' : $Config['Content']['_ImageSizeY'][$Field]);
+
+            $iconWidth = ($Config['Content']['_IconSizeX'][$Field] == 'auto' ? '0' : $Config['Content']['_IconSizeX'][$Field]);
+            $iconHeight = ($Config['Content']['_IconSizeY'][$Field] == 'auto' ? '0' : $Config['Content']['_IconSizeY'][$Field]);
+
+            // crunch sizes
+
+            $image = image_resize($upload['file'], $imageWidth, $imageHeight, true);
+            $icon = image_resize($upload['file'], $iconWidth, $iconHeight, true);
+        }
+	return $upload['url'];
 	}
 	
 }
@@ -111,36 +124,40 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 	//die;
 		switch ($Type){
 			case 'image';
-                                $Value = explode('?', $Value);
-                                
-                                    $Vars = array();
-                                    $Vars['q'] = '75';
+
+                                    $imageWidth = ($Config['_ImageSizeX'][$Field] == 'auto' ? '0' : $Config['_ImageSizeX'][$Field]);
+                                    $imageHeight = ($Config['_ImageSizeY'][$Field] == 'auto' ? '0' : $Config['_ImageSizeY'][$Field]);
+
+                                    $iconWidth = ($Config['_IconSizeX'][$Field] == 'auto' ? '0' : $Config['_IconSizeX'][$Field]);
+                                    $iconHeight = ($Config['_IconSizeY'][$Field] == 'auto' ? '0' : $Config['_IconSizeY'][$Field]);
+
+                                    $uploadVars = wp_upload_dir();
+
+                                    $SourceFile = str_replace($uploadVars['url'], $uploadVars['path'], $Value);
+                                    if(!file_exists($SourceFile)){
+                                        return 'Image does not exists.';
+                                    }
+                                    $dim = getimagesize($SourceFile);                                    
+                                    $newDim = image_resize_dimensions($dim[0], $dim[1], $iconWidth, $iconHeight, true);
+
+                                    
+                                    $Sourcepath = pathinfo($SourceFile);
+                                    $URLpath = pathinfo($Value);
+                                    $iconURL = $URLpath['dirname'].'/'.$URLpath['filename'].'-'.$newDim[4].'x'.$newDim[5].'.'.$URLpath['extension'];
+                                    if(!file_exists($Sourcepath['dirname'].'/'.$Sourcepath['filename'].'-'.$newDim[4].'x'.$newDim[5].'.'.$Sourcepath['extension'])){
+                                        $image = image_resize($SourceFile, $imageWidth, $imageHeight, true);
+                                        $icon = image_resize($SourceFile, $iconWidth, $iconHeight, true);
+                                    }
                                     $ClassName = '';
-                                    if(!empty($Config['_IconClassName'][$Field])){
-                                        $ClassName = $Config['_IconClassName'][$Field];
-                                    }
-                                    if(!empty($Config['_IconCompression'][$Field])){
-                                        $Vars['q'] = $Config['_ImageCompression'][$Field];
-                                    }
-                                    if(!empty($Config['_IconSizeY'][$Field])){
-                                        if($Config['_IconSizeY'][$Field] != 'auto'){
-                                            $Vars['h'] = $Config['_IconSizeY'][$Field];
-                                        }
-                                    }
-                                    if(!empty($Config['_IconSizeX'][$Field])){
-                                        if($Config['_IconSizeX'][$Field] != 'auto'){
-                                            $Vars['w'] = $Config['_IconSizeX'][$Field];
-                                        }
+                                    if(!empty($Config['_ImageClassName'][$Field])){
+                                        $ClassName = 'class="'.$Config['_ImageClassName'][$Field].'" ';
                                     }
                                     
-                                    $Vars = build_query($Vars);
-
-                                    $Source = WP_PLUGIN_URL.'/db-toolkit/libs/timthumb.php?src='.urlencode(trim($Value[0])).'&'.$Vars;
                                     if(!empty($Config['_IconURLOnly'][$Field])){
-                                        return $Source;
+                                        return $iconURL;
                                     }
+                                    return '<img src="'.$iconURL.'" '.$ClassName.image_hwstring($iconWidth, $iconHeight).'>';
 
-                                    return '<img src="'.$Source.'" class="'.$ClassName.'">';
 
 		 		break;
 			case 'mp3';

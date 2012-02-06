@@ -296,7 +296,30 @@
 
         // number = jQuery('.sectionBreak').length;
 	number=Math.floor(Math.random()*99999);
-	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter tab '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="tab_tab'+number+'"><div class="'+area+'portlet-header ui-widget-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/>&nbsp;<input type="text" class="tabTitle" name="Data[Content][_Tab][_tab'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><input class="layOut'+area+' positioning" type="hidden" name="_tab'+number+'" id="tab_'+number+'" value="1"/></div>');
+	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter tab '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="tab_tab'+number+'"><div class="'+area+'portlet-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/>Tab Title<input type="text" class="tabTitle" name="Data[Content][_Tab][_tab'+number+'][Title]" /><span class="ui-icon ui-icon-close"></span></div><input class="layOut'+area+' positioning" type="hidden" name="_tab'+number+'" id="tab_'+number+'" value="1"/></div>');
+	jQuery("."+area+"portlet-header .ui-icon").click(function() {
+            jQuery(this).toggleClass("ui-icon-minusthick");
+            jQuery(this).parents("."+area+"portlet:first").remove();
+	});
+
+	jQuery("."+area+"Grid"+area).sortable({
+            connectWith: '.'+area+'Grid'+area,
+            update: function(event, ui){
+                jQuery(this).find(".positioning").val(jQuery(this).parent().attr('id'));
+                formSetup_columSave();
+                viewSetup_columSave();
+            }
+	});
+	//jQuery(".formGrid"+area).disableSelection();
+
+	//dr_sorter();
+    }
+
+    function dr_addHTML(area){
+
+        // number = jQuery('.sectionBreak').length;
+	number=Math.floor(Math.random()*99999);
+	jQuery('#fieldTray'+area).prepend('<div style="padding: 3px;" class="list_row4 table_sorter html '+area+'portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" id="html_html'+number+'"><div class="'+area+'portlet-header ui-corner-all"><img align="absmiddle" class="OrderSorter" src="data_report/arrow_out.png" style=""/>HTML<br /><textarea class="htmlTitle" name="Data[Content][_html][_html'+number+'][Title]" style="width:90%; height:100px;" ></textarea><span class="ui-icon ui-icon-close"></span></div><input class="layOut'+area+' positioning" type="hidden" name="_html'+number+'" id="html_'+number+'" value="1"/></div>');
 	jQuery("."+area+"portlet-header .ui-icon").click(function() {
             jQuery(this).toggleClass("ui-icon-minusthick");
             jQuery(this).parents("."+area+"portlet:first").remove();
