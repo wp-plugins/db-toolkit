@@ -756,7 +756,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                 if(!empty($Fields)){
                     $fieldIndex = 1;
                     foreach($Fields as $Field){
-                        
+                        $Return = '';
                         $Req = false;                        
                         if(!empty($Config['_Required'][$Field])) {                            
                             $Req = 'validate[required]';
@@ -774,9 +774,9 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                         }
                         $Field = str_replace('Field_', '', $Field);
                         $FieldSet = explode('_', $Config['_Field'][$Field]);
+                        $name = $Config['_FieldTitle'][$Field];
                         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
-                            
-                            $name = $Config['_FieldTitle'][$Field];
+                                                        
                             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
                             if(!empty($Defaults[$Field])){
                                 $Val = esc_attr($Defaults[$Field]);
@@ -817,7 +817,15 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                 $FormLayout->append('<div id="'.$Field.'">', $columnCounter);
                                 $tabContentStarted = true;
                             }elseif(substr($Field,0,5) == '_html'){
-                                //$FormLayout->append(, $columnCounter);
+                                //$FormLayout->append(, $columnCounter);                              
+                                foreach($Config['_Field'] as $fieldKey=>$type){
+                                    if(!empty($Defaults)){
+                                        $Config['_html'][$Field]['Title'] = str_replace('{{'.$fieldKey.'}}', $Defaults[$fieldKey], $Config['_html'][$Field]['Title']);
+                                    }else{
+                                        $Config['_html'][$Field]['Title'] = str_replace('{{'.$fieldKey.'}}', '', $Config['_html'][$Field]['Title']);
+                                    }
+                                }
+                                
                                 $FormLayout->append($Config['_html'][$Field]['Title'], $columnCounter);
                             }
                             
