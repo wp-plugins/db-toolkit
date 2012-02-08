@@ -21,7 +21,7 @@
     </div>
 
 	
-	<div id="formGridform">
+	<ul id="formGridform">
 <?php
 
 
@@ -35,8 +35,7 @@
         if(!empty($cfg['_grid'])){
             $newRow = 1;
             foreach($cfg['_grid'] as $row=>$cols){
-                echo '<div class="rowWrapperForm">';
-
+                echo '<li class="rowWrapperForm">';                    
                     echo '<div id="row'.$newRow.'" class="formRow" style="clear: both; width: 85%; float: left;">';
                         $newCol = 1;
                         foreach($cols as $col=>$width){
@@ -44,7 +43,7 @@
                             echo '<div class="column" id="row'.$newRow.'_col'.$newCol.'" style="padding: 0pt; margin: 0pt; width: '.$width.'; float: left;">';
 
                                 echo '<input type="hidden" value="'.$width.'" name="Data[Content][_grid][row'.$newRow.'][col'.$newCol.']" class="row'.$newRow.'_control" id="row'.$newRow.'_col'.$newCol.'_control">';//row'.$newRow.'_col'.$newCol.'';
-                                echo '<div style="padding: 10px; margin: 10px; -moz-user-select: none;" class="ui-state-error formGridform formColumn ui-sortable" unselectable="on">';
+                                echo '<div style="padding: 10px; margin: 10px; -moz-user-select: none;" class="ui-state-highlight formGridform formColumn ui-sortable" unselectable="on">';
                                 
                                 $content = array_keys($layout, $row.'_'.$col);
                                 if(!empty($content)){
@@ -102,16 +101,17 @@
                         echo '<img height="16" width="16" onclick="formAddColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/add.png">';
                         echo '<img height="16" width="16" onclick="formSubtractColumn(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/delete.png">';
                         echo '<img height="16" width="16" onclick="formRemoveColumns(\'row'.$newRow.'\');" style="cursor: pointer;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/no.png">';
+                        echo ' <i><img id="mover" height="16" width="16" style="cursor: move;" src="'.WP_PLUGIN_URL.'/db-toolkit/data_report/arrow-move.png"></i>';
                     echo '</div>';
-
-                echo '</div>';
+                    echo '<div style="clear:both;"></div>';
+                echo '</li>';
             $newRow++;
             }
         }
 
 
     ?>
-	</div>
+	</ul>
 	<div style="clear:both; width:350px;"><br /><br />
 	
         <?php echo InfoBox('Available Fields'); ?>
@@ -164,6 +164,9 @@
 			}
 
 		});
+
+
+
 			jQuery(".formportlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all").find(".formportlet-header").addClass("ui-corner-all");
 			jQuery(".formportlet-header .ui-icon").click(function() {
 				jQuery(this).toggleClass("ui-icon-minusthick");
@@ -217,6 +220,16 @@ function formSetup_InsertInterface(eid){
 
 function formSetup_columSave(){
 	jQuery('#gridLayoutBoxForm').val(jQuery('.layOutform').serialize());
+        jQuery( "#formGridform" ).sortable({
+            placeholder: 'sortable-placeholder',
+            forcePlaceholderSize: true,
+            connectWith: ".rowWrapperForm",
+            handle: 'i',
+            stop: function(p){
+                    formSetup_columSave();
+            }
+
+        }).disableSelection();
 }
 
 function formSetup_AddRow(){
@@ -227,7 +240,7 @@ function formSetup_AddRow(){
 	//});
 
 
-	jQuery('#formGridform').append('<div class="rowWrapperForm"><div style="clear:both; width:85%; float:left;" class="formRow" id="row'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="row'+rownum+'_col1" class="column"><input id="row'+rownum+'_col1_control" class="row'+rownum+'_control" name="Data[Content][_grid][row'+rownum+'][col1]" type="hidden" value="100%" /><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:15%; padding-top:12px; float:left;" class="formRow" id="row1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="formSetupColumns(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="formAddColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="formSubtractColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="formRemoveColumns(\'row'+rownum+'\');" /></div></div>');
+	jQuery('#formGridform').append('<li class="rowWrapperForm"><div style="clear:both; width:85%; float:left;" class="formRow" id="row'+rownum+'"><div style="padding:0; margin:0; width:100%; float:left;" id="row'+rownum+'_col1" class="column"><input id="row'+rownum+'_col1_control" class="row'+rownum+'_control" name="Data[Content][_grid][row'+rownum+'][col1]" type="hidden" value="100%" /><div class="ui-state-highlight formGridform formColumn" style="padding:10px; margin:10px;"></div></div></div><div style="width:15%; padding-top:12px; float:left;" class="formRow" id="row1Control"><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/cog.png" style="cursor:pointer;" width="16" height="16" onclick="formSetupColumns(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/add.png" style="cursor:pointer;" width="16" height="16" onclick="formAddColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/delete.png" style="cursor:pointer;" width="16" height="16" onclick="formSubtractColumn(\'row'+rownum+'\');" /><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/no.png" style="cursor:pointer;" width="16" height="16" onclick="formRemoveColumns(\'row'+rownum+'\');" /> <i><img src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/data_report/arrow-move.png" width="16" height="16" style="cursor:move;" /></i></div><div style="clear:both;"></div></li>');
 		jQuery(".formGridform").sortable({
 			connectWith: '.formGridform',
 			update: function(event, ui){                            
@@ -284,7 +297,7 @@ function formAddColumn(row){
                 jQuery('#'+row+' .column').width(width+'%').animate({},1, function(){
 		//alert(width);
 			if(this.id == row+'_col'+(cols-1)){
-				jQuery('#'+row).append('<div style="padding:0; margin:0; width:'+width+'%; float:left;" id="'+row+'_col'+cols+'" class="column"><input id="row'+row+'_'+cols+'_control" class="'+row+'_control" name="Data[Content][_grid]['+row+'][col'+cols+']" type="hidden" value="'+width+'%" /><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div>');
+				jQuery('#'+row).append('<div style="padding:0; margin:0; width:'+width+'%; float:left;" id="'+row+'_col'+cols+'" class="column"><input id="row'+row+'_'+cols+'_control" class="'+row+'_control" name="Data[Content][_grid]['+row+'][col'+cols+']" type="hidden" value="'+width+'%" /><div class="ui-state-highlight formGridform formColumn" style="padding:10px; margin:10px;"></div>');
 				jQuery(".formGridform").sortable({
 					connectWith: '.formGridform',
 					update: function(event, ui){
@@ -312,7 +325,7 @@ function formSubtractColumn(row){
 	width = 100/cols;
 	//jQuery('#'+row).html('');
 	//for(i=1; i<= cols; i++){
-	//jQuery('#'+row).append('<div style="padding:0; margin:0; width:'+width+'%; float:left;" id="'+row+'_col'+i+'" class="column"><div class="ui-state-error formGridform formColumn" style="padding:10px; margin:10px;"></div></div>');
+	//jQuery('#'+row).append('<div style="padding:0; margin:0; width:'+width+'%; float:left;" id="'+row+'_col'+i+'" class="column"><div class="ui-state-highlight formGridform formColumn" style="padding:10px; margin:10px;"></div></div>');
 	jQuery('#'+row+'_col'+(cols+1)+' .formportlet').appendTo('#'+row+'_col'+cols+' .formColumn');
 	//jQuery('#'+row+'_col'+(cols+1)).fadeOut(100, function(){
 		jQuery('#'+row+'_col'+(cols+1)).remove();

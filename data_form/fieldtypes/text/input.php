@@ -1,9 +1,11 @@
 <?php
 /// This creates the actual input fields for capturing. this will handle the occurance of the setting
 
-if($FieldSet[1] == 'singletext'){
+if($FieldSet[1] == 'integer'){
 	$WidthOverride = '';
-        
+        if(!empty($Req)){
+            $Req = 'validate[required,custom[onlyNumber]]';
+        }
 	if(!empty($Config['_FieldLength'][$Field])){
 		$WidthOverride = 'style="width:'.$Config['_FieldLength'][$Field].';"';
 	}
@@ -15,6 +17,22 @@ if($FieldSet[1] == 'singletext'){
             $fieldType = 'textfield';
         }
         
+	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="'.$fieldType.'" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'" />';
+}
+if($FieldSet[1] == 'singletext'){
+	$WidthOverride = '';
+
+	if(!empty($Config['_FieldLength'][$Field])){
+		$WidthOverride = 'style="width:'.$Config['_FieldLength'][$Field].';"';
+	}
+        $fieldType = 'text';
+        if(!empty($Config['_fieldType'][$Field])){
+            $fieldType = $Config['_fieldType'][$Field];
+        }
+        if($fieldType == 'text'){
+            $fieldType = 'textfield';
+        }
+
 	echo '<input name="dataForm['.$Element['ID'].']['.$Field.']" type="'.$fieldType.'" id="entry_'.$Element['ID'].'_'.$Field.'" value="'.$Val.'" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'" />';
 }
 if($FieldSet[1] == 'password'){

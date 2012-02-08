@@ -185,12 +185,6 @@
                     echo dais_customfield('checkbox', 'Show Reset Button', '_ShowReset', '_ShowReset', 'list_row1' , 1, $Sel, 'Render the reset form button.');
 
                     $Sel = '';
-                    if(!empty($Element['Content']['_ShowUniform'])) {
-                        $Sel = 'checked="checked"';
-                    }
-                    echo dais_customfield('checkbox', 'Enable Uniform', '_ShowUniform', '_ShowUniform', 'list_row1' , 1, $Sel, 'Use Uniform.js to make the forms pretty.');
-
-                    $Sel = '';
                     if(!empty($Element['Content']['_SubmitAlignment'])) {
                         switch($Element['Content']['_SubmitAlignment']) {
                             case 'left':
