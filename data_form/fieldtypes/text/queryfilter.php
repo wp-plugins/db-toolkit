@@ -1,13 +1,20 @@
 <?php
 //Filters query variables for the field type
 if(!empty($_SESSION['reportFilters'][$EID][$Field])) {
-    if($WhereTag == '') {
-        $WhereTag = " WHERE ";
-    }
 
 if($Type[1] == 'integer'){
-        $queryWhere[] = "( prim.".$Field." >= '".floatval($_SESSION['reportFilters'][$EID][$Field][0])."' AND prim.".$Field." <= '".floatval($_SESSION['reportFilters'][$EID][$Field][1])."')";
+        if($_SESSION['reportFilters'][$EID][$Field][0] != '' && $_SESSION['reportFilters'][$EID][$Field][0] != ''){
+            if($WhereTag == '') {
+                $WhereTag = " WHERE ";
+            }
+
+            $queryWhere[] = "( prim.".$Field." >= '".floatval($_SESSION['reportFilters'][$EID][$Field][0])."' AND prim.".$Field." <= '".floatval($_SESSION['reportFilters'][$EID][$Field][1])."')";
+        }
     }else{
+        if($WhereTag == '') {
+            $WhereTag = " WHERE ";
+        }
+
         $filterParts = explode(';', $_SESSION['reportFilters'][$EID][$Field]);
         if(is_array($filterParts)){
             foreach($filterParts as $querySearch){
