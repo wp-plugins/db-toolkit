@@ -287,8 +287,8 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 			$UID = uniqid(rand(1,999));
                         
 			$Return = '<div class="filterField '.$Class.'"><h2>'.$FieldTitle.'</h2>';
-			$Return .= '<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="FieldSearch" id="startRange_'.$EID.'_'.$UID.'" value="'.$DateFrom.'" size="12" style="width: 100px;" /> to';
-			$Return .= '<input type="text" class="FieldSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'_'.$UID.'" value="'.$DateTo.'" size="12" style="width: 100px;" />&nbsp;';
+			$Return .= '<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="filterSearch" id="startRange_'.$EID.'_'.$UID.'" value="'.$DateFrom.'" size="12" style="width: 100px;" /> to';
+			$Return .= '<input type="text" class="filterSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'_'.$UID.'" value="'.$DateTo.'" size="12" style="width: 100px;" />&nbsp;';
                         $Return .= '</div>';
 			
 			$_SESSION['dataform']['OutScripts'] .= "
