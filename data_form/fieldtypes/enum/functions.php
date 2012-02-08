@@ -7,7 +7,7 @@ function enum_showFilter($Field, $Type, $Default, $Config, $EID){
 		$FieldTitle = $Config['_FieldTitle'][$Field];
 	}
 
-	$Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2>';
+	$Return .= '<div class="filterField" '.$Class.'"><h2>'.$FieldTitle.'</h2>';
 	// ------ //
 	$result = mysql_query("SHOW COLUMNS FROM `".$Config['_main_table']."`");
 	if(mysql_num_rows($result) > 0) {

@@ -582,7 +582,7 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
                 if($Res == false){                    
                     return;
                 }
-                $Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
+                $Return .= '<div class="filterField"><h2>'.$FieldTitle.'</h2><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
                     $Return .= '<option>Select All</option>';
                 }else{                    

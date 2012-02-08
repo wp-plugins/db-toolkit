@@ -114,7 +114,7 @@ function select_showFilter($Field, $Type, $Default, $Config, $EID) {
         $text = $Default[$Field];
     }
     $UID = uniqid(rand(1,999));
-    $Return = '<div style="padding:2px;float:left;" '.$Class.'><h2>'.$FieldTitle.'</h2>';
+    $Return = '<div class="filterField '.$Class.'"><h2>'.$FieldTitle.'</h2>';
 
     $Return .= '<select type="text" name="reportFilter['.$EID.']['.$Field.'][]" multiple="multiple" size="1" class="filterBoxes" id="filter_'.$EID.'_'.$UID.'">';
 

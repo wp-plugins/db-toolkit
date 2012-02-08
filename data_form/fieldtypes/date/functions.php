@@ -278,7 +278,7 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 			$DateFrom = '';//date('Y-m-d', strtotime('last week'));
 			if(!empty($Default[$Field][0])){
 				$DateFrom = $Default[$Field][0];
-				$Class = 'class="highlight"';
+				$Class = 'highlight';
 			}
 			$DateTo = '';//date('Y-m-d', strtotime('next week'));
 			if(!empty($Default[$Field][1])){
@@ -286,7 +286,7 @@ function date_showFilter($Field, $Type, $Default, $Config, $EID){
 			}
 			$UID = uniqid(rand(1,999));
                         
-			$Return = '<div style="padding:2px;float:left;" '.$Class.'><h2>'.$FieldTitle.'</h2>';
+			$Return = '<div class="filterField '.$Class.'"><h2>'.$FieldTitle.'</h2>';
 			$Return .= '<input type="text" name="reportFilter['.$EID.']['.$Field.'][]" class="FieldSearch" id="startRange_'.$EID.'_'.$UID.'" value="'.$DateFrom.'" size="12" style="width: 100px;" /> to';
 			$Return .= '<input type="text" class="FieldSearch" name="reportFilter['.$EID.']['.$Field.'][]" id="endRange_'.$EID.'_'.$UID.'" value="'.$DateTo.'" size="12" style="width: 100px;" />&nbsp;';
                         $Return .= '</div>';

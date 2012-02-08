@@ -122,6 +122,10 @@
     padding: 8px 4px 2px;
     margin: 10px 0 0 0 !important;
 }
+.report_filters_panel .filterField{
+    float:left;
+    padding:2px;
+}
 .report_filters_panel{
     background: none repeat scroll 0 0 #F1F1F1;
     border-bottom: 1px solid #D2D2D2;

@@ -94,7 +94,7 @@ function tagging_showFilter($Field, $Type, $Default, $Config, $EID){
 		$FieldTitle = $Config['_FieldTitle'][$Field];
 	}
 
-	$Return .= '<div style="float:left;padding:2px;" '.$Class.'><h2>'.$FieldTitle.'</h2>';
+	$Return .= '<div class="filterField '.$Class.'"><h2>'.$FieldTitle.'</h2>';
 
 	$Return .= '<input type="text" id="filter_'.$Field.'" name="reportFilter['.$EID.']['.$Field.']" value="'.$Default[$Field].'" '.$Sel.' />&nbsp;&nbsp;&nbsp;</div>';
 
