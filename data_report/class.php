@@ -1,5 +1,52 @@
 <?php
-        
+
+function dr_setFilters($EID, $FilterString){
+
+    $Media = getelement($EID);
+    $Config = $Media['Content'];
+
+
+    if($FilterString == 'clear'){
+        unset($_SESSION['reportFilters'][$EID]);
+        ob_start();
+            include(DB_TOOLKIT.'data_report/toolbar.php');
+        $Return .= ob_get_clean();
+        return $Return;
+    }
+    parse_str($FilterString, $filters);
+    $filters = $filters['reportFilter'][$EID];
+    foreach($filters as $filter=>$val){
+        if(is_array($val)){
+            foreach($val as $pkey=>$part){
+                if(!empty($part)){
+                    $_SESSION['reportFilters'][$EID][$filter][$pkey] = $part;
+                }else{
+                    unset($_SESSION['reportFilters'][$EID][$filter][$pkey]);
+                }
+            }
+        }else{
+            if(!empty($val)){
+                $_SESSION['reportFilters'][$EID][$filter] = $val;
+            }else{
+                if(!empty($_SESSION['reportFilters'][$EID][$filter])){
+                    unset($_SESSION['reportFilters'][$EID][$filter]);
+                }
+            }
+        }
+    }
+        ob_start();
+            include(DB_TOOLKIT.'data_report/toolbar.php');
+        $Return .= ob_get_clean();
+
+        return $Return;
+    /*
+    [EID] => dt_intfc4f28dd990c4a1
+    [_keywords] => wer
+    [email_address] =>
+    */
+
+}
+
 function grid_rowswitch($Row = '') {
     if ($Row == 'odd') {
         return '';

@@ -64,42 +64,7 @@ if (file_exists('fieldtypes')) {
             jQuery('#'+id).removeClass('button-highlighted');
         }
     }
-    function bf_loadFieldTypePanel(el, table){
-        ert = el.split('_FieldTypePanel');
-        field = ert[0];
-        if(ert.length == 4){
-            field = '__'+ert[2];
-        }
     
-        if(jQuery('#'+el).html() == ''){
-            jQuery('#'+el+'_status').show();
-            ajaxCall('df_buildFieldTypesMenu',field, table, function(l){
-                jQuery('#'+el+'_status').hide();
-                jQuery('#'+el).html(l);
-                jQuery('#'+el).fadeIn();
-                //jQuery('#'+el).dialog({
-                //    height:140,
-                //    modal: true
-                //});
-            });
-        }else{
-            jQuery('#'+el).slideToggle(function(){
-                jQuery('#'+el).html('');
-            });
-        }
-    }
-
-    function df_sorter(){
-        jQuery('.fieldSorter').Sortable({
-            accept: 'table_sorter',
-            activeclass : 	'sortableactive',
-            handle: 'img.OrderSorter',
-            hoverclass : 	'highlight',
-            snapDistance: '5px',
-            tolerance: 'intersect'
-        }
-    );
-    }
 
 
     function df_dialog(message, id){
@@ -141,106 +106,7 @@ if (file_exists('fieldtypes')) {
 	
 	
     }
-    function df_fetchFormSetp(id){
-	table = jQuery('#'+id).val();
-	jQuery('#FieldList_Main').html(' <img src="../wp-content/plugins/db-toolkit/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');									 
-	jQuery('#FieldList_Right').html('');
-	jQuery('#Return_FieldSelect').html(' <img src="../wp-content/plugins/db-toolkit/loading.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');									 
-	ajaxCall('df_tableFormSetup',table, function(c){
-            jQuery('#FieldList_Main').html(c);
-            df_sorter();
-	});
-	ajaxCall('df_loadReturnFields',table, function(r){
-            jQuery('#Return_FieldSelect').html(r);
-	});
-	
-    }
-
-    function df_typeChange(id){
-	jQuery('#ExtraSetting_'+id).html('');
-	ajaxCall('df_alignmentSetup',id, function(j){
-            jQuery('#ExtraSetting_'+id).html(' => '+j);
-	});
-    }
-    function df_noOptions(id){
-	jQuery('#ExtraSetting_'+id).html('');
-    }
-
-    function df_setOptions(field, func, fieldtype){
-        /// SET the selected Button to the active button.
-        // Minimise the fild type selector
-        jQuery('#fieldTypeButton_'+field).html(jQuery('#'+field+'_'+fieldtype).html());
-        jQuery('#Fieldtype_'+field).val(fieldtype);
-        jQuery('#'+field+'_FieldTypePanel').fadeOut(function(){
-            jQuery('#'+field+'_FieldTypePanel').html('');
-        });
-	jQuery('#ExtraSetting_'+field).html('');
-	if(func != 'null'){
-            jQuery('#ExtraSetting_'+field).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Config...');
-            ajaxCall('df_controlFunc',field, jQuery('#_main_table').val(), func, function(x){
-                jQuery('#ExtraSetting_'+field).html('&nbsp;'+x);
-                jQuery('#ExtraSetting_'+field).fadeIn();
-                df_loadOutScripts();
-            });
-	}
-        return false;
-    }
-
-    function df_enumOptions(id){
-	//table = jQuery('#'+id).val();
-	//ajaxCall('df_enumOptions',table, id, function(en){
-        //jQuery('#ExtraSetting_'+id).html(' => '+en+'<span id="extrasettings_'+id+'"></span>');
-	//});
-    }
-
-    function df_sessionvalueChange(id){
-	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Session Value Setup');
-	ajaxCall('df_sessionValueSetup',id, function(tf){
-            jQuery('#ExtraSetting_'+id).html(' => '+tf+'<span id="extrasettings_'+id+'"></span>');
-	});
-    }
-
-    function df_linkedTableSelector(id, req){
-	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Tables');
-	ajaxCall('df_listTables',id, 'df_loadLikedFields', true, false, req, function(tf){
-            jQuery('#ExtraSetting_'+id).html(' => '+tf+'<span id="extrasettings_'+id+'"></span>');
-	});
-    }
-    function df_linkedfilteredTableSelector(id, req){
-	jQuery('#ExtraSetting_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Tables');
-	ajaxCall('df_listTables',id, 'df_loadFilteredLikedFields', true, false, req, function(tf){
-            jQuery('#ExtraSetting_'+id).html(' => '+tf+'<span id="extrasettings_'+id+'"></span>');
-	});
-    }
-
-    function df_loadLikedFields(id){
-	table = jQuery('#'+id).val();
-	jQuery('#extrasettings_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');
-	ajaxCall('df_loadlinkedfields',table,id,function(lr){
-            //alert(id);
-            jQuery('#extrasettings_'+id).html(' => '+lr);
-	});
-    }
-    function df_loadFilteredLikedFields(id){
-	table = jQuery('#'+id).val();
-	main = jQuery('#_main_table').val();
-	jQuery('#extrasettings_'+id).html(' <img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Fields');
-	ajaxCall('df_loadlinkedfilteredfields',table,id, main,function(lr){
-            //alert(id);
-            jQuery('#extrasettings_'+id).html(' => '+lr);
-	});
-    }
-
-    function df_submitStart(notice){
-	jQuery(body).append('<div class="ui-overlay" id="reportpanel_block"><div class="ui-widget-overlay ui-corner-all">Loading Data</div></div>')
-    }
-
-    function linked_reloadField(eid, ajaxSubmit, addquery, returnVal){
-        
-        ajaxCall('df_reloadFormField', eid, addquery, returnVal.Value, function(p){
-           jQuery('#'+p.element).html(p.html);
-        });
-    }
+    
 
     function df_buildQuickCaptureForm(eid, ajaxSubmit, addquery, callback){
         
@@ -300,7 +166,7 @@ if (file_exists('fieldtypes')) {
                         }
                     });
                     jQuery("#ui-jsDialog-"+eid+"").html(c.html);
-                    //jQuery("#ui-jsDialog-"+eid+" select, #ui-jsDialog-"+eid+" input:checkbox, #ui-jsDialog-"+eid+" input:radio, #ui-jsDialog-"+eid+" input:file").uniform();
+                    
                     if(c.script){
                         eval(c.script);
                     }

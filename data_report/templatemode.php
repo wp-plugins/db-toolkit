@@ -532,7 +532,7 @@ $Output = do_shortcode(do_shortcode(do_shortcode(do_shortcode(ob_get_clean()))))
         $Output = $Template;
     //}
 //vardump($Config);
-echo $Output;
+echo str_replace('{{_EID}}', $Media['ID'], $Output);
 
 
 $_SESSION['dataform']['OutScripts'] .= "\r\n".$jsqueue."\r\n";

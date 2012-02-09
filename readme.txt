@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.1.032
+Stable tag: 0.3.2.002
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,24 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.002 =
+* Changed the form layout to use PHP-Scaffold and applied Twitters Bootstrap form and layout classes for improved forms.
+* Changed the formlayout builder to allow sorting of rows.
+* Added a form field width setting in the fieldtype config (little gear icon to the right on the field panel).
+* Added an HTML form element (still playing with it to make it easier to use).
+* Added a numerical fieldtype for capturing numbers. the filter is a ranged filter.
+* Removed inline styles from the toolbar and filters panel for better custom styling.
+* Removed uniform styles in favour of twitters bootstrap as a permanent addition.
+* Seperated admin javascript functions from frontend inclusion.
+* Added Use Ajax filters for faster searching in interfaces.
+* Added Toolbar Templates finally.
+* Removed TimThumb completely in favour of the built in resizing features.
+* Uploaded images are now resized and saved to the server as actual image files.
+* Uploaded images now retain their original file name (sanitized).
+* Some bug fixes.
+* NOTE: Some forms using the form layout may need to be reset. With this update some thing may work differently. please post to support forums if you have any problems.
+
 
 = 0.3.1.031 =
 * Set the interface to reset its state on save, this should solve the problems with sessions when changing the sort.

@@ -690,12 +690,6 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     }
     $Form = '';
 
-    // setup uniform
-    if(!empty($Config['_ShowUniform'])){
-        $_SESSION['dataform']['OutScripts'] .= "
-            jQuery(\".formular select, .formular input:checkbox, .formular input:radio, .formular input:file\").uniform();
-        ";
-    }
     // Build Form layout
     $formStack = 'form-vertical';
 

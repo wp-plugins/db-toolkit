@@ -268,11 +268,6 @@ function dt_styles($preIs = false) {
             wp_enqueue_style('form_style');
         }else{
             wp_register_style('form_style', WP_PLUGIN_URL.'/db-toolkit/data_form/css/form.css');
-            // adding uniform :D
-            //wp_register_style('form_style_uniform', WP_PLUGIN_URL.'/db-toolkit/data_form/css/aristo/uniform.aristo.css');
-            wp_register_style('form_style_uniform', WP_PLUGIN_URL.'/db-toolkit/data_form/css/uniform/uniform.default.css');
-            //wp_enqueue_style('form_style');
-            wp_enqueue_style('form_style_uniform');
             wp_enqueue_style('form_style');
         }
         
@@ -469,6 +464,12 @@ function dt_scripts($preIs = false) {
     if(!empty($preIs) || is_admin()){
         //vardump($preIs);
     // queue & register scripts
+
+        if(is_admin ()){
+            wp_register_script('dbt_jslib', WP_PLUGIN_URL . '/db-toolkit/libs/jslib.js', false, false, true);
+            wp_enqueue_script("dbt_jslib");
+        }
+
         wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
         wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
         wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.min.js');

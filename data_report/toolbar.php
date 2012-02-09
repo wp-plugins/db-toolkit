@@ -213,19 +213,27 @@ if (!empty($Config['_Show_Filters'])) {
             </div>
             <div class="list_row3 <?php echo $customClassButtonBar; ?>" style="clear:both;">
             <?php
+            if(empty($Config['_ajax_Filters'])){
                 echo dr_toolbarButton('Apply Filters', 'jQuery(\'#setFilters_'.$Media['ID'].'\').submit();', 'applyfilter');
+            }else{
+                echo dr_toolbarButton('Apply Filters', 'dr_applyFilters(\''.$Media['ID'].'\');', 'applyfilter');
+            }
                 echo dr_toolbarSeperator();
             ?>
 
 <?php
-if(!empty($_SESSION['reportFilters'][$Media['ID']])){
+////if(!empty($_SESSION['reportFilters'][$Media['ID']])){
 ?>
             <div class="btnseparator"></div><input type="hidden" name="reportFilter[ClearFilters]" id="clearFilters_<?php echo $Media['ID']; ?>" value="" />
             <?php
+            if(empty($Config['_ajax_Filters'])){
                 echo dr_toolbarButton('Clear Filters', 'jQuery(\'#clearFilters_'.$Media['ID'].'\').val(1); jQuery(\'#setFilters_'.$Media['ID'].'\').submit();', 'clearfilter');
+            }else{
+                echo dr_toolbarButton('Clear Filters', 'dr_applyFilters(\''.$Media['ID'].'\', true);', 'clearfilter');
+            }
                 echo dr_toolbarSeperator();
 
-}
+//}
             if (is_admin ()) {
                 if (empty($Config['_Hide_FilterLock'])) {
                     if (empty($_SESSION['lockedFilters'][$Media['ID']])) {

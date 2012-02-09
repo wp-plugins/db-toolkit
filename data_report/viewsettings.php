@@ -62,6 +62,12 @@
                         $Sel = 'checked="checked"';
                     }
                     echo dais_customfield('checkbox', 'Show Filters', '_Show_Filters', '_Show_Filters', 'list_row2' , 1 , $Sel ,'Render the filters panel for the interface.');
+
+                    $Sel = '';
+                    if(!empty($Element['Content']['_ajax_Filters'])) {
+                        $Sel = 'checked="checked"';
+                    }
+                    echo dais_customfield('checkbox', 'Ajax Filters', '_ajax_Filters', '_ajax_Filters', 'list_row2' , 1 , $Sel ,'Apply filters via ajax (no page reloads).');
                     $Sel = '';
                     if(!empty($Element['Content']['_Hide_FilterLock'])) {
                         $Sel = 'checked="checked"';
