@@ -11,6 +11,12 @@ switch($Types[1]) {
             $iconWidth = ($Config['_IconSizeX'][$Field] == 'auto' ? '0' : $Config['_IconSizeX'][$Field]);
             $iconHeight = ($Config['_IconSizeY'][$Field] == 'auto' ? '0' : $Config['_IconSizeY'][$Field]);
 
+            if($iconWidth == '0' && $iconHeight == '0'){
+                $iconWidth = '100';
+            }
+            if($imageWidth == '0' && $imageHeight == '0'){
+                $imageWidth = '100';
+            }
             $uploadVars = wp_upload_dir();
 
             $SourceFile = str_replace($uploadVars['url'], $uploadVars['path'], $Value);
