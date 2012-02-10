@@ -2266,12 +2266,18 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                     if(!empty($Config['_SetDashboard'])){
                                                         $Interface = get_option($EID);                                                        
                                                         $app = get_option('_'.$Interface['_Application'].'_app');
+
                                                         if(!empty($app['landing'])){
                                                             $pageLoc = 'app_'.$Interface['_Application'];
                                                         }else{
                                                             $pageLoc = $EID;
                                                         }
-                                                        $PageLink = 'admin.php?page='.$pageLoc.'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                        if(!empty($app['docked'])){
+                                                            $PageLink = 'admin.php?page='.$pageLoc.'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                        }else{
+                                                            $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                        }
+
                                                     }else{
                                                         $PageLink = 'admin.php?page='.$_GET['page'].'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                     }
