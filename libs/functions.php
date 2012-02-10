@@ -1316,7 +1316,13 @@ function dt_process() {
                     if(!empty($Setup['Content']['_ItemViewInterface'])){
                        $RedirInterface = get_option($Setup['Content']['_ItemViewInterface']);
                        if(!empty($RedirInterface['_ItemGroup'])){
-                            $gets['page'] = $Setup['Content']['_ItemViewInterface'];
+                           $app = get_option('_'.$RedirInterface['_Application'].'_app');
+                           if(!empty($app['docked'])){
+                                $gets['page'] = $Setup['Content']['_ItemViewInterface'];
+                           }else{
+                                $gets['page'] = 'dbt_builder';
+                                $gets['renderinterface'] = $Setup['Content']['_ItemViewInterface'];
+                           }
                        }else{
                            $gets['page'] = 'dbt_builder';
                            $gets['renderinterface'] = $Setup['Content']['_ItemViewInterface'];
