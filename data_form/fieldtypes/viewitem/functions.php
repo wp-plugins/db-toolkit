@@ -1,6 +1,7 @@
 <?php
 // Functions
 function viewitem_handleInput($Field, $Input, $FieldType, $Config, $Default){
+
     if(!empty($Default[$Field])){
         return $Default[$Field];
     }

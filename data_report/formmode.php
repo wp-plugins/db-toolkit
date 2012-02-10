@@ -1,5 +1,22 @@
 <?php
 echo '<div style="width: '.$Config['_popupWidth'].'px;">';
+    //_useToolbarTemplate _layoutTemplate
+    if(!empty($_SESSION['DF_Notification'])){
+        
+        ob_start();
+        foreach($_SESSION['DF_Notification'] as $Key=>$Notice){
+        $uid = uniqid();
+        ?>
+            <div class="alert alert-<?php echo $_SESSION['DF_NotificationTypes'][$Key]; ?>" id="<?php echo $uid; ?>">
+            <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">×</a>
+            <?php echo $Notice; ?>
+            </div>
+        <?
+        }
+        unset($_SESSION['DF_Notification']);
+        echo ob_get_clean();
+    }
+
     foreach($Config['_Field'] as $Field=>$Value) {
         $typeSet = explode('_', $Value);
         if(function_exists($typeSet[0].'_preForm')) {

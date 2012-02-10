@@ -2895,6 +2895,7 @@ function df_processupdate($Data, $EID) {
                 }else {
                     $Return['Message'] = $Config['_UpdateFail'];
                 }
+                $Return['noticeType'] = 'error';
                 return $Return;
             }
 
@@ -2905,6 +2906,7 @@ function df_processupdate($Data, $EID) {
                     if (function_exists($func)) {
                         $updateData = $func($updateData, $Setup, $Config);
                         if(!empty($updateData['__fail__'])){
+                            $Return['noticeType'] = 'error';
                             if(!empty($updateData['__error__'])) {
                                 $Return['Message'] = $updateData['__error__'];
                                 return $Return;
@@ -2914,6 +2916,7 @@ function df_processupdate($Data, $EID) {
                             }else{
                                 $Return['Message'] = $Config['_InsertFail'];
                             }
+
                             return $Return;
                         }
 
@@ -2944,6 +2947,7 @@ function df_processupdate($Data, $EID) {
     //$Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
     if(empty($updateData)){
         $Return['Message'] = 'umm, there was nothing to update.';
+        $Return['noticeType'] = 'error';
         return $Return;
     }
 
@@ -3004,9 +3008,11 @@ function df_processupdate($Data, $EID) {
         } else {
             $Return['Message'] = $Config['_UpdateSuccess'];
         }
+        $Return['noticeType'] = 'success';
         return $Return;
     //}
-    $Return['Message'] = 'Nothing to update, C';
+    $Return['noticeType'] = 'error';
+    $Return['Message'] = 'Nothing to update.';
     return $Return;
 }
 

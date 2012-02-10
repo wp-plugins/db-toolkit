@@ -617,7 +617,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     global $wpdb;
 
     include_once DB_TOOLKIT.'/data_form/phpscaffold.php';
-
+    //vardump($_GET);
     $Script = '';
     $Config = $Element['Content'];
     //vardump($Config);
@@ -778,7 +778,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                 $Val = '';
                             }
                             if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
-                                include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
+                                
                                     ob_start();
                                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $inputField = '<div class="control-group">';
@@ -792,6 +792,11 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     $inputField .= '</div>';
 
                                 $FormLayout->append($inputField, $columnCounter);
+                            }
+                            if(!empty($FieldTypes[$FieldSet[1]]['hidden'])){
+                                    ob_start();
+                                    include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
+                                    $Hidden .= ob_get_clean();
                             }
                         }else{                            
                             // Check for tabs and section breaks

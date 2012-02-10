@@ -185,6 +185,11 @@
                     }
                     echo dais_customfield('checkbox', 'Disable Notifications', '_NotificationsOff', '_NotificationsOff', 'list_row2' , 1, $Sel, 'Disables dialog notifications.');
                     $Sel = '';
+                    if(!empty($Element['Content']['_inlineNotifications'])) {
+                        $Sel = 'checked="checked"';
+                    }
+                    echo dais_customfield('checkbox', 'Inline Notifications', '_inlineNotifications', '_inlineNotifications', 'list_row2' , 1, $Sel, 'Uses inline Notifications over dialogs.');
+                    $Sel = '';
                     if(!empty($Element['Content']['_ShowReset'])) {
                         $Sel = 'checked="checked"';
                     }

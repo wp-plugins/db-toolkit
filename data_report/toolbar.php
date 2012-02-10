@@ -1,8 +1,21 @@
 <?php
 // Control Buttons
-//_useToolbarTemplate _layoutTemplate
-
-
+    //_useToolbarTemplate _layoutTemplate
+    if(!empty($_SESSION['DF_Notification'])){
+        
+        ob_start();
+        foreach($_SESSION['DF_Notification'] as $Key=>$Notice){
+        $uid = uniqid();
+        ?>
+            <div class="alert alert-<?php echo $_SESSION['DF_NotificationTypes'][$Key]; ?>" id="<?php echo $uid; ?>">
+            <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">×</a>
+            <?php echo $Notice; ?>
+            </div>
+        <?
+        }
+        unset($_SESSION['DF_Notification']);
+        echo ob_get_clean();
+    }
 
 if (!empty($Config['_Hide_Toolbar'])) {
 

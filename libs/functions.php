@@ -1253,7 +1253,12 @@ function dt_process() {
                     $_SESSION['DF_Post_EID'] = $EID;
                 }
                 if(empty($Setup['Content']['_NotificationsOff'])) {
-                    $_SESSION['DF_Post'][] = $Return['Message'];
+                    if(!empty($Setup['Content']['_inlineNotifications'])){
+                        $_SESSION['DF_Notification'][] = $Return['Message'];
+                        $_SESSION['DF_NotificationTypes'][] = $Return['noticeType'];
+                    }else{
+                        $_SESSION['DF_Post'][] = $Return['Message'];
+                    }
                 }
 
                     
@@ -1266,7 +1271,12 @@ function dt_process() {
                     
                     $Setup = getelement($EID);
                     if(empty($Setup['Content']['_NotificationsOff'])) {
-                        $_SESSION['DF_Post'][] = $Return['Message'];
+                        if(!empty($Setup['Content']['_inlineNotifications'])){
+                            $_SESSION['DF_Notification'][] = $Return['Message'];
+                            $_SESSION['DF_NotificationTypes'][] = $Return['noticeType'];
+                        }else{
+                            $_SESSION['DF_Post'][] = $Return['Message'];
+                        }
                     }
                 }
             }
@@ -1812,7 +1822,7 @@ function dt_renderInterface($interface){
             $_SESSION['report_'.$interface]['LastPage'] = $newPage;
         }
     }
-    
+
     switch ($Config['_ViewMode']){
         
         case 'list':
@@ -1831,6 +1841,23 @@ function dt_renderInterface($interface){
             $Return .= ob_get_clean();
             break;
         case 'search':
+
+            //_useToolbarTemplate _layoutTemplate
+            if(!empty($_SESSION['DF_Notification'])){                
+                ob_start();
+                foreach($_SESSION['DF_Notification'] as $Key=>$Notice){
+                $uid = uniqid();
+                ?>
+                    <div class="alert alert-<?php echo $_SESSION['DF_NotificationTypes'][$Key]; ?>" id="<?php echo $uid; ?>">
+                    <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">×</a>
+                    <?php echo $Notice; ?>
+                    </div>
+                <?
+                }
+                unset($_SESSION['DF_Notification']);
+                $Return .= ob_get_clean();
+            }
+
             ob_start();
                 include(DB_TOOLKIT.'data_report/searchmode.php');
             $Return .= ob_get_clean();
