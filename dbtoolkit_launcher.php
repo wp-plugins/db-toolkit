@@ -63,7 +63,9 @@ if(is_array($app)){
                         //vardump($app);
                         if($group == $app['landing']){
                             if(!empty($Interface['_Application'])){
-                                $group = 'app_'.$Interface['_Application'];
+                                 if(!empty($app['docked'])){
+                                    $group = 'app_'.$Interface['_Application'];
+                                 }
                             }else{
                                 $group = $_GET['page'];
                             }
