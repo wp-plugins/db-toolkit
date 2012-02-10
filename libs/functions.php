@@ -1286,10 +1286,7 @@ function dt_process() {
             }
             if(is_admin()){
                 if(!empty($Setup['Content']['_ItemViewInterface'])){
-
-
-
-                    $Location = 'admin.php?page=dbt_builder';
+                    $Location = 'admin.php';
                 }else{
                     $Location = $_SERVER['HTTP_REFERER'];
                 }
@@ -1303,9 +1300,9 @@ function dt_process() {
             //echo $Location;
             //exit;
             if(!empty($ReturnValue)) {
+                
                 $url = parse_url($_SERVER['HTTP_REFERER']);
                 $returntoken = '?';
-
                 if(!empty($url['query'])) {
                     if(empty($Setup['Content']['_ItemViewPage'])) {
                         $Location = str_replace('?'.$url['query'], '', $_SERVER['HTTP_REFERER']);
@@ -1313,7 +1310,7 @@ function dt_process() {
 
                     parse_str($url['query'], $gets);
                     parse_str($ReturnValue, $returngets);
-                    if(!empty($Setup['Content']['_ItemViewInterface'])){
+                    if(!empty($Setup['Content']['_ItemViewInterface'])){                        
                        $RedirInterface = get_option($Setup['Content']['_ItemViewInterface']);
                        if(!empty($RedirInterface['_ItemGroup'])){
                            $app = get_option('_'.$RedirInterface['_Application'].'_app');
@@ -1329,8 +1326,25 @@ function dt_process() {
                        }
                     }
                     $ReturnValue = htmlspecialchars_decode(http_build_query(array_merge($gets, $returngets)));
-                }
+                }else{
+                    if(!empty($Setup['Content']['_ItemViewInterface'])){
+                       $RedirInterface = get_option($Setup['Content']['_ItemViewInterface']);
+                       if(!empty($RedirInterface['_ItemGroup'])){
+                           $app = get_option('_'.$RedirInterface['_Application'].'_app');
+                           if(!empty($app['docked'])){
+                                $gets['page'] = $Setup['Content']['_ItemViewInterface'];
+                           }else{
+                                $gets['page'] = 'dbt_builder';
+                                $gets['renderinterface'] = $Setup['Content']['_ItemViewInterface'];
+                           }
+                       }else{
+                           $gets['page'] = 'dbt_builder';
+                           $gets['renderinterface'] = $Setup['Content']['_ItemViewInterface'];
+                       }
+                    }
+                    $ReturnValue = htmlspecialchars_decode(http_build_query($gets, $returngets));
 
+                }
                 $Redirect = $Location.$returntoken.$ReturnValue;
             }
             //echo $Redirect;
