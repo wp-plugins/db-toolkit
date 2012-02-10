@@ -562,9 +562,9 @@ function df_reloadFormField($EID, $Field, $Default = false){
 
 
 
-    if(!empty($Config['_gridLayout']) && !empty($Config['_grid'])) {
+  
 
-        $Pre = "<label class=\"form-gen-lable singletext\" for=\"entry_".$Element['ID']."_".$Field."\" id=\"lable_".$Element['ID']."_".$Field."\">".$name."</label>\n";
+        
         ob_start();
         if(!empty($Defaults[$Field])){
             $Val = esc_attr($Defaults[$Field]);
@@ -580,32 +580,10 @@ function df_reloadFormField($EID, $Field, $Default = false){
             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
         }
         $Pre .= ob_get_clean();
-        $Pre .= "<div class=\"caption\" id=\"caption_".$Element['ID']."_".$Field."\">\n";
-        $Pre .= $Config['_FieldCaption'][$Field].'&nbsp';
-        $Pre .= "</div>\n";
+
         
 
-    }else{
-
-        // load auto mode
-        $Pre = '<td id="'.$Element['ID'].'_'.$Field.'" nowrap="nowrap" width="30%" style="text-align:right;background-color:inherit; border:inherit;padding:3px;" valign="top"><strong>'.$name.'&nbsp;</strong></td>';
-        $Pre .= '<td class="'.$Row.'" style="background-color:inherit; border:inherit;padding:3px;" valign="top">';
-        //df_makeEnumField($Data['_main_table'], $ElementID, $Field, $Data[$Data[$Field]]['Type'], false, $Req);
-        ob_start();
-        include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
-        $Pre .= ob_get_clean();
-        // Caption
-        $Pre .= '<div class="caption">';
-            if(!empty ($Config['_FieldCaption'][$Field])){
-               $Pre .= $Config['_FieldCaption'][$Field];
-            }else{
-                $Pre .= '&nbsp;';
-            }
-        $Pre .= '</div>';
-
-        $Pre .= '</td>';
-    }
-
+    
     $Output['html'] = $Pre;
     $Output['element'] = 'form-field-'.$Field;
     return $Output;
@@ -783,7 +761,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $inputField = '<div class="control-group">';
                                     $inputField .= '<label class="control-label">'.$name.'</label>';
-                                    $inputField .= '<div class="controls">';
+                                    $inputField .= '<div class="controls" id="form-field-'.$Field.'">';
                                     $inputField .= ob_get_clean();
                                     if(!empty($Config['_FieldCaption'][$Field])){
                                         $inputField .= '<p class="help-block">'.$Config['_FieldCaption'][$Field].'</p>';

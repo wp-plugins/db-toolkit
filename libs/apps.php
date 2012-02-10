@@ -164,10 +164,10 @@ function app_launcher(){
         $app = substr($_GET['page'], 4);
         $app = get_option('_'.$app.'_app');
     }elseif(substr($_GET['page'],0,8) == 'dt_intfc'){
-        $interface = get_option($_GET['page']);
-        $app = get_option('_'.sanitize_title($interface['_Application']).'_app');
+        $Interface = get_option($_GET['page']);
+        $app = get_option('_'.sanitize_title($Interface['_Application']).'_app');
         $_GET['renderinterface'] = $_GET['page'];
-    }
+    }    
     include DB_TOOLKIT.'dbtoolkit_launcher.php';
 }
 

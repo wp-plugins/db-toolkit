@@ -697,7 +697,7 @@ function dr_buildInterfaceList() {
             foreach ($appConfig['interfaces'] as $interface=>$access) {
                 $cfg = get_option($interface);                
                 if(empty($cfg['_ItemGroup'])){
-                    $cfg['_ItemGroup'] = 'uncategorised';
+                    $cfg['_ItemGroup'] = 'Ungrouped';
                 }
                 $appGroups[$cfg['_ItemGroup']][] = $cfg;
             }
@@ -2263,7 +2263,18 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 // Get permalink
                                                 // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
                                                 if($_GET['page']!= 'dbt_builder'){
-                                                    $PageLink = 'admin.php?page='.$_GET['page'].'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                    if(!empty($Config['_SetDashboard'])){
+                                                        $Interface = get_option($EID);                                                        
+                                                        $app = get_option('_'.$Interface['_Application'].'_app');
+                                                        if(!empty($app['landing'])){
+                                                            $pageLoc = 'app_'.$Interface['_Application'];
+                                                        }else{
+                                                            $pageLoc = $EID;
+                                                        }
+                                                        $PageLink = 'admin.php?page='.$pageLoc.'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                    }else{
+                                                        $PageLink = 'admin.php?page='.$_GET['page'].'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                    }
                                                 }else{
                                                     $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }

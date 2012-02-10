@@ -500,7 +500,7 @@ if(!empty($appConfig['imageURL'])){
                     ksort($Groups);
                     foreach($Groups as $Group=>$data){
                         if($Group == '__Ungrouped')
-                            $Group = '<em>Uncategorised</em>';
+                            $Group = '<em>Ungrouped</em>';
                         echo '<h2 style="clear:both;">'.$Group.'</h2>';
 
                         // Interface panel
@@ -597,7 +597,7 @@ if(!empty($appConfig['imageURL'])){
                     ksort($Groups);
                     foreach($Groups as $Group=>$data){
                         if($Group == '__Ungrouped')
-                            $Group = '<em>Uncategorised</em>';
+                            $Group = '<em>Ungrouped</em>';
                         echo '<h2 style="clear:both;">'.$Group.'</h2>';
 
                         // Interface panel

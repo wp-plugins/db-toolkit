@@ -38,7 +38,6 @@ if(is_array($app)){
 ?>
 <h2 id="appTitle"><?php echo $app['name']; ?></h2>
 <?php
-
     // get link of docked:
     if(!empty($app['docked'])){
         $Link = 'admin.php?page=';
@@ -61,6 +60,15 @@ if(is_array($app)){
                             echo '</ul>';
                         echo '</li>';
                     }else{
+                        //vardump($app);
+                        if($group == $app['landing']){
+                            if(!empty($Interface['_Application'])){
+                                $group = 'app_'.$Interface['_Application'];
+                            }else{
+                                $group = $_GET['page'];
+                            }
+                            //vardump($interface);
+                        }
                         echo '<li class="root_item"><a href="'.$Link.$group.'" class="parent">'.$menu.'</a></li>';
                     }
                 }                

@@ -24,6 +24,11 @@ if (!empty($Element['_Application'])) {
 
 <h2>Navigation</h2>
 <?php
+                    if(empty($Element['_InterfaceCategory']))
+                        $Element['_InterfaceCategory'] = 'Uncategorized';
+
+                    //echo dais_customfield('text', 'Interface Category', '_InterfaceCategory', '_InterfaceCategory', 'list_row2', $Element['_InterfaceCategory'], '', 'Categorizes this interface.');
+                    
                     if(empty($Element['_ItemGroup']))
                         $Element['_ItemGroup'] = '';
 

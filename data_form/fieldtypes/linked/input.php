@@ -146,7 +146,7 @@ if($FieldSet[1] == 'linked'){
                         // get the linked interfaces add entry button title
                         if(!empty($Config['_Linkedfields'][$Field]['_addInterface'])){
                         $linkInterface = getelement($Config['_Linkedfields'][$Field]['_addInterface']);                        
-                            $Return .= '<div class="fbutton"><div class="button add-new-h2"><span onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadField);return false;" style="padding-left: 20px;" class="add">'.$linkInterface['Content']['_New_Item_Title'].'</span></div></div>';
+                            $Return .= ' <button class="btn" onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadField);return false;">'.$linkInterface['Content']['_New_Item_Title'].'</button>';
                         }
                         $_SESSION['dataform']['OutScripts'] .="
 
