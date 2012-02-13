@@ -548,7 +548,7 @@ if(!empty($appConfig['imageURL'])){
                             <div class="interfaceSettings">Type: <strong><?php echo $Config['_ViewMode']; ?></strong> | Table: <strong><?php echo $Config['_main_table']; ?></strong> | Permission: <strong><?php echo $Interface['_menuAccess']; ?></strong>
                             <?php
                             if(!empty($Interface['_ItemBound'])){
-                                $page= get_page($Interface['_ItemBound']);
+                                $page = get_page($Interface['_ItemBound']);
                                 echo ' | Bound to: <strong>'.$page->post_title.'</strong>';
                             }
 

@@ -145,9 +145,8 @@ function dt_styles($preIs = false) {
         $isBound = get_option('_dbtbinding_'.$post->ID);
         if(!empty($isBound)){
             $preIs[] = $isBound;
-            $post->post_content .= dt_renderInterface($isBound);
         }
-        //$post->post_content = 'orange?';
+
         $pattern = get_shortcode_regex();
 
         $texts = get_option('widget_text');

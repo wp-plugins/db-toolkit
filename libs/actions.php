@@ -13,6 +13,16 @@ add_action('init', 'dt_start');
 add_action('admin_init', 'dt_admin_init');
 add_action('admin_menu', 'dt_menus');
 add_action('wp_ajax_dt_ajaxCall', 'dt_ajaxCall');
+add_filter('the_content', 'dt_bindInterfaces');
+
+function dt_bindInterfaces($content){
+    global $post;
+    if($isBound = get_option('_dbtbinding_'.$post->ID)){
+        return $content.dt_renderInterface($isBound);
+    }
+    return $content;
+}
+
 
 // Hook into the page loading to get the scripts and
 // styles for the shortcodes used on a post or page.

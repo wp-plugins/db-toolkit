@@ -279,6 +279,16 @@ function dt_saveCreateInterface($saveData){
         }
         update_option('_dbtbinding_'.$saveData['Data']['Content']['_ItemBoundPage'], $optionTitle, false);
         $newCFG['_ItemBound'] = $saveData['Data']['Content']['_ItemBoundPage'];
+    }else{
+        $oldOptions = get_option($optionTitle);
+        if(!empty($oldOptions)){
+            // remove bindings if there are any
+            $oldOptions = unserialize(base64_decode($oldOptions['Content']));
+            if(!empty($oldOptions['_ItemBoundPage'])){
+                delete_option('_dbtbinding_'.$oldOptions['_ItemBoundPage']);
+            }
+        }
+        unset($newCFG['_ItemBound']);
     }
 
 

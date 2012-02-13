@@ -38,8 +38,12 @@ if (!empty($Config['_Hide_Toolbar'])) {
                     $ajaxSubmit = 'false';
                 }
             }
-
-            $Template = str_replace('{{_button_addItem}}', dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;','add'), $Template);
+            if(!empty($_GET)){
+                $hasQuery = build_query($_GET);
+            }else{
+                $hasQuery = false;
+            }
+            $Template = str_replace('{{_button_addItem}}', dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ',\''.$hasQuery.'\');return false;','add'), $Template);
         }else{
             $Template = str_replace('{{_button_addItem}}', '', $Template);
         }
