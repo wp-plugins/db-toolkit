@@ -60,6 +60,7 @@ A: Well you can technically use it now, however some things are still a little i
 
 = 0.3.2.010 =
 * Fixed a bug in the image field that would give you an image does not exist notice when the file does exist.
+* fixed a type that prevented activation on some configurations. thanks to regex on the forum for finding this. sigh!
 
 = 0.3.2.009 =
 * Fixed a bug that made a selected item filtered list lose its selected item filter when an item is deleted from the list. yes it was hard to say.
