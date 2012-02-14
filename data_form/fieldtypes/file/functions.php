@@ -124,7 +124,7 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 	//die;
 		switch ($Type){
 			case 'image';
-
+                                    $Value = strtok($Value, '?');
                                     $imageWidth = ($Config['_ImageSizeX'][$Field] == 'auto' ? '0' : $Config['_ImageSizeX'][$Field]);
                                     $imageHeight = ($Config['_ImageSizeY'][$Field] == 'auto' ? '0' : $Config['_ImageSizeY'][$Field]);
 
