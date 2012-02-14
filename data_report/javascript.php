@@ -317,11 +317,11 @@
 	}
     }
 
-    function dr_deleteItem(EID, ID){
+    function dr_deleteItem(EID, ID, addQuery){
         if(confirm("Are you sure you want to delete this entry?")){
             ajaxCall('df_deleteEntries',EID, ID, function(x){
-                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');
-                setTimeout('dr_goToPage(\''+EID+'\', jQuery(\'#pageJump_'+EID+'\').val())', 2000);
+                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');                
+                dr_goToPage(EID, false, false, addQuery);
                 //df_dialog(x);
             });
         }

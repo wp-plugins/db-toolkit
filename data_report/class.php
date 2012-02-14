@@ -2159,7 +2159,12 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                             if ($ViewLink != '') {
                                 $ViewLink .= " ";
                             }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
+                            if(!empty($_GET)){
+                                $hasQuery = build_query($_GET);
+                            }else{
+                                $hasQuery = false;
+                            }
+                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\',\''.$hasQuery.'\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
                         }
                         //vardump($Config);
 
