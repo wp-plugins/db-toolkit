@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3
-Stable tag: 0.3.2.010
+Stable tag: 0.3.2.011
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,10 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.011 =
+* Fixed a bug in the image field that would give you an image does not exist notice when the file does exist.
+* Added in another level of validation for interfaces in form mode.
 
 = 0.3.2.010 =
 * Fixed a bug in the image field that would give you an image does not exist notice when the file does exist.

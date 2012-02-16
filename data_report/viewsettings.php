@@ -6,7 +6,14 @@
                             $Sel = '';
                         }
                     }
-                    echo dais_customfield('radio', 'List Mode', '_ViewMode', '_ViewMode_View', 'list_row2' , 'list' , $Sel ,'Sets the interface to be a list of entries.');
+                    echo dais_customfield('radio', 'List Mode', '_ViewMode', '_ViewMode_List', 'list_row2' , 'list' , $Sel ,'Sets the interface to be a list of entries.');
+                    $Sel = '';
+                    if(!empty($Element['Content']['_ViewMode'])) {
+                        if($Element['Content']['_ViewMode']=='filter'){
+                            $Sel = 'checked="checked"';
+                        }
+                    }
+                    //echo dais_customfield('radio', 'Filter Mode', '_ViewMode', '_ViewMode_Filter', 'list_row2' , 'filter' , $Sel, 'Sets the interface into filter mode. Be sure to set the redirects to the interface you want to the filters to effect.');
                     $Sel = '';
                     if(!empty($Element['Content']['_ViewMode'])) {
                         if($Element['Content']['_ViewMode']=='view'){

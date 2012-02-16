@@ -4,6 +4,9 @@ function text_handleInput($Field, $Input, $FieldType, $Config, $Default){
 	if($FieldType == 'presettext'){
 		return $Config['Content']['_Preset'][$Field];
 	}
+        if($FieldType == 'sanitized'){
+            return sanitize_title($Default[$Config['Content']['_sanitizeField'][$Field]]);
+        }
         if($FieldType == 'password'){
             if(empty($Input) && !empty($Default[$Field])){
                 return $Default[$Field];
@@ -75,6 +78,26 @@ function text_postProcess($Field, $Input, $Type, $Element, $Data, $ReturnField){
 }
 
 
+function text_sanitize($Field, $Table, $Config = false){
+    global $wpdb;
+
+    $columns = $wpdb->get_results("SHOW COLUMNS FROM `".$Table."`", ARRAY_A);
+    $Return = 'Field to Sanitize: <select name="Data[Content][_sanitizeField]['.$Field.']" >';
+    foreach($columns as $Column){
+	$Sel = '';
+        if(!empty($Config['Content']['_sanitizeField'][$Field])){
+
+		if($Config['Content']['_sanitizeField'][$Field] == $Column['Field']){
+                    $Sel = 'selected="selected"';
+                }
+	}
+        $Return .= '<option value="'.$Column['Field'].'" '.$Sel.'>'.$Column['Field'].'</option>';
+    }
+    $Return .= '</select><span class="description"> A Sanitized version of the selected field will be saved.</span>';
+
+    return $Return;
+
+}
 
 function text_presuff($Field, $Table, $Config = false){
 

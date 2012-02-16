@@ -133,7 +133,9 @@ function file_processValue($Value, $Type, $Field, $Config, $EID){
 
                                     $uploadVars = wp_upload_dir();
 
-                                    $SourceFile = str_replace($uploadVars['url'], $uploadVars['path'], $Value);
+                                    
+
+                                    $SourceFile = str_replace($uploadVars['baseurl'], $uploadVars['basedir'], $Value);
                                     if(!file_exists($SourceFile)){
                                         return 'Image does not exists.';
                                     }

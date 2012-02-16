@@ -2880,6 +2880,10 @@ function df_processupdate($Data, $EID) {
 
     
     foreach ($Config['_Field'] as $Field => $Type) {
+        if(empty($Data[$EID][$Field]) && !empty($Config['_Required'][$Field])){
+                $return['_error_'][] = $Config['_FieldTitle'][$Field].' is required.';
+                $return['_fail_'][$Field] = true;                
+        }
         if(isset($Data[$EID][$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
             $typeSet = explode('_', $Type);
             if (!empty($typeSet[1])) {
@@ -2894,6 +2898,12 @@ function df_processupdate($Data, $EID) {
                     }
                     $Element['_ActiveProcess'] = 'update';
                     $newValue = $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $PreData, $Data);
+                    if(is_array($newValue[$Field])){
+                        if(!empty($newValue[$Field]['_fail_'])){
+                            $return['_error_'][] = $newValue[$Field]['_error_'];
+                            $return['_fail_'][$Field] = true;
+                        }
+                    }
                     //}
                 } else {
                     $newValue = $Data[$EID][$Field];
@@ -2906,6 +2916,10 @@ function df_processupdate($Data, $EID) {
                 //$updateData[] = "`".$Field."` = '".mysql_real_escape_string($newValue)."' ";
             }
         }
+    }
+    // return if any failed.
+    if(!empty($return['_fail_'])){
+        return $return;
     }
     // process update processess
     if (!empty($Config['_FormProcessors'])) {

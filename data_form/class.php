@@ -642,6 +642,12 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     }else {
         unset($Defaults);
     }
+
+    // check for a failed insert
+    if(!empty($_SESSION['failedProcess'][$Element['ID']]) && empty($Defaults)){
+        $Defaults = $_SESSION['failedProcess'][$Element['ID']]['Data'];
+        $psudoDefault = true;
+    }    
     
     $Row = 'list_row2';
     $formID = rand(0,999);
@@ -658,7 +664,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     /// attempt to place in here
     ### DONT FORGET VALIDATION!!!!
     if(!empty($Config['_Required'])) {
-        $_SESSION['dataform']['OutScripts'] .= "
+        $_SESSION['dataform']['OutScripts'] .= "            
 			jQuery('#data_form_".$Element['ID']."').validationEngine({
 			  success :  false,
 			  failure : function() {}
@@ -729,22 +735,24 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                     $fieldIndex = 1;
                     foreach($Fields as $Field){
                         $Return = '';
-                        $Req = false;                        
-                        if(!empty($Config['_Required'][$Field])) {                            
+
+                        if(empty($Config['_FormFieldWidth'][$Field])){
+                            $Config['_FormFieldWidth'][$Field] = 'input-medium';
+                        }
+
+                        $Field = str_replace('Field_', '', $Field);
+                        $Req = false;
+                        if(!empty($Config['_Required'][$Field])) {
                             $Req = 'validate[required]';
                         }
                         if(!empty($Config['_Unique'][$Field])) {
                             if(!empty($Req)) {
-                                $Req = 'validate[required, ajax[ajaxUnique]]';                                
+                                $Req = 'validate[required, ajax[ajaxUnique]]';
                             }else {
                                 $Req = 'validate[optional, ajax[ajaxUnique]]';
                             }
                         }
 
-                        if(empty($Config['_FormFieldWidth'][$Field])){
-                            $Config['_FormFieldWidth'][$Field] = 'input-medium';
-                        }
-                        $Field = str_replace('Field_', '', $Field);
                         $FieldSet = explode('_', $Config['_Field'][$Field]);
                         $name = $Config['_FieldTitle'][$Field];
                         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
@@ -756,10 +764,14 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                 $Val = '';
                             }
                             if(!empty($FieldTypes[$FieldSet[1]]['visible']) && (empty($Config['_CloneField'][$Field]) || !empty($FieldTypes[$FieldSet[1]]['cloneview']))){
-                                
+                                    $isValid = '';
+                                    if(!empty($_SESSION['failedProcess'][$Element['ID']]['Fields'][$Field])){
+                                        $isValid = 'fail';
+                                    }
+
                                     ob_start();
                                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
-                                    $inputField = '<div class="control-group">';
+                                    $inputField = '<div class="control-group '.$isValid.'">';
                                     $inputField .= '<label class="control-label">'.$name.'</label>';
                                     $inputField .= '<div class="controls" id="form-field-'.$Field.'">';
                                     $inputField .= ob_get_clean();
@@ -844,6 +856,15 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $FormLayout->setLayout(implode('|', $tmpLayout));
 
 
+    // check for a failed insert
+        if(!empty($_SESSION['failedProcess'][$Element['ID']])){
+            unset($_SESSION['failedProcess'][$Element['ID']]);            
+        }
+        if(!empty($psudoDefault)){
+            unset($Defaults);
+        }
+
+
         $buttonBar = '';
         if(!empty($Config['_FormMode']) || ($Config['_ViewMode'] == 'form' || empty($Config['_grid']))) {
             $ButtonText = 'Submit';
@@ -923,19 +944,33 @@ function df_processInsert($EID, $Data) {
     }
 
     foreach($Config['_Field'] as $Field=>$Type){        
+        if(empty($Data[$Field]) && !empty($Config['_Required'][$Field])){
+                $return['_error_'][] = $Config['_FieldTitle'][$Field].' is required.';
+                $return['_fail_'][$Field] = true;
+        }
         $typeSet = explode('_', $Type);
         if(!empty($typeSet[1])) {
             if(function_exists($typeSet[0].'_handleInput')) {
                 $Setup['_ActiveProcess'] = 'insert';
                 $Func = $typeSet[0].'_handleInput';
                 $Value = false;
-                if(!empty($Data[$Field])){
+                if(isset($Data[$Field])){
                     $Value = $Data[$Field];
                 }
                 $Data[$Field] = $Func($Field, $Value, $typeSet[1], $Setup, $Data);
+                if(is_array($Data[$Field])){
+                    if(!empty($Data[$Field]['_fail_'])){
+                        $return['_error_'][] = $Data[$Field]['_error_'];
+                        $return['_fail_'][$Field] = true;
+                    }
+                }
             }
         }
     }
+    if(!empty($return['_fail_'])){
+       return $return;
+    }
+    
     if(!empty($Config['_FormProcessors'])){
         foreach($Config['_FormProcessors'] as $processID=>$Setup){
             if(empty($Data)){                

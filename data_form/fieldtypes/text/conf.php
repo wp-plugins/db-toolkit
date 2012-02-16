@@ -5,7 +5,8 @@ $isVisible = true;
 $FieldTypes = array();
 
 $FieldTypes['singletext'] 	= array('name' => 'Single Text Field'	, 'func' => 'text_presuff'	, 'visible' => true, 'baseType'  => 'VARCHAR(255)');
-$FieldTypes['presettext'] 	= array('name' => 'Preset Value'	, 'func' => 'text_preset'	, 'visible' => false, 'baseType'  => 'VARCHAR(255)');
+$FieldTypes['sanitized'] 	= array('name' => 'Sanitize Field'	, 'func' => 'text_sanitize'	, 'visible' => false, 'baseType'  => 'VARCHAR(255)');
+$FieldTypes['presettext'] 	= array('name' => 'Preset Value'	, 'func' => 'text_preset'	, 'visible' => false, 'baseType' => 'VARCHAR(255)');
 $FieldTypes['password'] 	= array('name' => 'Password (md5)'	, 'func' => 'null'      	, 'visible' => true, 'baseType'  => 'VARCHAR(100)');
 $FieldTypes['textarea'] 	= array('name' => 'Text Area'		, 'func' => 'text_chartotal'	, 'visible' => true, 'baseType'  => 'TEXT');
 $FieldTypes['textarealarge'] 	= array('name' => 'Text Area Large'	, 'func' => 'null'		, 'visible' => true, 'baseType'  => 'TEXT');

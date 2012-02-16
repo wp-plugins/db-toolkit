@@ -1245,7 +1245,15 @@ function dt_process() {
                 unset($_POST['dataForm']['dr_update']);
                 unset($_POST['dataForm']['EID']);                
                 $Return = df_processUpdate($_POST['dataForm'], $EID);
+                if(!empty($Return['_fail_'])){
+                    $_SESSION['failedProcess'][$EID]['Data'] = $Data;
+                    $_SESSION['failedProcess'][$EID]['Fields'] = $Return['_fail_'];
+                    $_SESSION['DF_Notification'] = $Return['_error_'];
+                    $_SESSION['DF_NotificationTypes'][] = 'error';
 
+                    header('Location: '.$_SERVER['HTTP_REFERER']);
+                    exit;
+                }
                 if(!empty($Return['Value'])){
                     dr_trackActivity('Update', $EID, $Return['Value']);
                     $_SESSION['DF_Post_returnID'] = $Return['Value'];
@@ -1263,7 +1271,15 @@ function dt_process() {
                     
             }else {
                 foreach($_POST['dataForm'] as $EID=>$Data) {
-                    $Return = df_processInsert($EID, $Data);
+                    $Return = df_processInsert($EID, $Data);                    
+                    if(!empty($Return['_fail_'])){
+                        $_SESSION['failedProcess'][$EID]['Data'] = $Data;
+                        $_SESSION['failedProcess'][$EID]['Fields'] = $Return['_fail_'];
+                        $_SESSION['DF_NotificationTypes'][] = 'error';
+
+                        header('Location: '.$_SERVER['HTTP_REFERER']);
+                        exit;
+                    }
                     // Track Activity
                     if(!empty($Return['Value']))
                     dr_trackActivity('Insert', $EID, $Return['Value']);
@@ -1824,6 +1840,14 @@ function dt_renderInterface($interface){
     if($Config['_ViewMode'] == 'list'){
         ob_start();
             include(DB_TOOLKIT.'data_report/toolbar.php');
+            include(DB_TOOLKIT.'data_report/filters.php');
+        $Return .= ob_get_clean();
+    }
+    if($Config['_ViewMode'] == 'filter'){
+        $Config['_Show_Filters'] = true;
+        $Config['_toggle_Filters'] = false;
+        ob_start();
+            include(DB_TOOLKIT.'data_report/filters.php');
         $Return .= ob_get_clean();
     }
 
@@ -1848,7 +1872,7 @@ function dt_renderInterface($interface){
             ob_start();
                 include(DB_TOOLKIT.'data_report/listmode.php');
             $Return .= ob_get_clean();
-            break;            break;
+            break;
         case 'view':
             ob_start();
                 include(DB_TOOLKIT.'data_report/viewmode.php');
