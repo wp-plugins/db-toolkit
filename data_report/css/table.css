@@ -1,5 +1,7 @@
 /* Tables */
-
+table.data_report_Table{
+    margin-top:5px;
+}
 table.data_report_Table tr th.sorting_ASC span,
 table.data_report_Table tr th.sorting_DESC span,
 table.data_report_Table tr th.report_header span {
@@ -14,7 +16,8 @@ table.data_report_Table tr th.sorting_DESC span { background-position:right -28p
 
 
 table.data_report_Table td.total div {
-	margin:0;padding:0;
+	margin:0;
+        padding:0;
 	background:none	
 }
 
@@ -26,3 +29,5 @@ table.data_report_Table tr.highlight td{
 	background:#dfdfdf;
 
 }
+/* Pagination Styles */
+.pagination li{display:inline;}

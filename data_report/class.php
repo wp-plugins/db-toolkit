@@ -1359,6 +1359,101 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if(!empty($getOverride)){
         parse_str($getOverride, $_GET);
     }
+    $queryJoin = array();
+    $queryWhere = array();
+    $queryWhereStruct = array();
+    $queryLimit = '';
+    $querySelects = array();
+    $WhereTag = '';
+    $groupBy = '';
+
+    $Element = getelement($EID);
+    $Config = $Element['Content'];
+
+    /// Explode types for later use
+    foreach ($Config['_Field'] as $Field => $Type) {
+        $Config['_Field'][$Field] = explode('_', $Type);
+
+    }
+    /// Load queryfilters
+    $joinIndex = 'a';
+    foreach ($Config['_Field'] as $Field => $Type) {
+
+        // Create a Join ID
+        $joinIndex++;
+
+        // SELECT: if clone find masters
+        if(!empty($Config['_CloneField'][$Field])){
+            $prime = $querySelects[$Config['_CloneField'][$Field]['Master']];
+        }else{
+            $prime = '`prim`.`'.$Field.'`';
+        }
+        //$prim = $Field;
+        //SELECT: Add Field to SELECT if visible
+        $querySelects[$Field] = $prime;
+
+        // SELECT: Add return values select
+        if(in_array($Field, $Config['_ReturnFields'])){
+            $querySelects['_return_'.$Field] = '`prim`.`'.$Field.'`';
+        }
+        //$querySelects[$Field]
+        // Run Filters that have been set through each field type
+        if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/queryfilter.php')) {
+            include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/queryfilter.php');
+        }
+    }
+    // apply AS types to selects
+    // Remove hidden fields from query to save memory
+    foreach($querySelects as $Field=>$Value){
+        if(strpos($Config['_IndexType'][$Field],'_show') !== false || strpos($Field,'_return_') !== false){
+            $querySelects[$Field] = $Value.' AS `'.$Field.'`';
+        }else{
+            unset($querySelects[$Field]);
+        }
+    }
+
+    if(!empty($queryWhere)){        
+        $WhereTag = " WHERE ";
+        foreach($queryWhere as $whereType => $whereSet){
+            if(is_array($whereSet)){
+                $queryWhereStruct[] = '('.implode(' '.$whereType.' ', $whereSet).')';
+            }else{
+                $queryWhereStruct[] = $whereSet;
+            }
+        }
+    }
+
+    
+    // Build Query
+    $Query = "SELECT \n";
+        // add selects
+        $Query .= implode(", \n", $querySelects)."\n";
+        // add table
+        $Query .= "FROM `" . $Config['_main_table'] . "` AS prim \n";
+        // add joins
+        $Query .= implode(" \n", $queryJoin) . " \n ";
+        // add where tag if needed wheres
+        $Query .= $WhereTag." \n";
+        // add wheres
+        $Query .= implode(" OR \n", $queryWhereStruct) . "\n ";
+        // add group by
+        $Query .= $groupBy . " \n ";
+        // add orderby
+        $Query .= $orderStr . " \n ";
+        // add query limits
+        $Query .= $queryLimit . "\n;";
+
+//return query structure to system.
+return $Query;
+}
+
+
+
+
+
+
+function olddr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false, $getOverride = false) {
+
     
 //Filters will be picked up via Session value
 // Set Vars
@@ -1690,7 +1785,19 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $preSelects[] = $selectField . ' AS `'.$AS.'`';
     }
     $querySelect = implode(", \n", $preSelects);
-    $queryWhere = implode(' AND ', $queryWhere);
+    if(!empty($_SESSION['reportFilters'][$EID])){
+        if(count($_SESSION['reportFilters'][$EID]) == 2){
+            if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])){
+                $queryWhere = implode(' OR ', $queryWhere);
+            }else{
+                $queryWhere = implode(' AND ', $queryWhere);
+            }
+        }else{
+            $queryWhere = implode(' AND ', $queryWhere);
+        }
+    }else{
+        $queryWhere = implode(' AND ', $queryWhere);
+    }
     // create sort fields
     if (!empty($Config['_SortField'])) {
         if (!empty($querySelects[$_SESSION['report_' . $EID]['SortField']])) {
@@ -2583,11 +2690,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             if ($TotalPages > 1) {
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';                
 
-                $ReportReturn .= '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">«</a>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">‹</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'_pg=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">«</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'_pg='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">‹</a>';
                 $ReportReturn .= '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">›</a>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'_pg='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">›</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'_pg='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
             }
 

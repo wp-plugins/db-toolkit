@@ -33,7 +33,7 @@
             if(!empty($Element['Content']['_TemplateClass'])){
                 $wapperClass = $Element['Content']['_TemplateClass'];
             }
-            echo dais_customfield('text', 'Wrapper Element', '_TemplateWrapper', '_TemplateWrapper', 'list_row1', $wapperEl, '', 'Element tag that wrappes the interface.');
+            echo dais_customfield('text', 'Wrapper Element', '_TemplateWrapper', '_TemplateWrapper', 'list_row1', $wapperEl, '', 'Element tag that wrappes the interface. Having a wrapper element, also enables ajax pagination.');
             echo dais_customfield('text', 'Wrapper Classes', '_TemplateClass', '_TemplateClass', 'list_row1', $wapperClass, '', 'Additional classes to add to the interface wrapper.');
 
             $HeaderTemplate = '';

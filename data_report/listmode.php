@@ -48,11 +48,110 @@ if (!empty($Config['_Field'][$_SESSION['report_' . $Media['ID']]['SortDir']])) {
 if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMode'])) {
     $gotTo = false;
     if (!empty($_GET['_pg'])) {
-        $gotTo = $_GET['_pg'];
+        $gotTo = floatval($_GET['_pg']);
     }
 
-    echo dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_' . $Media['ID']]['SortField'], $_SESSION['report_' . $Media['ID']]['SortDir']);
+    $Query = dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_' . $Media['ID']]['SortField'], $_SESSION['report_' . $Media['ID']]['SortDir']);
+    $Data = $wpdb->get_results($Query, ARRAY_A);
+    if(!empty($Config['_useListTemplate'])){
+        // User the template the user has done
+        if(!empty($Config['_TemplateWrapper'])){
+            $WrapperEl = $Config['_TemplateWrapper'];
+        }
+        $Wrapperclasses = '';
+        if(!empty($Config['_TemplateClass'])){
+            $Wrapperclasses = $Config['_TemplateClass'];
+        }
+        if(!empty($Config['_TemplateWrapper'])){
+            echo '<'.$WrapperEl.' id="reportPanel_'.$Media['ID'].'" class="interfaceWrapper '.$Wrapperclasses.'">';
+        }
+        include('templatemode.php');
+        if(!empty($Config['_TemplateWrapper'])){
+        echo '</'.$WrapperEl.'>';
+        }
 
+    }else{
+        // Use the default list grid'
+        // set table classes
+        $EID = $Media['ID'];
+        $tableClass = 'data_report_Table';
+        if(is_admin ()){
+            $tableClass = 'wp-list-table widefat fixed posts data_report_Table';
+        }
+
+        echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"4\" border=\"0\" style=\"cursor:default;\" id=\"data_report_".$EID."\" class=\"".$tableClass."  ".$Config['_ListTableClass']."\">\n";
+            
+            //headers
+            echo "<thead>\n";
+                echo "<tr id=\"the-list\">\n";
+                // in admin check box selector
+                // May make this standard as its more wordpressy
+                if(is_admin ()){
+                    echo "<th style=\"\" class=\"manage-column column-cb check-column\" id=\"dbt_cb\" scope=\"col\"><input type=\"checkbox\"></th>\n";
+                }
+
+                // Field Headings                
+                foreach($Config['_FieldTitle'] as $Field=>$Title){
+                    if(strpos($Config['_IndexType'][$Field],'_show') !== false){
+
+                        $Direction = 'ASC';
+                        if ($_SESSION['report_' . $EID]['SortDir'] == 'ASC') {
+                            $Direction = 'DESC';
+                        }
+                        $sortClass = 'report_header';
+                        if ($_SESSION['report_' . $EID]['SortField'] == $Field) {
+                            $sortClass = 'sorting_' . $_SESSION['report_' . $EID]['SortDir'];
+                        }
+                        $sortAction = '';
+                        if (!empty($Config['_Sortable'][$Field])) {
+                            $sortAction = 'onclick="dr_sortReport(\'' . $EID . '\', \'' . $Field . '\', \'' . $Direction . '\');" class="' . $sortClass . '"';
+                        }
+
+                        echo "<th nowrap=\"nowrap\" scope=\"col\" width=\"" . ($Config['_WidthOverride'][$Field] == '' ? '{{width_' . $Field . '}}px' : $Config['_WidthOverride'][$Field] . 'px') . "\" ".$sortAction."><span>".$Title."</span></th>\n";
+                    }
+                }
+                // Action Headings
+                
+                echo "</tr>\n";
+            echo "</thead>\n";
+            //vardump($Config);
+            //die;
+
+            /// Rows
+            echo "<tbody>\n";
+            foreach($Data as $Row){
+                $actionCheck = false;
+                echo "<tr id=\"row_".$EID."_1\" ref=\"10 highlight\" class=\" itemRow_".$EID." report_entry\">\n";
+                    foreach($Row as $Field=>$Value){
+                        $RowID = uniqid();
+                        // ignore the return fields
+                        if(strpos($Config['_IndexType'][$Field],'_show') !== false){
+                            if(is_admin ()){
+                                if(empty($actionCheck)){
+                                    echo "<th class=\"check-column\" scope=\"row\"><input type=\"checkbox\" value=\"1\" name=\"post[]\"></th>";
+                                }
+                            }
+                            $sortClass = '';
+                            if ($_SESSION['report_' . $EID]['SortField'] == $Field) {
+                                $sortClass = 'column_sorting_' . $_SESSION['report_' . $EID]['SortDir'];
+                            }
+                            echo "<td \" ref=\"itemRow_".$EID."\" id=\"".$RowID."\" scope=\"col\" class=\"".$sortClass." \" style=\"text-align:" . $Config['_Justify'][$Field] . "; \">\n";
+                                echo $Value;
+                                if(is_admin ()){
+                                    if(empty($actionCheck)){
+                                        echo "<div class=\"row-actions\"><span class=\"view\"><a rel=\"permalink\" title=\"View this item\" href=\"    \">View</a> | </span><span class=\"edit\"><a title=\"Edit this item\" href=\"        \">Edit</a> | </span><span class=\"trash\"><a href=\"     \" title=\"Delete this item\" class=\"submitdelete\">Delete</a></span></div>\n";                                        
+                                    }
+                                }
+                            echo "</td>\n";
+                            $actionCheck = true;
+                        }                    
+                    }
+                echo "</tr>\n";
+
+            }
+            echo "</tbody>\n";
+        echo "</table>\n";
+    }
 
     if (!empty($Config['_autoPolling'])) {
         $Rate = $Config['_autoPolling'] * 1000;
@@ -62,46 +161,6 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
         ";
     }
 
-    /*
-     * Experimental Graphing
-
-
-      global $wpdb;
-      $Query = dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_'.$Media['ID']]['SortField'], $_SESSION['report_'.$Media['ID']]['SortDir'],'sql');
-      //$Query = explode('LIMIT', $Query);
-      //$Query = $Query[0];
-      $rowData = $wpdb->get_results($Query, ARRAY_A);
-      //vardump($rowData);
-      $graphData =  "var data = [ ";
-      $inputData = array();
-      foreach($rowData as $Entry){
-
-      if($Entry['DateOrdered'] != '0000-00-00 00:00:00'){
-      //echo $Entry['DateOrdered'].'<br />';
-      $inputData[] = '['.(strtotime($Entry['DateOrdered'])*1000).','.$Entry['__4c0a9aaf39956'].']';
-      }//vardump($Entry);
-      //break;
-      }
-      $graphData .= implode(',', $inputData);
-      $graphData .= "];";
-
-      echo '<div id="placeholder" style="width:680px; height: 450px;">graph</div>';
-      $_SESSION['dataform']['OutScripts'] .= $graphData;
-      $_SESSION['dataform']['OutScripts'] .= "
-
-
-
-      $.plot($(\"#placeholder\"), [{
-      label: \"Phone sales\",
-      data: data,
-      lines: { show: true },
-      points: { show: true }
-
-
-      }], { xaxis: { mode: \"time\", timeformat: \"%y-%m-%d %H:%M:%S\"} });
-
-      ";
-     */
 }
 if (empty($Config['_useListTemplate'])) {
     echo '</div>';

@@ -1857,15 +1857,7 @@ function dt_renderInterface($interface){
         $Config['_ViewMode'] = 'list';
     }
 
-    if(!empty($_GET['npage'])){
-        $newPage = floatval($_GET['npage']);
-        if(is_array($interface)){
-            $_SESSION['report_'.$interface['id']]['LastPage'] = $newPage;
-        }else{
-            $_SESSION['report_'.$interface]['LastPage'] = $newPage;
-        }
-    }
-
+    global $wpdb;
     switch ($Config['_ViewMode']){
         
         case 'list':

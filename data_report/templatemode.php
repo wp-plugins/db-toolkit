@@ -70,44 +70,111 @@ if ($Count['Total'] == 0) {
 }
 
 //$prevbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $Media['ID'] . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
-$firstpagebutton = '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">«</a>';
-$prevbutton = '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">‹</a>';
+$firstAjax = '';
+$prevAjax = '';
+$nextAjax = '';
+$lastAjax = '';
+if(!empty($Config['_TemplateWrapper'])){
+    $firstAjax = 'onclick="dr_goToPage(\'' . $EID . '\', 1); return false;"';
+    $prevAjax = 'onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;"';
+    $nextAjax = 'onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;"';
+    $lastAjax = 'onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;"';
+}
+
+$firstpagebutton = '<a href="?'.$pageLink.'_pg=1" title="Go to the first page" class="first-page" '.$firstAjax.'>«</a>';
+$prevbutton = '<a href="?'.$pageLink.'_pg='.$Prev.'" title="Go to the previous page" class="prev-page" '.$prevAjax.'>‹</a>';
 $pagejump = '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_' . $Media['ID'] . '" style="width:30px; font-size:11px;" value="' . $Page . '" onkeypress="dr_pageInput(\'' . $Media['ID'] . '\', this.value);" /> of ' . $TotalPages . '</div>';
-$nextbutton = '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">›</a>';
-$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
+$nextbutton = '<a href="?'.$pageLink.'_pg='.$Next.'" title="Go to the next page" class="next-page" '.$nextAjax.'>›</a>';
+$lastpagebutton = '<a href="?'.$pageLink.'_pg='.$TotalPages.'" title="Go to the last page" class="last-page" '.$lastAjax.'>»</a>';
 
 $pagecount = '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
 
-$pagination = '';
+$pagination = '<div class="pagination"><ul>';
+
+$ajaxLink = '';
+if(!empty($Config['_TemplateWrapper'])){
+    $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', 1);"';
+}
+$class = '';
+if($Page <= 1){
+    $class = 'disabled';
+}
+$pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg=1" class="pagination-page" '.$ajaxLink.'>«</a></li>';
+$ajaxLink = '';
+if(!empty($Config['_TemplateWrapper'])){
+    $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', '.($Page-1).');"';
+}
+$class = '';
+if($Page <= 1){
+    $class = 'disabled';
+}
+
+$pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.($Page-1).'" class="pagination-page" '.$ajaxLink.'>‹</a></li>';
 
 if(floatval($Page) > 10){
     for($s=$Page-4; $s<=$Page; $s++){
-        $pagination .= '<a href="?'.$pageLink.'npage='.$s.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $s . '); return false;">'.$s.'</a>';
+        $ajaxLink = '';
+        $class = '';
+        if($s == $Page){
+            $class = 'active';
+        }
+        if(!empty($Config['_TemplateWrapper'])){
+            $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', ' . $s . ');"';
+        }
+        $pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.$s.'" class="pagination-page" '.$ajaxLink.'>'.$s.'</a></li>';
     }
-    for($s=$Page+1; $s<=$Page+4; $s++){
-        $pagination .= '<a href="?'.$pageLink.'npage='.$s.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $s . '); return false;">'.$s.'</a>';
+    if($Page+4 <= $TotalPages){
+        for($s=$Page+1; $s<=$Page+4; $s++){
+            $ajaxLink = '';
+            $class = '';
+            if($s == $Page){
+                $class = 'active';
+            }
+            if(!empty($Config['_TemplateWrapper'])){
+                $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', ' . $s . ');"';
+            }
+            $pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.$s.'" class="pagination-page" '.$ajaxLink.'>'.$s.'</a></li>';
+        }
     }
 
 }
 
 for($p=1; $p<=$TotalPages; $p++){
     $class= '';
+    $ajaxLink = '';
+    if(!empty($Config['_TemplateWrapper'])){
+        $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', ' . $p . ');"';
+    }
     if($Page == $p){
-        $class= 'highlight';
+        $class= 'active';
     }
     if($p <= 10){
         if($Page <=10){
-            $pagination .= '<a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">'.$p.'</a>';
+            $pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.$p.'" class="pagination-page" '.$ajaxLink.'>'.$p.'</a></li>';
         }
     }else{
         if($p == $TotalPages && $Page < $TotalPages-4){
-            $pagination .= '<a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">&hellip;</a><a href="?'.$pageLink.'npage='.$p.'" title="Go to the next page" class="pagination-page '.$class.'" onclick="dr_goToPage(\'' . $EID . '\', ' . $p . '); return false;">'.$p.'</a>';
+            $pagination .= '<li class="disabled"><a href="#">&hellip;</a></li>';
+            $pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.$p.'" class="pagination-page" '.$ajaxLink.'>'.$p.'</a></li>';
         }
     }
 }
-
-
-//$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
+$ajaxLink = '';
+if(!empty($Config['_TemplateWrapper'])){
+    $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', '.($Page+1).');"';
+}
+$class = '';
+if($Page >= $TotalPages){
+    $class = 'disabled';
+}
+$pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.($Page+1).'" class="pagination-page" '.$ajaxLink.'>›</a></li>';
+$ajaxLink = '';
+if(!empty($Config['_TemplateWrapper'])){
+    $ajaxLink = 'onclick="dr_goToPage(\'' . $EID . '\', '.$TotalPages.');"';
+}
+$pagination .= '<li class="'.$class.'"><a href="?'.$pageLink.'_pg='.$TotalPages.'" class="pagination-page" '.$ajaxLink.'>»</a></li>';
+$pagination .= '</ul></div>';
+//$lastpagebutton = '<a href="?'.$pageLink.'_pg='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">»</a>';
 
 foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
     // placebefore Entry loop    

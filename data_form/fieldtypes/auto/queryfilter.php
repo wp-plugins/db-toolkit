@@ -18,14 +18,12 @@ switch ($Type[1]) {
         //get_currentuserinfo();
         //if(!empty($Config['_UserBaseFilter'][$Field])){
 
-        $queryJoin .= " LEFT JOIN `".$wpdb->users."` AS ".$joinIndex." on (prim.`".$Field."` = ".$joinIndex.".ID) \n";
-        $querySelects[$Field] = $joinIndex.'.user_login';
+        $queryJoin[] = " LEFT JOIN `".$wpdb->users."` AS ".$joinIndex." on (`prim`.`".$Field."` = `".$joinIndex."`.`ID`) \n";
+
+        $querySelects[$Field] = '`'.$joinIndex.'`.`user_login`';
 
         if (!empty($Config['_UserBaseFilter'][$Field])) {
-            if ($WhereTag == '') {
-                $WhereTag = " WHERE ";
-            }
-            $queryWhere[] = 'prim.`'.$Field."` = ".$user_ID;
+            $queryWhere[' AND '] = 'prim.`'.$Field."` = ".$user_ID;
         }
         //}
         break;
