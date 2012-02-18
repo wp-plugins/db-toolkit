@@ -933,7 +933,7 @@ function dt_adminMenus() {
 
 
 
-        if(!empty($Groups)){       
+        if(!empty($Groups)){
         
             foreach($Groups as $Group=>$Interfaces){
                 
@@ -1794,7 +1794,11 @@ function dt_renderInterface($interface){
     }    
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     $Config = $Media['Content'];
+    /// Explode types for later use
+    foreach ($Config['_Field'] as $Field => $Type) {
+        $Config['_Field'][$Field] = explode('_', $Type);
 
+    }
     // get the $_GET['returnVars']
     if(!empty($_GET['_returnVars'])){
         

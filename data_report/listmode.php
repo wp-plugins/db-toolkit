@@ -78,6 +78,26 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
         if(is_admin ()){
             $tableClass = 'wp-list-table widefat fixed posts data_report_Table';
         }
+        
+        // Run View Processes
+        if(!empty($Config['_ViewProcessors'])){
+
+            foreach($Config['_ViewProcessors'] as $viewProcess){
+                if(empty($_GET['format_'.$EID])){
+                    //ignore on export
+                    if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
+                        include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
+                        $func = 'pre_process_'.$viewProcess['_process'];
+                        $Data = $func($Data, $viewProcess, $Config, $EID);
+                        if(empty($Data)){
+                            return;
+                        }
+                    }
+                }
+            }
+
+        }
+        
 
         echo "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"4\" border=\"0\" style=\"cursor:default;\" id=\"data_report_".$EID."\" class=\"".$tableClass."  ".$Config['_ListTableClass']."\">\n";
             
@@ -136,7 +156,16 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
                                 $sortClass = 'column_sorting_' . $_SESSION['report_' . $EID]['SortDir'];
                             }
                             echo "<td \" ref=\"itemRow_".$EID."\" id=\"".$RowID."\" scope=\"col\" class=\"".$sortClass." \" style=\"text-align:" . $Config['_Justify'][$Field] . "; \">\n";
-                                echo $Value;
+                                // Run FieldType Processor
+                                if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Config['_Field'][$Field][0] . '/functions.php')) {
+                                    include_once WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Config['_Field'][$Field][0] . '/functions.php';
+                                }
+                                $func = $Config['_Field'][$Field][0].'_processValue';
+                                if(function_exists($func)){
+                                    echo $func($Value, $Config['_Field'][$Field][1], $Field, $Config, $EID, $Data);
+                                }else{
+                                    echo $Value;
+                                }
                                 if(is_admin ()){
                                     if(empty($actionCheck)){
                                         echo "<div class=\"row-actions\"><span class=\"view\"><a rel=\"permalink\" title=\"View this item\" href=\"    \">View</a> | </span><span class=\"edit\"><a title=\"Edit this item\" href=\"        \">Edit</a> | </span><span class=\"trash\"><a href=\"     \" title=\"Delete this item\" class=\"submitdelete\">Delete</a></span></div>\n";                                        
