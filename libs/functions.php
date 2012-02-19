@@ -1227,7 +1227,14 @@ function dt_process() {
 
     if(!empty($_POST['processKey'])) {
     
-
+    // add files to post for valdation
+        if(!empty($_FILES['dataForm']['name'])){
+            foreach($_FILES['dataForm']['name'] as $EID=>$Fields){
+                foreach($Fields as $Field=>$Value){
+                    $_POST['dataForm'][$EID][$Field] = $Value;
+                }
+            }
+        }
     $_POST = stripslashes_deep($_POST);
         if($_POST['processKey'] == $_SESSION['processKey']) {
 
@@ -1271,7 +1278,7 @@ function dt_process() {
                     
             }else {
                 foreach($_POST['dataForm'] as $EID=>$Data) {
-                    $Return = df_processInsert($EID, $Data);                    
+                    $Return = df_processInsert($EID, $Data);                  
                     if(!empty($Return['_fail_'])){
                         $_SESSION['failedProcess'][$EID]['Data'] = $Data;
                         $_SESSION['failedProcess'][$EID]['Fields'] = $Return['_fail_'];
