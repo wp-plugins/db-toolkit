@@ -18,40 +18,8 @@ if (empty($Config['_useListTemplate'])) {
 }
 //($EID, $Page = 1, $SortField = false, $SortDir = false)
 
-if (empty($_SESSION['report_' . $Media['ID']]['SortField'])) {
-    $_SESSION['report_' . $Media['ID']]['SortField'] = $Config['_SortField'];
-}
-if (empty($_SESSION['report_' . $Media['ID']]['SortDir'])) {
-    $_SESSION['report_' . $Media['ID']]['SortDir'] = $Config['_SortDirection'];
-}
-// Check sorts are valid
-if (!empty($Config['_IndexType'][$_SESSION['report_' . $Media['ID']]['SortField']])) {
-    $SortPart = explode('_', $Config['_IndexType'][$_SESSION['report_' . $Media['ID']]['SortField']]);
-    if (!empty($SortPart[1])) {
-        if ($SortPart[1] == 'hide') {
-            $_SESSION['report_' . $Media['ID']]['SortField'] = $Config['_SortField'];
-            $_SESSION['report_' . $Media['ID']]['SortDir'] = $Config['_SortDirection'];
-        }
-    } else {
-        $_SESSION['report_' . $Media['ID']]['SortField'] = $Config['_SortField'];
-        $_SESSION['report_' . $Media['ID']]['SortDir'] = $Config['_SortDirection'];
-    }
-} else {
-    $_SESSION['report_' . $Media['ID']]['SortField'] = $Config['_SortField'];
-    $_SESSION['report_' . $Media['ID']]['SortDir'] = $Config['_SortDirection'];
-}
-
-if (!empty($Config['_Field'][$_SESSION['report_' . $Media['ID']]['SortDir']])) {
-    //echo 'not';
-}
 
 if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMode'])) {
-    $gotTo = false;
-    if (!empty($_GET['_pg'])) {
-        $gotTo = floatval($_GET['_pg']);
-    }
-
-    $Query = dr_BuildReportGrid($Media['ID'], $gotTo, $_SESSION['report_' . $Media['ID']]['SortField'], $_SESSION['report_' . $Media['ID']]['SortDir']);
     $Data = $wpdb->get_results($Query, ARRAY_A);
     if(!empty($Config['_useListTemplate'])){
         // User the template the user has done
@@ -109,7 +77,7 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
                 if(is_admin ()){
                     echo "<th style=\"\" class=\"manage-column column-cb check-column\" id=\"dbt_cb\" scope=\"col\"><input type=\"checkbox\"></th>\n";
                 }
-
+                
                 // Field Headings                
                 foreach($Config['_FieldTitle'] as $Field=>$Title){
                     if(strpos($Config['_IndexType'][$Field],'_show') !== false){
@@ -127,7 +95,7 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
                             $sortAction = 'onclick="dr_sortReport(\'' . $EID . '\', \'' . $Field . '\', \'' . $Direction . '\');" class="' . $sortClass . '"';
                         }
 
-                        echo "<th nowrap=\"nowrap\" scope=\"col\" width=\"" . ($Config['_WidthOverride'][$Field] == '' ? '{{width_' . $Field . '}}px' : $Config['_WidthOverride'][$Field] . 'px') . "\" ".$sortAction."><span>".$Title."</span></th>\n";
+                        echo "<th nowrap=\"nowrap\" scope=\"col\" " . ($Config['_WidthOverride'][$Field] == '' ? '' : "width=\"".$Config['_WidthOverride'][$Field] . "px\"") . " ".$sortAction."><span>".$Title."</span></th>\n";
                     }
                 }
                 // Action Headings
@@ -141,14 +109,14 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
             echo "<tbody>\n";
             foreach($Data as $Row){
                 $actionCheck = false;
-                echo "<tr id=\"row_".$EID."_1\" ref=\"10 highlight\" class=\" itemRow_".$EID." report_entry\">\n";
+                echo "<tr id=\"row_".$EID."_".$Row['_return_'.$Config['_ReturnFields'][0]]."\" ref=\"".$Row['_return_'.$Config['_ReturnFields'][0]]." highlight\" class=\" itemRow_".$EID." report_entry\">\n";
                     foreach($Row as $Field=>$Value){
                         $RowID = uniqid();
                         // ignore the return fields
                         if(strpos($Config['_IndexType'][$Field],'_show') !== false){
                             if(is_admin ()){
                                 if(empty($actionCheck)){
-                                    echo "<th class=\"check-column\" scope=\"row\"><input type=\"checkbox\" value=\"1\" name=\"post[]\"></th>";
+                                    echo "<th class=\"check-column\" scope=\"row\"><input type=\"checkbox\" value=\"".$Row['_return_'.$Config['_ReturnFields'][0]]."\" name=\"post[]\"></th>";
                                 }
                             }
                             $sortClass = '';
@@ -168,7 +136,11 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
                                 }
                                 if(is_admin ()){
                                     if(empty($actionCheck)){
-                                        echo "<div class=\"row-actions\"><span class=\"view\"><a rel=\"permalink\" title=\"View this item\" href=\"    \">View</a> | </span><span class=\"edit\"><a title=\"Edit this item\" href=\"        \">Edit</a> | </span><span class=\"trash\"><a href=\"     \" title=\"Delete this item\" class=\"submitdelete\">Delete</a></span></div>\n";                                        
+                                        echo "<div class=\"row-actions\">";
+                                        echo "<span class=\"view\"><a rel=\"permalink\" title=\"View this item\" href=\"    \">View</a> | </span>";
+                                        echo "<span class=\"edit\"><a title=\"Edit this item\" href=\"        \">Edit</a> | </span>";
+                                        echo "<span class=\"trash\"><a href=\"     \" title=\"Delete this item\" class=\"submitdelete\" onclick='jQuery(\"#manual-example a[rel=tipsy]\").tipsy(\"show\"); return false;'>Delete</a></span>";
+                                        echo "</div>\n";
                                     }
                                 }
                             echo "</td>\n";
@@ -181,6 +153,34 @@ if (!empty($_SESSION['reportFilters'][$Media['ID']]) || empty($Config['_SearchMo
             echo "</tbody>\n";
         echo "</table>\n";
     }
+
+    $_SESSION['dataform']['OutScripts'] .= "
+        jQuery(\"tbody\").children().children(\".check-column\").find(\":checkbox\").click(function(l){
+            if(\"undefined\"==l.shiftKey){
+                return true
+                }
+                if(l.shiftKey){
+                if(!j){
+                    return true
+                    }
+                    c=a(j).closest(\"form\").find(\":checkbox\");
+                e=c.index(j);
+                k=c.index(this);
+                i=a(this).prop(\"checked\");
+                if(0<e&&0<k&&e!=k){
+                    c.slice(e,k).prop(\"checked\",function(){
+                        if(a(this).closest(\"tr\").is(\":visible\")){
+                            return i
+                            }
+                            return false
+                        })
+                    }
+                }
+            j=this;
+        return true
+        });
+
+";
 
     if (!empty($Config['_autoPolling'])) {
         $Rate = $Config['_autoPolling'] * 1000;
@@ -195,9 +195,4 @@ if (empty($Config['_useListTemplate'])) {
     echo '</div>';
 }
 
-if (is_admin ()) {
-    //$SharedSecret = md5($Media['ID']).md5(serialize($Config));
-    //echo '<div class="list_row1">API Key: <input type="text" value="'.$SharedSecret.'" style="width:98%;" onclick="jQuery(this).select();" onchange="jQuery(this).val(\''.$SharedSecret.'\');" /></div>';
-    //echo '<div class="list_row2">Channel: '.$Media['ID'].'</div>';
-}
 ?>

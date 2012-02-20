@@ -7,17 +7,10 @@ if(empty($_SESSION['reportFilters'][$EID][$Field][0]))
 if(empty($_SESSION['reportFilters'][$EID][$Field][1]))
     unset($_SESSION['reportFilters'][$EID][$Field][1]);
 
-                if(!empty ($groupBy[$Field]) && !empty($Config['_dateFormat'][$Field])){
-                    $groupBy[$Field] = 'SUBSTRING('.$Field.',1,'.strlen(date($Config['_dateFormat'][$Field])).')';
-                }
-
 		if(!empty($_SESSION['reportFilters'][$EID][$Field][0]) && !empty($_SESSION['reportFilters'][$EID][$Field][1])){
 
-			if($WhereTag == ''){
-				$WhereTag = " WHERE ";
-			}
 			if($_SESSION['reportFilters'][$EID][$Field][0] == $_SESSION['reportFilters'][$EID][$Field][1]){
-                            $queryWhere[] = "( prim.".$Field." BETWEEN '".$_SESSION['reportFilters'][$EID][$Field][0]." 00:00:00' AND '".$_SESSION['reportFilters'][$EID][$Field][0]." 23:59:59')";
+                            $queryWhere[] = "( ".$prime." BETWEEN '".$_SESSION['reportFilters'][$EID][$Field][0]." 00:00:00' AND '".$_SESSION['reportFilters'][$EID][$Field][0]." 23:59:59')";
 			}else{
                             $format = 'Y-m-d 00:00:00';
                             if($_SESSION['reportFilters'][$EID][$Field][0] == 'NOW'){
@@ -32,7 +25,7 @@ if(empty($_SESSION['reportFilters'][$EID][$Field][1]))
                             $EndDate = date($format, strtotime($_SESSION['reportFilters'][$EID][$Field][1]));
 
 
-                            $queryWhere[] = "( prim.".$Field." BETWEEN '".$StartDate."' AND '".$EndDate."' )";
+                            $queryWhere[] = "(".$prime." BETWEEN '".$StartDate."' AND '".$EndDate."' )";
                         }
 
                 }

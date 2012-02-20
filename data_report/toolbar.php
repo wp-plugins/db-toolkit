@@ -11,7 +11,7 @@
             <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">×</a>
             <?php echo $Notice; ?>
             </div>
-        <?
+        <?php
         }
         unset($_SESSION['DF_Notification']);
         echo ob_get_clean();

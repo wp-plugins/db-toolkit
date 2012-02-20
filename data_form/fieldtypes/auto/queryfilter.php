@@ -11,14 +11,17 @@ switch ($Type[1]) {
         if ($WhereTag == '') {
             $WhereTag = " WHERE ";
         }
-        $queryWhere[] = 'prim.`' . $Field . "` = " . $_SESSION[$Config['_SessionValue'][$Field]];
+        $queryWhere['AND'][] = 'prim.`' . $Field . "` = " . $_SESSION[$Config['_SessionValue'][$Field]];
         break;
     case 'userbase':
         //global $user_ID;
         //get_currentuserinfo();
         //if(!empty($Config['_UserBaseFilter'][$Field])){
 
-        $queryJoin[] = " LEFT JOIN `".$wpdb->users."` AS ".$joinIndex." on (`prim`.`".$Field."` = `".$joinIndex."`.`ID`) \n";
+        $queryJoin[$wpdb->users][$prime]['ID'][$joinIndex] = " LEFT JOIN `".$wpdb->users."` AS ".$joinIndex." on (`prim`.`".$Field."` = `".$joinIndex."`.`ID`) \n";
+        //vardump($queryJoin);
+        //die;
+
 
         $querySelects[$Field] = '`'.$joinIndex.'`.`user_login`';
 
@@ -29,6 +32,6 @@ switch ($Type[1]) {
         break;
 }
 if ($Type[0] == 'hidden') {    
-    $queryWhere[] = "prim.`" . $Field . "` = '" . $_SESSION['reportFilters'][$EID][$Field] . "'";
+    $queryWhere['AND'][] = "prim.`" . $Field . "` = '" . $_SESSION['reportFilters'][$EID][$Field] . "'";
 }
 ?>

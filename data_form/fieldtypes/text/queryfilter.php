@@ -37,4 +37,10 @@ if($Type[1] == 'integer'){
         }
     }
 }
+
+if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])){
+    foreach(explode(',', $_SESSION['reportFilters'][$EID]['_keywords']) as $keyWord){
+        $queryWhere['OR'][] = $querySelects[$Field]." LIKE '%".trim($keyWord)."%'";
+    }
+}
 ?>

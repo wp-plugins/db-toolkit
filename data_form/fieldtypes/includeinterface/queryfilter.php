@@ -17,5 +17,6 @@ variables avaiable
 
 */
 
+//$querySelects[$Field] = '('.dr_BuildReportGrid($Config['_includeInterface'][$Field], false, false, false, 'sql').')';
 
 ?>

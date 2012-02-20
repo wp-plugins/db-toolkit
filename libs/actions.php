@@ -9,7 +9,7 @@
 add_action( 'admin_bar_menu', 'dt_adminMenus', 1000);
 
 // Assign Actions
-add_action('init', 'dt_start');
+add_action('wp_loaded', 'dt_start');
 add_action('admin_init', 'dt_admin_init');
 add_action('admin_menu', 'dt_menus');
 add_action('wp_ajax_dt_ajaxCall', 'dt_ajaxCall');

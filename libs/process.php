@@ -72,6 +72,11 @@ if(!empty($_POST['Data'])) {
 
 function dt_saveCreateInterface($saveData){
     global $wpdb, $user;
+
+    if(!session_id()) {
+            @session_start();
+    }
+
     
     $activeApp = get_option('_dbt_activeApp');
     
@@ -118,7 +123,6 @@ function dt_saveCreateInterface($saveData){
 
     // Clear Session data for the interface
     unset($_SESSION['report_' . $optionTitle]);
-
 
     if(!empty($saveData['Data']['Content']['_shortCode'])){
         $newCFG['_shortCode'] = $saveData['Data']['Content']['_shortCode'];

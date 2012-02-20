@@ -19,10 +19,8 @@ function interface_VersionCheck() {
 
 function dt_start() {
     // I like sessions
-    if(!session_id()) {
-        
+    if(!session_id()) { 
             @session_start();
-        
     }
     // Include Libraries
     if(empty($_SESSION['dataform']['OutScripts'])){
@@ -468,7 +466,7 @@ function dt_scripts($preIs = false) {
             wp_register_script('dbt_jslib', WP_PLUGIN_URL . '/db-toolkit/libs/jslib.js', false, false, true);
             wp_enqueue_script("dbt_jslib");
         }
-
+        
         wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
         wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
         wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.min.js');
@@ -1865,9 +1863,14 @@ function dt_renderInterface($interface){
     switch ($Config['_ViewMode']){
         
         case 'list':
-            ob_start();
-                include(DB_TOOLKIT.'data_report/listmode.php');
-            $Return .= ob_get_clean();
+                
+                $gotTo = false;
+                if (!empty($_GET['_pg'])) {
+                    $gotTo = floatval($_GET['_pg']);
+                }
+
+                $Return .= dr_BuildReportGrid($Media['ID'], $gotTo, false, false);
+            
             break;
         case 'view':
             ob_start();
