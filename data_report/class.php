@@ -1359,6 +1359,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if(!empty($getOverride)){
         parse_str($getOverride, $_GET);
     }
+    
     $queryJoin = array();
     $queryWhere = array();
     $queryWhereStruct = array();
