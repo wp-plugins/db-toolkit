@@ -25,7 +25,7 @@ if(is_admin()) {
     function df_listTables($TableReference, $JFunc = 'alert', $Default = false, $Req = false) {
     /*
     global $wpdb;
-        
+
         if(empty($Value))
             $Value = '';
         //$Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
@@ -36,12 +36,12 @@ if(is_admin()) {
             $refTitle = 'Table: '.str_replace('`', '', $Default).': Change';
         }
 
-        $Return .= '<ul class="tools_widgets">';        
+        $Return .= '<ul class="tools_widgets">';
         $Return .= '<li class="root_item"><a class="parent hasSubs" id="tableReferance">'.$refTitle.'</a>';
         $Return .= '<ul>';
         $databases = $wpdb->get_results("show databases", ARRAY_N);
 
-        
+
         foreach($databases as $database) {
             if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
 
@@ -90,16 +90,16 @@ if(is_admin()) {
         */
 
         /// old select method
-        
+
         global $wpdb;
-        
+
         if(empty($Value))
             $Value = '';
         $Return .= 'Select Table: <select name="Data[Content]['.$TableReference.']" id="'.$TableReference.'" onchange="'.$JFunc.'(\''.$TableReference.'\');">';
         $Return .= '<option value="">'.$Value.'</option>';
 
         //$databases = $wpdb->get_results("show databases", ARRAY_N);
-        
+
 
         //foreach($databases as $database) {
             //if($database[0] != 'information_schema' AND $database[0] != 'mysql'){
@@ -189,7 +189,7 @@ if(is_admin()) {
     function df_ListFields($Table, $Default, $Name) {
         if(empty($Table)){
             return;
-        }        
+        }
         $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
         $Return = '<select name="Data[Content]['.$Name.']" id="Return_'.$Table.'">';
         //$Return .= '<option value="false">None</option>';
@@ -224,13 +224,13 @@ if(is_admin()) {
 
     function df_fieldTypes($Field, $Table, $c, $Defaults) {
         // $c = data types.
-        
+
         $Return = '';
         $Type = explode('_', $Defaults[$Field]);
         //$Return = $Type[0];
         global $wpdb;
         $exisitngFields = $wpdb->get_results("SHOW FIELDS FROM `".$Table."`", ARRAY_A);
-        
+
         foreach($exisitngFields as $curField){
             if($curField['Field'] == $Field){
                 $FieldType = $curField['Type'];
@@ -248,7 +248,7 @@ if(is_admin()) {
                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php');
                     foreach($FieldTypes as $possField=>$conf){
                         if(strtolower($conf['baseType']) == $FieldType){
-                        
+
                         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png')) {
                             $Icon = WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/icon.png';
                         }
@@ -261,10 +261,10 @@ if(is_admin()) {
                     }
                 }
             }
-             * 
+             *
              */
-            
-            
+
+
             $Return .= '<span class="button" id="fieldTypeButton_'.$Field.'" onclick="bf_loadFieldTypePanel(\''.$Field.'_FieldTypePanel\', \''.$Table.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 18px;"> '.$Title.'</span></span> <span style="display:none;" id="'.$Field.'_FieldTypePanel_status"><img src="'.WP_PLUGIN_URL.'/db-toolkit/images/indicator.gif" align="absmiddle" /></span>';
             $Return .= '<input type="hidden" name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" value="'.$Defaults[$Field].'" />';
             return $Return;
@@ -286,7 +286,7 @@ if(is_admin()) {
 
 
     function df_buildFieldTypesMenu($Field, $Table){
-    
+
         global $wpdb;
         $exisitngFields = $wpdb->get_results("SHOW FIELDS FROM `".$Table."`", ARRAY_A);
         $fields = array();
@@ -294,7 +294,7 @@ if(is_admin()) {
             $fields[$curField['Field']] = $curField['Type'];
         }
 
-        
+
 
         $Types = loadFolderContents(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes');
         //$Return = '<select name="Data[Content][_Field]['.$Field.']" id="Fieldtype_'.$Field.'" >';
@@ -306,7 +306,7 @@ if(is_admin()) {
         if(!empty($fields[$Field])){
             //$Return .= '<div class="warning" style="font-weight:normal;">Changing FieldTypes on existing data may result in data loss. <div style="padding:3px; cursor:pointer;"><a onclick="jQuery(\'.inComp\').toggle(); return false;">Show All FieldTypes</a></div></div>';
         }
-        
+
         $Return .= '<div style="width:33.33333%; float:left;">';
         //$Return .= '<div style="">';
         $Return .= '<div style="padding:3px; cursor:default" class="admin_config_toolbar">Default / Auto Increment</div>';
@@ -319,7 +319,7 @@ if(is_admin()) {
         $Return .= '</div>';
         //sort($Types[0]);
         foreach($Types[0] as $Type) {
-            
+
             if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php')) {
                 include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$Type[1].'/conf.php');
                 //$Return .= '<optgroup label="'.$FieldTypeTitle.'">';
@@ -360,7 +360,7 @@ if(is_admin()) {
                         $Return .= '<div style="padding:4px; display:'.$fieldDisplay.';" class="'.$fieldClass.'">';
                         $Return .= '<a href="#" id="'.$Field.'_'.$Type[1].'_'.$Key.'" onclick="return df_setOptions(\''.$Field.'\', \''.$FieldSet['func'].'\', \''.$Type[1].'_'.$Key.'\');"><span style="background: url('.$Icon.') left center no-repeat; padding:5px 20px;"> '.$FieldSet['name'].'</span></a>';
                         $Return .= '</div>';
-                    
+
 
                 }
                 //if(empty($used)){
@@ -386,10 +386,10 @@ function df_processAjaxForm($Input, $addQuery = false){
     ob_start();
     parse_str($Input, $Data);
     $Data = stripslashes_deep($Data);
-    
+
     if(!empty($Data['processKey'])) {
         $Data = stripslashes_deep($Data);
-        if($Data['processKey'] == $_SESSION['processKey']) {            
+        if($Data['processKey'] == $_SESSION['processKey']) {
             if(!empty($Data['dr_update'])) {
                 $EID = $Data['dataForm']['EID'];
                 $Setup = getelement($EID);
@@ -439,7 +439,7 @@ function is_uppercase($Char) {
 function df_buildQuickCaptureForm($EID, $addQuery = false) {
 
     parse_str($addQuery, $_GET);
-    
+
     $Data = getelement($EID);
     //$Return = '<h2>'.$Data['Content']['_New_Item_Title'].'</h2>';
     if(!empty($Data['Content']['_New_Item_Hide'])){
@@ -458,7 +458,7 @@ function df_buildQuickCaptureForm($EID, $addQuery = false) {
         $Out['script'] = $_SESSION['dataform']['OutScripts'];
         unset($_SESSION['dataform']['OutScripts']);
     }
-    
+
     //$Return = df_BuildCaptureForm($Data);
     return $Out;//$Return;
 }
@@ -496,19 +496,19 @@ function df_buildtabsindex($Setup, $Config){
         ";
         return $Out;
     }
-    
+
 return false;
 }
 function df_checkTabState($ColSet, $Tabs){
-    
-    foreach($ColSet['Fields'] as $Field){        
+
+    foreach($ColSet['Fields'] as $Field){
         if(!empty($Tabs['tabs'][$Field['Name']])){
-            
+
             return $Field['Name'];
         }
     }
 return false;
-    
+
 }
 
 function set_iso($string) {
@@ -562,9 +562,9 @@ function df_reloadFormField($EID, $Field, $Default = false){
 
 
 
-  
 
-        
+
+
         ob_start();
         if(!empty($Defaults[$Field])){
             $Val = esc_attr($Defaults[$Field]);
@@ -581,9 +581,9 @@ function df_reloadFormField($EID, $Field, $Default = false){
         }
         $Pre .= ob_get_clean();
 
-        
 
-    
+
+
     $Output['html'] = $Pre;
     $Output['element'] = 'form-field-'.$Field;
     return $Output;
@@ -606,7 +606,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         $Element = getelement($Config['_Edit_Element_Reference']);
         $Config = $Element['Content'];
     }
-    
+
     if(!empty($Defaults) && !empty($Config['_Show_Edit'])) {
 
         $EditID = $Defaults;
@@ -626,19 +626,19 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                 return $Output;
             }
         }
-        
+
         $defRes = mysql_query("SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."' ".$hardFilter.";");
         $Query = "SELECT * FROM `".$Config['_main_table']."` WHERE `".$Config['_ReturnFields'][0]."` = '".$EditID."' ".$hardFilter.";";
         if(mysql_num_rows($defRes) == 0) {
             $Output['width'] = 220;
             $Output['html'] = '<div style="warning">That does not belong to you!</div>';
             return $Output;
-            
+
         }
         //$Defaults = mysql_fetch_assoc($defRes);
         $Defaults = $wpdb->get_results($Query, ARRAY_A);
         $Defaults = $Defaults[0];
-        
+
     }else {
         unset($Defaults);
     }
@@ -647,8 +647,8 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     if(!empty($_SESSION['failedProcess'][$Element['ID']]) && empty($Defaults)){
         $Defaults = $_SESSION['failedProcess'][$Element['ID']]['Data'];
         $psudoDefault = true;
-    }    
-    
+    }
+
     $Row = 'list_row2';
     $formID = rand(0,999);
     $SubmitURL = getdocument($Element['ParentDocument']);
@@ -664,7 +664,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
     /// attempt to place in here
     ### DONT FORGET VALIDATION!!!!
     if(!empty($Config['_Required'])) {
-        $_SESSION['dataform']['OutScripts'] .= "            
+        $_SESSION['dataform']['OutScripts'] .= "
 			jQuery('#data_form_".$Element['ID']."').validationEngine({
 			  success :  false,
 			  failure : function() {}
@@ -693,7 +693,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
         if(empty($Layout)){
             parse_str($Config['_gridLayout'], $Layout);
         }
-        
+
         $Hidden = '<form enctype="multipart/form-data" method="post" action="'.$_SERVER['REQUEST_URI'].'" class="formular '.$formStack.' '.$customClass.'" id="data_form_'.$Element['ID'].'" >';
         if(empty($_SESSION['processKey'])) {
             $_SESSION['processKey'] = uniqid(rand(100, 999).'_processKey_');
@@ -756,7 +756,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                         $FieldSet = explode('_', $Config['_Field'][$Field]);
                         $name = $Config['_FieldTitle'][$Field];
                         if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php') && count($FieldSet) == 2) {
-                                                        
+
                             include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/conf.php');
                             if(!empty($Defaults[$Field])){
                                 $Val = esc_attr($Defaults[$Field]);
@@ -788,7 +788,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $Hidden .= ob_get_clean();
                             }
-                        }else{                            
+                        }else{
                             // Check for tabs and section breaks
                             // remember to close them before form renders.
                             if(substr($Field,0,4) == '_tab'){
@@ -801,12 +801,12 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
                                 // start tab content
                                 if(!empty($tabContentStarted)){
-                                    $FormLayout->append('</div>', $columnCounter);                                    
+                                    $FormLayout->append('</div>', $columnCounter);
                                 }
                                 $FormLayout->append('<div id="'.$Field.'">', $columnCounter);
                                 $tabContentStarted = true;
                             }elseif(substr($Field,0,5) == '_html'){
-                                //$FormLayout->append(, $columnCounter);                              
+                                //$FormLayout->append(, $columnCounter);
                                 foreach($Config['_Field'] as $fieldKey=>$type){
                                     if(!empty($Defaults)){
                                         $Config['_html'][$Field]['Title'] = str_replace('{{'.$fieldKey.'}}', $Defaults[$fieldKey], $Config['_html'][$Field]['Title']);
@@ -814,12 +814,12 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                         $Config['_html'][$Field]['Title'] = str_replace('{{'.$fieldKey.'}}', '', $Config['_html'][$Field]['Title']);
                                     }
                                 }
-                                
+
                                 $FormLayout->append($Config['_html'][$Field]['Title'], $columnCounter);
                             }
-                            
+
                         }
-                                       
+
                     $fieldIndex++;
                     }
                 }
@@ -852,13 +852,13 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
          $rowIndex++;
         }
-        
+
         $FormLayout->setLayout(implode('|', $tmpLayout));
 
 
     // check for a failed insert
         if(!empty($_SESSION['failedProcess'][$Element['ID']])){
-            unset($_SESSION['failedProcess'][$Element['ID']]);            
+            unset($_SESSION['failedProcess'][$Element['ID']]);
         }
         if(!empty($psudoDefault)){
             unset($Defaults);
@@ -915,7 +915,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
 
         $Output['width'] = $Config['_popupWidth'];
-        $Output['html'] = $Hidden.$Form.$buttonBar;
+        $Output['html'] = $Hidden.$Form.$buttonBar.'</form>';
         $Output['script'] = $Script;
         return $Output;
     }
@@ -943,7 +943,7 @@ function df_processInsert($EID, $Data) {
         return $Return;
     }
 
-    foreach($Config['_Field'] as $Field=>$Type){        
+    foreach($Config['_Field'] as $Field=>$Type){
         if(empty($Data[$Field]) && !empty($Config['_Required'][$Field])){
                 $return['_error_'][] = $Config['_FieldTitle'][$Field].' is required.';
                 $return['_fail_'][$Field] = true;
@@ -970,10 +970,10 @@ function df_processInsert($EID, $Data) {
     if(!empty($return['_fail_'])){
        return $return;
     }
-    
+
     if(!empty($Config['_FormProcessors'])){
         foreach($Config['_FormProcessors'] as $processID=>$Setup){
-            if(empty($Data)){                
+            if(empty($Data)){
                 if(empty($Config['_InsertFail'])) {
                     $Return['Message'] = 'Entry Insert Failed';
                 }else {
@@ -985,7 +985,7 @@ function df_processInsert($EID, $Data) {
                 if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php')){
                     include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                     $func = 'pre_process_'.$Setup['_process'];
-                    if(function_exists($func)){                        
+                    if(function_exists($func)){
                         $Data = $func($Data, $Setup, $Config);
                         if(!empty($Data['__fail__'])){
                             if(!empty($Data['__error__'])) {
@@ -1023,13 +1023,13 @@ function df_processInsert($EID, $Data) {
             }
         }
     }
-    
+
     if(empty($Entries)){
         $Return['Message'] = 'umm, there was nothing to insert.';
         return $Return;
     }
     $Query = "INSERT INTO `".$Config['_main_table']."` (". implode(',',$Fields).") VALUES (".implode(',', $Entries).");";
-    
+
     if($wpdb->query($Query)){
         $inserted = true;
         $ID = $wpdb->insert_id;
@@ -1040,7 +1040,7 @@ function df_processInsert($EID, $Data) {
 
     if(!empty($inserted)){
         //vardump($Config['_ReturnFields']);
-        
+
         if(!empty($Config['_ReturnFields'][0])) {
             $ReturnVals = implode(', ', $Config['_ReturnFields']);
 
@@ -1055,7 +1055,7 @@ function df_processInsert($EID, $Data) {
                 }
                 $Query = "SELECT ".$ReturnVals." FROM `".$Config['_main_table']."` WHERE ".implode('&&', $Wheres)." LIMIT 1";
             }
-            
+
             $dta = $wpdb->get_row($Query, ARRAY_A);
             $outstr = array();
             if(!empty($dta)){
@@ -1106,9 +1106,9 @@ function df_processInsert($EID, $Data) {
 				mysql_query("INSERT INTO `_audit_".$Config['_main_table']."` SET `_DateInserted` = '".date('Y-m-d H:i:s')."', `_User` = '".$memberID."', `_RawData` = '".mysql_real_escape_string(serialize($Data))."', `".$Config['_ReturnFields'][0]."` = '".$ID."'  ;");
 			}
         }
-         * 
+         *
          */
-        //post processors        
+        //post processors
         if(!empty($Config['_FormProcessors'])){
             foreach($Config['_FormProcessors'] as $processID=>$Setup){
                 if(!empty($Setup['_onInsert'])){
@@ -1116,7 +1116,7 @@ function df_processInsert($EID, $Data) {
                         include_once WP_PLUGIN_DIR.'/db-toolkit/data_form/processors/'.$Setup['_process'].'/functions.php';
                         $func = 'post_process_'.$Setup['_process'];
                         if(function_exists($func)){
-                            $Data = $func($Data, $Setup, $Config);                            
+                            $Data = $func($Data, $Setup, $Config);
                             if(!is_array($Data)){
                                 $Config['_InsertSuccess'] = $Data;
                             }
