@@ -915,7 +915,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
 
 
         $Output['width'] = $Config['_popupWidth'];
-        $Output['html'] = $Hidden.$Form.$buttonBar;
+        $Output['html'] = $Hidden.$Form.$buttonBar.'</form>';
         $Output['script'] = $Script;
         return $Output;
     }

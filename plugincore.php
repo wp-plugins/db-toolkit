@@ -15,7 +15,7 @@ if(empty($_SESSION['dataform']['OutScripts'])) {
 define('DB_TOOLKIT', plugin_dir_path(__FILE__));
 
 //hide notices while I work through the cleanup.
-error_reporting(E_ALL ^ E_NOTICE);
+//error_reporting(E_ALL ^ E_NOTICE);
 
 require_once DB_TOOLKIT.'libs/functions.php';
 require_once DB_TOOLKIT.'libs/apps.php';
