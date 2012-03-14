@@ -27,7 +27,7 @@ switch($Types[1]) {
                 $dim = getimagesize($SourceFile);
                 $newDim = image_resize_dimensions($dim[0], $dim[1], $imageWidth, $imageHeight, true);
             }else{
-                $Out = 'Image not available';
+                $Out .= 'Image not available';
                 return;
             }
 
