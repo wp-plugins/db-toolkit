@@ -772,9 +772,23 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     ob_start();
                                     include(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php');
                                     $inputField = '<div class="control-group '.$isValid.'">';
-                                    $inputField .= '<label class="control-label">'.$name.'</label>';
+                                        $inputField .= '<label class="control-label">'.$name.'</label>';
+                                        if(empty($Config['_placeHolderTitle'][$Field])){
+                                            $placeholder = '';
+                                        }else{
+                                            $placeholder = $name;
+                                        }
+
                                     $inputField .= '<div class="controls" id="form-field-'.$Field.'">';
                                     $inputField .= ob_get_clean();
+                                    if(!empty($Config['_placeHolderTitle'][$Field])){
+                                        if(strpos($inputField, 'type="text') !== false){
+                                            $inputField = str_replace('<input', '<input placeholder="'.$name.'"', $inputField);
+                                            $inputField = str_replace('<label class="control-label">'.$name.'</label>', '', $inputField);
+                                        }
+                                    }
+
+
                                     if(!empty($Config['_FieldCaption'][$Field])){
                                         $inputField .= '<p class="help-block">'.$Config['_FieldCaption'][$Field].'</p>';
                                     }

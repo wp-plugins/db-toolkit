@@ -21,20 +21,19 @@ if(!empty($_GET[$Field]) || !empty($_GET[$Config['_overRide'][$Field]])){
             }
         }
 	if($WhereTag == ''){
-		$WhereTag = " WHERE ";	
+		$WhereTag = " WHERE ";
 	}
-	
+
 
 	$queryWhere[$Field] = "prim.`".$Field."` = '".$Filter."' ";
 }else{
-    if(!empty($_SESSION['viewitemFilter'][$EID][$Field])){
-        if($WhereTag == ''){
-                $WhereTag = " WHERE ";
+    if(empty($Config['_selectFilterOptional'][$Field])){
+        if(!empty($_SESSION['viewitemFilter'][$EID][$Field])){
+            if($WhereTag == ''){
+                    $WhereTag = " WHERE ";
+            }
+            $queryWhere[$Field] = "prim.`".$Field."` = '".$_SESSION['viewitemFilter'][$EID][$Field]."' ";
         }
-        $queryWhere[$Field] = "prim.`".$Field."` = '".$_SESSION['viewitemFilter'][$EID][$Field]."' ";
     }
 }
-
-
-
 ?>

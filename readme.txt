@@ -3,8 +3,8 @@ Contributors: Desertsnowman
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
-Tested up to: 3.3
-Stable tag: 0.3.2.013
+Tested up to: 3.3.1
+Stable tag: 0.3.2.014
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,11 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.014 =
+* Added title as placeholder to the fieldsetup box (only textfields are supported).
+* Added the ability to set the Selected Filter Item to optional. This allows you to render the interface without the value but filter if its present.
+* Fixed a bug in the PDF export that removed the first entry.
 
 = 0.3.2.013 =
 * Bug fixes all over the place. mostly minor though.

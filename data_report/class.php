@@ -179,7 +179,7 @@ if (is_admin ()) {
 
         $return = ' &nbsp;<span class="' . $IClass . '" id="'.$Name.'_' . $Field . '" onclick="df_setToggle(\''.$Name.'_' . $Field . '\');" title="'.$Name.'"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/'.$Icon.') left center no-repeat; padding:5px 8px;"></span></span>';
         $return .= '<input style="display:none;" type="checkbox" name="Data[Content][_'.$Name.'][' . $Field . ']" id="'.$Name.'_' . $Field . '_check" ' . $ISel . ' />';
-    
+
         return $return;
 
     }
@@ -312,23 +312,32 @@ if (is_admin ()) {
         $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="' . $Title . '" name="Data[Content][_FieldTitle][' . $Field . ']" /> ';
         $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" />';
         $PreReturn[$Field] .= df_FormWidthSetup($Field, $fieldFormWidth);
+
+        $sel = '';
+        if(!empty($Config['Content']['_placeHolderTitle'][$Field])){
+            $sel = 'checked="checked"';
+        }
+        $PreReturn[$Field] .= 'Title as Placeholder: <input type="checkbox" value="1" name="Data[Content][_placeHolderTitle][' . $Field . ']" '.$sel.' /> <span class="description">Not all fieldtypes support this.</span>';
         $PreReturn[$Field] .= '</div>';
+
+        //$Config['placeHolderTitle'][$Field]
+
         //$PreReturn[$Field] .= '<label><strong>Alignment</strong></label>';
         $PreReturn[$Field] .= '<div style="padding:3px;">List Column Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
         $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify).'</div>';
-        
-        
-        
+
+
+
         if(empty($row))
             $row = false;
-        
+
         $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) .'</div>'. dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
         // inline settings
         //class="button-highlighted"
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $UClass . '" id="unique_' . $Field . '" onclick="df_setToggle(\'unique_' . $Field . '\');" title="Unique"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $RClass . '" id="required_' . $Field . '" onclick="df_setToggle(\'required_' . $Field . '\');" title="Required"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $SClass . '" id="issortable_' . $Field . '" onclick="df_setToggle(\'issortable_' . $Field . '\');" title="Sortable"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/table_sort.png) left center no-repeat; padding:5px 8px;"></span></span>';
-        
+
         //$PreReturn[$Field] .= df_IconToggle($Field, 'Indexes', 'open-bookmark.png', $Config['Content']);
 
         $PreReturn[$Field] .= '<div class="widefat" id="' . $Field . '_FieldTypePanel" style="display:none; text-align:left; margin:10px 0;"></div>';
@@ -336,7 +345,7 @@ if (is_admin ()) {
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Unique][' . $Field . ']" id="unique_' . $Field . '_check" ' . $USel . ' />';
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Required][' . $Field . ']" id="required_' . $Field . '_check" ' . $RSel . ' />';
         $PreReturn[$Field] .= '<input style="display:none;" type="checkbox" name="Data[Content][_Sortable][' . $Field . ']" id="issortable_' . $Field . '_check" ' . $SSel . ' />';
-        
+
         $PreReturn[$Field] .= '</div><div class="admin_config_panel" style="text-align:right;" id="ExtraSetting_' . $Field . '">';
         unset($Types);
         $Types = explode('_', $Defaults['_Field'][$Field]);
@@ -363,7 +372,7 @@ if (is_admin ()) {
             return;
         }
         global $wpdb;
-        
+
         if ($Column == 'Linking') {
 
             $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
@@ -383,7 +392,7 @@ if (is_admin ()) {
 
 
             $name = df_parseCamelCase($Field);
-            //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';            
+            //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
             $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox cloned" style="width:550px;"><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" /><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" /><h3 class="fieldTypeHandle">' . df_parseCamelCase($Field) . '</h3>';
             // Linking Master
             $PreReturn[$Field] .= '<div style="padding:5px;">';
@@ -448,7 +457,7 @@ if (is_admin ()) {
                 if (!empty($Config['Content']['_Justify'][$Field])) {
                     $Justify = $Config['Content']['_Justify'][$Field];
                 }
-            }            
+            }
             $PreReturn[$Field] .= '<div style="padding:3px;">Title: <input type="text" value="' . $Title . '" name="Data[Content][_FieldTitle][' . $Field . ']" /> ';
             $PreReturn[$Field] .= 'Caption: <input type="text" value="' . $Caption . '" name="Data[Content][_FieldCaption][' . $Field . ']" />';
             $PreReturn[$Field] .= df_FormWidthSetup($Field, $fieldFormWidth);
@@ -591,7 +600,7 @@ if (is_admin ()) {
 
     function dr_reportListTypes($Field, $Default = false) {
 
-        
+
         $VClass = 'button';
         $IClass = 'button';
         $VSel = '';
@@ -609,7 +618,7 @@ if (is_admin ()) {
             }
         }
 
-        
+
         $Return = ' &nbsp;<span class="' . $VClass . '" id="displayTypeV_' . $Field . '" onclick="df_setToggle(\'displayTypeV_' . $Field . '\');" title="Visible"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/eye.png) left center no-repeat; padding:5px 8px;"></span></span>';
         $Return .= '<input style="display:none;" type="checkbox" name="Data[Content][_IndexType][' . $Field . '][Visibility]" value="show" id="displayTypeV_' . $Field . '_check" ' . $VSel . ' />';
 
@@ -659,8 +668,8 @@ function dr_toolbarButton($Title, $Script = false, $Class = 'noicon', $Link = fa
         $linkStart = '<a href="'.$Link.'" target="'.$Target.'">';
         $linkEnd = '</a>';
     }
-    
-    
+
+
     return '<span class="fbutton"><div class="button add-new-h2" '.$onClick.'>'.$linkStart.'<span class="'.$Class.'">'.$Title.'</span>'.$linkEnd.'</div></span>';
 }
 function dr_toolbarSeperator(){
@@ -695,7 +704,7 @@ function dr_buildInterfaceList() {
             $appConfig = get_option('_'.$app.'_app');
             $appGroups = array();
             foreach ($appConfig['interfaces'] as $interface=>$access) {
-                $cfg = get_option($interface);                
+                $cfg = get_option($interface);
                 if(empty($cfg['_ItemGroup'])){
                     $cfg['_ItemGroup'] = 'Ungrouped';
                 }
@@ -846,7 +855,7 @@ function df_buildSetProcessors($Config) {
     return $Return;
 }
 function df_buildSetViewProcessors($Config) {
-    
+
     if (empty($Config['_ViewProcessors'])) {
         return;
     }
@@ -1137,7 +1146,7 @@ function df_FormWidthSetup($id, $Default = false) {
         $Sel = 'selected="selected"';
     }
     $Return .= '<option value="input-small" ' . $Sel . '>Small</option>';
-    
+
     $Sel = '';
     if ($Default == 'input-medium') {
         $Sel = 'selected="selected"';
@@ -1164,12 +1173,12 @@ function df_FormWidthSetup($id, $Default = false) {
 
     $Return .= '</optgroup>';
     $Return .= '<optgroup label="Incremental">';
-   
+
         for($i=1; $i<=12; $i++){
             $Sel = '';
             if ($Default == 'span'.$i) {
                 $Sel = 'selected="selected"';
-            }            
+            }
             $Return .= '<option value="span'.$i.'" ' . $Sel . '>Span '.$i.'</option>';
         }
     $Return .= '</optgroup>';
@@ -1181,7 +1190,7 @@ function df_FormWidthSetup($id, $Default = false) {
 function dr_BuildUpDateForm($EID, $ID) {
     $Data = getelement($EID);
     $Data['_ActiveProcess'] = 'update';
-    
+
     $Out['title'] = $Data['Content']['_EditFormText'];
     $PreOut = df_BuildCaptureForm($Data, $ID);
     if (!is_array($PreOut)) {
@@ -1278,7 +1287,7 @@ function dr_processQuery($Config, $querySelects) {
             if(!empty($Config['_CloneField'][$CloneOf])){
             //echo '++++ '.$Select.' ++++<br />';
             $Select = dr_findCloneParent($Select, $Config['_CloneField'], $querySelects);
-            }else{               
+            }else{
                 $Select = $CloneOf;
             }
         }
@@ -1293,9 +1302,9 @@ function dr_processQuery($Config, $querySelects) {
         if(strpos($Select , '.') <= 0){
             $pattern = '\(([a-zA-Z0-9]+)\)';
             preg_match('/' . $pattern . '/s', $Select, $matches);
-            if(!empty($matches[1])){                
+            if(!empty($matches[1])){
                 $Select = str_replace($matches[1], 'prim.`'.$matches[1].'`', $Select);
-            }else{                
+            }else{
                 $Select = 'prim.`'.$Select.'`';
             }
         }
@@ -1359,7 +1368,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if(!empty($getOverride)){
         parse_str($getOverride, $_GET);
     }
-    
+
 //Filters will be picked up via Session value
 // Set Vars
     if(empty($Page)){
@@ -1368,8 +1377,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if (!empty($Format)) {
         // XML Output
         if (strtolower($Format) == 'xml') {
-            $apiOut = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";            
-            $apiOut .= "    <entries>\n";            
+            $apiOut = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+            $apiOut .= "    <entries>\n";
         }
         //json output
         if (strtolower($Format) == 'json') {
@@ -1391,7 +1400,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
     }
     //global $ReportReturn;
-    
+
     $ReportReturn = '';
     $Element = getelement($EID);
     $Config = $Element['Content'];
@@ -1471,7 +1480,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
 //setup Field Types
-    
+
     foreach ($Config['_Field'] as $Field => $Type) {
         if(empty($Type)){
             //$querySelects[$Field] = $Field;
@@ -1616,7 +1625,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     foreach ($Config['_Field'] as $Field => $Type) {
 
         //set filter for auto values
-        if ($Type[0] == 'hidden') {            
+        if ($Type[0] == 'hidden') {
             if (!empty($_SESSION['reportFilters'][$EID][$Field])) {
                 if ($WhereTag == '') {
                     $WhereTag = " WHERE ";
@@ -1624,7 +1633,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $queryWhere[] = "prim.`" . $Field . "` = '" . $_SESSION['reportFilters'][$EID][$Field] . "'";
             }
         }
-        
+
         // Run Filters that have been set through each field type
         if (file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/queryfilter.php')) {
             include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $Type[0] . '/queryfilter.php');
@@ -1657,7 +1666,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
     }
     // create Query Selects and Where clause string
-    
+
     $querySelects = dr_processQuery($Config, $querySelects);
 
 
@@ -1727,7 +1736,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $countSelect = ',' . implode(',', $countSelect);
         }
     }
-    
+
     // Build WHERES - prim.clones
     $pattern = 'prim.`(__[a-zA-Z0-9]+)`';
     preg_match_all('/' . $pattern . '/s', $queryWhere, $matches);
@@ -1787,7 +1796,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $Config['_Items_Per_Page'] = $limitOveride;
     }
 
-    if(!empty($_SESSION['report_'.$EID]['limitOveride'])){        
+    if(!empty($_SESSION['report_'.$EID]['limitOveride'])){
             $Config['_Items_Per_Page'] = floatval($_SESSION['report_'.$EID]['limitOveride']);
     }
 
@@ -1858,14 +1867,14 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         return ob_get_clean();
     }
 
-    $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";   
+    $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";
 
     if (strtolower($Format) == 'data') {
         $dtaRes = mysql_query($Query);
         $Data = mysql_fetch_assoc($dtaRes);
         return $Data;
     }
-    
+
     if(!empty($Config['_UserQueryOveride']) && !empty($Config['_QueryOveride'])){
         $Query = $Config['_QueryOveride'];
 
@@ -1910,7 +1919,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
 
     $_SESSION['queries'][$EID] = $Query;
-    
+
     //echo $Query;
     if (strtolower($Format) == 'sql') {
         return $Query;
@@ -1988,9 +1997,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             }
         }
 
-        //while($row = mysql_fetch_assoc($Result)) {        
+        //while($row = mysql_fetch_assoc($Result)) {
         foreach ($Result as $row) {
-        
+
             // Switch Row Style
             //$Row = dais_rowswitch($Row);
             //$Row = report_rowswitch($Row);
@@ -2256,10 +2265,10 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                         $ReportReturn .= ob_get_clean();
                                     } else {
                                         $PreReportReturn = '';
-                                        // Make View Item Link If page is set                                        
+                                        // Make View Item Link If page is set
                                         if (is_admin ()) {
                                             //vardump($Config);
-                                            if (!empty($Config['_ItemViewInterface'])) {                                                
+                                            if (!empty($Config['_ItemViewInterface'])) {
                                                 // Create return link
                                                 $ReportVars = array();
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
@@ -2269,7 +2278,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
                                                 if($_GET['page']!= 'dbt_builder'){
                                                     if(!empty($Config['_SetDashboard'])){
-                                                        $Interface = get_option($EID);                                                        
+                                                        $Interface = get_option($EID);
                                                         $app = get_option('_'.$Interface['_Application'].'_app');
 
                                                         if(!empty($app['landing'])){
@@ -2324,7 +2333,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                             }
                                             if (!empty($Config['_ItemViewPage'])) {
                                                 // Create return link
-                                                
+
                                                 $ReportVars = array();
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
                                                     $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
@@ -2339,7 +2348,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 } else {
                                                     $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }
-                                                
+
                                                 $PreReportReturn .= "<a href=\"" . $PageLink . "\" >";
                                             }
                                         }
@@ -2370,7 +2379,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                     $PreReportReturn .= $after;
                                                 }
                                             }
-                                        
+
 
                                         // API Output
                                         if (!empty($Format)) {
@@ -2408,7 +2417,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                     }
                                     $ReportReturn .= $PreReportReturn;
                                     if (!empty($Config['_Show_popup'])) {
-                                        
+
                                         if ($ColumnCounter === 0) {
                                             // Add inline actions
                                             $ViewLink = '';
@@ -2433,7 +2442,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                             $PageLink = 'admin.php?page=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                         }
                                                         $ViewLink['view'] = "<a href=\"" . $PageLink . "\">View</a>";
-                                                        
+
 
                                                     }
                                                 } else {
@@ -2506,11 +2515,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 }
             }
         }
-        
+
     }
     //echo mysql_error();
     if (!empty($Config['_UseListViewTemplate'])) {
-        
+
         if (!empty($Config['_ListViewTemplateContentWrapperEnd'])) {
             $ReportReturn .= $Config['_ListViewTemplateContentWrapperEnd'];
         }
@@ -2524,8 +2533,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
 
 // Make Scripts for deleting and select
-    if (!empty($Config['_Show_Edit'])) {        
-        $_SESSION['dataform']['OutScripts'] .= "            
+    if (!empty($Config['_Show_Edit'])) {
+        $_SESSION['dataform']['OutScripts'] .= "
 		jQuery('#data_report_" . $EID . " .report_entry').bind('click', function(){
 			jQuery(this).toggleClass(\"highlight\");
 		});
@@ -2581,13 +2590,13 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             }
             //$ReportReturn .= '<div class="reportFooter_totals">';
             if ($TotalPages > 1) {
-                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';                
+                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
 
-                $ReportReturn .= '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Â«</a>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">â€¹</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
                 $ReportReturn .= '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">â€º</a>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">Â»</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
+                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
             }
 
@@ -2595,7 +2604,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $ReportReturn .= '<br class="clear"></div>';
             $ReportReturn .= '</div>';
 
-            
+
         } else {
             if (!empty($Config['_ListViewTemplatePreFooter'])) {
                 $ReportReturn .= $Config['_ListViewTemplatePreFooter'];
@@ -2795,7 +2804,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if (strtolower($Format) == 'json') {
             //$apiOutput;
             //vardump($apiOutput);
-            return json_encode($apiOutput);            
+            return json_encode($apiOutput);
         }
         // PDF Output
         if (strtolower($Format) == 'pdf') {
@@ -2878,11 +2887,11 @@ function df_processupdate($Data, $EID) {
     //go through the Submitted Data / apply fieldtype filters and add processed value to update queue
     */
 
-    
+
     foreach ($Config['_Field'] as $Field => $Type) {
         if(empty($Data[$EID][$Field]) && !empty($Config['_Required'][$Field])){
                 $return['_error_'][] = $Config['_FieldTitle'][$Field].' is required.';
-                $return['_fail_'][$Field] = true;                
+                $return['_fail_'][$Field] = true;
         }
         if(isset($Data[$EID][$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
             $typeSet = explode('_', $Type);
@@ -2963,7 +2972,7 @@ function df_processupdate($Data, $EID) {
     }
 
 
-    
+
     // Post Process
     foreach ($Config['_Field'] as $Field => $Type) {
         $typeSet = explode('_', $Type);
@@ -3011,7 +3020,7 @@ function df_processupdate($Data, $EID) {
         $Return['Value'] = $ID;
     }
 
-    
+
     // post update processess
     if (!empty($Config['_FormProcessors'])) {
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
@@ -3366,7 +3375,7 @@ function dt_listApps() {
     vardump($appList);
     $out['html'] = ob_get_clean();
 
-    
+
 
 
     $Return = '<div style="float:left; width: 25%;">';
@@ -3404,7 +3413,7 @@ function dt_listInterfaces($App) {
 
     foreach ($app['interfaces'] as $interface=>$access) {
         $dta = get_option($interface);
-        
+
         //if ($dta['_Application'] == $App) {
             if (empty($dta['_ItemGroup'])) {
                 $Group = '<em>ungrouped</em>';
@@ -3420,7 +3429,7 @@ function dt_listInterfaces($App) {
         return $Return;
     }
     foreach ($interfaceGroups as $group => $Interface) {
-    
+
         $Return .= '<div style="padding:3px;" class="highlight">' . $group . '</div>';
         foreach ($Interface as $dta) {
             //if ($dta['_Application'] == $App) {
@@ -3471,10 +3480,10 @@ ob_start();
                 }
 
             ?>
-            
+
                 <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $rowTemplateID; ?>">
                     <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $rowTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
-                    <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $rowTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">                    
+                    <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $rowTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">
                     <h3 class="fieldTypeHandle"><?php echo $Name; ?></h3>
                     <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
                         <strong>Template Name:</strong> <input type="text" name="Data[Content][_layoutTemplate][_Content][_name][]" value="<?php echo $Name; ?>" />
@@ -3486,7 +3495,7 @@ ob_start();
                     </div>
                     <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
                         <textarea id="<?php echo $rowTemplateID; ?>_before" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_before][]"><?php echo $Header; ?></textarea>
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('400px'); return false;">Larger</a> | 
+                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('400px'); return false;">Larger</a> |
                         <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('80px'); return false;">Smaller</a>
                     </div>
 
@@ -3515,7 +3524,7 @@ ob_start();
 
                     <div style="clear:both"></div>
                 </div>
-            
+
 <?php
 
 return ob_get_clean();
@@ -3545,7 +3554,7 @@ ob_start();
     if(!empty($Default['_after'])){
         $after = $Default['_after'];
     }
-    
+
 
 ?>
 
@@ -3608,7 +3617,7 @@ function dt_buildnodeMap($data, $Return = '', $level = 0, $path = '', $Default =
             }
         }
     }else{
-        
+
         $Return .= '<option value="'.$path.'['.$data.']">'.$space.$p.$data.'</option>';
     }
 
@@ -3654,7 +3663,7 @@ function dr_dataSourceMapping($url, $Config = false){
         Root Node
       </div>
 
-      <div class="controls">        
+      <div class="controls">
         <select id="_DataSourceRootNode" name="Data[Content][_DataSourceRootNode]">
             <option value="">Select the root node point</option>
         <?php echo $Return; ?>
@@ -3699,10 +3708,10 @@ return $Return;
 function dr_loadFieldMapping($url, $root, $table, $Config = false){
 
    global $wpdb;
-   
+
     $tablefields = $wpdb->get_results("SHOW COLUMNS FROM `".$table."`", ARRAY_N);
 
-    
+
     $select = '<select id="Data[Content][_DataSourceFieldMap][{{Field}}]" name="Data[Content][_DataSourceFieldMap][{{Field}}]">';
 
     $select .= '</select>';
@@ -3720,7 +3729,7 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
     foreach($matchesarray[1] as $path){
         $data = $data[$path];
     }
-        
+
     //vardump($select);
     $Return = '<table class="widefat">';
     $Return .= '<thead>';
@@ -3751,7 +3760,7 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
         }else{
             $Return .= '<td>';
                 $Return .= 'Node point not an array and cannot be mapped.';
-            $Return .= '</td>';            
+            $Return .= '</td>';
         }
 
         $Return .= '</tr>';
@@ -3770,15 +3779,15 @@ function dt_runDataSourceImport($Config){
 
 
     $data = file_get_contents($Config['_DataSourceURL']);
-    
+
     if(strpos(substr(strtolower($data),0,1024), 'xml')){
         $data = dt_xml2array($data);
     }else{
         $data = json_decode($data, true);
     }
-    
+
     preg_match_all('/\\[(.*?)\\]/', $Config['_DataSourceRootNode'], $matchesarray);
-    
+
     foreach($matchesarray[1] as $path){
         $data = $data[$path];
     }
@@ -3790,7 +3799,7 @@ function dt_runDataSourceImport($Config){
     $onot = 0;
     foreach($data as $entry){
         //vardump($entry);
-        $prefix = "INSERT INTO `".$Config['_main_table']."` (";        
+        $prefix = "INSERT INTO `".$Config['_main_table']."` (";
         $insertString = array();
         $prefixFields = array();
         foreach($Config['_DataSourceFieldMap'] as $Field=>$nodePoint){
@@ -3799,7 +3808,7 @@ function dt_runDataSourceImport($Config){
                 $prefixFields[] = "`".$Field."`";
                 //echo $nodePoint;
                 preg_match_all('/\\[(.*?)\\]/', $nodePoint, $matchesarray);
-                $currentEntry = $entry;                
+                $currentEntry = $entry;
                 foreach($matchesarray[1] as $key=>$point){
                     if($key > 0 ){
                         $currentEntry = $currentEntry[$point];
@@ -3809,13 +3818,13 @@ function dt_runDataSourceImport($Config){
             }
         }
         $query = $prefix.implode(', ',$prefixFields).") VALUES (".implode(', ', $insertString).");";
-        
+
         if($wpdb->query($query)){
             $in++;
         }else{
             $not++;
         }
-        
+
     }
 
     echo $in+$not." entries inserted.\r\n";
