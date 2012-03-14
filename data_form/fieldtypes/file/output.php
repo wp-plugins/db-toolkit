@@ -23,9 +23,13 @@ switch($Types[1]) {
             if(!file_exists($SourceFile)){
                 $Return .= 'Image does not exists.';
             }
-            $dim = getimagesize($SourceFile);
-            $newDim = image_resize_dimensions($dim[0], $dim[1], $imageWidth, $imageHeight, true);
-
+            if(file_exists($SourceFile)){
+                $dim = getimagesize($SourceFile);
+                $newDim = image_resize_dimensions($dim[0], $dim[1], $imageWidth, $imageHeight, true);
+            }else{
+                $Out = 'Image not available';
+                return;
+            }
 
             $Sourcepath = pathinfo($SourceFile);
             $URLpath = pathinfo($Value);
