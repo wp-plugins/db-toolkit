@@ -16,7 +16,7 @@ function linked_processValue($Value, $Type, $Field, $Config, $EID, $Data){
 		
 	}
         
-	return $Value;
+	return trim($Value);
 }
 
 function linked_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){

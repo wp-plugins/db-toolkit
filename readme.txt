@@ -62,6 +62,7 @@ A: Well you can technically use it now, however some things are still a little i
 * Added title as placeholder to the fieldsetup box (only textfields are supported).
 * Added the ability to set the Selected Filter Item to optional. This allows you to render the interface without the value but filter if its present.
 * Fixed a bug in the PDF export that removed the first entry.
+* Fixed a concat bug with linked fields not spacing the additional fields correctly.
 
 = 0.3.2.013 =
 * Bug fixes all over the place. mostly minor though.
