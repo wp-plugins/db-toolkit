@@ -58,7 +58,7 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
-= 0.3.2.014 =
+= 0.3.2.015 =
 * Fixed a bug that prevented custom scripts to reload.
 * Fixed a bug that broke the export buttons from working in frontend.
 * Fixed a bug that broke the redirect pass back from formmode to list mode.
