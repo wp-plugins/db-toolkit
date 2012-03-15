@@ -1,10 +1,34 @@
 //<script>
 
+    function dr_exportReport(url, eid, isGlobal){
+
+        jQuery('.export').addClass('active');
+        jQuery('.export').removeClass('export');
+        if(isGlobal){
+            chartData = jQuery('.chartData').serializeArray();
+        }else{
+            chartData = jQuery('#chartData_'+eid).serializeArray();
+        }
+
+        if(chartData.length > 0){
+            ajaxCall('dr_exportChartImage',chartData, function(d){
+                jQuery('.active').addClass('export');
+                jQuery('.active').removeClass('active');
+                window.location.replace(url);
+            })
+        }else{
+                jQuery('.active').addClass('export');
+                jQuery('.active').removeClass('active');
+                window.location.replace(url);
+        }
+        return;
+    }
+
     function dr_applyFilters(eid, clear){
 
         filterstr = jQuery('#setFilters_'+eid).serialize();
         jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;"></span>Loading Data</div></div>');
-        
+
         if(clear == true){
             filterstr = 'clear';
             jQuery('#setFilters_'+eid+' input').val('');
@@ -15,7 +39,7 @@
         ajaxCall('dr_setFilters', eid, filterstr, function(p){
            jQuery('#reportpanel_block_'+eid).remove();
            dr_goToPage(eid, false, false);
-           
+
            jQuery('#report_tools_'+eid).remove();
            jQuery('#filterPanel_'+eid).replaceWith(p);
         });
@@ -32,13 +56,13 @@
 	});
     }
     function dr_goToPage(eid, page, global, addQuery){
-        
+
 	if(page == false){
-            if(global== false){                
+            if(global== false){
                 jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute;z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
                 ajaxCall('dr_BuildReportGrid',eid, 0,0,0,0,0,0,addQuery, function(dta){
                     jQuery('#reportPanel_'+eid).html(dta);
-                    //df_loadOutScripts();
+                    df_loadOutScripts();
                 });
             }else{
                 jQuery('.data_report_Table').each(function(g){
@@ -48,11 +72,11 @@
                 });
             }
 	}else{
-            
+
             jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute;z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
             ajaxCall('dr_BuildReportGrid',eid, page,0,0,0,0,0,addQuery, function(dta){
                 jQuery('#reportPanel_'+eid).html(dta);
-                //df_loadOutScripts();
+                df_loadOutScripts();
             });
 	}
 	df_loadOutScripts();
@@ -228,9 +252,9 @@
     }
 
     function dr_BuildUpDateForm(eid, rid, ajaxSubmit){
-    
+
 		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-                
+
         id = rid;//Math.floor(Math.random()*9999999);
 
 	if(jQuery("#ui-jsDialog-"+id+"-"+eid+"").length == 1){
@@ -259,7 +283,7 @@
                         }
                     });
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").html(c.html);
-                    
+
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'width', parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'position', 'center');
                     df_loadOutScripts();
@@ -320,7 +344,7 @@
     function dr_deleteItem(EID, ID, addQuery){
         if(confirm("Are you sure you want to delete this entry?")){
             ajaxCall('df_deleteEntries',EID, ID, function(x){
-                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');                
+                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');
                 dr_goToPage(EID, false, false, addQuery);
                 //df_dialog(x);
             });

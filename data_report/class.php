@@ -1365,6 +1365,14 @@ return $Selects;
 
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false, $getOverride = false) {
 
+    // get element
+    $Element = getelement($EID);
+    $Config = $Element['Content'];
+    if(!empty($Config['_customFooterJavaScript'])){
+        $_SESSION['dataform']['OutScripts'] .= "
+            ".stripslashes_deep($Config['_customFooterJavaScript'])."
+        ";
+    }
     if(!empty($getOverride)){
         parse_str($getOverride, $_GET);
     }
@@ -1402,8 +1410,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     //global $ReportReturn;
 
     $ReportReturn = '';
-    $Element = getelement($EID);
-    $Config = $Element['Content'];
     if(empty($Config['_main_table']))
         return 'No Table Selected';
     $queryJoin = '';
@@ -1999,7 +2005,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
         //while($row = mysql_fetch_assoc($Result)) {
         foreach ($Result as $row) {
-
             // Switch Row Style
             //$Row = dais_rowswitch($Row);
             //$Row = report_rowswitch($Row);

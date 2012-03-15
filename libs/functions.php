@@ -544,7 +544,7 @@ function dt_scripts($preIs = false) {
                    }
                }
                 if(!empty($Config['_customFooterJavaScript'])){
-                    $_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
+                    //$_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
                 }
             }
         }
@@ -583,7 +583,7 @@ function dt_scripts($preIs = false) {
                    }
                }
                 if(!empty($Config['_customFooterJavaScript'])){
-                    $_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
+                    //$_SESSION['dataform']['OutScripts'] .= stripslashes_deep($Config['_customFooterJavaScript']);
                 }
 
             }

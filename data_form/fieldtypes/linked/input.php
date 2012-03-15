@@ -10,7 +10,7 @@ if($FieldSet[1] == 'linked'){
                         $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['_Sort']."` ".$Config['_Linkedfields'][$Field]['_SortDir']."";
 
                     }
-                    
+
 				$concatvalues = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$concatvalues[] = $outValue;
@@ -37,7 +37,7 @@ if($FieldSet[1] == 'linked'){
 				$checkindex++;
 			}
 			//$Return .= '</select>';
-		
+
 		break;
 		case "radio":
                     $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC";
@@ -100,13 +100,13 @@ if($FieldSet[1] == 'linked'){
 				//$Return .= '<option value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" '.$Sel.' >'.$lrow['outValue'].'</option>';
 				$Return .= '<label class="checkbox" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' />'.$lrow['outValue'].'</label>';
 				$checkindex++;
-				
+
 			}
 			//$Return .= '</select> <input type="button" name="button" id="button" value="Add" onclick="linked_addOption(\''.$Element['ID'].'_'.$Field.'\')" />';
 			//$Return .= 'Selected: <select name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'">';
 			//$Return .= '</select>';
-			
-			
+
+
 		break;
 		case "dropdown":
 
@@ -123,7 +123,22 @@ if($FieldSet[1] == 'linked'){
 					$values[] = $outValue;
 				}
 				$outString = 'CONCAT('.implode(',\' \',',$values).') as outValue';
-			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$Ordering.";";
+
+                                $Where = '';
+                                if(!empty($Config['_Linkedfields'][$Field]['_Filter'])){// && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
+                                    $Where .= " WHERE ";
+
+                                    $filterType = '=';
+                                    if(!empty($Config['_Linkedfields'][$Field]['_FilterType'])){
+                                        $filterType = $Config['_Linkedfields'][$Field]['_FilterType'];
+                                    }
+                                    $Where .= "`".$Config['_Linkedfields'][$Field]['_Filter']."` ".$filterType." '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
+                                }
+
+
+
+
+			$QuerySQL = "SELECT ".$Config['_Linkedfields'][$Field]['ID'].", ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$Where." ".$Ordering.";";
 			$Res = mysql_query($QuerySQL);
 			//cho $QuerySQL;
 			$Return = '<select name="dataForm['.$Element['ID'].']['.$Field.']" id="entry_'.$Element['ID'].'_'.$Field.'" ref="'.$row['_return_'.$Config['_ReturnFields'][0]].'" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'">';
@@ -145,12 +160,12 @@ if($FieldSet[1] == 'linked'){
 
                         // get the linked interfaces add entry button title
                         if(!empty($Config['_Linkedfields'][$Field]['_addInterface'])){
-                        $linkInterface = getelement($Config['_Linkedfields'][$Field]['_addInterface']);                        
+                        $linkInterface = getelement($Config['_Linkedfields'][$Field]['_addInterface']);
                             $Return .= ' <button class="btn" onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadField);return false;">'.$linkInterface['Content']['_New_Item_Title'].'</button>';
                         }
                         $_SESSION['dataform']['OutScripts'] .="
 
-                            
+
 
                         ";
 
@@ -216,7 +231,7 @@ if($FieldSet[1] == 'linked'){
 
                         /*
                         $_SESSION['dataform']['OutScripts'] .="
-			
+
 			var options = {
 				script:'".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".urlencode(base64_encode($Field))."&',
 				varname:'input',
@@ -228,8 +243,8 @@ if($FieldSet[1] == 'linked'){
 			};
 			var as_json = new bsn.AutoSuggest('entry_".$Element['ID']."_".$Field."_view', options);
 			*/
-			
-			
+
+
 				//jQuery('#autocomplete_".$FieldID."').autocomplete(\"".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".encodestring($Field)."\",{width: 250, selectFirst: false});
 				//jQuery('#autocomplete_".$FieldID."').result(function(event, data, formatted) {
 				//	jQuery('#autocomplete_".$FieldID."_value').val(data[1]);

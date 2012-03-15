@@ -18,17 +18,17 @@
                                     if(!empty($Config['_Linkedfields'][$Field]['Prefix'][$Key])){
                                         $outList[] = "'".$Config['_Linkedfields'][$Field]['Prefix'][$Key]."'";
                                     }else{
-                                        $outList[] = "' '";
+                                        //$outList[] = "' '";
                                     }
 					$outList[] = $joinIndexSet.'.'.$outValue;
                                     if(!empty($Config['_Linkedfields'][$Field]['Suffix'][$Key])){
                                         $outList[] = "'".$Config['_Linkedfields'][$Field]['Suffix'][$Key]."'";
                                     }else{
-                                        $outList[] = "' '";
+                                        //$outList[] = "' '";
                                     }
                                 }
 
-                                    $outString = 'CONCAT('.implode(',',$outList).')';
+                                    $outString = 'CONCAT('.implode(', \' \',',$outList).')';
                                 }else{
                                     $outString = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['Value'][0].'`';
                                 }
@@ -68,7 +68,7 @@
                                     $Primary = 'prim.`'.$Config['_CloneField'][$Field]['Master'].'`';
 
                                 }
-                                if(empty($queryJoins[$joinIndex])){                                    
+                                if(empty($queryJoins[$joinIndex])){
                                     $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
                                     $queryJoins[$joinIndex] = $joinIndex;
@@ -77,7 +77,7 @@
                             //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
 
 			}
-                        
+
                         if(!empty($Config['_Linkedfields'][$Field]['_Filter']) && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
                             if($WhereTag == ''){
                                     $WhereTag = " WHERE ";
@@ -111,7 +111,7 @@
                                     }
                                 }
 
-				$outString = 'CONCAT('.implode(',',$outList).')';
+				$outString = 'CONCAT('.implode('`,\' \',`',$outList).')';
 
 
 
