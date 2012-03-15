@@ -63,6 +63,7 @@ A: Well you can technically use it now, however some things are still a little i
 * Fixed a bug that broke the export buttons from working in frontend.
 * Fixed a bug that broke the redirect pass back from formmode to list mode.
 * Added an = and != selector to the join table fieldtype WHERE filter.
+* Added in filter targeting and redirect.
 
 = 0.3.2.014 =
 * Added title as placeholder to the fieldsetup box (only textfields are supported).

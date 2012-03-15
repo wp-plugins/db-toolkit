@@ -38,7 +38,15 @@
         $Sel = '';
         if(!empty($Element['Content']['_targetInterface'])) {
             $Sel = 'checked="checked"';
-        }        echo dais_customfield('checkbox', 'Targeting', '_targetInterface', '_targetInterface', 'list_row1' , 1, $Sel, 'Push passback fields to target Interface');
+        }
+        echo dais_customfield('checkbox', 'Passback Targeting', '_targetInterface', '_targetInterface', 'list_row1' , 1, $Sel, 'Push passback fields to target Interface');
+        $Sel = '';
+        if(!empty($Element['Content']['_targetInterfaceFilter'])) {
+            $Sel = 'checked="checked"';
+        }
+        echo dais_customfield('checkbox', 'Filter Targeting', '_targetInterfaceFilter', '_targetInterfaceFilter', 'list_row1' , 1, $Sel, 'Push filters to target Interface');
+
+
         global $wpdb;
         $Interfaces = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_intfc%' ", ARRAY_A);
         $Clusters = $wpdb->get_results("SELECT option_name FROM $wpdb->options WHERE `option_name` LIKE 'dt_clstr%' ", ARRAY_A);
@@ -73,7 +81,7 @@
                         $Clusters = array();
                         if(empty($PrimInterfaces['Plugin']))
                             $PrimInterfaces['Plugin'] = '';
-                        
+
                         if(is_array($PrimInterfaces['Plugin'])){
                             foreach($PrimInterfaces['Plugin'] as $PrimInterface) {
                                 if(empty($PrimInterface['_ItemGroup'])){
@@ -158,7 +166,7 @@
                                 $Sel = '';
                                 if(empty($_GET['interface']))
                                     $_GET['interface'] = false;
-                                
+
                                 if($Interface['ID'] == $_GET['interface']){
                                     $Dis = 'disabled="disabled"';
                                     $Cls = 'highlight';
