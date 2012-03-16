@@ -1,6 +1,5 @@
 <?php
 
-
 $test = array();
 $Render = true;
 $TitleNotice = '';
@@ -11,7 +10,7 @@ foreach($Config['_Field'] as $Key=>$Value) {
                 $Render = false;
             }
         }else {
-            if(!isset($_GET[$Key])) {
+            if(!isset($_GET[$Key]) && empty($Config['_selectFilterOptional'][$Key])) {
                 $Render = false;
             }
         }
@@ -35,11 +34,11 @@ if($Config['_ViewMode'] == 'search'){
 }
 
 if(!empty($FilterLocks) && empty($isSearch)) {
-    
+
     $_SESSION['lockedFilters'][$Media['ID']] = $_SESSION['reportFilters'][$Media['ID']];
     if(empty($_SESSION['reportFilters'][$Media['ID']])) {
         $_SESSION['reportFilters'][$Media['ID']] = $FilterLocks;
-    }else {        
+    }else {
         if(is_array($FilterLocks)){
             array_merge($_SESSION['reportFilters'][$Media['ID']], $FilterLocks);
         }else{

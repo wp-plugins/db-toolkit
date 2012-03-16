@@ -30,13 +30,29 @@ function dt_start() {
     }
 
     if(!empty($_POST['reportFilter'])){
+            $RedirectLocation = $_SERVER['REQUEST_URI'];
+            //echo $RedirectLocation;
             foreach($_POST['reportFilter'] as $EID=>$FilterSet){
-                    if(!empty($_POST['reportFilter']['ClearFilters'])){
-                            unset($_SESSION['reportFilters'][$EID]);
-                    }else{
-                            unset($_SESSION['reportFilters'][$EID]);
-                            $_SESSION['reportFilters'][$EID] = $FilterSet;
+
+                    $InterfaceID = $EID;
+                    $Element = getelement($EID);
+                    $Config = $Element['Content'];
+                    //echo $RedirectLocation;
+                    if(!empty($Config['_targetInterfaceFilter']) && !empty($Config['_ItemViewInterface'])){
+                        if(!empty($Config['_ItemViewPage'])){
+                            $RedirectLocation = get_permalink($Config['_ItemViewPage']);
+                        }
+                        $InterfaceID = $Config['_ItemViewInterface'];
                     }
+
+
+                    if(!empty($_POST['reportFilter']['ClearFilters'])){
+                            unset($_SESSION['reportFilters'][$InterfaceID]);
+                    }else{
+                            unset($_SESSION['reportFilters'][$InterfaceID]);
+                            $_SESSION['reportFilters'][$InterfaceID] = $FilterSet;
+                    }
+            break;
             }
             if(!empty($_POST['reportFilter']['reportFilterLock'])){
                     dr_lockFilters($_POST['reportFilter']['reportFilterLock']);
@@ -49,7 +65,8 @@ function dt_start() {
                     //dump($_POST['reportFilter']);
                     //dump($EID);
             }
-        header("Location: ".$_SERVER['REQUEST_URI']."");
+
+        wp_redirect($RedirectLocation);
         exit;
     }
 
@@ -1542,9 +1559,11 @@ function dt_process() {
                         $Body = array();
                         $Counter = 1;
                         for($i = 0; $i<= $Total; $i++) {
-                            foreach($OutData[$i] as $Field=>$v){
-                                if(strpos($Config['_IndexType'][$Field], 'hide') === false){
-                                    $Body[$i][] = str_replace('&nbsp;','',html_entity_decode($v));
+                            if(is_array($OutData[$i])){
+                                foreach($OutData[$i] as $Field=>$v){
+                                    if(strpos($Config['_IndexType'][$Field], 'hide') === false){
+                                        $Body[$i][] = str_replace('&nbsp;','',html_entity_decode($v));
+                                    }
                                 }
                             }
                         }

@@ -1,50 +1,49 @@
 <?php
 
-function dr_setFilters($EID, $FilterString){
+function dr_setFilters($EID, $FilterString) {
 
     $Media = getelement($EID);
     $Config = $Media['Content'];
 
 
-    if($FilterString == 'clear'){
+    if ($FilterString == 'clear') {
         unset($_SESSION['reportFilters'][$EID]);
         ob_start();
-            include(DB_TOOLKIT.'data_report/toolbar.php');
+        include(DB_TOOLKIT . 'data_report/toolbar.php');
         $Return .= ob_get_clean();
         return $Return;
     }
     parse_str($FilterString, $filters);
     $filters = $filters['reportFilter'][$EID];
-    foreach($filters as $filter=>$val){
-        if(is_array($val)){
-            foreach($val as $pkey=>$part){
-                if(!empty($part)){
+    foreach ($filters as $filter => $val) {
+        if (is_array($val)) {
+            foreach ($val as $pkey => $part) {
+                if (!empty($part)) {
                     $_SESSION['reportFilters'][$EID][$filter][$pkey] = $part;
-                }else{
+                } else {
                     unset($_SESSION['reportFilters'][$EID][$filter][$pkey]);
                 }
             }
-        }else{
-            if(!empty($val)){
+        } else {
+            if (!empty($val)) {
                 $_SESSION['reportFilters'][$EID][$filter] = $val;
-            }else{
-                if(!empty($_SESSION['reportFilters'][$EID][$filter])){
+            } else {
+                if (!empty($_SESSION['reportFilters'][$EID][$filter])) {
                     unset($_SESSION['reportFilters'][$EID][$filter]);
                 }
             }
         }
     }
-        ob_start();
-            include(DB_TOOLKIT.'data_report/toolbar.php');
-        $Return .= ob_get_clean();
+    ob_start();
+    include(DB_TOOLKIT . 'data_report/toolbar.php');
+    $Return .= ob_get_clean();
 
-        return $Return;
+    return $Return;
     /*
-    [EID] => dt_intfc4f28dd990c4a1
-    [_keywords] => wer
-    [email_address] =>
-    */
-
+      [EID] => dt_intfc4f28dd990c4a1
+      [_keywords] => wer
+      [email_address] =>
+     */
 }
 
 function grid_rowswitch($Row = '') {
@@ -99,7 +98,7 @@ if (is_admin ()) {
             return;
         }
 
-        $result = mysql_query("SHOW COLUMNS FROM `". $Table."`");
+        $result = mysql_query("SHOW COLUMNS FROM `" . $Table . "`");
         if (mysql_num_rows($result) > 0) {
             $TotalsField = '';
             while ($row = mysql_fetch_assoc($result)) {
@@ -169,19 +168,18 @@ if (is_admin ()) {
         return false;
     }
 
-    function df_IconToggle($Field, $Name, $Icon, $Defaults = false){
+    function df_IconToggle($Field, $Name, $Icon, $Defaults = false) {
         $ISel = 'checked="checked"';
         $IClass = 'button-highlighted';
-        if (empty($Defaults['_'.$Name][$Field])) {
+        if (empty($Defaults['_' . $Name][$Field])) {
             $ISel = '';
             $IClass = 'button';
         }
 
-        $return = ' &nbsp;<span class="' . $IClass . '" id="'.$Name.'_' . $Field . '" onclick="df_setToggle(\''.$Name.'_' . $Field . '\');" title="'.$Name.'"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/'.$Icon.') left center no-repeat; padding:5px 8px;"></span></span>';
-        $return .= '<input style="display:none;" type="checkbox" name="Data[Content][_'.$Name.'][' . $Field . ']" id="'.$Name.'_' . $Field . '_check" ' . $ISel . ' />';
+        $return = ' &nbsp;<span class="' . $IClass . '" id="' . $Name . '_' . $Field . '" onclick="df_setToggle(\'' . $Name . '_' . $Field . '\');" title="' . $Name . '"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/' . $Icon . ') left center no-repeat; padding:5px 8px;"></span></span>';
+        $return .= '<input style="display:none;" type="checkbox" name="Data[Content][_' . $Name . '][' . $Field . ']" id="' . $Name . '_' . $Field . '_check" ' . $ISel . ' />';
 
         return $return;
-
     }
 
     function df_makeFieldConfigBox($Field, $Config, $Defaults = false) {
@@ -190,26 +188,25 @@ if (is_admin ()) {
 
         $Table = $Config['Content']['_main_table'];
         $name = df_parseCamelCase($Field);
-        $addClass= '';
+        $addClass = '';
         if (!empty($Config['Content']['_FieldTitle'][$Field])) {
             if (substr($Field, 0, 2) == '__') {
-                $name = '<img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/copy.png" width="16" height="16" align="absmiddle" /> '.$Config['Content']['_FieldTitle'][$Field];
-                if($Config['Content']['_FieldTitle'][$Field] != $Field){
-                    $name .= ' ('.$Field.')';
+                $name = '<img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/copy.png" width="16" height="16" align="absmiddle" /> ' . $Config['Content']['_FieldTitle'][$Field];
+                if ($Config['Content']['_FieldTitle'][$Field] != $Field) {
+                    $name .= ' (' . $Field . ')';
                 }
                 $addClass = 'cloned';
             } else {
                 $name = $Config['Content']['_FieldTitle'][$Field];
-                if($Config['Content']['_FieldTitle'][$Field] != $Field){
-                    $name .= ' ('.$Field.')';
+                if ($Config['Content']['_FieldTitle'][$Field] != $Field) {
+                    $name .= ' (' . $Field . ')';
                 }
-
             }
         }
         //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
 
 
-        $PreReturn[$Field] = '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox '.$addClass.'" style="width:550px;">';
+        $PreReturn[$Field] = '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox ' . $addClass . '" style="width:550px;">';
 
         $PreReturn[$Field] .= '<img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" />';
 
@@ -314,24 +311,23 @@ if (is_admin ()) {
         $PreReturn[$Field] .= df_FormWidthSetup($Field, $fieldFormWidth);
 
         $sel = '';
-        if(!empty($Config['Content']['_placeHolderTitle'][$Field])){
+        if (!empty($Config['Content']['_placeHolderTitle'][$Field])) {
             $sel = 'checked="checked"';
         }
-        $PreReturn[$Field] .= 'Title as Placeholder: <input type="checkbox" value="1" name="Data[Content][_placeHolderTitle][' . $Field . ']" '.$sel.' /> <span class="description">Not all fieldtypes support this.</span>';
+        $PreReturn[$Field] .= 'Title as Placeholder: <input type="checkbox" value="1" name="Data[Content][_placeHolderTitle][' . $Field . ']" ' . $sel . ' /> <span class="description">Not all fieldtypes support this.</span>';
         $PreReturn[$Field] .= '</div>';
 
         //$Config['placeHolderTitle'][$Field]
-
         //$PreReturn[$Field] .= '<label><strong>Alignment</strong></label>';
         $PreReturn[$Field] .= '<div style="padding:3px;">List Column Width: <input type="text" style="width:40px;" value="' . $Width . '" name="Data[Content][_WidthOverride][' . $Field . ']" /> ';
-        $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify).'</div>';
+        $PreReturn[$Field] .= df_alignmentSetup($Field, $Justify) . '</div>';
 
 
 
-        if(empty($row))
+        if (empty($row))
             $row = false;
 
-        $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) .'</div>'. dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
+        $PreReturn[$Field] .= '</div><div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) . '</div>' . dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
         // inline settings
         //class="button-highlighted"
         $PreReturn[$Field] .= ' &nbsp;<span class="' . $UClass . '" id="unique_' . $Field . '" onclick="df_setToggle(\'unique_' . $Field . '\');" title="Unique"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
@@ -375,7 +371,7 @@ if (is_admin ()) {
 
         if ($Column == 'Linking') {
 
-            $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
+            $result = mysql_query("SHOW COLUMNS FROM `" . $Table . "`");
             if (mysql_num_rows($result) > 0) {
                 $Row = 'list_row4';
                 while ($row = mysql_fetch_assoc($result)) {
@@ -473,7 +469,7 @@ if (is_admin ()) {
 
 
 
-            $PreReturn[$Field] .= '<div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) .'</div>'. dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
+            $PreReturn[$Field] .= '<div class="admin_config_toolbar"> <div style="float:left; width:180px;">' . df_fieldTypes($Field, $Table, $row, $Defaults['_Field']) . '</div>' . dr_reportListTypes($Field, $Defaults['_IndexType'][$Field]);
 
             $PreReturn[$Field] .= ' &nbsp;<span class="' . $UClass . '" id="unique_' . $Field . '" onclick="df_setToggle(\'unique_' . $Field . '\');" title="Unique"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/unique.png) left center no-repeat; padding:5px 8px;"></span></span>';
             $PreReturn[$Field] .= ' &nbsp;<span class="' . $RClass . '" id="required_' . $Field . '" onclick="df_setToggle(\'required_' . $Field . '\');" title="Required"><span style="background: url(' . WP_PLUGIN_URL . '/db-toolkit/data_report/required.png) left center no-repeat; padding:5px 8px;"></span></span>';
@@ -524,7 +520,7 @@ if (is_admin ()) {
                 parse_str($Defaults['_FormLayout'], $Columns);
             }
             $Return = '';
-            $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
+            $result = mysql_query("SHOW COLUMNS FROM `" . $Table . "`");
             if (mysql_num_rows($result) > 0) {
                 $Row = 'list_row4';
                 while ($row = mysql_fetch_assoc($result)) {
@@ -606,13 +602,13 @@ if (is_admin ()) {
         $VSel = '';
         $ISel = '';
 
-        if(!empty($Default)){
+        if (!empty($Default)) {
             $Part = explode('_', $Default);
-            if($Part[1] == 'show'){
+            if ($Part[1] == 'show') {
                 $VSel = 'checked="checked"';
                 $VClass = 'button-highlighted';
             }
-            if($Part[0] == 'index'){
+            if ($Part[0] == 'index') {
                 $ISel = 'checked="checked"';
                 $IClass = 'button-highlighted';
             }
@@ -656,26 +652,28 @@ if (is_admin ()) {
     // End Admin Functions
 }
 
-function dr_toolbarButton($Title, $Script = false, $Class = 'noicon', $Link = false, $Target = '_blank'){
+function dr_toolbarButton($Title, $Script = false, $Class = 'noicon', $Link = false, $Target = '_blank') {
 
     $onClick = '';
-    if(!empty($Script)){
-        $onClick = 'onClick="'.$Script.'"';
+    if (!empty($Script)) {
+        $onClick = 'onClick="' . $Script . '"';
     }
     $linkStart = '';
     $linkEnd = '';
-    if(!empty($Link)){
-        $linkStart = '<a href="'.$Link.'" target="'.$Target.'">';
+    if (!empty($Link)) {
+        $linkStart = '<a href="' . $Link . '" target="' . $Target . '">';
         $linkEnd = '</a>';
     }
 
 
-    return '<span class="fbutton"><div class="button add-new-h2" '.$onClick.'>'.$linkStart.'<span class="'.$Class.'">'.$Title.'</span>'.$linkEnd.'</div></span>';
+    return '<span class="fbutton"><div class="button add-new-h2" ' . $onClick . '>' . $linkStart . '<span class="' . $Class . '">' . $Title . '</span>' . $linkEnd . '</div></span>';
 }
-function dr_toolbarSeperator(){
+
+function dr_toolbarSeperator() {
     return;
     return '<div class="btnseparator"></div>';
 }
+
 function dr_lockFilters($EID) {
     //   vardump($_SESSION['reportFilters']);
     $setFilters = serialize($_SESSION['reportFilters'][$EID]);
@@ -694,41 +692,41 @@ function dr_buildInterfaceList() {
     global $wpdb;
     $apps = get_option('dt_int_Apps');
     //vardump($apps);
-    foreach($apps as $app=>$settings){
+    foreach ($apps as $app => $settings) {
 
         // for each App
         $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
-        $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" />'.$settings['name'].'</a>';
+        $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" />' . $settings['name'] . '</a>';
         $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
 
-            $appConfig = get_option('_'.$app.'_app');
-            $appGroups = array();
-            foreach ($appConfig['interfaces'] as $interface=>$access) {
-                $cfg = get_option($interface);
-                if(empty($cfg['_ItemGroup'])){
-                    $cfg['_ItemGroup'] = 'Ungrouped';
-                }
-                $appGroups[$cfg['_ItemGroup']][] = $cfg;
+        $appConfig = get_option('_' . $app . '_app');
+        $appGroups = array();
+        foreach ($appConfig['interfaces'] as $interface => $access) {
+            $cfg = get_option($interface);
+            if (empty($cfg['_ItemGroup'])) {
+                $cfg['_ItemGroup'] = 'Ungrouped';
             }
-            $Return .= "<li class=\"title\"><h2>Category</h2></li>";
-            foreach ($appGroups as $app => $state) {
+            $appGroups[$cfg['_ItemGroup']][] = $cfg;
+        }
+        $Return .= "<li class=\"title\"><h2>Category</h2></li>";
+        foreach ($appGroups as $app => $state) {
 
-                $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
-                $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" /> ' . $app . '</a>';
+            $Icon = WP_PLUGIN_URL . '/db-toolkit/data_report/application-home.png';
+            $Return .= '<li><a class="child"><img src="' . $Icon . '" align="absmiddle" /> ' . $app . '</a>';
 
-                if (!empty($appGroups[$app])) {
-                    $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
-                    $Return .= "<li class=\"title\"><h2>" . $app . "</h2></li>";
-                    foreach ($appGroups[$app] as $interface) {
-                        //vardump($interface);
-                        $IIcon = WP_PLUGIN_URL . '/db-toolkit/data_report/plus-button.png';
-                        $Return .= '<li><a onclick="formSetup_InsertInterface(\'' . $interface['ID'] . '\');"><img src="' . $IIcon . '" align="absmiddle" /> ' . $interface['_ReportDescription'] . '<div><span class="description">' . $interface['_ReportExtendedDescription'] . '</span></div></a>';
-                    }
-                    $Return .= '</ul>';
+            if (!empty($appGroups[$app])) {
+                $Return .= "<ul id=\"\" style=\"visibility: hidden; display: block;\">";
+                $Return .= "<li class=\"title\"><h2>" . $app . "</h2></li>";
+                foreach ($appGroups[$app] as $interface) {
+                    //vardump($interface);
+                    $IIcon = WP_PLUGIN_URL . '/db-toolkit/data_report/plus-button.png';
+                    $Return .= '<li><a onclick="formSetup_InsertInterface(\'' . $interface['ID'] . '\');"><img src="' . $IIcon . '" align="absmiddle" /> ' . $interface['_ReportDescription'] . '<div><span class="description">' . $interface['_ReportExtendedDescription'] . '</span></div></a>';
                 }
-
-                $Return .= '</li>';
+                $Return .= '</ul>';
             }
+
+            $Return .= '</li>';
+        }
         $Return .= '</ul>';
         $Return .= '</li>';
     }
@@ -854,6 +852,7 @@ function df_buildSetProcessors($Config) {
 
     return $Return;
 }
+
 function df_buildSetViewProcessors($Config) {
 
     if (empty($Config['_ViewProcessors'])) {
@@ -933,9 +932,10 @@ function df_listProcessors() {
     //<li><a onclick="">WOOT</a></li>
     return $Return;
 }
+
 function df_listViewProcessors() {
     //return '<li><a onclick="">'.__DIR__.'</a></li>';
-    if(!file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors')){
+    if (!file_exists(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors')) {
         return '<li><a>You dont have any view processors installed.</a></li>';
     }
     $processesDirs = opendir(WP_PLUGIN_DIR . '/db-toolkit/data_report/processors');
@@ -1002,6 +1002,7 @@ function df_addProcess($processor, $table) {
 
     return $Return;
 }
+
 function df_addViewProcess($processor, $table) {
 
     $Return = '';
@@ -1130,7 +1131,7 @@ function df_alignmentSetup($id, $Default = false) {
 }
 
 function df_FormWidthSetup($id, $Default = false) {
-    if(empty($Default)){
+    if (empty($Default)) {
         $Default = 'input-medium';
     }
     $Return = ' Form Field Size: <select name="Data[Content][_FormFieldWidth][' . $id . ']" id="FormFieldWidth_' . $id . '_settings">';
@@ -1174,13 +1175,13 @@ function df_FormWidthSetup($id, $Default = false) {
     $Return .= '</optgroup>';
     $Return .= '<optgroup label="Incremental">';
 
-        for($i=1; $i<=12; $i++){
-            $Sel = '';
-            if ($Default == 'span'.$i) {
-                $Sel = 'selected="selected"';
-            }
-            $Return .= '<option value="span'.$i.'" ' . $Sel . '>Span '.$i.'</option>';
+    for ($i = 1; $i <= 12; $i++) {
+        $Sel = '';
+        if ($Default == 'span' . $i) {
+            $Sel = 'selected="selected"';
         }
+        $Return .= '<option value="span' . $i . '" ' . $Sel . '>Span ' . $i . '</option>';
+    }
     $Return .= '</optgroup>';
     $Return .= '</select>';
     //'<input type="text" name="Data[Content][ImageSizeI]['.$id.']" value="100" class="textfield" size="3" maxlength="3" /> ';
@@ -1225,34 +1226,33 @@ function dr_cloneFindMater($Field, $Clones) {
     return $Field;
 }
 
-function olddr_findCloneParent($Clone, $Clones, $querySelects){
+function olddr_findCloneParent($Clone, $Clones, $querySelects) {
     // Clear out _Return_
     $preParent = $Clones[$Clone]['Master'];
     //echo $Clone.' - '.$preParent.'<br>';
-    if(!empty($querySelects[$Clone])){
+    if (!empty($querySelects[$Clone])) {
         $preParent = $querySelects[$Clone];
-    }elseif(!empty($querySelects[$preParent])){
+    } elseif (!empty($querySelects[$preParent])) {
         $preParent = $querySelects[$preParent];
     }
     $pattern = '__[a-zA-Z0-9]+';
-    preg_match('/'.$pattern.'/s', $preParent, $matches);
-    if(!empty($matches)){
+    preg_match('/' . $pattern . '/s', $preParent, $matches);
+    if (!empty($matches)) {
         $preParent = dr_findCloneParent($preParent, $Clones, $querySelects);
     }
     return $preParent;
 }
 
-
-function dr_findCloneParent($Clone, $Clones, $querySelects){
+function dr_findCloneParent($Clone, $Clones, $querySelects) {
     //echo $Clone.' - ';
     //vardump($Clones);
 
-    if(!empty($Clones[$Clone]['Master'])){
+    if (!empty($Clones[$Clone]['Master'])) {
         //echo $Clones[$Clone]['Master'].' - ';
-        if(!empty($querySelects[$Clones[$Clone]['Master']])){
+        if (!empty($querySelects[$Clones[$Clone]['Master']])) {
             $Clone = $querySelects[$Clones[$Clone]['Master']];
-        }else{
-            $Clone = $querySelects['_return_'.$Clones[$Clone]['Master']];
+        } else {
+            $Clone = $querySelects['_return_' . $Clones[$Clone]['Master']];
         }
         //echo '|'.$Clone.'|';
         if (substr($Clone, 0, 2) == '__') {
@@ -1260,7 +1260,7 @@ function dr_findCloneParent($Clone, $Clones, $querySelects){
         }
     }
     //echo $Clone.'<br />';
-return $Clone;
+    return $Clone;
 }
 
 function dr_processQuery($Config, $querySelects) {
@@ -1268,7 +1268,6 @@ function dr_processQuery($Config, $querySelects) {
 
     //vardump($querySelects);
     //vardump($Config['_CloneField']);
-
     //may need a for loop rather than a foreach.
     //return $querySelects;
     foreach ($querySelects as $Field => $preSelect) {
@@ -1276,42 +1275,40 @@ function dr_processQuery($Config, $querySelects) {
         $Select = $preSelect;
         $pattern = '__[a-zA-Z0-9]+';
         preg_match('/' . $pattern . '/s', $Select, $matches);
-        if(!empty($matches[0])){
+        if (!empty($matches[0])) {
             //vardump($matches);
             //echo $Select.' -> ';
             $Select = $matches[0];
             //echo $Select.' <br /> ';
         }
-        if(!empty($Config['_CloneField'][$Select])){
+        if (!empty($Config['_CloneField'][$Select])) {
             $CloneOf = $querySelects[$Select];
-            if(!empty($Config['_CloneField'][$CloneOf])){
-            //echo '++++ '.$Select.' ++++<br />';
-            $Select = dr_findCloneParent($Select, $Config['_CloneField'], $querySelects);
-            }else{
+            if (!empty($Config['_CloneField'][$CloneOf])) {
+                //echo '++++ '.$Select.' ++++<br />';
+                $Select = dr_findCloneParent($Select, $Config['_CloneField'], $querySelects);
+            } else {
                 $Select = $CloneOf;
             }
         }
 
 
-        if(!empty($matches[0])){
+        if (!empty($matches[0])) {
             //echo $Select.' - ';
             //echo $matches[0].'<br />';
             $Select = str_replace($matches[0], $Select, $preSelect);
             //echo $Select.'<br /><br />';
         }
-        if(strpos($Select , '.') <= 0){
+        if (strpos($Select, '.') <= 0) {
             $pattern = '\(([a-zA-Z0-9]+)\)';
             preg_match('/' . $pattern . '/s', $Select, $matches);
-            if(!empty($matches[1])){
-                $Select = str_replace($matches[1], 'prim.`'.$matches[1].'`', $Select);
-            }else{
-                $Select = 'prim.`'.$Select.'`';
+            if (!empty($matches[1])) {
+                $Select = str_replace($matches[1], 'prim.`' . $matches[1] . '`', $Select);
+            } else {
+                $Select = 'prim.`' . $Select . '`';
             }
         }
         $Processed[$Field] = $Select;
         //echo $Field.' - '.$Select.'<br />';
-
-
     }
 
 
@@ -1323,44 +1320,44 @@ function dr_processQuery($Config, $querySelects) {
 
     $pattern = '__[a-zA-Z0-9]+';
     $Selects = array();
-    foreach($querySelects as $Field=>$Select){
+    foreach ($querySelects as $Field => $Select) {
         $returnPrefix = '';
-        if(strpos($Field, '_return_') !== false){
+        if (strpos($Field, '_return_') !== false) {
             $subField = str_replace('_return_', '', $Field);
-            if(!empty($querySelects[$subField])){
+            if (!empty($querySelects[$subField])) {
                 $Select = $querySelects[$subField];
             }
         }
-        preg_match('/'.$pattern.'/s', $Select, $matches);
+        preg_match('/' . $pattern . '/s', $Select, $matches);
         $preSelect = $Select;
         $copySelectes = $querySelects;
-        if(!empty($matches[0])){
+        if (!empty($matches[0])) {
             unset($copySelectes[$Field]);
             $Select = dr_findCloneParent($matches[0], $Config['_CloneField'], $copySelectes);
         }
         preg_match('/[a-zA-Z0-9]+\(`(.*)`\)/s', $preSelect, $brackMatch);
-        if(!empty($brackMatch[0]) && !empty($matches[0])){
-            if(strpos($Select, '.') === false){
-               $Select = 'prim.`'.$Select.'`';
+        if (!empty($brackMatch[0]) && !empty($matches[0])) {
+            if (strpos($Select, '.') === false) {
+                $Select = 'prim.`' . $Select . '`';
             }
-          $Select = str_replace('`'.$brackMatch[1].'`', $Select, $brackMatch[0]);
+            $Select = str_replace('`' . $brackMatch[1] . '`', $Select, $brackMatch[0]);
         }
         preg_match('/[a-zA-Z0-9]+\(`(.*)`\)/s', $Select, $brackMatch);
-        if(!empty($brackMatch[0])){
-            if(strpos($brackMatch[1], '.') === false){
-               $pre = 'prim.`'.$brackMatch[1].'`';
+        if (!empty($brackMatch[0])) {
+            if (strpos($brackMatch[1], '.') === false) {
+                $pre = 'prim.`' . $brackMatch[1] . '`';
             }
-            $Select = str_replace('`'.$brackMatch[1].'`', $pre, $brackMatch[0]);
+            $Select = str_replace('`' . $brackMatch[1] . '`', $pre, $brackMatch[0]);
             //dump($brackMatch);
         }
-        if(strpos($Select, '.') === false){
-           $Select = 'prim.`'.$Select.'`';
+        if (strpos($Select, '.') === false) {
+            $Select = 'prim.`' . $Select . '`';
         }
         // Find anything with a bracket
 
         $Selects[$Field] = $Select;
     }
-return $Selects;
+    return $Selects;
 }
 
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false, $getOverride = false) {
@@ -1368,18 +1365,18 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // get element
     $Element = getelement($EID);
     $Config = $Element['Content'];
-    if(!empty($Config['_customFooterJavaScript'])){
+    if (!empty($Config['_customFooterJavaScript'])) {
         $_SESSION['dataform']['OutScripts'] .= "
-            ".stripslashes_deep($Config['_customFooterJavaScript'])."
+            " . stripslashes_deep($Config['_customFooterJavaScript']) . "
         ";
     }
-    if(!empty($getOverride)){
+    if (!empty($getOverride)) {
         parse_str($getOverride, $_GET);
     }
 
 //Filters will be picked up via Session value
 // Set Vars
-    if(empty($Page)){
+    if (empty($Page)) {
         $Page = 1;
     }
     if (!empty($Format)) {
@@ -1410,7 +1407,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     //global $ReportReturn;
 
     $ReportReturn = '';
-    if(empty($Config['_main_table']))
+    if (empty($Config['_main_table']))
         return 'No Table Selected';
     $queryJoin = '';
     $queryJoins = array();
@@ -1488,39 +1485,34 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 //setup Field Types
 
     foreach ($Config['_Field'] as $Field => $Type) {
-        if(empty($Type)){
+        if (empty($Type)) {
             //$querySelects[$Field] = $Field;
         }
         // explodes to:
         // [0] = Field plugin dir
         // [1] = Field plugin type
         $Config['_Field'][$Field] = explode('_', $Type);
-
     }
 
 //SetupHeaders
     // Start Table
     // Check for template
-    if (empty($Config['_UseListViewTemplate'])) {
-        $customClass= '';
-        if(!empty($Config['_ListTableClass'])){
-            $customClass= $Config['_ListTableClass'];
+
+        $customClass = '';
+        if (!empty($Config['_ListTableClass'])) {
+            $customClass = $Config['_ListTableClass'];
         }
 
-        $tableClass = 'class="data_report_Table '.$customClass.'"';
+        $tableClass = 'class="data_report_Table ' . $customClass . '"';
         if (is_admin ()) {
-            $tableClass = 'class="widefat data_report_Table_admin '.$customClass.'"';
+            $tableClass = 'class="widefat data_report_Table_admin ' . $customClass . '"';
         }
         $ReportReturn .= '<table width="100%" border="0" cellspacing="0" cellpadding="4" ' . $tableClass . ' id="data_report_' . $EID . '" style="cursor:default;">';
         //Start Headers Row
         //$ReportReturn .= '<caption>'.$Config['_ReportTitle'].'</caption>';
         $ReportReturn .= '<thead>';
         $ReportReturn .= '<tr>';
-    } else {
-        if (!empty($Config['_ListViewTemplatePreHeader'])) {
-            $ReportReturn .= $Config['_ListViewTemplatePreHeader'];
-        }
-    }
+
 
     foreach ($Config['_IndexType'] as $Field => $Type) {
         //echo 'ping';
@@ -1549,18 +1541,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             if (empty($Config['_WidthOverride'][$Field])) {
                 $Config['_WidthOverride'][$Field] = '';
             }
-            // Header Template Insert
-            if (!empty($Config['_UseListViewTemplate'])) {
-                if (!empty($Config['_ListViewTemplateHeader'])) {
-                    if (!empty($Config['_FieldTitle'][$Field])) {
-                        $preHeader = '<span>' . $Config['_FieldTitle'][$Field] . '</span>';
-                    } else {
-                        $preHeader = '<span>' . df_parseCamelCase($fieldTitle) . '</span>';
-                    }
-                    $PreHeader = str_replace('{{_Field}}', $preHeader, $Config['_ListViewTemplateHeader']);
-                    $ReportReturn .= $PreHeader;
-                }
-            } else {
 
                 $ReportReturn .= '<th nowrap="nowrap" scope="col" width="' . ($Config['_WidthOverride'][$Field] == '' ? '{{width_' . $Field . '}}px' : $Config['_WidthOverride'][$Field] . 'px') . '" ';
                 if (!empty($Config['_Sortable'][$Field])) {
@@ -1574,9 +1554,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 }
 
                 $ReportReturn .= '</th>';
-            }
+
             // Preset the selects from query
-            $querySelects[$Field] = $Field;// 'prim.`' . $Field . '`';
+            $querySelects[$Field] = $Field; // 'prim.`' . $Field . '`';
             // Set average width and min width
             $minWidth[$Field] = strlen($fieldTitle) * 8;
             $AvrageWidth[$Field] = array();
@@ -1592,7 +1572,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         //$querySelects[$Config['_ReturnFields'][0]] = 'prim.'.$Config['_ReturnFields'][0];
         foreach ($Config['_ReturnFields'] as $Field) {
             $newField = '_return_' . $Field;
-            $querySelects[$newField] = $Field;//'prim.`' . $Field . '`';
+            $querySelects[$newField] = $Field; //'prim.`' . $Field . '`';
         }
     }
     if (empty($Config['_Show_popup'])) {
@@ -1601,26 +1581,16 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
 
         if (!empty($ShowActionPanel)) {
-            if (!empty($Config['_UseListViewTemplate'])) {
-                if (!empty($Config['_ListViewTemplateHeader'])) {
-                    $PreHeader = str_replace('{{_Field}}', 'Action', $Config['_ListViewTemplateHeader']);
-                    $ReportReturn .= $PreHeader;
-                }
-            } else {
+
                 $ReportReturn .= '<th scope="col">';
                 $ReportReturn .= 'Action';
                 $ReportReturn .= '</th>';
-            }
+
         }
     }
-    if (!empty($Config['_UseListViewTemplate'])) {
-        if (!empty($Config['_ListViewTemplatePostHeader'])) {
-            $ReportReturn .= $Config['_ListViewTemplatePostHeader'];
-        }
-    } else {
+
         $ReportReturn .= '</tr>';
         $ReportReturn .= '</thead>';
-    }
     // End Headers setup
     // Build Query
     // field type filters
@@ -1681,8 +1651,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $WhereTag = " WHERE ";
         }
         foreach ($querySelects as $Key => $Field) {
-            if(!empty($Config['_IndexType'][$Field][0])){
-                echo $Field.'<br />';
+            if (!empty($Config['_IndexType'][$Field][0])) {
+                echo $Field . '<br />';
                 $preWhere[] = $Field . " LIKE '%" . $_SESSION['reportFilters'][$EID]['_keywords'] . "%' ";
                 // explode and serach parts
                 $parts = explode(',', $_SESSION['reportFilters'][$EID]['_keywords']);
@@ -1702,7 +1672,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     //vardump($Config['_CloneField']);    //vardump($querySelects);
     $preSelects = array();
     foreach ($querySelects as $AS => $selectField) {
-        $preSelects[] = $selectField . ' AS `'.$AS.'`';
+        $preSelects[] = $selectField . ' AS `' . $AS . '`';
     }
     $querySelect = implode(", \n", $preSelects);
     $queryWhere = implode(' AND ', $queryWhere);
@@ -1775,6 +1745,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     //dump($Queries);
     $CountQuery = "SELECT count(" . $countSelect . ") as Total FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . " \n " . $groupBy . "\n\n " . $countLimit . ";";
     $CountResult = mysql_query($CountQuery);
+
     if (!empty($entryCount)) {
         // Countr Rows
         while ($prCount = mysql_fetch_assoc($CountResult)) {
@@ -1802,8 +1773,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         $Config['_Items_Per_Page'] = $limitOveride;
     }
 
-    if(!empty($_SESSION['report_'.$EID]['limitOveride'])){
-            $Config['_Items_Per_Page'] = floatval($_SESSION['report_'.$EID]['limitOveride']);
+    if (!empty($_SESSION['report_' . $EID]['limitOveride'])) {
+        $Config['_Items_Per_Page'] = floatval($_SESSION['report_' . $EID]['limitOveride']);
     }
 
     if (!empty($Config['_Items_Per_Page'])) {
@@ -1836,9 +1807,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     if (!empty($Format)) {
         // XML Output
         if (strtolower($Format) == 'xml') {
-            $apiOut .= "    <page>".$Page."</page>\n";
-            $apiOut .= "    <totalpages>".$TotalPages."</totalpages>\n";
-            $apiOut .= "    <totalentries>".$Count['Total']."</totalentries>\n";
+            $apiOut .= "    <page>" . $Page . "</page>\n";
+            $apiOut .= "    <totalpages>" . $TotalPages . "</totalpages>\n";
+            $apiOut .= "    <totalentries>" . $Count['Total'] . "</totalentries>\n";
         }
         //json output
         if (strtolower($Format) == 'json') {
@@ -1850,24 +1821,24 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // Select Query
     //$Query = "SELECT count(b.Country) as TotalCountry, ".$querySelect." FROM `".$Config['_main_table']."` AS prim \n ".$queryJoin." \n ".$WhereTag." \n ".$queryWhere."\n GROUP BY b.Country \n ".$orderStr." \n ".$queryLimit.";"
 
-    if(!empty($Config['_useListTemplate']) && empty($Format)){
+    if (!empty($Config['_useListTemplate']) && empty($Format)) {
         $Media = $Element;
         ob_start();
         $Query = dr_BuildReportGrid($EID, $Page, $SortField, $SortDir, 'sql', $limitOveride, $wherePush);
         //$WrapperEl = 'div';
-        if(!empty($Config['_TemplateWrapper'])){
+        if (!empty($Config['_TemplateWrapper'])) {
             $WrapperEl = $Config['_TemplateWrapper'];
         }
         $Wrapperclasses = '';
-        if(!empty($Config['_TemplateClass'])){
+        if (!empty($Config['_TemplateClass'])) {
             $Wrapperclasses = $Config['_TemplateClass'];
         }
-        if(!empty($Config['_TemplateWrapper'])){
-            echo '<'.$WrapperEl.' id="reportPanel_'.$Media['ID'].'" class="interfaceWrapper '.$Wrapperclasses.'">';
+        if (!empty($Config['_TemplateWrapper'])) {
+            echo '<' . $WrapperEl . ' id="reportPanel_' . $Media['ID'] . '" class="interfaceWrapper ' . $Wrapperclasses . '">';
         }
         include('templatemode.php');
-        if(!empty($Config['_TemplateWrapper'])){
-        echo '</'.$WrapperEl.'>';
+        if (!empty($Config['_TemplateWrapper'])) {
+            echo '</' . $WrapperEl . '>';
         }
 
         return ob_get_clean();
@@ -1881,16 +1852,15 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         return $Data;
     }
 
-    if(!empty($Config['_UserQueryOveride']) && !empty($Config['_QueryOveride'])){
+    if (!empty($Config['_UserQueryOveride']) && !empty($Config['_QueryOveride'])) {
         $Query = $Config['_QueryOveride'];
 
         preg_match('/(LIMIT [ 0-9]+,[ 0-9]+)/', $Query, $Limits);
-        if(!empty($Limits[0])){
+        if (!empty($Limits[0])) {
             $Query = str_replace($Limits[0], $queryLimit, $Query);
-        }else{
+        } else {
             $Query .= $queryLimit;
         }
-
     }
 
 
@@ -1931,8 +1901,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         return $Query;
     }
 
-    if(!empty($exitNotice)){
-        return;//'<div id="'.$EID.'_wrapper"></div>';
+    if (!empty($exitNotice)) {
+        return; //'<div id="'.$EID.'_wrapper"></div>';
     }
 
 
@@ -1940,38 +1910,30 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
     // Run View Processes
 
-    if(!empty($Config['_ViewProcessors'])){
+    if (!empty($Config['_ViewProcessors'])) {
 
-        foreach($Config['_ViewProcessors'] as $viewProcess){
-            if(empty($_GET['format_'.$EID])){
+        foreach ($Config['_ViewProcessors'] as $viewProcess) {
+            if (empty($_GET['format_' . $EID])) {
                 //ignore on export
-                if(file_exists(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php')){
-                    include_once(DB_TOOLKIT.'data_report/processors/'.$viewProcess['_process'].'/functions.php');
-                    $func = 'pre_process_'.$viewProcess['_process'];
+                if (file_exists(DB_TOOLKIT . 'data_report/processors/' . $viewProcess['_process'] . '/functions.php')) {
+                    include_once(DB_TOOLKIT . 'data_report/processors/' . $viewProcess['_process'] . '/functions.php');
+                    $func = 'pre_process_' . $viewProcess['_process'];
                     $Result = $func($Result, $viewProcess, $Config, $EID);
-                    if(empty($Result)){
+                    if (empty($Result)) {
                         return;
                     }
                 }
             }
             //if(file_exists($viewProcess['_process']))
         }
-
     }
     //pre_process_
-
     //$Result = mysql_query($Query);
     if (!empty($Config['_chartOnly'])) {
         return '<div id="chart_' . $ChartID . '" style="height:' . $height . 'px;"></div>'; //$ReportReturn;
     }
     // Build Rows
-    if (!empty($Config['_UseListViewTemplate'])) {
-        if (!empty($Config['_ListViewTemplateContentWrapperStart'])) {
-            $ReportReturn .= $Config['_ListViewTemplateContentWrapperStart'];
-        }
-    } else {
-        $ReportReturn .= '<tbody>';
-    }
+    $ReportReturn .= '<tbody>';
     // Row number Increment
     $rowIndex = 1;
     // Set Row Style
@@ -1995,7 +1957,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if (!empty($Format)) {
             // XML Output
             if (strtolower($Format) == 'xml') {
-                $apiOut .= "    <entrycount>".count($Result)."</entrycount>\n";
+                $apiOut .= "    <entrycount>" . count($Result) . "</entrycount>\n";
             }
             //json output
             if (strtolower($Format) == 'json') {
@@ -2004,6 +1966,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
 
         //while($row = mysql_fetch_assoc($Result)) {
+
         foreach ($Result as $row) {
             // Switch Row Style
             //$Row = dais_rowswitch($Row);
@@ -2022,9 +1985,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     }
                 }
             }
-            if (empty($Config['_UseListViewTemplate'])) {
-                $ReportReturn .= '<tr class="' . $Row . ' itemRow_' . $EID . ' ' . $SelectedRow . '  report_entry" ref="' . $row['_return_' . $Config['_ReturnFields'][0]] . ' highlight" id="row_' . $EID . '_' . $rowIndex . '" >';
-            }
+            $ReportReturn .= '<tr class="' . $Row . ' itemRow_' . $EID . ' ' . $SelectedRow . '  report_entry" ref="' . $row['_return_' . $Config['_ReturnFields'][0]] . ' highlight" id="row_' . $EID . '_' . $rowIndex . '" >';
+
             // API Output
             if (!empty($Format)) {
                 // XML Output
@@ -2042,303 +2004,324 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     }
                 }
             }
-            // Output each Row
-            //dump($row);
-            if (!empty($Config['_UseListViewTemplate'])) {
-                if (!empty($Config['_ListViewTemplatePreContent'])) {
-                    $ReportReturn .= $Config['_ListViewTemplatePreContent'];
+
+
+
+            $ColumnCounter = 0;
+            //vardump($Config);
+            // action panels
+            // Edit Functions if no popup
+            $actionPanels = '';
+            if (!empty($ShowActionPanel)) {
+                $ViewLink = '';
+                $ActionWidth = 16;
+                if (!empty($Config['_Show_View'])) {
+                    $ActionWidth = $ActionWidth + 16;
+                    $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
+                    if (!is_admin()) {
+                        if (!empty($Config['_ItemViewPage'])) {
+                            $ReportVars = array();
+                            foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                            }
+                            // Get permalink
+                            $PageLink = get_permalink($Config['_ItemViewPage']);
+                            $Location = parse_url($PageLink);
+                            if (!empty($Location['query'])) {
+                                $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
+                                parse_str($Location['query'], $gets);
+                                $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
+                            } else {
+                                $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
+                            }
+                            $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
+                        }
+                    }
                 }
+                if (!empty($Config['_Show_Edit'])) {
+                    $ActionWidth = $ActionWidth + 16;
+                    if ($ViewLink != '') {
+                        $ViewLink .= " ";
+                    }
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                }
+                if (!empty($Config['_Show_Delete_action'])) {
+                    $ActionWidth = $ActionWidth + 16;
+                    if ($ViewLink != '') {
+                        $ViewLink .= " ";
+                    }
+                    if (!empty($_GET)) {
+                        $hasQuery = build_query($_GET);
+                    } else {
+                        $hasQuery = false;
+                    }
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\',\'' . $hasQuery . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
+                }
+                //vardump($Config);
+
+                $PreReportReturn = '<td class="' . $Row . ' action" width="' . $ActionWidth . '" scope="col" style="text-align:center;overflow:hidden;">';
+                $PreReportReturn .= $ViewLink; //'Edit | View';
+                $PreReportReturn .= '</td>';
+                $actionPanels .= $PreReportReturn;
             }
 
-            if (!empty($Config['_UseListViewTemplate'])) {
-                if (!empty($Config['_ListViewTemplateContent'])) {
-                    $PreReturn = str_replace('{{_FieldValue}}', $PreReportReturn, $Config['_ListViewTemplateContent']);
-                    foreach ($row as $fieldKey => $fieldValue) {
-                        if (function_exists($Config['_Field'][$fieldKey][0] . '_processValue')) {
-                            $processFunc = $Config['_Field'][$fieldKey][0] . '_processValue';
-                            $fieldValue = $processFunc($fieldValue, $Config['_Field'][$fieldKey][1], $fieldKey, $Config, $EID, $row);
-                        }
-                        if (!empty($Config['_FieldTitle'][$fieldKey])) {
-                            $name = $Config['_FieldTitle'][$fieldKey];
-                        } else {
-                            $name = df_parseCamelCase($fieldKey);
-                        }
-
-                        $PreReturn = str_replace('{{_' . $fieldKey . '_name}}', $name, $PreReturn);
-                        $PreReturn = str_replace('{{' . $fieldKey . '}}', $fieldValue, $PreReturn);
 
 
-                        //vardump($Config);
-                        //echo '<br />'.$fieldKey;
-                        //$PreReturn = str_replace('{{'.$fieldKey.'}}', $fieldValue, $PreReturn);
-                    }
 
-                    // substr
-
-                    preg_match("/\{\{([A-Za-z0-9]+)\|([0-9]+)\}\}/", $PreReturn, $returnMatches);
-                    if (!empty($returnMatches)) {
-                        $PreReturn = str_replace($returnMatches[0], substr(strip_tags($row[$returnMatches[1]]), 0, $returnMatches[2]) . '&hellip;', $PreReturn);
-                    }
+            // Show Action Panels on left
+            //$ReportReturn .= $actionPanels;
 
 
-                    $PreReturn = str_replace('{{_RowClass}}', $Row, $PreReturn);
-                    $PreReturn = str_replace('{{_SelectedClass}}', $SelectedRow, $PreReturn);
-                    $PreReturn = str_replace('{{_RowIndex}}', $rowIndex, $PreReturn);
-                    $PreReturn = str_replace('{{_UID}}', uniqid(), $PreReturn);
-                    $PreReturn = str_replace('{{_PageID}}', $Element['ParentDocument'], $PreReturn);
-                    $PreReturn = str_replace('{{_PageName}}', getdocument($Element['ParentDocument']), $PreReturn);
-                    $PreReturn = str_replace('{{_EID}}', $EID, $PreReturn);
-                    //Template based view / edit
-                    if (!empty($Config['_Show_View']) || !empty($Config['_Show_Edit'])) {
-                        $ViewLink = '';
-                        if (!empty($Config['_Show_View'])) {
-                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry(\"" . $row['_return_' . $Config['_ReturnFields'][0]] . "\", \"" . $EID . "\", \"" . $isModal . "\"); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
-                            if (!empty($Config['_ItemViewPage'])) {
-                                $ReportVars = array();
-                                foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                    $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
-                                }
-                                // Get permalink
-                                $PageLink = get_permalink($Config['_ItemViewPage']);
-                                $Location = parse_url($PageLink);
-                                if (!empty($Location['query'])) {
-                                    $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
-                                    parse_str($Location['query'], $gets);
-                                    $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
-                                } else {
-                                    $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                }
-                                $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
+            foreach ($Config['_IndexType'] as $Field => $Type) {
+                //foreach ($row as $Field => $Data) {
+                if ($Type[1] === 1)
+                    break;
+
+                $Data = $row[$Field];
+
+                if (!empty($Config['_IndexType'][$Field][1])) {
+                    if ($Config['_IndexType'][$Field][1] == 'show') {
+                        $outData = $Data;
+                        /// Capture value for Totals
+                        if (!empty($Config['_TotalsFields'][$Field]['Type'])) {
+                            switch ($Config['_TotalsFields'][$Field]['Type']) {
+                                case 'count':
+                                    //echo $Field.' = '.$Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']].'+1<br />';
+                                    $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] = $Count['TotalEntries'];
+                                    break;
+                                case 'sum':
+                                    //echo $Field.' = '.$Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']].' + '.$outData.'<br />';
+                                    $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] = $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] + $outData;
+                                    break;
+                                case 'avg':
+                                    //echo $Field.' = '.$Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']].' + '.$outData.'<br />';
+                                    $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] = $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] + $outData;
+                                    break;
                             }
                         }
-                        if (!empty($Config['_Show_Edit'])) {
-                            if ($ViewLink != '') {
-                                $ViewLink .= " ";
-                            }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+
+                        if (function_exists($Config['_Field'][$Field][0] . '_processValue')) {
+                            $processFunc = $Config['_Field'][$Field][0] . '_processValue';
+                            //						Value  field type
+                            $outData = $processFunc($Data, $Config['_Field'][$Field][1], $Field, $Config, $EID, $row);
                         }
-                        $PreReturn = str_replace('{{_ViewEdit}}', $ViewLink, $PreReturn); //'Edit | View';
-                        $PreReturn = str_replace('{{_ViewLink}}', $PageLink, $PreReturn); //'Edit | View';
-                    }
-                    $ReportReturn .= $PreReturn;
-                }
-                if (!empty($Config['_UseListViewTemplate'])) {
-                    if (!empty($Config['_ListViewTemplatePostContent'])) {
-                        $ReportReturn .= $Config['_ListViewTemplatePostContent'];
-                    }
-                }
-            } else {
-                if (empty($Config['_chartOnly'])) {
-                    $ColumnCounter = 0;
-                    //vardump($Config);
-                    // action panels
+                        // Capture columns average width for ato widths
+                        $AvrageWidth[$Field][] = strlen($outData) * 8;
 
-                    // Edit Functions if no popup
-                    $actionPanels = '';
-                    if (!empty($ShowActionPanel)) {
-                        $ViewLink = '';
-                        $ActionWidth = 16;
-                        if (!empty($Config['_Show_View'])) {
-                            $ActionWidth = $ActionWidth + 16;
-                            $ViewLink .= "<span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></span>";
-                            if(!is_admin()){
-                                if (!empty($Config['_ItemViewPage'])) {
-                                    $ReportVars = array();
-                                    foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                        $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
-                                    }
-                                    // Get permalink
-                                    $PageLink = get_permalink($Config['_ItemViewPage']);
-                                    $Location = parse_url($PageLink);
-                                    if (!empty($Location['query'])) {
-                                        $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
-                                        parse_str($Location['query'], $gets);
-                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
-                                    } else {
-                                        $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                    }
-                                    $ViewLink = "<a href=\"" . $PageLink . "\"><img src=\"" . WP_PLUGIN_URL . "/db-toolkit/data_report/css/images/magnifier.png\" width=\"16\" height=\"16\" alt=\"View\" title=\"View\" border=\"0\" align=\"absmiddle\" /></a>";
-                                }
-                            }
+
+                        // Apply keyword Fitler Highlight
+                        if (!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
+                            //$outData = str_replace($_SESSION['reportFilters'][$EID]['_keywords'], '<strong>'.$_SESSION['reportFilters'][$EID]['_keywords'].'</strong>', $outData);
+                            //$outData = str_replace(ucwords($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.ucwords($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
+                            //$outData = str_replace(strtoupper($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtoupper($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
+                            //$outData = str_replace(strtolower($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtolower($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
                         }
-                        if (!empty($Config['_Show_Edit'])) {
-                            $ActionWidth = $ActionWidth + 16;
-                            if ($ViewLink != '') {
-                                $ViewLink .= " ";
-                            }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+
+                        // set row output
+                        //Check if field is in totals and is allowed inline
+                        $Location = 'inline';
+                        if (!empty($Config['_TotalsFields'][$Field]['Location'])) {
+                            $Location = $Config['_TotalsFields'][$Field]['Location'];
                         }
-                        if (!empty($Config['_Show_Delete_action'])) {
-                            $ActionWidth = $ActionWidth + 16;
-                            if ($ViewLink != '') {
-                                $ViewLink .= " ";
+                        if ($Location == 'inline' || $Location == 'headerinline' || $Location == 'footerinline') {
+                            // selection highlighting (experimental)
+                            $sortClass = '';
+                            if ($_SESSION['report_' . $EID]['SortField'] == $Field) {
+                                $sortClass = 'column_sorting_' . $_SESSION['report_' . $EID]['SortDir'];
                             }
-                            if(!empty($_GET)){
-                                $hasQuery = build_query($_GET);
-                            }else{
-                                $hasQuery = false;
-                            }
-                            $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\',\''.$hasQuery.'\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
-                        }
-                        //vardump($Config);
+                            $itemID = uniqid('');
+                            // Add Reload Highlighting
+                            $LiveHighlight = '';
+                            $ReportReturn .= '<td class="' . $Row . ' ' . $sortClass . ' ' . $LiveHighlight . '" scope="col" id="' . $itemID . '" ref="itemRow_' . $EID . '" width="' . ($Config['_WidthOverride'][$Field] == '' ? '{{width_' . $Field . '}}px' : $Config['_WidthOverride'][$Field] . 'px') . '" style="text-align:' . $Config['_Justify'][$Field] . '; ">';
+                            //inline editing
+                            if (!empty($Config['_InlineEdit'][$Field])) {
+                                $Req = 'inlineedit';
+                                $FieldSet = $Config['_Field'][$Field];
+                                //$ReportReturn .= WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php';
+                                ob_start();
+                                $Defaults[$Field] = $row['_sourceid_' . $Field];
+                                include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $FieldSet[0] . '/conf.php');
+                                include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $FieldSet[0] . '/input.php');
+                                $ReportReturn .= ob_get_clean();
+                            } else {
+                                $PreReportReturn = '';
+                                // Make View Item Link If page is set
+                                if (is_admin ()) {
+                                    //vardump($Config);
+                                    if (!empty($Config['_ItemViewInterface'])) {
+                                        // Create return link
+                                        $ReportVars = array();
+                                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                        }
+                                        // Get permalink
+                                        // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
+                                        if ($_GET['page'] != 'dbt_builder') {
+                                            if (!empty($Config['_SetDashboard'])) {
+                                                $Interface = get_option($EID);
+                                                $app = get_option('_' . $Interface['_Application'] . '_app');
 
-                        $PreReportReturn = '<td class="' . $Row . ' action" width="' . $ActionWidth . '" scope="col" style="text-align:center;overflow:hidden;">';
-                        $PreReportReturn .= $ViewLink; //'Edit | View';
-                        $PreReportReturn .= '</td>';
-                        $actionPanels .= $PreReportReturn;
-                    }
-
-
-
-
-                    // Show Action Panels on left
-                    //$ReportReturn .= $actionPanels;
-
-
-                    foreach($Config['_IndexType'] as $Field=>$Type){
-                    //foreach ($row as $Field => $Data) {
-                        if($Type[1] === 1)
-                            break;
-
-                        if(empty($row[$Field]))
-                            $row[$Field] = '';
-                        $Data = $row[$Field];
-
-                        if (!empty($Config['_IndexType'][$Field][1])) {
-                            if ($Config['_IndexType'][$Field][1] == 'show') {
-                                $outData = $Data;
-                                /// Capture value for Totals
-                                if (!empty($Config['_TotalsFields'][$Field]['Type'])) {
-                                    switch ($Config['_TotalsFields'][$Field]['Type']) {
-                                        case 'count':
-                                            //echo $Field.' = '.$Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']].'+1<br />';
-                                            $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] = $Count['TotalEntries'];
-                                            break;
-                                        case 'sum':
-                                            //echo $Field.' = '.$Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']].' + '.$outData.'<br />';
-                                            $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] = $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] + $outData;
-                                            break;
-                                        case 'avg':
-                                            //echo $Field.' = '.$Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']].' + '.$outData.'<br />';
-                                            $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] = $Config['_TotalsFields'][$Field][$Config['_TotalsFields'][$Field]['Type']] + $outData;
-                                            break;
-                                    }
-                                }
-
-                                if (function_exists($Config['_Field'][$Field][0] . '_processValue')) {
-                                    $processFunc = $Config['_Field'][$Field][0] . '_processValue';
-                                    //						Value  field type					 Field	 element config
-                                    $outData = $processFunc($Data, $Config['_Field'][$Field][1], $Field, $Config, $EID, $row);
-                                }
-                                // Capture columns average width for ato widths
-                                $AvrageWidth[$Field][] = strlen($outData) * 8;
-
-
-                                // Apply keyword Fitler Highlight
-                                if (!empty($_SESSION['reportFilters'][$EID]['_keywords'])) {
-                                    //$outData = str_replace($_SESSION['reportFilters'][$EID]['_keywords'], '<strong>'.$_SESSION['reportFilters'][$EID]['_keywords'].'</strong>', $outData);
-                                    //$outData = str_replace(ucwords($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.ucwords($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
-                                    //$outData = str_replace(strtoupper($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtoupper($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
-                                    //$outData = str_replace(strtolower($_SESSION['reportFilters'][$EID]['_keywords']), '<strong>'.strtolower($_SESSION['reportFilters'][$EID]['_keywords']).'</strong>', $outData);
-                                }
-
-                                // set row output
-                                //Check if field is in totals and is allowed inline
-                                $Location = 'inline';
-                                if (!empty($Config['_TotalsFields'][$Field]['Location'])) {
-                                    $Location = $Config['_TotalsFields'][$Field]['Location'];
-                                }
-                                if ($Location == 'inline' || $Location == 'headerinline' || $Location == 'footerinline') {
-                                    // selection highlighting (experimental)
-                                    $sortClass = '';
-                                    if ($_SESSION['report_' . $EID]['SortField'] == $Field) {
-                                        $sortClass = 'column_sorting_' . $_SESSION['report_' . $EID]['SortDir'];
-                                    }
-                                    $itemID = uniqid('');
-                                    // Add Reload Highlighting
-                                    $LiveHighlight = '';
-                                    $ReportReturn .= '<td class="' . $Row . ' ' . $sortClass . ' ' . $LiveHighlight . '" scope="col" id="' . $itemID . '" ref="itemRow_' . $EID . '" width="' . ($Config['_WidthOverride'][$Field] == '' ? '{{width_' . $Field . '}}px' : $Config['_WidthOverride'][$Field] . 'px') . '" style="text-align:' . $Config['_Justify'][$Field] . '; ">';
-                                    //inline editing
-                                    if (!empty($Config['_InlineEdit'][$Field])) {
-                                        $Req = 'inlineedit';
-                                        $FieldSet = $Config['_Field'][$Field];
-                                        //$ReportReturn .= WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/'.$FieldSet[0].'/input.php';
-                                        ob_start();
-                                        $Defaults[$Field] = $row['_sourceid_' . $Field];
-                                        include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $FieldSet[0] . '/conf.php');
-                                        include(WP_PLUGIN_DIR . '/db-toolkit/data_form/fieldtypes/' . $FieldSet[0] . '/input.php');
-                                        $ReportReturn .= ob_get_clean();
-                                    } else {
-                                        $PreReportReturn = '';
-                                        // Make View Item Link If page is set
-                                        if (is_admin ()) {
-                                            //vardump($Config);
-                                            if (!empty($Config['_ItemViewInterface'])) {
-                                                // Create return link
-                                                $ReportVars = array();
-                                                foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                                    $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                                if (!empty($app['landing'])) {
+                                                    $pageLoc = 'app_' . $Interface['_Application'];
+                                                } else {
+                                                    $pageLoc = $EID;
                                                 }
-                                                // Get permalink
-                                                // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
-                                                if($_GET['page']!= 'dbt_builder'){
-                                                    if(!empty($Config['_SetDashboard'])){
-                                                        $Interface = get_option($EID);
-                                                        $app = get_option('_'.$Interface['_Application'].'_app');
-
-                                                        if(!empty($app['landing'])){
-                                                            $pageLoc = 'app_'.$Interface['_Application'];
-                                                        }else{
-                                                            $pageLoc = $EID;
-                                                        }
-                                                        if(!empty($app['docked'])){
-                                                            $PageLink = 'admin.php?page='.$pageLoc.'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                        }else{
-                                                            $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                        }
-
-                                                    }else{
-                                                        $PageLink = 'admin.php?page='.$_GET['page'].'&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                    }
-                                                }else{
+                                                if (!empty($app['docked'])) {
+                                                    $PageLink = 'admin.php?page=' . $pageLoc . '&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                } else {
                                                     $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }
-                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\">";
+                                            } else {
+                                                $PageLink = 'admin.php?page=' . $_GET['page'] . '&sub=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                             }
                                         } else {
+                                            $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                        }
+                                        $PreReportReturn .= "<a href=\"" . $PageLink . "\">";
+                                    }
+                                } else {
 
-                                            if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
-                                                // Create return link
-                                                $url = (!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+                                    if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])) {
+                                        // Create return link
+                                        $url = (!empty($_SERVER['HTTPS'])) ? "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
-                                                $url = strtok($url, '?');
+                                        $url = strtok($url, '?');
+                                        $ReportVars = array();
+
+
+
+                                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                        }
+                                        // Get permalink
+                                        // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
+                                        $op = '?';
+                                        if (strpos($url, '?') !== false) {
+                                            $op = '&';
+                                        }
+                                        $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
+                                        $PageLink = $url . $op . $sendString;
+
+                                        //$sendString = implode('&', $ReturnFields);
+                                        //$PreReportReturn .= '<a id href="#'.$Config['_ItemViewInterface'].'" onclick="dr_pushResult(\''.$Config['_ItemViewInterface'].'\', \''.$sendString.'\'); return false;">'.$outData.'</a>';
+
+                                        $PreReportReturn .= "<a href=\"" . $PageLink . "\" onclick=\"dr_pushResult('" . $Config['_ItemViewInterface'] . "', '" . $sendString . "'); return false;\" >";
+
+
+                                        //$PreReportReturn .= "<a href=\"" . $PageLink . "\">";
+                                    }
+                                    if (!empty($Config['_ItemViewPage'])) {
+                                        // Create return link
+
+                                        $ReportVars = array();
+                                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
+                                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
+                                        }
+                                        // Get permalink
+                                        $PageLink = get_permalink($Config['_ItemViewPage']);
+                                        $Location = parse_url($PageLink);
+                                        if (!empty($Location['query'])) {
+                                            $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
+                                            parse_str($Location['query'], $gets);
+                                            $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
+                                        } else {
+                                            $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                        }
+
+                                        $PreReportReturn .= "<a href=\"" . $PageLink . "\" >";
+                                    }
+                                }
+                                $ReturnFields = array();
+                                if (is_array($Config['_ReturnFields'])) {
+                                    foreach ($Config['_ReturnFields'] as $ReturnField) {
+                                        $ReturnFields[] = $ReturnField . '=' . urlencode($row['_return_' . $ReturnField]);
+                                    }
+                                }
+                                //$ReturnMix = implode('&', $ReturnFields);
+                                //$PreReportReturn .= '<a href="'.getdocument($_GET['PageData']['ID']).'#'.$ReturnMix.'">'.stripslashes($outData).'</a>';
+                                // CREATE redirect pushing
+                                if (!empty($Config['_layoutTemplate']['_Fields'][$Field])) {
+                                    if (!empty($outData)) {
+                                        $before = $Config['_layoutTemplate']['_Fields'][$Field]['_before'];
+                                        $after = $Config['_layoutTemplate']['_Fields'][$Field]['_after'];
+                                        foreach ($row as $repField => $repValue) {
+                                            $before = str_replace('{{' . $repField . '}}', $repValue, $before);
+                                            $after = str_replace('{{' . $repField . '}}', $repValue, $after);
+                                        }
+                                        $PreReportReturn .= $before;
+                                    }
+                                }
+                                $PreReportReturn .= $outData;
+                                if (!empty($Config['_layoutTemplate']['_Fields'][$Field])) {
+                                    if (!empty($outData)) {
+                                        $PreReportReturn .= $after;
+                                    }
+                                }
+
+
+                                // API Output
+                                if (!empty($Format)) {
+                                    // XML Output
+                                    if (strtolower($Format) == 'xml') {
+                                        if (!is_integer($outData)) {
+                                            $apiOut .= "        <" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
+                                        } else {
+                                            $apiOut .= "	<" . $Field . ">" . stripslashes($outData) . "</" . $Field . ">\n";
+                                        }
+                                    }
+                                    // json Output
+                                    if (strtolower($Format) == 'json') {
+                                        $apiOutput['entries'][$jsonIndex][$Field] = $outData;
+                                        //echo $outData;
+                                    }
+                                    // PDF output
+                                    if (strtolower($Format) == 'pdf') {
+                                        $apiOutput[$pdfIndex][$Field] = stripslashes($outData);
+                                        if (!empty($_SESSION['reportFilters'][$EID][$Field])) {
+                                            $apiOutput['filters'][$Field][stripslashes($outData)] = stripslashes($outData);
+                                        }
+                                    }
+                                }
+                                // Close link
+                                if (!empty($Config['_ItemViewPage'])) {
+                                    $PreReportReturn .= "</a>";
+                                }
+                                if (!empty($Config['_ItemViewInterface'])) {
+                                    $PreReportReturn .= "</a>";
+                                }
+                                if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])) {
+                                    $PreReportReturn .= "</a>";
+                                }
+                            }
+                            $ReportReturn .= $PreReportReturn;
+                            if (!empty($Config['_Show_popup'])) {
+
+                                if ($ColumnCounter === 0) {
+                                    // Add inline actions
+                                    $ViewLink = '';
+                                    $ActionWidth = 16;
+                                    if (!empty($Config['_Show_View'])) {
+                                        $ActionWidth = $ActionWidth + 16;
+                                        $ViewLink['view'] = "<a href=\"#\" onclick=\"return false;\"><span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\">View</span></a>";
+                                        if (is_admin ()) {
+                                            if (!empty($Config['_ItemViewInterface'])) {
                                                 $ReportVars = array();
-
-
-
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
                                                     $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
                                                 }
                                                 // Get permalink
-                                                // interface admin.php?page=Database_Toolkit&renderinterface=dt_intfc4c04c77ed928a
-                                                $op = '?';
-                                                if(strpos($url, '?') !== false){
-                                                    $op = '&';
+                                                // check if its in a menu
+                                                $inf = get_option($Config['_ItemViewInterface']);
+
+                                                if (empty($inf['_ItemGroup']) && empty($inf['_interfaceName'])) {
+                                                    $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
+                                                } else {
+                                                    $PageLink = 'admin.php?page=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }
-                                                $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
-                                                $PageLink = $url. $op . $sendString;
-
-                                                //$sendString = implode('&', $ReturnFields);
-                                                //$PreReportReturn .= '<a id href="#'.$Config['_ItemViewInterface'].'" onclick="dr_pushResult(\''.$Config['_ItemViewInterface'].'\', \''.$sendString.'\'); return false;">'.$outData.'</a>';
-
-                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\" onclick=\"dr_pushResult('".$Config['_ItemViewInterface']."', '".$sendString."'); return false;\" >";
-
-
-                                                //$PreReportReturn .= "<a href=\"" . $PageLink . "\">";
+                                                $ViewLink['view'] = "<a href=\"" . $PageLink . "\">View</a>";
                                             }
+                                        } else {
                                             if (!empty($Config['_ItemViewPage'])) {
-                                                // Create return link
-
                                                 $ReportVars = array();
                                                 foreach ($Config['_ReturnFields'] as $ReportReturnField) {
                                                     $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
@@ -2353,186 +2336,65 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                                                 } else {
                                                     $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
                                                 }
-
-                                                $PreReportReturn .= "<a href=\"" . $PageLink . "\" >";
+                                                $ViewLink['view'] = "<a href=\"" . $PageLink . "\">View</a>";
                                             }
-                                        }
-                                        $ReturnFields = array();
-                                        if (is_array($Config['_ReturnFields'])) {
-                                            foreach ($Config['_ReturnFields'] as $ReturnField) {
-                                                $ReturnFields[] = $ReturnField . '=' . urlencode($row['_return_' . $ReturnField]);
-                                            }
-                                        }
-                                        //$ReturnMix = implode('&', $ReturnFields);
-                                        //$PreReportReturn .= '<a href="'.getdocument($_GET['PageData']['ID']).'#'.$ReturnMix.'">'.stripslashes($outData).'</a>';
-
-                                        // CREATE redirect pushing
-                                            if(!empty($Config['_layoutTemplate']['_Fields'][$Field])){
-                                                if(!empty($outData)){
-                                                    $before = $Config['_layoutTemplate']['_Fields'][$Field]['_before'];
-                                                    $after = $Config['_layoutTemplate']['_Fields'][$Field]['_after'];
-                                                    foreach($row as $repField=>$repValue){
-                                                        $before = str_replace('{{'.$repField.'}}', $repValue, $before);
-                                                        $after = str_replace('{{'.$repField.'}}', $repValue, $after);
-                                                    }
-                                                    $PreReportReturn .= $before;
-                                                }
-                                            }
-                                            $PreReportReturn .= $outData;
-                                            if(!empty($Config['_layoutTemplate']['_Fields'][$Field])){
-                                                if(!empty($outData)){
-                                                    $PreReportReturn .= $after;
-                                                }
-                                            }
-
-
-                                        // API Output
-                                        if (!empty($Format)) {
-                                            // XML Output
-                                            if (strtolower($Format) == 'xml') {
-                                                if(!is_integer($outData)){
-                                                    $apiOut .= "        <" . $Field . "><![CDATA[" . stripslashes($outData) . "]]></" . $Field . ">\n";
-                                                }else{
-                                                    $apiOut .= "	<" . $Field . ">" .stripslashes($outData). "</" . $Field . ">\n";
-                                                }
-                                            }
-                                            // json Output
-                                            if (strtolower($Format) == 'json') {
-                                                $apiOutput['entries'][$jsonIndex][$Field] = $outData;
-                                                //echo $outData;
-                                            }
-                                            // PDF output
-                                            if (strtolower($Format) == 'pdf') {
-                                                $apiOutput[$pdfIndex][$Field] = stripslashes($outData);
-                                                if (!empty($_SESSION['reportFilters'][$EID][$Field])) {
-                                                    $apiOutput['filters'][$Field][stripslashes($outData)] = stripslashes($outData);
-                                                }
-                                            }
-                                        }
-                                        // Close link
-                                        if (!empty($Config['_ItemViewPage'])) {
-                                            $PreReportReturn .= "</a>";
-                                        }
-                                        if (!empty($Config['_ItemViewInterface'])) {
-                                            $PreReportReturn .= "</a>";
-                                        }
-                                         if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
-                                             $PreReportReturn .= "</a>";
-                                         }
-                                    }
-                                    $ReportReturn .= $PreReportReturn;
-                                    if (!empty($Config['_Show_popup'])) {
-
-                                        if ($ColumnCounter === 0) {
-                                            // Add inline actions
-                                            $ViewLink = '';
-                                            $ActionWidth = 16;
-                                            if (!empty($Config['_Show_View'])) {
-                                                $ActionWidth = $ActionWidth + 16;
-                                                $ViewLink['view'] = "<a href=\"#\" onclick=\"return false;\"><span style=\"cursor:pointer;\" onclick=\"df_loadEntry('" . $row['_return_' . $Config['_ReturnFields'][0]] . "', '" . $EID . "', " . $isModal . "); return false;\">View</span></a>";
-                                                if (is_admin ()) {
-                                                    if (!empty($Config['_ItemViewInterface'])) {
-                                                        $ReportVars = array();
-                                                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
-                                                        }
-                                                        // Get permalink
-
-                                                        // check if its in a menu
-                                                        $inf = get_option($Config['_ItemViewInterface']);
-
-                                                        if(empty($inf['_ItemGroup']) && empty($inf['_interfaceName'])){
-                                                            $PageLink = 'admin.php?page=dbt_builder&renderinterface=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                        }else{
-                                                            $PageLink = 'admin.php?page=' . $Config['_ItemViewInterface'] . '&' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                        }
-                                                        $ViewLink['view'] = "<a href=\"" . $PageLink . "\">View</a>";
-
-
-                                                    }
-                                                } else {
-                                                    if (!empty($Config['_ItemViewPage'])) {
-                                                        $ReportVars = array();
-                                                        foreach ($Config['_ReturnFields'] as $ReportReturnField) {
-                                                            $ReportVars[$ReportReturnField] = urlencode($row['_return_' . $ReportReturnField]);
-                                                        }
-                                                        // Get permalink
-                                                        $PageLink = get_permalink($Config['_ItemViewPage']);
-                                                        $Location = parse_url($PageLink);
-                                                        if (!empty($Location['query'])) {
-                                                            $PageLink = str_replace('?' . $Location['query'], '', $PageLink);
-                                                            parse_str($Location['query'], $gets);
-                                                            $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query(array_merge($gets, $ReportVars)));
-                                                        } else {
-                                                            $PageLink = $PageLink . '?' . htmlspecialchars_decode(http_build_query($ReportVars));
-                                                        }
-                                                        $ViewLink['view'] = "<a href=\"" . $PageLink . "\">View</a>";
-                                                    }
-                                                }
-                                            }
-                                            if (!empty($Config['_Show_Edit'])) {
-                                                $ActionWidth = $ActionWidth + 16;
-
-                                                $ViewLink['edit'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');">Edit</span></a>';
-                                            }
-                                            if (!empty($Config['_Show_Delete_action'])) {
-                                                $ActionWidth = $ActionWidth + 16;
-
-                                                $ViewLink['delete'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" class="delete" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');">Delete</span></a>';
-                                            }
-                                            //vardump($Config);
-                                            //$PreReportReturn = '<td class="'.$Row.' action" width="'.$ActionWidth.'" scope="col" style="text-align:center;overflow:hidden;">';
-                                            $ReportReturn .= '<div class="row-actions">' . implode(' | ', $ViewLink) . '</div>'; //'Edit | View';
-                                            //$PreReportReturn .= '</td>';
-                                            //$ReportReturn .= $PreReportReturn;
                                         }
                                     }
-                                    $ReportReturn .= '</td>';
+                                    if (!empty($Config['_Show_Edit'])) {
+                                        $ActionWidth = $ActionWidth + 16;
+
+                                        $ViewLink['edit'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');">Edit</span></a>';
+                                    }
+                                    if (!empty($Config['_Show_Delete_action'])) {
+                                        $ActionWidth = $ActionWidth + 16;
+
+                                        $ViewLink['delete'] = '<a href="#" onclick="return false;"><span style="cursor:pointer;" class="delete" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');">Delete</span></a>';
+                                    }
+                                    //vardump($Config);
+                                    //$PreReportReturn = '<td class="'.$Row.' action" width="'.$ActionWidth.'" scope="col" style="text-align:center;overflow:hidden;">';
+                                    $ReportReturn .= '<div class="row-actions">' . implode(' | ', $ViewLink) . '</div>'; //'Edit | View';
+                                    //$PreReportReturn .= '</td>';
+                                    //$ReportReturn .= $PreReportReturn;
                                 }
                             }
-                        }
-                        $ColumnCounter++;
-                    }
-
-                    // API Output
-                    if (!empty($Format)) {
-                        // XML Output
-                        if (strtolower($Format) == 'xml') {
-                            $apiOut .= "    </entry>\n";
-                        }
-                        // json Output
-                        if (strtolower($Format) == 'json') {
-                            $jsonIndex++;
-                        }
-                        //PDF Output
-                        if (strtolower($Format) == 'pdf') {
-                            $pdfIndex++;
+                            $ReportReturn .= '</td>';
                         }
                     }
+                }
+                $ColumnCounter++;
+            }
 
-                    // Show Action Panelson right
-                    $ReportReturn .= $actionPanels;
-
-                    $ReportReturn .= '</tr>';
-
-                    // Increment row index
-                    $rowIndex++;
+            // API Output
+            if (!empty($Format)) {
+                // XML Output
+                if (strtolower($Format) == 'xml') {
+                    $apiOut .= "    </entry>\n";
+                }
+                // json Output
+                if (strtolower($Format) == 'json') {
+                    $jsonIndex++;
+                }
+                //PDF Output
+                if (strtolower($Format) == 'pdf') {
+                    $pdfIndex++;
                 }
             }
-        }
 
+            // Show Action Panelson right
+            $ReportReturn .= $actionPanels;
+
+            $ReportReturn .= '</tr>';
+
+            // Increment row index
+            $rowIndex++;
+        }
     }
     //echo mysql_error();
-    if (!empty($Config['_UseListViewTemplate'])) {
 
-        if (!empty($Config['_ListViewTemplateContentWrapperEnd'])) {
-            $ReportReturn .= $Config['_ListViewTemplateContentWrapperEnd'];
-        }
-    } else {
         // Close off Table end content
         $ReportReturn .= '</tbody>';
         $ReportReturn .= '</table>';
-    }
+
 
 
 
@@ -2568,11 +2430,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if ($toPos > $Count['Total']) {
             $toPos = $Count['Total'];
         }
-        if (empty($Config['_UseListViewTemplate'])) {
-
             $pageLink = '';
-            if(!empty($_SERVER['QUERY_STRING'])){
-                $pageLink = $_SERVER['QUERY_STRING'].'&';
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $pageLink = $_SERVER['QUERY_STRING'] . '&';
             }
 
             //$ReportReturn .= '<div style="padding:3px;" class="list_row3">';
@@ -2588,20 +2448,20 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 $ReportReturn .= '<span class="displaying-num">' . $nothingFound . '</span>';
             } else {
                 $footerPrefix = ( $Start + 1) . ' - ' . $toPos . ' of ';
-                if(empty($Config['_Items_Per_Page'])){
+                if (empty($Config['_Items_Per_Page'])) {
                     $footerPrefix = '';
                 }
-                $ReportReturn .= '<span class="displaying-num">'.$footerPrefix.$Count['Total'] . ' Items</span>';
+                $ReportReturn .= '<span class="displaying-num">' . $footerPrefix . $Count['Total'] . ' Items</span>';
             }
             //$ReportReturn .= '<div class="reportFooter_totals">';
             if ($TotalPages > 1) {
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
 
-                $ReportReturn .= '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Prev . '" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
                 $ReportReturn .= '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
-                $ReportReturn .= '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Next . '" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $TotalPages . '" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
             }
 
@@ -2609,43 +2469,6 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $ReportReturn .= '<br class="clear"></div>';
             $ReportReturn .= '</div>';
 
-
-        } else {
-            if (!empty($Config['_ListViewTemplatePreFooter'])) {
-                $ReportReturn .= $Config['_ListViewTemplatePreFooter'];
-            }
-            if (!empty($Config['_ListViewTemplateFooter'])) {
-
-                $prevbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
-                $pagejump = '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_' . $EID . '" style="width:30px; font-size:11px;" value="' . $Page . '" onkeypress="dr_pageInput(\'' . $EID . '\', this.value);" /> of ' . $TotalPages . '</div>';
-                $nextbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/next.gif" width="27" height="17" alt="Next" align="absmiddle" /></div></div>';
-
-                if ($Count['Total'] == 0) {
-                    $nothingFound = 'Nothing Found';
-                    if (!empty($Config['_NoResultsText'])) {
-                        $nothingFound = $Config['_NoResultsText'];
-                    }
-                    $itemcount = '';
-                    $noentries = $nothingFound;
-                } else {
-                    $noentries = '';
-                    $itemcount = ($Start + 1) . ' - ' . $toPos . ' of ' . $Count['Total'] . ' Items';
-                }
-
-                $PreReturn = $Config['_ListViewTemplateFooter'];
-
-                $PreReturn = str_replace('{{_footer_prev}}', $prevbutton, $PreReturn);
-                $PreReturn = str_replace('{{_footer_next}}', $nextbutton, $PreReturn);
-                $PreReturn = str_replace('{{_footer_page_jump}}', $pagejump, $PreReturn);
-                $PreReturn = str_replace('{{_footer_item_count}}', $itemcount, $PreReturn);
-                $PreReturn = str_replace('{{_footer_no_entries}}', $noentries, $PreReturn);
-
-                $ReportReturn .= $PreReturn;
-            }
-            if (!empty($Config['_ListViewTemplatePostFooter'])) {
-                $ReportReturn .= $Config['_ListViewTemplatePostFooter'];
-            }
-        }
     }
     //query
     if (is_admin ()) {
@@ -2780,7 +2603,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     }
 
 // Set Auto Widths to Averages
-    if(!empty($AvrageWidth)){
+    if (!empty($AvrageWidth)) {
         foreach ($AvrageWidth as $Field => $Value) {
             $Tmp = 0;
             foreach ($Value as $Num) {
@@ -2845,7 +2668,6 @@ function df_processupdate($Data, $EID) {
     $Config = $Element['Content'];
     //dump($Config);
     // Load Entry's data for hidden values
-
     //$preQuery = mysql_query("SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'");
     //$PreData = mysql_fetch_assoc($preQuery);
 
@@ -2854,51 +2676,51 @@ function df_processupdate($Data, $EID) {
     $PreData = $PreData[0];
 
     /* Auditing Disabled for now. Need to find a way to audit dynamic and changed tables.
-    if ($Config['_EnableAudit']) {
-        $memberID = 0;
-        if (!empty($_SESSION['UserBase']['Member']['ID'])) {
-            $memberID = $_SESSION['UserBase']['Member']['ID'];
-        }
-        $lres = mysql_query("SHOW COLUMNS FROM " . $Config['_main_table']);
-        $prerows = array();
-        while ($row = mysql_fetch_assoc($lres)) {
-            $prerows[] = $row['Field'];
-        }
-        $rows = implode(',', $prerows);
-        if (mysql_query("CREATE TABLE `_audit_" . $Config['_main_table'] . "` SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "' LIMIT 1")) {
-            // new entry
+      if ($Config['_EnableAudit']) {
+      $memberID = 0;
+      if (!empty($_SESSION['UserBase']['Member']['ID'])) {
+      $memberID = $_SESSION['UserBase']['Member']['ID'];
+      }
+      $lres = mysql_query("SHOW COLUMNS FROM " . $Config['_main_table']);
+      $prerows = array();
+      while ($row = mysql_fetch_assoc($lres)) {
+      $prerows[] = $row['Field'];
+      }
+      $rows = implode(',', $prerows);
+      if (mysql_query("CREATE TABLE `_audit_" . $Config['_main_table'] . "` SELECT * FROM `" . $Config['_main_table'] . "` WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "' LIMIT 1")) {
+      // new entry
 
-            mysql_query("ALTER TABLE `_audit_" . $Config['_main_table'] . "` ADD `_ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ,
-						ADD `_DateInserted` DATETIME NOT NULL AFTER `_ID` ,
-						ADD `_DateModified` DATETIME NOT NULL AFTER `_ID` ,
-						ADD `_User` INT NOT NULL AFTER `_DateModified` ,
-                                                ADD `_RawData` TEXT NOT NULL AFTER `_DateInserted`");
-            mysql_query("UPDATE `_audit_" . $Config['_main_table'] . "` SET `_DateModified` = '" . date('Y-m-d H:i:s') . "', `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "';");
-            mysql_query("INSERT INTO `_audit_" . $Config['_main_table'] . "` SET `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', `" . $Config['_ReturnFields'][0] . "`, " . $OldData . " = '" . $Data[$Config['_ReturnFields'][0]] . "'  ;");
-            mysql_query("INSERT INTO `_audit_" . $Config['_main_table'] . "` SET `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'  ;");
-        } else {
-            $predata = mysql_query("SELECT * FROM " . $Config['_main_table'] . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "';");
-            $prerow = mysql_fetch_assoc($predata);
-            $OldData = array();
-            foreach ($prerow as $Field => $Value) {
-                $OldData[] = "`" . $Field . "` = '" . mysql_real_escape_string($Value) . "' ";
-            }
-            $OldData = implode(', ', $OldData);
-            $UpdateQuery = "UPDATE `_audit_" . $Config['_main_table'] . "` SET `_DateModified` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', " . $OldData . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "' ORDER BY `_ID` DESC LIMIT 1;";
-            mysql_query($UpdateQuery);
-            mysql_query("INSERT INTO `_audit_" . $Config['_main_table'] . "` SET `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'  ;");
-        }
-    }
-    //go through the Submitted Data / apply fieldtype filters and add processed value to update queue
-    */
+      mysql_query("ALTER TABLE `_audit_" . $Config['_main_table'] . "` ADD `_ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ,
+      ADD `_DateInserted` DATETIME NOT NULL AFTER `_ID` ,
+      ADD `_DateModified` DATETIME NOT NULL AFTER `_ID` ,
+      ADD `_User` INT NOT NULL AFTER `_DateModified` ,
+      ADD `_RawData` TEXT NOT NULL AFTER `_DateInserted`");
+      mysql_query("UPDATE `_audit_" . $Config['_main_table'] . "` SET `_DateModified` = '" . date('Y-m-d H:i:s') . "', `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "';");
+      mysql_query("INSERT INTO `_audit_" . $Config['_main_table'] . "` SET `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', `" . $Config['_ReturnFields'][0] . "`, " . $OldData . " = '" . $Data[$Config['_ReturnFields'][0]] . "'  ;");
+      mysql_query("INSERT INTO `_audit_" . $Config['_main_table'] . "` SET `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'  ;");
+      } else {
+      $predata = mysql_query("SELECT * FROM " . $Config['_main_table'] . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "';");
+      $prerow = mysql_fetch_assoc($predata);
+      $OldData = array();
+      foreach ($prerow as $Field => $Value) {
+      $OldData[] = "`" . $Field . "` = '" . mysql_real_escape_string($Value) . "' ";
+      }
+      $OldData = implode(', ', $OldData);
+      $UpdateQuery = "UPDATE `_audit_" . $Config['_main_table'] . "` SET `_DateModified` = '" . date('Y-m-d H:i:s') . "', `_User` = '" . $memberID . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', " . $OldData . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "' ORDER BY `_ID` DESC LIMIT 1;";
+      mysql_query($UpdateQuery);
+      mysql_query("INSERT INTO `_audit_" . $Config['_main_table'] . "` SET `_DateInserted` = '" . date('Y-m-d H:i:s') . "', `_RawData` = '" . mysql_real_escape_string(serialize($Data)) . "', `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'  ;");
+      }
+      }
+      //go through the Submitted Data / apply fieldtype filters and add processed value to update queue
+     */
 
 
     foreach ($Config['_Field'] as $Field => $Type) {
-        if(empty($Data[$EID][$Field]) && !empty($Config['_Required'][$Field])){
-                $return['_error_'][] = $Config['_FieldTitle'][$Field].' is required.';
-                $return['_fail_'][$Field] = true;
+        if (empty($Data[$EID][$Field]) && !empty($Config['_Required'][$Field])) {
+            $return['_error_'][] = $Config['_FieldTitle'][$Field] . ' is required.';
+            $return['_fail_'][$Field] = true;
         }
-        if(isset($Data[$EID][$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])){
+        if (isset($Data[$EID][$Field]) || isset($_FILES['dataForm']['size'][$EID][$Field])) {
             $typeSet = explode('_', $Type);
             if (!empty($typeSet[1])) {
                 if (function_exists($typeSet[0] . '_handleInput')) {
@@ -2912,8 +2734,8 @@ function df_processupdate($Data, $EID) {
                     }
                     $Element['_ActiveProcess'] = 'update';
                     $newValue = $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $PreData, $Data);
-                    if(is_array($newValue[$Field])){
-                        if(!empty($newValue[$Field]['_fail_'])){
+                    if (is_array($newValue[$Field])) {
+                        if (!empty($newValue[$Field]['_fail_'])) {
                             $return['_error_'][] = $newValue[$Field]['_error_'];
                             $return['_fail_'][$Field] = true;
                         }
@@ -2932,17 +2754,17 @@ function df_processupdate($Data, $EID) {
         }
     }
     // return if any failed.
-    if(!empty($return['_fail_'])){
+    if (!empty($return['_fail_'])) {
         return $return;
     }
     // process update processess
     if (!empty($Config['_FormProcessors'])) {
 
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
-            if(empty($updateData)){
-                if(empty($Config['_InsertFail'])) {
+            if (empty($updateData)) {
+                if (empty($Config['_InsertFail'])) {
                     $Return['Message'] = 'Entry Update Failed';
-                }else {
+                } else {
                     $Return['Message'] = $Config['_UpdateFail'];
                 }
                 $Return['noticeType'] = 'error';
@@ -2955,21 +2777,20 @@ function df_processupdate($Data, $EID) {
                     $func = 'pre_process_' . $Setup['_process'];
                     if (function_exists($func)) {
                         $updateData = $func($updateData, $Setup, $Config);
-                        if(!empty($updateData['__fail__'])){
+                        if (!empty($updateData['__fail__'])) {
                             $Return['noticeType'] = 'error';
-                            if(!empty($updateData['__error__'])) {
+                            if (!empty($updateData['__error__'])) {
                                 $Return['Message'] = $updateData['__error__'];
                                 return $Return;
                             }
-                            if(empty($Config['_InsertFail'])) {
+                            if (empty($Config['_InsertFail'])) {
                                 $Return['Message'] = 'Entry Insert Failed';
-                            }else{
+                            } else {
                                 $Return['Message'] = $Config['_InsertFail'];
                             }
 
                             return $Return;
                         }
-
                     }
                 }
             }
@@ -2990,21 +2811,21 @@ function df_processupdate($Data, $EID) {
         }
     }
 
-        //foreach ($updateData as $Field => $newValue) {
+    //foreach ($updateData as $Field => $newValue) {
     //    $newData[] = "`" . $Field . "` = '" . mysql_real_escape_string($newValue) . "' ";
     //}
     //$Updates = implode(', ', $newData);
     //$Query = "UPDATE `" . $Config['_main_table'] . "` SET " . $Updates . " WHERE `" . $Config['_ReturnFields'][0] . "` = '" . $Data[$Config['_ReturnFields'][0]] . "'";
-    if(empty($updateData)){
+    if (empty($updateData)) {
         $Return['Message'] = 'umm, there was nothing to update.';
         $Return['noticeType'] = 'error';
         return $Return;
     }
 
 
-    if($wpdb->update($Config['_main_table'], $updateData, array($Config['_ReturnFields'][0] => $Data[$Config['_ReturnFields'][0]]))){
+    if ($wpdb->update($Config['_main_table'], $updateData, array($Config['_ReturnFields'][0] => $Data[$Config['_ReturnFields'][0]]))) {
         $update = true;
-    }else{
+    } else {
         $update = false;
     }
 
@@ -3030,10 +2851,10 @@ function df_processupdate($Data, $EID) {
     if (!empty($Config['_FormProcessors'])) {
         foreach ($Config['_FormProcessors'] as $processID => $Setup) {
             if (!empty($Setup['_onUpdate'])) {
-                if(empty($updateData)){
-                    if(empty($Config['_InsertFail'])) {
+                if (empty($updateData)) {
+                    if (empty($Config['_InsertFail'])) {
                         $Return['Message'] = 'Entry Update Failed';
-                    }else {
+                    } else {
                         $Return['Message'] = $Config['_UpdateFail'];
                     }
                     return $Return;
@@ -3053,13 +2874,13 @@ function df_processupdate($Data, $EID) {
         }
     }
     //if ($update == true) {
-        if (empty($Config['_UpdateSuccess'])) {
-            $Return['Message'] = 'Entry updated successfully';
-        } else {
-            $Return['Message'] = $Config['_UpdateSuccess'];
-        }
-        $Return['noticeType'] = 'success';
-        return $Return;
+    if (empty($Config['_UpdateSuccess'])) {
+        $Return['Message'] = 'Entry updated successfully';
+    } else {
+        $Return['Message'] = $Config['_UpdateSuccess'];
+    }
+    $Return['noticeType'] = 'success';
+    return $Return;
     //}
     $Return['noticeType'] = 'error';
     $Return['Message'] = 'Nothing to update.';
@@ -3071,7 +2892,7 @@ function df_deleteEntries($EID, $Data) {
     $Data = df_cleanArray(explode('|||', $Data));
     $El = getelement($EID);
     $Config = $El['Content'];
-    if(empty($Config['_Show_Delete']) && empty($Config['_Show_Delete_action'])){
+    if (empty($Config['_Show_Delete']) && empty($Config['_Show_Delete_action'])) {
         return 'Deleting is Disabled';
     }
     if (!empty($RefConfig['Field'])) {
@@ -3409,23 +3230,23 @@ function dt_listApps() {
 }
 
 function dt_listInterfaces($App) {
-    if(empty($App))
+    if (empty($App))
         return '<h3>Please select an app</h3>';
 
-    $app = get_option('_'.$App.'_app');
+    $app = get_option('_' . $App . '_app');
     //vardump($app);
     $Return = '<h3>' . $App . '</h3>';
 
-    foreach ($app['interfaces'] as $interface=>$access) {
+    foreach ($app['interfaces'] as $interface => $access) {
         $dta = get_option($interface);
 
         //if ($dta['_Application'] == $App) {
-            if (empty($dta['_ItemGroup'])) {
-                $Group = '<em>ungrouped</em>';
-            } else {
-                $Group = $dta['_ItemGroup'];
-            }
-            $interfaceGroups[$Group][] = $dta;
+        if (empty($dta['_ItemGroup'])) {
+            $Group = '<em>ungrouped</em>';
+        } else {
+            $Group = $dta['_ItemGroup'];
+        }
+        $interfaceGroups[$Group][] = $dta;
         //}
     }
     //vardump($interfaceGroups);
@@ -3439,128 +3260,122 @@ function dt_listInterfaces($App) {
         foreach ($Interface as $dta) {
             //if ($dta['_Application'] == $App) {
 
-                if ($GroupRun != $group) {
+            if ($GroupRun != $group) {
 
-                    $GroupRun = $group;
-                }
+                $GroupRun = $group;
+            }
 
-                $Return .= '<div style="padding:5px;">';
-                $Return .= '<span class="interfaceInserter" style="cursor:pointer;" id="' . $dta['ID'] . '">' . $dta['_ReportDescription'] . '</span>';
-                if (!empty($dta['_ReportExtendedDescription'])) {
-                    $Return .= '<div><span class="description interfaceInserter" style="cursor:pointer;" id="' . $dta['ID'] . '">' . $dta['_ReportExtendedDescription'] . '</span></div>';
-                }
-                $Return .= '</div>';
+            $Return .= '<div style="padding:5px;">';
+            $Return .= '<span class="interfaceInserter" style="cursor:pointer;" id="' . $dta['ID'] . '">' . $dta['_ReportDescription'] . '</span>';
+            if (!empty($dta['_ReportExtendedDescription'])) {
+                $Return .= '<div><span class="description interfaceInserter" style="cursor:pointer;" id="' . $dta['ID'] . '">' . $dta['_ReportExtendedDescription'] . '</span></div>';
+            }
+            $Return .= '</div>';
             //}
         }
     }
     return $Return;
 }
 
-
-function dr_addListRowTemplate($Default = false){
-
+function dr_addListRowTemplate($Default = false) {
 
 
-ob_start();
-                $show = 'block';
-                if(!empty($Default)){
-                    $show = 'block';
-                }
-                $rowTemplateID = uniqid('Template-');
-                $Name = $rowTemplateID;
-                if(!empty($Default['_name'])){
-                    $Name = $Default['_name'];
-                }
-                $Header = '';
-                if(!empty($Default['_before'])){
-                    $Header = $Default['_before'];
-                }
-                $Content = '';
-                if(!empty($Default['_content'])){
-                    $Content = $Default['_content'];
-                }
-                $Footer = '';
-                if(!empty($Default['_after'])){
-                    $Footer = $Default['_after'];
-                }
 
-            ?>
+    ob_start();
+    $show = 'block';
+    if (!empty($Default)) {
+        $show = 'block';
+    }
+    $rowTemplateID = uniqid('Template-');
+    $Name = $rowTemplateID;
+    if (!empty($Default['_name'])) {
+        $Name = $Default['_name'];
+    }
+    $Header = '';
+    if (!empty($Default['_before'])) {
+        $Header = $Default['_before'];
+    }
+    $Content = '';
+    if (!empty($Default['_content'])) {
+        $Content = $Default['_content'];
+    }
+    $Footer = '';
+    if (!empty($Default['_after'])) {
+        $Footer = $Default['_after'];
+    }
+?>
 
-                <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $rowTemplateID; ?>">
-                    <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $rowTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
-                    <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $rowTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">
-                    <h3 class="fieldTypeHandle"><?php echo $Name; ?></h3>
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
-                        <strong>Template Name:</strong> <input type="text" name="Data[Content][_layoutTemplate][_Content][_name][]" value="<?php echo $Name; ?>" />
-                    </div>
-
-
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
-                        <strong>Before</strong> <span class="description">Placed before the content loop.</span>
-                    </div>
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
-                        <textarea id="<?php echo $rowTemplateID; ?>_before" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_before][]"><?php echo $Header; ?></textarea>
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('400px'); return false;">Larger</a> |
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('80px'); return false;">Smaller</a>
-                    </div>
+    <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $rowTemplateID; ?>">
+        <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('#dt_<?php echo $rowTemplateID; ?>').remove();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cancel.png">
+        <img align="absmiddle" style="float: right; padding: 5px;" onclick="jQuery('.<?php echo $rowTemplateID; ?>').toggle();" src="<?php echo WP_PLUGIN_URL; ?>/db-toolkit/images/cog.png">
+        <h3 class="fieldTypeHandle"><?php echo $Name; ?></h3>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+            <strong>Template Name:</strong> <input type="text" name="Data[Content][_layoutTemplate][_Content][_name][]" value="<?php echo $Name; ?>" />
+        </div>
 
 
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
-                        <strong>Content</strong>
-                        <span class="description">Repeated with every row/entry.</span>
-                    </div>
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
-                        <textarea id="<?php echo $rowTemplateID; ?>_content" class="layoutTextAreaLarge" name="Data[Content][_layoutTemplate][_Content][_content][]"><?php echo $Content; ?></textarea>
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_content').height('600px'); return false;">Larger</a> |
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_content').height('180px'); return false;">Smaller</a>
-                    </div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+            <strong>Before</strong> <span class="description">Placed before the content loop.</span>
+        </div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
+            <textarea id="<?php echo $rowTemplateID; ?>_before" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_before][]"><?php echo $Header; ?></textarea>
+            <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('400px'); return false;">Larger</a> |
+            <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_before').height('80px'); return false;">Smaller</a>
+        </div>
 
 
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
-                        <strong>After</strong> <span class="description">Placed after the content loop.</span>
-                    </div>
-                    <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
-                        <textarea id="<?php echo $rowTemplateID; ?>_after" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_after][]"><?php echo $Footer; ?></textarea>
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_after').height('400px'); return false;">Larger</a> |
-                        <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_after').height('80px'); return false;">Smaller</a>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+            <strong>Content</strong>
+            <span class="description">Repeated with every row/entry.</span>
+        </div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
+            <textarea id="<?php echo $rowTemplateID; ?>_content" class="layoutTextAreaLarge" name="Data[Content][_layoutTemplate][_Content][_content][]"><?php echo $Content; ?></textarea>
+            <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_content').height('600px'); return false;">Larger</a> |
+            <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_content').height('180px'); return false;">Smaller</a>
+        </div>
 
-                    </div>
+
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel <?php echo $rowTemplateID; ?>">
+            <strong>After</strong> <span class="description">Placed after the content loop.</span>
+        </div>
+        <div style="display: <?php echo $show; ?>;" class="admin_config_panel fieldBeforeAfter <?php echo $rowTemplateID; ?>">
+            <textarea id="<?php echo $rowTemplateID; ?>_after" class="layoutTextArea" name="Data[Content][_layoutTemplate][_Content][_after][]"><?php echo $Footer; ?></textarea>
+            <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_after').height('400px'); return false;">Larger</a> |
+            <a href="#" onclick="jQuery('#<?php echo $rowTemplateID; ?>_after').height('80px'); return false;">Smaller</a>
+
+        </div>
 
 
-                    <div style="clear:both"></div>
-                </div>
+        <div style="clear:both"></div>
+    </div>
 
 <?php
-
-return ob_get_clean();
-
+    return ob_get_clean();
 }
 
-function dr_addListFieldTemplate($Field, $Default = false){
+function dr_addListFieldTemplate($Field, $Default = false) {
 
 
 
 
-ob_start();
+    ob_start();
 
     $fieldTemplateID = uniqid('Field-');
     $Name = $rowTemplateID;
 
     $show = 'block';
-    if(!empty($Default)){
+    if (!empty($Default)) {
         $show = 'none';
     }
     $before = '';
     $after = '';
 
-    if(!empty($Default['_before'])){
+    if (!empty($Default['_before'])) {
         $before = $Default['_before'];
     }
-    if(!empty($Default['_after'])){
+    if (!empty($Default['_after'])) {
         $after = $Default['_after'];
     }
-
-
 ?>
 
     <div class="admin_list_row3 table_sorter postbox" id="dt_<?php echo $fieldTemplateID; ?>">
@@ -3587,117 +3402,111 @@ ob_start();
 
 
 <?php
-
-return ob_get_clean();
-
+    return ob_get_clean();
 }
 
-
-function dt_buildnodeMap($data, $Return = '', $level = 0, $path = '', $Default = false){
+function dt_buildnodeMap($data, $Return = '', $level = 0, $path = '', $Default = false) {
 
     $space = '';
-    if($level > 0){
-        for($i=0; $i<=$level; $i++){
+    if ($level > 0) {
+        for ($i = 0; $i <= $level; $i++) {
             $space .= '--';
         }
     }
-    if(is_array($data)){
-        foreach($data as $node=>$value){
-            if($node === 0){
-                return dt_buildnodeMap($value, $Return, $level+1, $path.'['.$node.']', $Default);
+    if (is_array($data)) {
+        foreach ($data as $node => $value) {
+            if ($node === 0) {
+                return dt_buildnodeMap($value, $Return, $level + 1, $path . '[' . $node . ']', $Default);
             }
-            $p ='';
-            if($level > 0){
-                if(is_array($value)){
+            $p = '';
+            if ($level > 0) {
+                if (is_array($value)) {
                     $p = '&raquo;';
                 }
             }
             $sel = '';
-            if($Default == $path.'['.$node.']'){
+            if ($Default == $path . '[' . $node . ']') {
                 $sel = 'selected="selected"';
             }
-            $Return .= '<option value="'.$path.'['.$node.']" '.$sel.'>'.$space.$p.$node.'</option>';
-            if(is_array($value)){
-                $Return = dt_buildnodeMap($value, $Return, $level+1, $path.'['.$node.']', $Default);
+            $Return .= '<option value="' . $path . '[' . $node . ']" ' . $sel . '>' . $space . $p . $node . '</option>';
+            if (is_array($value)) {
+                $Return = dt_buildnodeMap($value, $Return, $level + 1, $path . '[' . $node . ']', $Default);
             }
         }
-    }else{
+    } else {
 
-        $Return .= '<option value="'.$path.'['.$data.']">'.$space.$p.$data.'</option>';
+        $Return .= '<option value="' . $path . '[' . $data . ']">' . $space . $p . $data . '</option>';
     }
 
-return $Return;
-
+    return $Return;
 }
 
-function dr_dataSourceMapping($url, $Config = false){
+function dr_dataSourceMapping($url, $Config = false) {
 
-    if(empty($url)){
+    if (empty($url)) {
         return 'Disabled.';
     }
 
     // Create a stream
     $opts = array(
-      'http'=>array(
-        'method'=>"GET",
-        'header'=>"Accept-language: en\r\n" .
-                  "Cookie: foo=bar\r\n"
-      )
+        'http' => array(
+            'method' => "GET",
+            'header' => "Accept-language: en\r\n" .
+            "Cookie: foo=bar\r\n"
+        )
     );
 
     $context = stream_context_create($opts);
 
     // Open the file using the HTTP headers set above
-    if(!$data = @file_get_contents($url, false, $context)){
+    if (!$data = @file_get_contents($url, false, $context)) {
         return 'Could not connect to source.';
     }
 
-    if(strpos(substr(strtolower($data),0,1024), 'xml')){
+    if (strpos(substr(strtolower($data), 0, 1024), 'xml')) {
         $data = dt_xml2array($data);
-    }else{
+    } else {
         $data = json_decode($data, true);
     }
     //$Return = '<select>';
     $Return = dt_buildnodeMap($data, '', 0, '', $Config['_DataSourceRootNode']);
     ob_start();
-    ?>
+?>
 
-  <div class="section">
-    <div class="option">
-      <div class="title">
-        Root Node
-      </div>
+    <div class="section">
+        <div class="option">
+            <div class="title">
+                Root Node
+            </div>
 
-      <div class="controls">
-        <select id="_DataSourceRootNode" name="Data[Content][_DataSourceRootNode]">
-            <option value="">Select the root node point</option>
-        <?php echo $Return; ?>
-        </select>
-        <div class="clear"></div>
+            <div class="controls">
+                <select id="_DataSourceRootNode" name="Data[Content][_DataSourceRootNode]">
+                    <option value="">Select the root node point</option>
+<?php echo $Return; ?>
+                </select>
+                <div class="clear"></div>
 
-      </div>
+            </div>
 
-      <div class="explain">
-        Select the starting node point. this is usually an array point. which will contain the entries you want to capture.
-      </div>
+            <div class="explain">
+                Select the starting node point. this is usually an array point. which will contain the entries you want to capture.
+            </div>
 
-      <div class="clear"></div>
+            <div class="clear"></div>
+        </div>
     </div>
-  </div>
     <div id="_dataFieldMapView">
-        <?php
-        if(!empty($Config['_DataSourceRootNode'])){
-            echo dr_loadFieldMapping($url, $Config['_DataSourceRootNode'], $Config['_main_table'], $Config);
-        }else{
-        ?>
-        <div class="description">select the node point to configure field mapping.</div>
-        <?php
-        }
-        ?>
+<?php
+    if (!empty($Config['_DataSourceRootNode'])) {
+        echo dr_loadFieldMapping($url, $Config['_DataSourceRootNode'], $Config['_main_table'], $Config);
+    } else {
+?>
+            <div class="description">select the node point to configure field mapping.</div>
+<?php
+    }
+?>
     </div>
-    <?php
-
-
+<?php
     $_SESSION['dataform']['OutScripts'] .= "
         jQuery('#_DataSourceRootNode').bind('change', function(){
             dr_loadFieldMapping(jQuery('#_DataSourceURL').val(), this.value, jQuery('#_main_table').val())
@@ -3707,14 +3516,14 @@ function dr_dataSourceMapping($url, $Config = false){
 
     $Return = ob_get_clean();
 
-return $Return;
+    return $Return;
 }
 
-function dr_loadFieldMapping($url, $root, $table, $Config = false){
+function dr_loadFieldMapping($url, $root, $table, $Config = false) {
 
-   global $wpdb;
+    global $wpdb;
 
-    $tablefields = $wpdb->get_results("SHOW COLUMNS FROM `".$table."`", ARRAY_N);
+    $tablefields = $wpdb->get_results("SHOW COLUMNS FROM `" . $table . "`", ARRAY_N);
 
 
     $select = '<select id="Data[Content][_DataSourceFieldMap][{{Field}}]" name="Data[Content][_DataSourceFieldMap][{{Field}}]">';
@@ -3723,15 +3532,15 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
 
     $data = file_get_contents($url);
 
-    if(strpos(substr(strtolower($data),0,1024), 'xml')){
+    if (strpos(substr(strtolower($data), 0, 1024), 'xml')) {
         $data = dt_xml2array($data);
-    }else{
+    } else {
         $data = json_decode($data, true);
     }
 
     preg_match_all('/\\[(.*?)\\]/', $root, $matchesarray);
 
-    foreach($matchesarray[1] as $path){
+    foreach ($matchesarray[1] as $path) {
         $data = $data[$path];
     }
 
@@ -3740,112 +3549,108 @@ function dr_loadFieldMapping($url, $root, $table, $Config = false){
     $Return .= '<thead>';
     $Return .= '<tr>';
     $Return .= '<th>';
-        $Return .= 'Table Field';
+    $Return .= 'Table Field';
     $Return .= '</th>';
     $Return .= '<th>';
-        $Return .= 'Source Field';
+    $Return .= 'Source Field';
     $Return .= '</th>';
     $Return .= '</tr>';
     $Return .= '</thead>';
     $Return .= '<tbody>';
 
-    foreach($tablefields as $column){
+    foreach ($tablefields as $column) {
 
         $Return .= '<tr>';
         $Return .= '<td>';
-            $Return .= df_parseCamelCase($column[0]);
+        $Return .= df_parseCamelCase($column[0]);
         $Return .= '</td>';
-        if(!empty($select)){
+        if (!empty($select)) {
             $Return .= '<td>';
-                $Return .='<select id="Data[Content][_DataSourceFieldMap]['.$column[0].']" name="Data[Content][_DataSourceFieldMap]['.$column[0].']">';
-                $Return .= '<option value="NULL"></option>';
-                $Return .= dt_buildnodeMap($data, false, false, false, $Config['_DataSourceFieldMap'][$column[0]]);
-                $Return .= '</select>';
+            $Return .='<select id="Data[Content][_DataSourceFieldMap][' . $column[0] . ']" name="Data[Content][_DataSourceFieldMap][' . $column[0] . ']">';
+            $Return .= '<option value="NULL"></option>';
+            $Return .= dt_buildnodeMap($data, false, false, false, $Config['_DataSourceFieldMap'][$column[0]]);
+            $Return .= '</select>';
             $Return .= '</td>';
-        }else{
+        } else {
             $Return .= '<td>';
-                $Return .= 'Node point not an array and cannot be mapped.';
+            $Return .= 'Node point not an array and cannot be mapped.';
             $Return .= '</td>';
         }
 
         $Return .= '</tr>';
-
     }
     $Return .= '</tbody>';
     $Return .= '</table>';
 
     return $Return;
-
-
 }
 
-function dt_runDataSourceImport($Config){
+function dt_runDataSourceImport($Config) {
     global $wpdb;
 
 
     $data = file_get_contents($Config['_DataSourceURL']);
 
-    if(strpos(substr(strtolower($data),0,1024), 'xml')){
+    if (strpos(substr(strtolower($data), 0, 1024), 'xml')) {
         $data = dt_xml2array($data);
-    }else{
+    } else {
         $data = json_decode($data, true);
     }
 
     preg_match_all('/\\[(.*?)\\]/', $Config['_DataSourceRootNode'], $matchesarray);
 
-    foreach($matchesarray[1] as $path){
+    foreach ($matchesarray[1] as $path) {
         $data = $data[$path];
     }
-    if(empty($data)){
+    if (empty($data)) {
         echo 'Data source contained no data';
         exit;
     }
     $in = 0;
     $onot = 0;
-    foreach($data as $entry){
+    foreach ($data as $entry) {
         //vardump($entry);
-        $prefix = "INSERT INTO `".$Config['_main_table']."` (";
+        $prefix = "INSERT INTO `" . $Config['_main_table'] . "` (";
         $insertString = array();
         $prefixFields = array();
-        foreach($Config['_DataSourceFieldMap'] as $Field=>$nodePoint){
+        foreach ($Config['_DataSourceFieldMap'] as $Field => $nodePoint) {
 
-            if($nodePoint != 'NULL'){
-                $prefixFields[] = "`".$Field."`";
+            if ($nodePoint != 'NULL') {
+                $prefixFields[] = "`" . $Field . "`";
                 //echo $nodePoint;
                 preg_match_all('/\\[(.*?)\\]/', $nodePoint, $matchesarray);
                 $currentEntry = $entry;
-                foreach($matchesarray[1] as $key=>$point){
-                    if($key > 0 ){
+                foreach ($matchesarray[1] as $key => $point) {
+                    if ($key > 0) {
                         $currentEntry = $currentEntry[$point];
                     }
                 }
-                $insertString[] = "'".@mysql_real_escape_string($currentEntry)."'";
+                $insertString[] = "'" . @mysql_real_escape_string($currentEntry) . "'";
             }
         }
-        $query = $prefix.implode(', ',$prefixFields).") VALUES (".implode(', ', $insertString).");";
+        $query = $prefix . implode(', ', $prefixFields) . ") VALUES (" . implode(', ', $insertString) . ");";
 
-        if($wpdb->query($query)){
+        if ($wpdb->query($query)) {
             $in++;
-        }else{
+        } else {
             $not++;
         }
-
     }
 
-    echo $in+$not." entries inserted.\r\n";
+    echo $in + $not . " entries inserted.\r\n";
     echo "=========================================\r\n";
-    echo $in." entries captured.\r\n";
-    if(!empty($not)){
-        echo $not." entries exclude. (failed or already captured)";
+    echo $in . " entries captured.\r\n";
+    if (!empty($not)) {
+        echo $not . " entries exclude. (failed or already captured)";
     }
     exit;
-
 }
 
 function dt_xml2array($contents, $get_attributes=1, $priority = 'tag') {
-    if(!$contents) return array();
+    if (!$contents)
+        return array();
 
-    if(!function_exists('xml_parser_create')) {
+    if (!function_exists('xml_parser_create')) {
         print "'xml_parser_create()' function not found!";
         return array();
     }
@@ -3858,113 +3663,108 @@ function dt_xml2array($contents, $get_attributes=1, $priority = 'tag') {
     xml_parse_into_struct($parser, trim($contents), $xml_values);
     xml_parser_free($parser);
 
-    if(!$xml_values) return;//Hmm...
-
-    //Initializations
-    $xml_array = array();
+    if (!$xml_values)
+        return; //Hmm...
+        //Initializations
+ $xml_array = array();
     $parents = array();
     $opened_tags = array();
     $arr = array();
 
     $current = &$xml_array; //Refference
-
     //Go through the tags.
-    $repeated_tag_index = array();//Multiple tags with same name will be turned into an array
-    foreach($xml_values as $data) {
-        unset($attributes,$value);//Remove existing values, or there will be trouble
-
+    $repeated_tag_index = array(); //Multiple tags with same name will be turned into an array
+    foreach ($xml_values as $data) {
+        unset($attributes, $value); //Remove existing values, or there will be trouble
         //This command will extract these variables into the foreach scope
         // tag(string), type(string), level(int), attributes(array).
-        extract($data);//We could use the array by itself, but this cooler.
+        extract($data); //We could use the array by itself, but this cooler.
 
         $result = array();
         $attributes_data = array();
 
-        if(isset($value)) {
-            if($priority == 'tag') $result = $value;
-            else $result['value'] = $value; //Put the value in a assoc array if we are in the 'Attribute' mode
+        if (isset($value)) {
+            if ($priority == 'tag')
+                $result = $value;
+            else
+                $result['value'] = $value; //Put the value in a assoc array if we are in the 'Attribute' mode
+
         }
 
         //Set the attributes too.
-        if(isset($attributes) and $get_attributes) {
-            foreach($attributes as $attr => $val) {
-                if($priority == 'tag') $attributes_data[$attr] = $val;
-                else $result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
+        if (isset($attributes) and $get_attributes) {
+            foreach ($attributes as $attr => $val) {
+                if ($priority == 'tag')
+                    $attributes_data[$attr] = $val;
+                else
+                    $result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
+
             }
         }
 
         //See tag status and do the needed.
-        if($type == "open") {//The starting of the tag '<tag>'
-            $parent[$level-1] = &$current;
-            if(!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
+        if ($type == "open") {//The starting of the tag '<tag>'
+            $parent[$level - 1] = &$current;
+            if (!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
                 $current[$tag] = $result;
-                if($attributes_data) $current[$tag. '_attr'] = $attributes_data;
-                $repeated_tag_index[$tag.'_'.$level] = 1;
+                if ($attributes_data)
+                    $current[$tag . '_attr'] = $attributes_data;
+                $repeated_tag_index[$tag . '_' . $level] = 1;
 
                 $current = &$current[$tag];
-
             } else { //There was another element with the same tag name
-
-                if(isset($current[$tag][0])) {//If there is a 0th element it is already an array
-                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-                    $repeated_tag_index[$tag.'_'.$level]++;
+                if (isset($current[$tag][0])) {//If there is a 0th element it is already an array
+                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                    $repeated_tag_index[$tag . '_' . $level]++;
                 } else {//This section will make the value an array if multiple tags with the same name appear together
-                    $current[$tag] = array($current[$tag],$result);//This will combine the existing item and the new item together to make an array
-                    $repeated_tag_index[$tag.'_'.$level] = 2;
+                    $current[$tag] = array($current[$tag], $result); //This will combine the existing item and the new item together to make an array
+                    $repeated_tag_index[$tag . '_' . $level] = 2;
 
-                    if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
-                        $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-                        unset($current[$tag.'_attr']);
+                    if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
+                        $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                        unset($current[$tag . '_attr']);
                     }
-
                 }
-                $last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
+                $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
                 $current = &$current[$tag][$last_item_index];
             }
-
-        } elseif($type == "complete") { //Tags that ends in 1 line '<tag />'
+        } elseif ($type == "complete") { //Tags that ends in 1 line '<tag />'
             //See if the key is already taken.
-            if(!isset($current[$tag])) { //New Key
+            if (!isset($current[$tag])) { //New Key
                 $current[$tag] = $result;
-                $repeated_tag_index[$tag.'_'.$level] = 1;
-                if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;
-
+                $repeated_tag_index[$tag . '_' . $level] = 1;
+                if ($priority == 'tag' and $attributes_data)
+                    $current[$tag . '_attr'] = $attributes_data;
             } else { //If taken, put all things inside a list(array)
-                if(isset($current[$tag][0]) and is_array($current[$tag])) {//If it is already an array...
-
+                if (isset($current[$tag][0]) and is_array($current[$tag])) {//If it is already an array...
                     // ...push the new element into that array.
-                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
+                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 
-                    if($priority == 'tag' and $get_attributes and $attributes_data) {
-                        $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+                    if ($priority == 'tag' and $get_attributes and $attributes_data) {
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
-                    $repeated_tag_index[$tag.'_'.$level]++;
-
+                    $repeated_tag_index[$tag . '_' . $level]++;
                 } else { //If it is not an array...
-                    $current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
-                    $repeated_tag_index[$tag.'_'.$level] = 1;
-                    if($priority == 'tag' and $get_attributes) {
-                        if(isset($current[$tag.'_attr'])) { //The attribute of the last(0th) tag must be moved as well
-
-                            $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-                            unset($current[$tag.'_attr']);
+                    $current[$tag] = array($current[$tag], $result); //...Make it an array using using the existing value and the new value
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
+                    if ($priority == 'tag' and $get_attributes) {
+                        if (isset($current[$tag . '_attr'])) { //The attribute of the last(0th) tag must be moved as well
+                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                            unset($current[$tag . '_attr']);
                         }
 
-                        if($attributes_data) {
-                            $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
+                        if ($attributes_data) {
+                            $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
                     }
-                    $repeated_tag_index[$tag.'_'.$level]++; //0 and 1 index is already taken
+                    $repeated_tag_index[$tag . '_' . $level]++; //0 and 1 index is already taken
                 }
             }
-
-        } elseif($type == 'close') { //End of tag '</tag>'
-            $current = &$parent[$level-1];
+        } elseif ($type == 'close') { //End of tag '</tag>'
+            $current = &$parent[$level - 1];
         }
     }
 
     return($xml_array);
 }
-
-
 ?>

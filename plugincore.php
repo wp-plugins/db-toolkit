@@ -4,7 +4,7 @@ Plugin Name: DB-Toolkit
 Plugin URI: http://dbtoolkit.co.za
 Description: Plugin for building databases, managers and viewers for custom Content Management.
 Author: David Cramer
-Version: 0.3.2.015
+Version: 0.3.2.016
 Author URI: http://dbtoolkit.co.za
 */
 

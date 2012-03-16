@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.3.2.015
+Stable tag: 0.3.2.016
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -58,11 +58,17 @@ A: Well you can technically use it now, however some things are still a little i
 
 == Changelog ==
 
-= 0.3.2.014 =
+= 0.3.2.016 =
+* Fixed a major bug that ran a blank query 4 times for every entry in template mode. (nasty I know, so sorry) resulting in huge wast of resource time.
+* Allowed items to hold a 0 as a value.
+* removed legacy code from view output that added compatibility for version 0.1. so no upgrading from v0.1 to 0.3 will no longer have working templates.
+
+= 0.3.2.015 =
 * Fixed a bug that prevented custom scripts to reload.
 * Fixed a bug that broke the export buttons from working in frontend.
 * Fixed a bug that broke the redirect pass back from formmode to list mode.
 * Added an = and != selector to the join table fieldtype WHERE filter.
+* Added in filter targeting and redirect.
 
 = 0.3.2.014 =
 * Added title as placeholder to the fieldsetup box (only textfields are supported).

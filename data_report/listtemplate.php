@@ -12,12 +12,12 @@
             <div id="listTemplate" class="setupTab">
 
 
-                
+
 
 
                 <div id="layoutContentTemplate">
 
-                    <div id="layoutHeaderTemplate">                        
+                    <div id="layoutHeaderTemplate">
 <?php
             $Sel = '';
             if (!empty($Element['Content']['_useListTemplate'])) {
@@ -66,8 +66,6 @@
 {{_RowClass}}           : Row Class
 {{_RowIndex}}           : Row Index
 {{_UID}}                : Unique Row ID
-{{_PageID}}             : Page ID
-{{_PageName}}           : Page Name
 {{_EID}}                : Element ID
 {{<i><b>Fieldname</b></i>}}           : Field Data
 {{_<i>Fieldname</i>_name}}     : Field Name
@@ -167,7 +165,7 @@ Number of items found and displayed (1 - 10 of 200 items)
                             <li class="root_item tabBox"><a class="parent hasSubs"><strong>Fields</strong></a>
                                 <ul id="" style="visibility: hidden; display: block;">
 <?php
-                            //echo df_listProcessors();                            
+                            //echo df_listProcessors();
                             if (!empty($Element['Content']['_FieldTitle'])) {
                                 foreach ($Element['Content']['_FieldTitle'] as $FieldKey => $Val) {
                                     echo '<li><a onclick="dr_addListFieldTemplate(\'' . $FieldKey . '\');"><img align="absmiddle" src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/arrow_switch.png"> ' . $Val . '</a></li>';
@@ -181,14 +179,14 @@ Number of items found and displayed (1 - 10 of 200 items)
                     <!-- Fields Template Panel -->
 
                     <div id="fieldTemplateHolder">
-                        <?php                            
+                        <?php
                             // Echo out Field Templates
                             if (!empty($Element['Content']['_layoutTemplate']['_Fields'])){
-                                
-                                foreach($Element['Content']['_layoutTemplate']['_Fields'] as $Field=>$Defaults){                                    
+
+                                foreach($Element['Content']['_layoutTemplate']['_Fields'] as $Field=>$Defaults){
                                     echo dr_addListFieldTemplate($Field, $Defaults);
                                 }
-                                
+
                             }
 
 
@@ -200,11 +198,11 @@ Number of items found and displayed (1 - 10 of 200 items)
 
             </div>
                 <div id="toolbarTemplate" class="setupTab">
-                
+
                 <h2>Toolbar Template</h2>
                 <span class="description">Allows you to customise the toolbar.</span>
-                <br />                                
-                <div class="row_helpPanel" style="display:none;">                    
+                <br />
+                <div class="row_helpPanel" style="display:none;">
                     <strong>Dynamic Toolbar Codes</strong>
                     <span class="description">All the <strong>button</strong> codes, can be used in the row/entry templates as well.</span>
                     <pre>
@@ -218,8 +216,8 @@ Number of items found and displayed (1 - 10 of 200 items)
 {{_button_export_pdf}}          :PDF Export button
 {{_button_export_csv}}          :CSV Export button
 
-                    </pre>                    
-                    
+                    </pre>
+
                 </div>
                 <span class="description">All buttons have a float:right style associated unless using a custom stylesheet in your theme. in which case you control it.</span>
                 <span class="description">This was bad on my side, but will correct it soon. So be sure to clear:left within your styling, for now.</span>

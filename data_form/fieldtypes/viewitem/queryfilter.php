@@ -3,7 +3,9 @@
 //echo $Field.'<br />';
 //vardump($Config);
 if(empty($_GET[$Field]) && empty($_GET[$Config['_overRide'][$Field]])){
-    $exitNotice = true;
+    if(empty($Config['_selectFilterOptional'][$Field])){
+        $exitNotice = true;
+    }
 }
 
 
@@ -36,4 +38,7 @@ if(!empty($_GET[$Field]) || !empty($_GET[$Config['_overRide'][$Field]])){
         }
     }
 }
+
+
+
 ?>
