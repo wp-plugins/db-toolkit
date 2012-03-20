@@ -1365,7 +1365,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // get element
     $Element = getelement($EID);
     $Config = $Element['Content'];
-    if (!empty($Config['_customFooterJavaScript'])) {
+    if (!empty($Config['_customFooterJavaScript']) && empty($Format)) {
         $_SESSION['dataform']['OutScripts'] .= "
             " . stripslashes_deep($Config['_customFooterJavaScript']) . "
         ";
