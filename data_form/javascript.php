@@ -64,7 +64,7 @@ if (file_exists('fieldtypes')) {
             jQuery('#'+id).removeClass('button-highlighted');
         }
     }
-    
+
 
 
     function df_dialog(message, id){
@@ -91,7 +91,7 @@ if (file_exists('fieldtypes')) {
                 }
             },
             close: function(event, ui) {
-		jQuery("#ui-dialog-notice").remove();	
+		jQuery("#ui-dialog-notice").remove();
             },
             open: function(event, ui) {
 		jQuery("#ui-dialog-notice").dialog('option', 'position', 'center');
@@ -103,14 +103,14 @@ if (file_exists('fieldtypes')) {
 	var Dialog = new Boxy('<div>'+message+'</div>', {title: 'Notice', modal: true, unloadOnHide: true});
 	return false;
 
-	
-	
+
+
     }
-    
+
 
     function df_buildQuickCaptureForm(eid, ajaxSubmit, addquery, callback){
-        
-        
+
+
 	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
             jQuery("#ui-jsDialog-"+eid+"").remove();
 	}
@@ -136,7 +136,7 @@ if (file_exists('fieldtypes')) {
                         'Save': function() {
                             //dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
                             //if(ajaxSubmit == false){
-                            //alert(ajaxSubmit);                            
+                            //alert(ajaxSubmit);
                             if(ajaxSubmit == true){
                                 //alert('p');
                                 jQuery("#data_form_"+eid+"").bind('submit', function(){
@@ -145,16 +145,16 @@ if (file_exists('fieldtypes')) {
                                 jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
                                 ajaxCall('df_processAjaxForm',formData, addquery, function(p){
                                     jQuery("#ui-jsDialog-"+eid+"").remove();
-                                    
+
                                     //load callback
                                     if (typeof callback == 'function') { // make sure the callback is a function
                                         callback.call(this, eid, ajaxSubmit, addquery, p); // brings the scope to the callback
                                     }
 
-                                    df_loadOutScripts();                                    
+                                    df_loadOutScripts();
                                     dr_goToPage(eid, false, false, addquery);
                                 });
-                                
+
                                 return false;
                                 });
                                 jQuery("#data_form_"+eid+"").submit();
@@ -166,13 +166,13 @@ if (file_exists('fieldtypes')) {
                         }
                     });
                     jQuery("#ui-jsDialog-"+eid+"").html(c.html);
-                    
+
                     if(c.script){
                         eval(c.script);
                     }
                     //alert(parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
-                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');                    
+                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
                 });
             },
             close: function(event, ui) {
@@ -292,7 +292,7 @@ if (file_exists('fieldtypes')) {
                     //alert(parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
-                                        
+
                     jQuery( "#"+eid+"_importProgress").progressbar({
                         value: 0
                     });
@@ -327,7 +327,7 @@ if (file_exists('fieldtypes')) {
 
     function dr_reloadImport(eid, delim){
 
-        
+
         ajaxCall('dr_buildImportManager',eid, delim, function(c){
             jQuery("#ui-jsDialog-"+eid+"").html(c.html);
             jQuery('#importDelimeter').focus();

@@ -383,6 +383,9 @@ if(is_admin()) {
 
 function df_processAjaxForm($Input, $addQuery = false){
 
+    if(!empty($addQuery)){
+        parse_str($addQuery, $_GET);
+    }
     ob_start();
     parse_str($Input, $Data);
     $Data = stripslashes_deep($Data);

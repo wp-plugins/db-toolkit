@@ -364,6 +364,7 @@ if (is_admin ()) {
     }
 
     function df_tableReportSetup($Table, $EID, $Config = false, $Column = 'M') {
+
         if (empty($Table)) {
             return;
         }
@@ -1188,7 +1189,12 @@ function df_FormWidthSetup($id, $Default = false) {
     return $Return;
 }
 
-function dr_BuildUpDateForm($EID, $ID) {
+function dr_BuildUpDateForm($EID, $ID, $addQuery = false) {
+
+    if(!empty($addQuery)){
+        parse_str($addQuery, $_GET);
+    }
+
     $Data = getelement($EID);
     $Data['_ActiveProcess'] = 'update';
 
@@ -1743,6 +1749,28 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // get done queries
     global $wpdb;
     //dump($Queries);
+
+    // Custom WHERE
+    $customWhere = '';
+    if(!empty($Config['_useCustomWhere'])){
+        if ($WhereTag == '') {
+            $WhereTag = " WHERE ";
+        }
+        $preWhere = '';
+        foreach($Config['_customWHERE'] as $cwhere){
+            if(!empty($queryWhere)){
+                $queryWhere = '('.$queryWhere.')';
+                $preWhere .= ' '.$cwhere['_Req'].' ';
+            }
+            $preWhere .= '('.$cwhere['_Where'].')';
+        }
+        $queryWhere .= $preWhere;
+    }
+
+
+
+
+
     $CountQuery = "SELECT count(" . $countSelect . ") as Total FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . " \n " . $groupBy . "\n\n " . $countLimit . ";";
     $CountResult = mysql_query($CountQuery);
 
@@ -1843,6 +1871,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 
         return ob_get_clean();
     }
+
+
 
     $Query = "SELECT " . $querySelect . " FROM `" . $Config['_main_table'] . "` AS prim \n " . $queryJoin . " \n " . $WhereTag . " \n " . $queryWhere . "\n " . $groupBy . " \n " . $orderStr . " \n " . $queryLimit . ";";
 

@@ -251,7 +251,7 @@
         });
     }
 
-    function dr_BuildUpDateForm(eid, rid, ajaxSubmit){
+    function dr_BuildUpDateForm(eid, rid, ajaxSubmit, addquery){
 
 		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
 
@@ -271,7 +271,7 @@
                 jQuery(".formError").remove();
             },
             open: function(event, ui) {
-                ajaxCall('dr_BuildUpDateForm',eid, rid, function(c){
+                ajaxCall('dr_BuildUpDateForm',eid, rid,addquery, function(c){
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'title', c.title);
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'buttons', {
                         'Close': function() {
@@ -279,7 +279,29 @@
                         },
                         'Save': function() {
                             //dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
-                            jQuery("#data_form_"+eid+"").submit();
+                                if(ajaxSubmit == true){
+                                jQuery("#data_form_"+eid+"").bind('submit', function(){
+                                formData = jQuery("#data_form_"+eid+"").serialize();
+                                jQuery("#ui-jsDialog-"+eid+"").html('Sending...');
+                                jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
+                                ajaxCall('df_processAjaxForm',formData, addquery, function(p){
+                                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
+
+                                    //load callback
+                                    if (typeof callback == 'function') { // make sure the callback is a function
+                                        callback.call(this, eid, ajaxSubmit, addquery, p); // brings the scope to the callback
+                                    }
+                                    dr_goToPage(eid, false, false, addquery);
+                                    df_loadOutScripts();
+                                });
+
+                                return false;
+                                });
+                                jQuery("#data_form_"+eid+"").submit();
+                            }else{
+                                jQuery("#data_form_"+eid+"").submit();
+                            }
+
                         }
                     });
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").html(c.html);
