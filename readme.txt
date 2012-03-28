@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 0.3.2.017
+Stable tag: 0.3.2.018
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,10 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.018 =
+* Fixed a few small bugs that where annoying me.
+* Added a new tab to edit interface to allow for custom WHERE statements in the final query.
 
 = 0.3.2.017 =
 * Fixed a bug that broke an interface ig you tried to group a virtual field that is set as a join. (ye its complicated.)
@@ -251,4 +255,3 @@ A: Well you can technically use it now, however some things are still a little i
 == Upgrade Notice ==
 
 Simply overwrite the existing folder with the new one.
-
