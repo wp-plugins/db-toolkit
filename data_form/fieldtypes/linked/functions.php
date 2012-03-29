@@ -4,44 +4,40 @@ global $ajaxAllowedFunctions;
 $ajaxAllowedFunctions['linked_setReloadField'] = 1;
 
 function linked_processValue($Value, $Type, $Field, $Config, $EID, $Data){
-//vardump($Data);
-        if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 
-                $Items = explode('||', rtrim(ltrim($Value, '||'), '||'));
-
-
-
-                //$OutQuery = 'SELECT prim.from, prim.to, '.$outString.' FROM `'.$LinkingTable.'` AS prim JOIN `'.$Config['_Linkedfields'][$Field]['Table'].'` AS too ON (prim.to = too.'.$Config['_Linkedfields'][$Field]['ID'].') ';
-
-
-	}
-	return trim($Value);
+	return $Value;
 }
 
 function linked_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){
-    return;
+    //return;
+
 	if($Config['Content']['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-		$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
-		mysql_query("DELETE FROM `".$LinkingTable."` WHERE `from` = '".$ID."' ");
-		mysql_query("UPDATE `".$LinkingTable."` SET `from` = '".$ID."' WHERE `control` = '".$_SESSION['LinkingControl'][$Config['ID']]."' ");
+                global $wpdb;
+
+		$LinkingTable = $wpdb->prefix.'__'.str_replace($wpdb->prefix.'dbt_', '', $Config['Content']['_main_table']).str_replace($wpdb->prefix.'dbt_', '', $Config['Content']['_Linkedfields'][$Field]['Table']);
+		$wpdb->query("DELETE FROM `".$LinkingTable."` WHERE `from` = '".$ID."' ");
+		$wpdb->query("UPDATE `".$LinkingTable."` SET `from` = '".$ID."' WHERE `control` = '".$_SESSION['LinkingControl'][$Config['ID']]."' ");
 		unset($_SESSION['LinkingControl'][$Config['ID']]);
 	}
 }
 function linked_handleInput($Field, $Input, $FieldType, $Config, $Data){
+
+        global $wpdb;
+
 	if($Config['Content']['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 
             if($Config['_ActiveProcess'] == 'update'){
                 $Input = unserialize($Input);
             }
 
-        return '||'.implode('||', $Input).'||';
+
 
         //$InputArray = unserialize($Input);
 	$_SESSION['LinkingControl'][$Config['ID']] = md5(uniqid(date('YmdHis')));
-	$LinkingTable = '_linking_'.$Config['Content']['_main_table'].'_'.$Config['Content']['_Linkedfields'][$Field]['Table'];
-	mysql_query("CREATE TABLE `".$LinkingTable."` (`from` INT NOT NULL ,`to` INT NOT NULL, `control` VARCHAR( 100 ) ,INDEX ( `from` , `to`, `control` )) ENGINE = InnoDB");
-	//mysql_query("INSERT INTO `".$LinkingTable."` ( `from` , `to`, `control` ) VALUES
-	//	('2', '6')
+	$LinkingTable = $wpdb->prefix.'__'.str_replace($wpdb->prefix.'dbt_', '', $Config['Content']['_main_table']).str_replace($wpdb->prefix.'dbt_', '', $Config['Content']['_Linkedfields'][$Field]['Table']);
+
+	$Query = "CREATE TABLE `".$LinkingTable."` (`from` INT NOT NULL ,`to` INT NOT NULL, `control` VARCHAR( 100 ) ,INDEX ( `from` , `to`, `control` )) ENGINE = InnoDB";
+        $wpdb->query($Query);
 
 		$Inserts = array();
 		$Inputs = array();
@@ -56,7 +52,7 @@ function linked_handleInput($Field, $Input, $FieldType, $Config, $Data){
 		}
 		$Insert = implode(',',$Inserts);
 		$InsertQuery = "INSERT INTO `".$LinkingTable."` (`to`, `control` ) VALUES ".$Insert." ;";
-		mysql_query($InsertQuery);
+                $wpdb->query($InsertQuery);
 		$Input = implode(',',$Inputs);
 	//echo $LinkingTable;
 	//die;
@@ -566,6 +562,7 @@ return $Return;
 
 function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 	$FieldTitle = '';
+
 	if(!empty($Config['_FieldTitle'][$Field])){
 		$FieldTitle = $Config['_FieldTitle'][$Field];
 	}
@@ -577,9 +574,9 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 			if(count($outList) >= 2){
 				$outString = 'CONCAT('.implode(',\' \',',$outList).')';
 			}else{
-				$outString = $outList[0];
+				$outString = '`'.$outList[0].'`';
 			}
-			$outString = '`'.$outString.'` AS out_value';
+			$outString = $outString.' AS out_value';
 		$Multiple = '';
 		//dump($Config['_Linkedfields']);
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
@@ -596,11 +593,13 @@ function linked_showFilter($Field, $Type, $Default, $Config, $EID){
 
 		$Res = mysql_query("SELECT `".$Config['_Linkedfields'][$Field]['ID']."`, ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$queryWhere." ORDER BY `out_value` ASC;");
                 if($Res == false){
+                    vardump("SELECT `".$Config['_Linkedfields'][$Field]['ID']."`, ".$outString." FROM `".$Config['_Linkedfields'][$Field]['Table']."` ".$queryWhere." ORDER BY `out_value` ASC;");
+                    die;
                     return;
                 }
                 $Return .= '<div class="filterField"><h2>'.$FieldTitle.'</h2><select id="'.$SelectID.'" name="reportFilter['.$EID.']['.$Field.'][]" '.$Multiple.'>';
 		if(empty($Config['_Linkedfields'][$Field]['SingleSelect'])){
-                    $Return .= '<option>Select All</option>';
+                  //  $Return .= '<option>Select All</option>';
                 }else{
                     $Return .= '<option></option>';
                 }

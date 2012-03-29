@@ -2,6 +2,7 @@
 //Filters query variables for the field type
 		if($Type[1] == 'linked'){
 
+                        global $wpdb;
 
                         $joinIndexSet = $joinIndex;
                         if(!empty($queryJoins[$joinIndex])){
@@ -28,7 +29,7 @@
                                     }
                                 }
 
-                                    $outString = 'CONCAT('.implode(', \' \',',$outList).')';
+                                    $outString = 'CONCAT_WS(\' \', '.implode(', ',$outList).')';
                                 }else{
                                     $outString = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['Value'][0].'`';
                                 }
@@ -50,12 +51,51 @@
 			$querySelects['_sourceid_'.$Field] = $joinIndexSet.'.`'.$Config['_Linkedfields'][$Field]['ID'].'`';
 
 			// left Join linked table
-			if($Config['_Linkedfields'][$Field]['Type'] == 'oldcheckbox'){
+			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
 
-				//$LinkingTable = '_linking_'.$Config['_Linkedfields'][$Field]['Table'].'_'.$Config['_Linkedfields'][$Field]['ID'];
-				//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex."_linking on (prim.".$Config['_ReturnFields'][0]." = ".$joinIndex."_linking.from) \n";
+                                $LinkingTable = $wpdb->prefix.'__'.str_replace($wpdb->prefix.'dbt_', '', $Config['_main_table']).str_replace($wpdb->prefix.'dbt_', '', $Config['_Linkedfields'][$Field]['Table']);
+
+				//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS `".$joinIndex."_linking` on (prim.".$Config['_ReturnFields'][0]." = ".$joinIndex."_linking.from) \n";
 				//$queryJoin .= " LEFT JOIN `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndex." on (".$joinIndex."_linking.to = ".$joinIndex.".".$Config['_Linkedfields'][$Field]['ID'].") \n";
-				//echo $LinkingTable;
+
+
+                                $Primary = '`prim`.`'.$Config['_ReturnFields'][0].'`';
+                                if(empty($queryJoins[$joinIndex])){
+                                    $queryJoins[$joinIndex."_linking"] = " LEFT JOIN `".$LinkingTable."` AS `".$joinIndex."_linking` on (".$Primary." = `".$joinIndex."_linking`.`from`) \n";;
+                                    $queryJoin .= $queryJoins[$joinIndex."_linking"];
+                                    $queryJoins[$joinIndex] = " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS `".$joinIndexSet."` on (`".$joinIndex."_linking`.`to` = `".$joinIndexSet."`.`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
+                                    $queryJoin .= $queryJoins[$joinIndex];
+
+
+
+                                }
+                                // titles concat
+                                if(count($Config['_Linkedfields'][$Field]['Value']) > 1){
+				foreach($Config['_Linkedfields'][$Field]['Value'] as $Key=>$outValue){
+
+                                    if(!empty($Config['_Linkedfields'][$Field]['Prefix'][$Key])){
+                                        $outList[] = "'".$Config['_Linkedfields'][$Field]['Prefix'][$Key]."'";
+                                    }else{
+                                        //$outList[] = "' '";
+                                    }
+					$outList[] = '`'.$joinIndexSet.'`.`'.$outValue.'`';
+                                    if(!empty($Config['_Linkedfields'][$Field]['Suffix'][$Key])){
+                                        $outList[] = "'".$Config['_Linkedfields'][$Field]['Suffix'][$Key]."'";
+                                    }else{
+                                        //$outList[] = "' '";
+                                    }
+                                }
+
+                                    $outString = 'CONCAT_WS(\' \', '.implode(',',$outList).')';
+                                }else{
+                                    $outString = '`'.$joinIndexSet.'`.`'.$Config['_Linkedfields'][$Field]['Value'][0].'`';
+                                }
+                                //$querySelects[$Field] = $outString;
+
+                                $groupBy[] = $Config['_ReturnFields'][0];
+                                $querySelects[$Field] = 'GROUP_CONCAT('.$outString.' SEPARATOR \', \')';
+
+                                //echo $LinkingTable;
 				//die;
 				//select u.name,p.product from user u
 				// join user_product_link pl on pl.userid=u.id
@@ -69,20 +109,25 @@
 
                                 }
                                 if(empty($queryJoins[$joinIndex])){
-                                    $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = ".$joinIndexSet.".`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
+                                    $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = `".$joinIndexSet."`.`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
                                     $queryJoins[$joinIndex] = $joinIndex;
                                 }
+                        }
                         //New Join Methods
                             //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
 
-			}
 
-                        if(!empty($Config['_Linkedfields'][$Field]['_Filter']) && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
+
+                        if(!empty($Config['_Linkedfields'][$Field]['_Filter'])){// && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
                             if($WhereTag == ''){
                                     $WhereTag = " WHERE ";
                             }
-                            $queryWhere[] = $joinIndexSet.".`".$Config['_Linkedfields'][$Field]['_Filter']."` = '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
+                            $filterType = '=';
+                            if(!empty($Config['_Linkedfields'][$Field]['_FilterType'])){
+                                $filterType = $Config['_Linkedfields'][$Field]['_FilterType'];
+                            }
+                            $queryWhere[] = $joinIndexSet.".`".$Config['_Linkedfields'][$Field]['_Filter']."` ".$filterType." '".  mysql_real_escape_string($Config['_Linkedfields'][$Field]['_FilterBy'])."'";
                         }
 
 		}
@@ -164,13 +209,14 @@
 				$WhereTag = " WHERE ";
 			}
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-			$LinkingTable = '_linking_'.$Config['_main_table'].'_'.$Config['_Linkedfields'][$Field]['Table'];
-			//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS ".$joinIndex." on (prim.".$Field." = ".$joinIndex.".".$Config['_Linkedfilterfields'][$Field]['Ref'].") \n";
-				$prewhere = array();
-				foreach($_SESSION['reportFilters'][$EID][$Field] as $like){
-					$prewhere[] = 'prim.'.$Field." LIKE '%|".$like."|%' ";
-				}
-				$queryWhere[] = '('.implode(' OR ', $prewhere).')';
+                            if(empty($Config['_Linkedfields'][$Field]['TextSearch'])){
+
+                                    $queryWhere[] = "`".$joinIndexSet."`.`".$Config['_Linkedfields'][$Field]['ID']."` in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
+
+                            }else{
+                                //echo $_SESSION['reportFilters'][$EID][$Field];
+                                $queryWhere[] = $outString." LIKE '%".$_SESSION['reportFilters'][$EID][$Field]."%' ";
+                            }
 			}else{
 
 

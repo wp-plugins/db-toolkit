@@ -399,5 +399,14 @@
 	jQuery("#"+foo).animate({"height": "toggle"}, {"duration": 200});
     }
 
+    function df_submitStart(notice){
+	jQuery(body).append('<div class="ui-overlay" id="reportpanel_block"><div class="ui-widget-overlay ui-corner-all">Loading Data</div></div>')
+    }
 
+    function linked_reloadField(eid, ajaxSubmit, addquery, returnVal){
+
+        ajaxCall('df_reloadFormField', eid, addquery, returnVal.Value, function(p){
+           jQuery('#'+p.element).html(p.html);
+        });
+    }
     
