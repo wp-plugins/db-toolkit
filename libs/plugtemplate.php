@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: {{appName}}
-Plugin URI: {{appURI}}
-Description: {{appDescription}}
-Author: {{appAuthor}}
-Version: {{appVersion}}
-Author URI: {{authorURI}}
+===Plugin Name: {{appName}}
+===Plugin URI: {{appURI}}
+===Description: {{appDescription}}
+===Author: {{appAuthor}}
+===Version: {{appVersion}}
+===Author URI: {{authorURI}}
 */
 
 

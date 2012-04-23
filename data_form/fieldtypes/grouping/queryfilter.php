@@ -18,12 +18,12 @@ variables avaiable
 */
 if(!empty($Config['_CloneField'][$Field]['Master'])){
     $groupBy[$Config['_CloneField'][$Field]['Master']] = '`'.$Config['_CloneField'][$Field]['Master'].'`';
-}else{
+}else{    
     $groupBy['group_'.$Field] = 'prim.`'.$Field.'`';
 }
 
 if($Config['_GroupingFields'][$Field]['Action'] == 'concat'){
-    //$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
+    //$querySelects[$Field] = $Config['_GroupingFields'][$Field]['Action'].'(`'.$Config['_GroupingFields'][$Field]['Field'].'`)';  
     if(array_key_exists($Config['_GroupingFields'][$Field]['Field'],$Config['_Field']) && substr($Config['_GroupingFields'][$Field]['Field'], 0, 2) != '__'){
         $querySelects[$Field] = 'GROUP_CONCAT(prim.`'.$Config['_GroupingFields'][$Field]['Field'].'`)';
     }else{

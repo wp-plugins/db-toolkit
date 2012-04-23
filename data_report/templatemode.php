@@ -1,10 +1,12 @@
 <?php
 
+
+
 if(!empty($exitNotice)){
     return;//'<div id="'.$EID.'_wrapper"></div>';
 }
 
-global $wpdb;
+global $wpdb, $InstanceID;
 
 $jsqueue = "";
 
@@ -69,13 +71,12 @@ if ($Count['Total'] == 0) {
     $noentries = '';
     $itemcount = ($Start + 1) . ' - ' . $toPos . ' of ' . $Count['Total'] . ' Items';
 }
-
 //$prevbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $Media['ID'] . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
-$firstpagebutton = '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
-$prevbutton = '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
+$firstpagebutton = '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Â«</a>';
+$prevbutton = '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">â€¹</a>';
 $pagejump = '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_' . $Media['ID'] . '" style="width:30px; font-size:11px;" value="' . $Page . '" onkeypress="dr_pageInput(\'' . $Media['ID'] . '\', this.value);" /> of ' . $TotalPages . '</div>';
-$nextbutton = '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
-$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
+$nextbutton = '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">â€º</a>';
+$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">Â»</a>';
 
 $pagecount = '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
 
@@ -108,14 +109,14 @@ for($p=1; $p<=$TotalPages; $p++){
 }
 
 
-//$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
+//$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">Â»</a>';
 
 foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
-    // placebefore Entry loop
+    // placebefore Entry loop    
     $preHeader = $Config['_layoutTemplate']['_Content']['_before'][$key];
 
     foreach($Config['_Field'] as $headField=>$type){
-
+        
         if (!empty($Config['_FieldTitle'][$headField])) {
             $name = $Config['_FieldTitle'][$headField];
         } else {
@@ -158,7 +159,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
             }
         }
         $Row = grid_rowswitch($Row);
-
+        
         $PreReturn = $Config['_layoutTemplate']['_Content']['_content'][$key];
 
         // Run first with processing values and wrapping them in thier template.
@@ -178,7 +179,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
             if(!empty($Config['_layoutTemplate']['_Fields'][$Field]) && strlen($Value) > 0){
                 $Value = $Config['_layoutTemplate']['_Fields'][$Field]['_before'].$Value.$Config['_layoutTemplate']['_Fields'][$Field]['_after'];
             }
-
+            
             $row[$Field] = $Value;
 
             if (!empty($Config['_FieldTitle'][$Field])) {
@@ -203,7 +204,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                 $PreReturn = str_replace($returnMatches[0], substr(strip_tags($row[$returnMatches[1]]), $start, $end), $PreReturn);
             }
 
-            preg_match("/\{\{([A-Za-z0-9]+)\|([A-Za-z0-9_\-]+)\}\}/", $PreReturn, $returnMatches);
+            preg_match("/\{\{([A-Za-z0-9]+)\|([A-Za-z0-9_\-]+)\}\}/", $PreReturn, $returnMatches);            
             if (!empty($returnMatches)) {
                 //vardump($returnMatches);
                 $subFunc = $returnMatches[2];
@@ -213,7 +214,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     $PreReturn = str_replace($returnMatches[0], $row[$returnMatches[1]], $PreReturn);
                 }
             }
-
+            
 
             $PreReturn = str_replace('{{_' . $Field . '_name}}', $name, $PreReturn);
             $PreReturn = str_replace('{{_' . $Field . '}}', $Field, $PreReturn);
@@ -258,7 +259,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     if(!empty($Config['_ajaxForms'])){
                         $isAjax = ", true,'".build_query($_GET)."'";
                     }
-                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\' '.$isAjax.');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $InstanceID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\' '.$isAjax.');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
 
 
@@ -271,7 +272,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                         }
 
                         $sendString = htmlspecialchars_decode(http_build_query($ReportVars));
-
+                        
                         $viewTarget = "dr_pushResult('".$Config['_ItemViewInterface']."', '".$sendString."');";
                     }
 
@@ -282,21 +283,21 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
             }
 
 
-            // Add data to template
+            // Add data to template            
             //echo $Config['_layoutTemplate']['_Content']['_content'][$key];
             // data
             //$row[$Field]
-
+            
         }
         $preContent = $PreReturn;
         //vardump($row);
-
+    
 
     $PreReturn = $preContent;
     $outContent = '';
     // loop through again to change any missing ones
     foreach($row as $Field=>$Value){
-
+            
             $Value = str_replace('<?php', htmlentities('<?php'), $Value);
             $Value = str_replace('?>', htmlentities('?>'), $Value);
 
@@ -372,7 +373,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
                     if ($ViewLink != '') {
                         $ViewLink .= " ";
                     }
-                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $InstanceID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
 
                     if (!empty($Config['_ItemViewInterface']) && !empty($Config['_targetInterface'])){
@@ -404,7 +405,7 @@ foreach($Config['_layoutTemplate']['_Content']['_name'] as $key=>$rowTemplate){
 
     echo $outContent;
     }
-
+    
     $preFooter = $Config['_layoutTemplate']['_Content']['_after'][$key];
 
     foreach($Config['_Field'] as $footField=>$type){
@@ -550,7 +551,7 @@ if (!empty($Config['_Show_Edit'])) {
     //    #data_report_dt_intfc4e10d80d9c725 .report_entry
 
 
-    $_SESSION['dataform']['OutScripts'] .= "
+    $_SESSION['dataform']['OutScripts'] .= "            
             jQuery('#reportPanel_" . $EID . " .report_entry').bind('click', function(){
                     jQuery(this).toggleClass(\"highlight\");
             });

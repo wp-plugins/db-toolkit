@@ -1,14 +1,13 @@
 <?php
 // Field Types Config| 
-$FieldTypeTitle = 'Math';
+$FieldTypeTitle = 'File';
 $isVisible = true;
 $FieldTypes = array();
 
-$FieldTypes['multiply'] = array('name' => 'Field Calculator','func' => 'math_multiplysetup', 'visible' => true, 'baseType'  => 'INT(11)');
-$FieldTypes['datediff'] = array('name' => 'Date Difference','func' => 'math_datesetup', 'visible' => false, 'baseType'  => 'INT(11)');
-$FieldTypes['percentage'] = array('name' => 'Percentage','func' => 'null', 'visible' => false, 'baseType'  => 'INT');
-$FieldTypes['mysqlfunc'] = array('name' => 'Mysql Function','func' => 'math_mysqlfunc', 'visible' => false, 'baseType'  => 'INT(11)');
-
+$FieldTypes['image'] 		= array('name' => 'Image Upload'	, 'func' => 'file_imageConfig'	, 'visible' => true, 'baseType'  => 'VARCHAR(255)');
+$FieldTypes['file'] 		= array('name' => 'File Upload'		, 'func' => 'null', 'visible' => true, 'baseType'  => 'VARCHAR(255)');
+//$FieldTypes['multi'] 		= array('name' => 'Multi File Upload'	, 'func' => 'null'				, 'visible' => true, 'baseType'  => 'VARCHAR(255)');
+$FieldTypes['mp3'] 		= array('name' => 'MP3 File Upload'	, 'func' => 'file_playerSetup'				, 'visible' => true, 'baseType'  => 'VARCHAR(255)');
 
 
 ?>

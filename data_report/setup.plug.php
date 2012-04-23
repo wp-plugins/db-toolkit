@@ -21,9 +21,9 @@
                 ?>
             </div>
             <?php
-
+            
             $icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/images/defaultlogo.png" />';
-
+            
             if(!empty($appConfig['imageURL'])){
                $icon = '<img src="'.UseImage($appConfig['imageURL'], 7, 150, 100).'" />';
             }
@@ -55,7 +55,7 @@
                     'Templates'=>'listtemplate.php',
                     'Redirects' => 'redirects.php',
                     'Bindings' => 'bindings.php',
-                    'Custom Scripts'=>'customscripts.php',
+                    'Custom Scripts'=>'customscripts.php',                    
                     'Custom WHERE'=>'where.php',
                     'Import & Export'=>'importexport.php'
                 );
@@ -102,11 +102,11 @@
                     }
 
                     echo '<div id="dbt-option-'.$tabIndex.'" class="group" style="display: '.$view.';">';
-
+                        
                         include(WP_PLUGIN_DIR.'/db-toolkit/data_report/'.$File);
 
                     echo '</div>';
-
+                    
                     $tabIndex++;
                 }
 

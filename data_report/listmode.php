@@ -14,7 +14,7 @@ if (!empty($_SESSION['dr_filters'][$_GET['PageData']['ID']])) {
 */
 
 if (empty($Config['_useListTemplate'])) {
-    echo '<div id="reportPanel_' . $Media['ID'] . '">';
+    echo '<div id="reportPanel_' . $InstanceID . '">';
 }
 //($EID, $Page = 1, $SortField = false, $SortDir = false)
 

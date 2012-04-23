@@ -1,4 +1,5 @@
 <?php
+
 // Control Buttons
     //_useToolbarTemplate _layoutTemplate
     if(!empty($_SESSION['DF_Notification'])){
@@ -43,7 +44,7 @@ if (!empty($Config['_Hide_Toolbar'])) {
             }else{
                 $hasQuery = false;
             }
-            $Template = str_replace('{{_button_addItem}}', dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ',\''.$hasQuery.'\');return false;','add'), $Template);
+            $Template = str_replace('{{_button_addItem}}', dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $InstanceID . '\', ' . $ajaxSubmit . ',\''.$hasQuery.'\');return false;','add'), $Template);
         }else{
             $Template = str_replace('{{_button_addItem}}', '', $Template);
         }
@@ -51,21 +52,26 @@ if (!empty($Config['_Hide_Toolbar'])) {
         // replace import button
         if (!empty($Config['_Show_Import'])) {
             //{{_button_import}}
-            $Template = str_replace('{{_button_import}}', dr_toolbarButton('Import', 'df_buildImportForm(\'' . $Media['ID'] . '\');return false;', 'import'), $Template);
+            $Template = str_replace('{{_button_import}}', dr_toolbarButton('Import', 'df_buildImportForm(\'' . $InstanceID . '\');return false;', 'import'), $Template);
         }else{
             $Template = str_replace('{{_button_import}}', '', $Template);
         }
 
         //replace {{_button_toggleFilters}}
         if (!empty($Config['_Show_Filters'])) {
-            $Template = str_replace('{{_button_toggleFilters}}', dr_toolbarButton('Filters', 'jQuery(\'#filterPanel_' . $Media['ID'] . '\').toggle();', 'filterbutton'), $Template);
+            $Template = str_replace('{{_button_toggleFilters}}', dr_toolbarButton('Filters', 'jQuery(\'#filterPanel_' . $InstanceID . '\').toggle();', 'filterbutton'), $Template);
         }else{
             $Template = str_replace('{{_button_toggleFilters}}', '', $Template);
         }
 
         // replace {{_button_reload}}
         if (!empty($Config['_showReload'])) {
-                $Template = str_replace('{{_button_reload}}', dr_toolbarButton('Reload', 'dr_goToPage(\'' . $Media['ID'] . '\', false, false);', 'reload'), $Template);
+                if(!empty($_GET)){
+                    $hasQuery = build_query($_GET);
+                }else{
+                    $hasQuery = false;
+                }
+                $Template = str_replace('{{_button_reload}}', dr_toolbarButton('Reload', 'dr_goToPage(\'' . $InstanceID . '\', false, false,\''.$hasQuery.'\');', 'reload'), $Template);
         }else{
 
         }
@@ -73,14 +79,14 @@ if (!empty($Config['_Hide_Toolbar'])) {
         // replace {{_button_selectAll}}
         if (!empty($Config['_Show_Delete'])) {
             if (!empty($Config['_Show_Select'])) {
-                $Template = str_replace('{{_button_selectAll}}', dr_toolbarButton('Select All', 'dr_selectAll(\'' . $Media['ID'] . '\');', 'selectall'), $Template);
-                $Template = str_replace('{{_button_unselect}}', dr_toolbarButton('Unselect All', 'dr_deSelectAll(\'' . $Media['ID'] . '\');', 'unselectall'), $Template);
+                $Template = str_replace('{{_button_selectAll}}', dr_toolbarButton('Select All', 'dr_selectAll(\'' . $InstanceID . '\');', 'selectall'), $Template);
+                $Template = str_replace('{{_button_unselect}}', dr_toolbarButton('Unselect All', 'dr_deSelectAll(\'' . $InstanceID . '\');', 'unselectall'), $Template);
             }else{
                 $Template = str_replace('{{_button_selectAll}}', '', $Template);
                 $Template = str_replace('{{_button_unselect}}', '', $Template);
             }
 
-            $Template = str_replace('{{_button_deleteSelected}}', dr_toolbarButton('Delete Selected', 'dr_deleteEntries(\'' . $Media['ID'] . '\');"', 'delete'), $Template);
+            $Template = str_replace('{{_button_deleteSelected}}', dr_toolbarButton('Delete Selected', 'dr_deleteEntries(\'' . $InstanceID . '\');"', 'delete'), $Template);
         }else{
             $Template = str_replace('{{_button_selectAll}}', '', $Template);
             $Template = str_replace('{{_button_unselect}}', '', $Template);
@@ -127,40 +133,45 @@ if (!empty($Config['_Hide_Toolbar'])) {
             }
 
             //vardump($Config['_ReturnFields']);
-           echo dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $Media['ID'] . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;','add');
+           echo dr_toolbarButton($Config['_New_Item_Title'], 'df_buildQuickCaptureForm(\'' . $InstanceID . '\', ' . $ajaxSubmit . ', \''.build_query($_GET).'\');return false;','add');
            echo dr_toolbarSeperator();
             //echo '<div class="fbutton"><div class="button add-new-h2" onclick=""><span class="add">' . $Config['_New_Item_Title'] . '</span></div></div>';
         }
 
         if (!empty($Config['_Show_Import'])) {
-            echo dr_toolbarButton('Import', 'df_buildImportForm(\'' . $Media['ID'] . '\');return false;', 'import');
+            echo dr_toolbarButton('Import', 'df_buildImportForm(\'' . $InstanceID . '\');return false;', 'import');
             echo dr_toolbarSeperator();
         }
 
         //if(empty($_SESSION['lockedFilters'][$Media['ID']]) || !empty($_SESSION['UserLogged'])){
         if (!empty($Config['_Show_Filters'])) {
             if (!empty($Config['_toggle_Filters'])) {
-                echo dr_toolbarButton('Filters', 'jQuery(\'#filterPanel_' . $Media['ID'] . '\').toggle();', 'filterbutton');
+                echo dr_toolbarButton('Filters', 'jQuery(\'#filterPanel_' . $InstanceID . '\').toggle();', 'filterbutton');
                 echo dr_toolbarSeperator();
             }
         }
         //}
         if (!empty($Config['_showReload'])) {
-                echo dr_toolbarButton('Reload', 'dr_goToPage(\'' . $Media['ID'] . '\', false, false);', 'reload');
+                if(!empty($_GET)){
+                    $hasQuery = build_query($_GET);
+                }else{
+                    $hasQuery = false;
+                }
+                echo dr_toolbarButton('Reload', 'dr_goToPage(\'' . $InstanceID . '\', false, false, \''.$hasQuery.'\');', 'reload');
                 echo dr_toolbarSeperator();
         }
 
         //dr_selectAll
         if (!empty($Config['_Show_Delete'])) {
             if (!empty($Config['_Show_Select'])) {
-                echo dr_toolbarButton('Select All', 'dr_selectAll(\'' . $Media['ID'] . '\');', 'selectall');
+                echo dr_toolbarButton('Select All', 'dr_selectAll(\'' . $InstanceID . '\');', 'selectall');
                 echo dr_toolbarSeperator();
 
-                echo dr_toolbarButton('Unselect All', 'dr_deSelectAll(\'' . $Media['ID'] . '\');', 'unselectall');
+                echo dr_toolbarButton('Unselect All', 'dr_deSelectAll(\'' . $InstanceID . '\');', 'unselectall');
                 echo dr_toolbarSeperator();
             }
 
-            echo dr_toolbarButton('Delete Selected', 'dr_deleteEntries(\'' . $Media['ID'] . '\');"', 'delete');
+            echo dr_toolbarButton('Delete Selected', 'dr_deleteEntries(\'' . $InstanceID . '\');"', 'delete');
             echo dr_toolbarSeperator();
         }
 

@@ -193,6 +193,7 @@ if(is_admin()) {
         $result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
         $Return = '<select name="Data[Content]['.$Name.']" id="Return_'.$Table.'">';
         //$Return .= '<option value="false">None</option>';
+
         if (mysql_num_rows($result) > 0) {
             while ($row = mysql_fetch_assoc($result)) {
                 $Sel = '';
@@ -777,7 +778,7 @@ function df_BuildCaptureForm($Element, $Defaults = false, $ViewOnly = false) {
                                     $inputField = '<div class="control-group '.$isValid.'">';
                                         $inputField .= '<label class="control-label">'.$name.'</label>';
                                         if(empty($Config['_placeHolderTitle'][$Field])){
-                                            $placeholder = '';
+                                            $placeholder = '';                                            
                                         }else{
                                             $placeholder = $name;
                                         }

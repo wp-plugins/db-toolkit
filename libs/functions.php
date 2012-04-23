@@ -5,6 +5,9 @@
  *
  */
 
+// Setup Globals
+$InstanceID = true;
+
 require_once(DB_TOOLKIT.'libs/lib.php');
 require_once(DB_TOOLKIT.'daiselements.class.php');
 require_once(DB_TOOLKIT.'data_form/class.php');
@@ -1768,6 +1771,7 @@ function dt_rendercluster($cluster){
 
 // Render interface from shortcode to front end and view
 function dt_renderInterface($interface){
+    global $InstanceID;
 
     if(is_array($interface)) {
         if(!empty($interface['id'])){
@@ -1784,10 +1788,12 @@ function dt_renderInterface($interface){
         unset($_SESSION['viewitemFilter'][$interface]);
         $ID = $interface;
     }
-    $Media = get_option($ID);
+    $Media = get_option($ID);    
     if(empty($Media)) {
         return;
     }
+
+    $InstanceID = uniqid($ID.'__');
 
     if($Media['Type'] == 'Cluster'){
         ob_start();
@@ -1908,7 +1914,7 @@ function dt_renderInterface($interface){
                 $uid = uniqid();
                 ?>
                     <div class="alert alert-<?php echo $_SESSION['DF_NotificationTypes'][$Key]; ?>" id="<?php echo $uid; ?>">
-                    <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">?</a>
+                    <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">×</a>
                     <?php echo $Notice; ?>
                     </div>
                 <?php

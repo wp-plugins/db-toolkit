@@ -1,17 +1,25 @@
 //<script>
 
-function math_CurrencyFormatted(amount)
-{
-	var i = parseFloat(amount);
-	if(isNaN(i)) { i = 0.00; }
-	var minus = '';
-	if(i < 0) { minus = '-'; }
-	i = Math.abs(i);
-	i = parseInt((i + .005) * 100);
-	i = i / 100;
-	s = new String(i);
-	if(s.indexOf('.') < 0) { s += '.00'; }
-	if(s.indexOf('.') == (s.length - 2)) { s += '0'; }
-	s = minus + s;
-	return s;
+function file_removeFile(el){
+	//if(confirm('Are you sure you want to remove this file?')){
+		jQuery('#box_'+el+' .togglebutton').toggle();
+		jQuery('#box_'+el).animate({opacity: 0.3}, 200, function(){
+			//jQuery(this).slideUp(500, function(){
+				jQuery('#'+el).attr('disabled', 'disabled');
+				//jQuery(this).remove();
+			//});
+		});	
+//	}
+}
+
+function file_undoRemoveFile(el){
+	//if(confirm('Are you sure you want to remove this file?')){
+		jQuery('#box_'+el+' .togglebutton').toggle();
+		jQuery('#box_'+el).animate({opacity: 1}, 200, function(){
+			//jQuery(this).slideUp(500, function(){
+				jQuery('#'+el).removeAttr('disabled');
+				//jQuery(this).remove();
+			//});
+		});	
+//	}
 }

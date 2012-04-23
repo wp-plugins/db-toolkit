@@ -1,384 +1,348 @@
 <?php
-$calcs = array();
-function math_processValue($Value, $Type, $Field, $Config, $EID, $Data, $Caller = 'list'){
-	//echo $Value;
-        global $calcs;
-        if($Type == 'percentage'){
+// Functions
 
-            //return $Field;
-            //return $Value;
-            //echo $Field;
-            //dump($Data);
-            //echo $_SESSION['queries'][$EID];
+function file_imageConfig($Field, $Table, $Config = false){
 
 
-            $Res = mysql_query($_SESSION['queries'][$EID]);
-            //mysql_data_seek($Res, 0);
-            while($postData = mysql_fetch_assoc($Res)){
-                $Pre[] = $postData[$Field];
-                //dump($postData);
-                //echo $Field;
-            }
-            if(empty($calcs[md5($_SESSION['queries'][$EID])])){
-                $listTotal = array_sum($Pre);
-            }else{
-                $listTotal = $calcs[md5($_SESSION['queries'][$EID])];
-            }
-
-            $Return = round(($Value/$listTotal)*100, 2);
-            unset($Pre);
-
-            $Out = '<div style="width:'.($Return).'%; background:#009922; float:left;">&nbsp;</div>&nbsp;'.$Return.'%';
-
-            if($Caller == 'list'){
-                return $Out;
-            }
-            return $Return;
-            //return $_SESSION['queries'][$EID];
-
-
-        }
-
-	if($Type == 'multiply'){
-            //dump($Data);
-            //dump($Config['_multiply']);
-                $Opp = '*';
-                
-                if(!empty($Config['_multiply'][$Field]['opperator'])){
-                    $Opp = $Config['_multiply'][$Field]['opperator'];
-                }
-                
-            $mathString = $Data[$Config['_multiply'][$Field]['A']].$Opp.$Data[$Config['_multiply'][$Field]['B']];
-            $DoCalc = create_function("", "return " . $mathString . ";" );
-            return number_format($DoCalc(true));
-
-            //return $Value;
+        $Compression = 75;
+        $Width = 'auto';
+        $Height = 'auto';
+	if(!empty($Config['Content']['_IconSizeX'][$Field])){
+		$Width = $Config['Content']['_IconSizeX'][$Field];
 	}
-	if($Type == 'datediff'){
-
-                if($Config['_dateDiff'][$Field]['A'] == 'NOW'){
-                    $DateA = date('Y-m-d H:i:s');
-                }else{
-                    $DateA = $Data[$Config['_dateDiff'][$Field]['A']];
-                }
-                if($Config['_dateDiff'][$Field]['B'] == 'NOW'){
-                    $DateB = date('Y-m-d H:i:s');
-                }else{
-                    $DateB = $Data[$Config['_dateDiff'][$Field]['B']];
-                }
-
-
-
-		return math_timeDuration($DateA, $DateB, $Config['_dateDiff'][$Field]['prefix'], $Config['_dateDiff'][$Field]['suffix']);
+	if(!empty($Config['Content']['_IconSizeY'][$Field])){
+		$Height = $Config['Content']['_IconSizeY'][$Field];
 	}
-        if($Config['_mathMysqlFunc'][$Field] == 'sumtotal'){
-            $_SERVER['fieldMath'][$Field] = $_SERVER['fieldMath'][$Field]+$Value;
-            return $_SERVER['fieldMath'][$Field];
-        }
-        return $Value;
-}
-
-function math_postProcess($Field, $Input, $FieldType, $Config, $Data, $ID){
-}
-function math_handleInput($Field, $Input, $FieldType, $Config, $Data){
-	if($FieldType == 'multiply'){
-                $Opp = '*';
-                if(!empty($Config['Content']['_multiply'][$Field]['opperator'])){
-                    $Opp = $Config['Content']['_multiply'][$Field]['opperator'];
-                }
-		$mathString = $Data[$Config['Content']['_multiply'][$Field]['A']].$Opp.$Data[$Config['Content']['_multiply'][$Field]['B']];
-                $DoCalc = create_function("", "return (" . $mathString . ");" );
-                return number_format($DoCalc(true));
-
-		//return 'pi';//$Value;
+        $Return = '<h2>List Icon</h2>';
+	$Return .= '<div class="list_row1" style="padding:3px;">Icon Size: <input type="text" name="Data[Content][_IconSizeX]['.$Field.']" value="'.$Width.'" class="textfield" size="3" maxlength="4" style="width:40px;" /> X <input type="text" name="Data[Content][_IconSizeY]['.$Field.']" value="'.$Height.'" class="textfield" size="3" maxlength="4" style="width:40px;" /></div>';
+        if(!empty($Config['Content']['_IconCompression'][$Field])){
+		$Compression = $Config['Content']['_IconCompression'][$Field];
 	}
-	if($FieldType == 'datediff'){
-		return math_timeDuration($Data[$Config['Content']['_dateDiff'][$Field]['A']], $Data[$Config['Content']['_dateDiff'][$Field]['B']]);
+	$Return .= '<div class="list_row1" style="padding:3px;">Icon Compression: <input type="text" name="Data[Content][_IconCompression]['.$Field.']" value="'.$Compression.'" class="textfield" size="3" maxlength="4" style="width:40px;" />%</div>';
+        $Class = '';
+ 	if(!empty($Config['Content']['_IconClassName'][$Field])){
+		$Class = $Config['Content']['_IconClassName'][$Field];
 	}
-
-}
-
-// Args = $Field, $table, ElementConfig
-function math_multiplysetup($Field, $Table, $ElementConfig = false){
-        $Defaults = false;
-        if(!empty($ElementConfig)){
-                $Defaults = $ElementConfig['Content']['_multiply'][$Field];
-            }
-		$Return .= math_loadfields($Table, $Field, $Defaults, $ElementConfig);
-	return $Return;
-}
-function math_datesetup($Field, $Table, $ElementConfig = false){
-		$Return .= math_loaddates($Table, $Field, $ElementConfig);
-	return $Return;
-}
-
-function math_loadfields($Table, $Field, $Defaults = false, $Media = false){
-
-        
-        $Config = $Media['Content'];       
-	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
-	if (mysql_num_rows($result) > 0) {
-		while ($row = mysql_fetch_assoc($result)){
-			$Sel = '';
-                        
-			if(!empty($Defaults['A'])){
-				if($Defaults['A'] == $row['Field']){
-					$Sel = 'selected="selected"';                                        
-				}
-			}
-			$ValueReturn .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-			$Sel = '';
-			if(!empty($Defaults['B'])){
-				if($Defaults['B'] == $row['Field']){
-					$Sel = 'selected="selected"';
-				}
-			}
-			$IDReturn .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-		}
+        $Return .= '<div class="list_row1" style="padding:3px;">Icon Class: <input type="text" name="Data[Content][_IconClassName]['.$Field.']" value="'.$Class.'" class="textfield" /></div>';
+        $Sel = '';
+	if(!empty($Config['Content']['_IconURLOnly'][$Field])){
+		$Sel = 'checked="checked"';//$Config['Content']['_ImageSquare'][$Field]
 	}
-	$IReturn = '<div class="list_row1" style="padding:3px;"><select name="Data[Content][_multiply]['.$Field.'][A]" id="Ref_'.$Table.'">';
-		$IReturn .= $IDReturn;
-
-                if(!empty($Config)) {
-                    if(!empty ($Config['_CloneField'])) {
-                        $IReturn .= '<optgroup label="Cloned Fields">';
-                        foreach ($Config['_CloneField'] as $FieldKey=>$Array) {
-                            $Sel = '';
-                            if($Defaults['A'] == $FieldKey) {
-                                $Sel = 'selected="selected"';
-                            }
-                            if($FieldKey != $Field){
-                                $IReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['_FieldTitle'][$FieldKey].'</option>';
-                            }
-                        }
-                        foreach ($Config['_CloneField'] as $FieldKey=>$Array) {
-                            $Sel = '';
-                            if($Defaults['B'] == $FieldKey) {
-                                $Sel = 'selected="selected"';
-                            }
-                            if($FieldKey != $Field){
-                                $VReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['_FieldTitle'][$FieldKey].'</option>';
-                            }
-                        }
-
-                    }
-                }
-
-	$IReturn .= '</select>';
-
-        $VReturn .= '<select name="Data[Content][_multiply]['.$Field.'][opperator]" id="Ref_'.$Table.'">';
-
-            $sel = '';
-            if(!empty($Defaults['opperator'])){
-                if($Defaults['opperator'] == '+'){
-                    $sel = 'selected="selected"';
-                }
-            }
-            $VReturn .= '<option value="+" '.$sel.'>+</option>';
-            $sel = '';
-            if(!empty($Defaults['opperator'])){
-                if($Defaults['opperator'] == '-'){
-                    $sel = 'selected="selected"';
-                }
-            }
-            $VReturn .= '<option value="-" '.$sel.'>-</option>';
-            $sel = '';
-            if(!empty($Defaults['opperator'])){
-                if($Defaults['opperator'] == '*'){
-                    $sel = 'selected="selected"';
-                }
-            }
-            $VReturn .= '<option value="*" '.$sel.'>*</option>';
-            $sel = '';
-            if(!empty($Defaults['opperator'])){
-                if($Defaults['opperator'] == '/'){
-                    $sel = 'selected="selected"';
-                }
-            }
-            $VReturn .= '<option value="/" '.$sel.'>/</option>';
-
-        $VReturn .= '</select>';
-
-	$VReturn .= '<select name="Data[Content][_multiply]['.$Field.'][B]" id="Ref_'.$Table.'">';
-		$VReturn .= $ValueReturn;
-
-            if(!empty($Config)) {
-                if(!empty ($Config['_CloneField'])) {
-                    $VReturn .= '<optgroup label="Cloned Fields">';
-                    foreach ($Config['_CloneField'] as $FieldKey=>$Array) {
-                        $Sel = '';
-                        if($Defaults[$Field]['ID'] == $FieldKey) {
-                            $Sel = 'selected="selected"';
-                        }
-                        $VReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['_FieldTitle'][$FieldKey].'</option>';
-                    }
-
-                }
-            }
-
-	$VReturn .= '</select></div>';
+        $Return .= '<div class="list_row2" style="padding:3px;">URL Only: <input type="checkbox" name="Data[Content][_IconURLOnly]['.$Field.']" value="1" '.$Sel.' /></div>';
 
 
-return $IReturn.$VReturn;
-}
-function math_loaddates($Table, $Field, $Config){
 
-	$result = mysql_query("SHOW COLUMNS FROM `".$Table."`");
-	if (mysql_num_rows($result) > 0) {
-                $IDReturn .= '<option value="NOW" >NOW</option>';
-                $ValueReturn .= '<option value="NOW" >NOW</option>';
-		while ($row = mysql_fetch_assoc($result)){
-			$Sel = '';
-			if(!empty($Config['Content']['_dateDiff'][$Field]['B'])){
-				if($Config['Content']['_dateDiff'][$Field]['B'] == $row['Field']){
-					$Sel = 'selected="selected"';
-				}
-			}
-			$ValueReturn .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-			$Sel = '';
-			if(!empty($Config['Content']['_dateDiff'][$Field]['A'])){
-				if($Config['Content']['_dateDiff'][$Field]['A'] == $row['Field']){
-					$Sel = 'selected="selected"';
-				}
-			}
-			$IDReturn .= '<option value="'.$row['Field'].'" '.$Sel.'>'.$row['Field'].'</option>';
-		}
-
-
-                if(!empty ($Config['Content']['_CloneField'])) {
-                    $ValueReturn .= '<optgroup label="Cloned Fields">';
-                    $IDReturn .= '<optgroup label="Cloned Fields">';
-                    foreach ($Config['Content']['_CloneField'] as $FieldKey=>$Array) {
-                        if($FieldKey != $Field){
-                            $Sel = '';
-                            if($Config['Content']['_dateDiff'][$Field]['A'] == $FieldKey) {
-                                $Sel = 'selected="selected"';
-                            }
-                            $IDReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['Content']['_FieldTitle'][$FieldKey].'</option>';
-                            $Sel = '';
-                            if($Config['Content']['_dateDiff'][$Field]['B'] == $FieldKey) {
-                                $Sel = 'selected="selected"';
-                            }
-                            $ValueReturn .= '<option value="'.$FieldKey.'" '.$Sel.'>'.$Config['Content']['_FieldTitle'][$FieldKey].'</option>';
-                        }
-                    }
-                }
-
+        $Compression = 75;
+        $Width = 'auto';
+        $Height = 'auto';
+	if(!empty($Config['Content']['_ImageSizeX'][$Field])){
+		$Width = $Config['Content']['_ImageSizeX'][$Field];
 	}
-	$IReturn = '<div class="list_row1" style="padding:3px;">Start Date<select name="Data[Content][_dateDiff]['.$Field.'][A]" id="Ref_'.$Table.'">';
-		$IReturn .= $IDReturn;
-	$IReturn .= '</select> End Date ';
-	$VReturn .= '<select name="Data[Content][_dateDiff]['.$Field.'][B]" id="Ref_'.$Table.'">';
-		$VReturn .= $ValueReturn;
-	$VReturn .= '</select></div>';
-
-
-    $Pre = '';
-    $Suf = '';
-
-    if(!empty($Config['Content']['_dateDiff'][$Field]['prefix'])) {
-        $Pre = $Config['Content']['_dateDiff'][$Field]['prefix'];
-    }
-    if(!empty($Config['Content']['_dateDiff'][$Field]['suffix'])) {
-        $Suf = $Config['Content']['_dateDiff'][$Field]['suffix'];
-    }
-
-    $Return .= 'Prefix: <input type="text" name="Data[Content][_dateDiff]['.$Field.'][prefix]" value="'.$Pre.'" class="textfield" size="5" />&nbsp;';
-    $Return .= ' Suffix: <input type="text" name="Data[Content][_dateDiff]['.$Field.'][suffix]" value="'.$Suf.'" class="textfield" size="5" />';
-
-
-return $IReturn.$VReturn.$Return;
-}
-
-function math_timeDuration($date1, $date2, $pre = '', $suf = '')
-{
-
-
-
-    if(empty($date1) || $date1 == '0000-00-00 00:00:00') {
-        return ".--";
-    }
-    if(empty($date2) || $date2 == '0000-00-00 00:00:00') {
-        return "--.";
-    }
-
-    $periods         = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
-    $lengths         = array("60","60","24","7","4.35","12","10");
-
-    $now             = strtotime($date2);
-    $unix_date         = strtotime($date1);
-
-       // check validity of date
-    if(empty($unix_date)) {
-        return "Bad date";
-    }
-
-    // is it future date or past date
-    if($now > $unix_date) {
-        $difference     = $now - $unix_date;
-        $tense         = "ago";
-
-    } else {
-        $difference     = $unix_date - $now;
-        $tense         = "from now";
-    }
-
-    for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
-        $difference /= $lengths[$j];
-    }
-
-    $difference = round($difference);
-
-    if($difference != 1) {
-        $periods[$j].= "s";
-    }
-    return $pre.$difference.' '.$periods[$j].$suf;
-}
-
-
-function math_mysqlfunc($Field, $Table, $ElementConfig = false){
-
-        $Return = 'Function: <select name="Data[Content][_mathMysqlFunc]['.$Field.']" id="" >';
-	$sel = '';
-        if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == 'sum'){
-		$sel = 'selected="selected"';
+	if(!empty($Config['Content']['_ImageSizeY'][$Field])){
+		$Height = $Config['Content']['_ImageSizeY'][$Field];
 	}
-        $Return .= '<option value="sum" '.$sel.'>sum()</option>';
-        $sel = '';
-        if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == 'sumtotal'){
-		$sel = 'selected="selected"';
+        $Return .= '<h2>View Image</h2>';
+	$Return .= '<div class="list_row1" style="padding:3px;">Image Size: <input type="text" name="Data[Content][_ImageSizeX]['.$Field.']" value="'.$Width.'" class="textfield" size="3" maxlength="4" style="width:40px;" /> X <input type="text" name="Data[Content][_ImageSizeY]['.$Field.']" value="'.$Height.'" class="textfield" size="3" maxlength="4" style="width:40px;" /></div>';
+        if(!empty($Config['Content']['_ImageCompression'][$Field])){
+		$Compression = $Config['Content']['_ImageCompression'][$Field];
 	}
-        $Return .= '<option value="sumtotal" '.$sel.'>count() incremental</option>';
-        $sel = '';
-        if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == 'count'){
-		$sel = 'selected="selected"';
+	$Return .= '<div class="list_row1" style="padding:3px;">Image Compression: <input type="text" name="Data[Content][_ImageCompression]['.$Field.']" value="'.$Compression.'" class="textfield" size="3" maxlength="4" style="width:40px;" />%</div>';
+        $Class = '';
+ 	if(!empty($Config['Content']['_ImageClassName'][$Field])){
+		$Class = $Config['Content']['_ImageClassName'][$Field];
 	}
-        $Return .= '<option value="count" '.$sel.'>count()</option>';
-        $sel = '';
-        if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == 'avg'){
-		$sel = 'selected="selected"';
+        $Return .= '<div class="list_row1" style="padding:3px;">Image Class: <input type="text" name="Data[Content][_ImageClassName]['.$Field.']" value="'.$Class.'" class="textfield" /></div>';
+        $Sel = '';
+	if(!empty($Config['Content']['_ImageURLOnly'][$Field])){
+		$Sel = 'checked="checked"';//$Config['Content']['_ImageSquare'][$Field]
 	}
-        $Return .= '<option value="avg" '.$sel.'>avg()</option>';
-
-        $sel = '';
-        if($ElementConfig['Content']['_mathMysqlFunc'][$Field] == '_custom'){
-		$sel = 'selected="selected"';
-	}
-        $Return .= '<option value="_custom" '.$sel.'>Custom</option>';
-
-        $Return .= '</select>';
+        $Return .= '<div class="list_row2" style="padding:3px;">URL Only: <input type="checkbox" name="Data[Content][_ImageURLOnly]['.$Field.']" value="1" '.$Sel.' /></div>';
 
 
-
-        $custom = '';
-        
-	if(!empty($ElementConfig['Content']['_mathMysqlCustomFunc'][$Field])){
-		$custom = $ElementConfig['Content']['_mathMysqlCustomFunc'][$Field];
-	}
-        $Return .= '<div style="padding:3px;"><strong>If custom:</strong></div>';
-        $Return .= '<br />Custom Function: <input type="text" name="Data[Content][_mathMysqlCustomFunc]['.$Field.']" value="'.$custom.'" class="textfield" /> e.g. myfunc() or myfunc &nbsp;<br /> Make sure you have spelled the function name correctly and that it does exists. If the funciton does now exists, no results will be returnd.';
 
 return $Return;
 
 }
+
+
+function file_handleInput($Field, $Input, $FieldType, $Config, $predata){
+	if($FieldType == 'multi'){
+		return $Input;
+	}
+	if(!empty($_POST['deleteImage'][$Field])){
+		$FileInfo = explode('?', $predata[$Field]);
+		if(file_exists($FileInfo[0])){
+			unlink($FileInfo[0]);
+		}
+		return '';
+	}
+	if(empty($_FILES['dataForm']['name'][$Config['ID']][$Field])){
+		return $predata[$Field];
+	}
+	// Create Directorys
+	if(!empty($_FILES['dataForm']['size'][$Config['ID']][$Field])){
+
+        $path = wp_upload_dir();
+
+		// set filename and paths
+		$Ext = pathinfo($_FILES['dataForm']['name'][$Config['ID']][$Field]);
+		$newFileName = uniqid($Config['ID'].'_').'.'.$Ext['extension'];
+		$newLoc = $path['path'].'/'.$newFileName;
+		//$urlLoc = $path['url'].'/'.$newFileName;
+		$GLOBALS['UploadedFile'][$Field] = $newLoc;
+
+                $upload = wp_upload_bits($_FILES['dataForm']['name'][$Config['ID']][$Field], null, file_get_contents($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field]));
+		//move_uploaded_file($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field], $newLoc);
+		
+	//return $newLoc;
+
+        if($FieldType == 'image'){
+
+            $imageWidth = ($Config['Content']['_ImageSizeX'][$Field] == 'auto' ? '0' : $Config['Content']['_ImageSizeX'][$Field]);
+            $imageHeight = ($Config['Content']['_ImageSizeY'][$Field] == 'auto' ? '0' : $Config['Content']['_ImageSizeY'][$Field]);
+
+            $iconWidth = ($Config['Content']['_IconSizeX'][$Field] == 'auto' ? '0' : $Config['Content']['_IconSizeX'][$Field]);
+            $iconHeight = ($Config['Content']['_IconSizeY'][$Field] == 'auto' ? '0' : $Config['Content']['_IconSizeY'][$Field]);
+
+            // crunch sizes
+
+            $image = image_resize($upload['file'], $imageWidth, $imageHeight, true);
+            $icon = image_resize($upload['file'], $iconWidth, $iconHeight, true);
+        }
+	return $upload['url'];
+	}
+	
+}
+
+function file_processValue($Value, $Type, $Field, $Config, $EID){
+
+	if(!empty($Value)){
+		//dump($Value);
+		//dump($Type);
+		//dump($Field);
+		//dump($Config);
+	//die;
+		switch ($Type){
+			case 'image';
+                            
+                                    $Value = strtok($Value, '?');
+                                    $imageWidth = ($Config['_ImageSizeX'][$Field] == 'auto' ? '100' : $Config['_ImageSizeX'][$Field]);
+                                    $imageHeight = ($Config['_ImageSizeY'][$Field] == 'auto' ? '100' : $Config['_ImageSizeY'][$Field]);
+
+                                    $iconWidth = ($Config['_IconSizeX'][$Field] == 'auto' ? '100' : $Config['_IconSizeX'][$Field]);
+                                    $iconHeight = ($Config['_IconSizeY'][$Field] == 'auto' ? '100' : $Config['_IconSizeY'][$Field]);
+
+                                    $uploadVars = wp_upload_dir();
+
+                                    
+
+                                    $SourceFile = str_replace($uploadVars['baseurl'], $uploadVars['basedir'], $Value);
+                                    if(!file_exists($SourceFile)){
+                                        return 'Image does not exists.';
+                                    }
+                                    $dim = getimagesize($SourceFile);                                    
+                                    $newDim = image_resize_dimensions($dim[0], $dim[1], $iconWidth, $iconHeight, true);
+                                    if(!empty($newDim)){
+                                    $Sourcepath = pathinfo($SourceFile);
+                                    $URLpath = pathinfo($Value);
+                                    $iconURL = $URLpath['dirname'].'/'.$URLpath['filename'].'-'.$newDim[4].'x'.$newDim[5].'.'.$URLpath['extension'];
+                                    if(!file_exists($Sourcepath['dirname'].'/'.$Sourcepath['filename'].'-'.$newDim[4].'x'.$newDim[5].'.'.$Sourcepath['extension'])){
+                                        $image = image_resize($SourceFile, $imageWidth, $imageHeight, true);
+                                        $icon = image_resize($SourceFile, $iconWidth, $iconHeight, true);
+                                    }
+                                    }else{
+                                        $iconURL = $Value;
+                                        $iconWidth = $dim[0];
+                                        $iconHeight = $dim[1];
+                                    }
+                                    $ClassName = '';
+                                    if(!empty($Config['_ImageClassName'][$Field])){
+                                        $ClassName = 'class="'.$Config['_ImageClassName'][$Field].'" ';
+                                    }
+                                    
+                                    if(!empty($Config['_IconURLOnly'][$Field])){
+                                        return $iconURL;
+                                    }
+                                    return '<img src="'.$iconURL.'" '.$ClassName.image_hwstring($iconWidth, $iconHeight).'>';
+
+
+		 		break;
+			case 'mp3';
+					$File = explode('?', $Value);
+					$UniID = uniqid($EID.'_');
+				//$ReturnData = '<span id="'.$UniID.'">'.$File[1].'</span>';
+                                $ReturnData = '<audio id="'.$UniID.'" src="'.$File[0].'">unavailable</audio>';
+				
+				$_SESSION['dataform']['OutScripts'] .= "
+					AudioPlayer.embed(\"".$UniID."\", {
+					";
+						if(!empty($Config['_PlayerCFG']['Autoplay'][$Field])){
+							$_SESSION['dataform']['OutScripts'] .= " autostart: 'yes', ";
+						}
+						if(!empty($Config['_PlayerCFG']['Animation'][$Field])){
+							$_SESSION['dataform']['OutScripts'] .= " animation: 'yes', "; 	
+						}
+				$_SESSION['dataform']['OutScripts'] .= "
+                                                transparentpagebg: 'yes',
+						soundFile: \"".$File[0]."\",
+						titles: \"".$File[1]."\"
+					});
+
+				";
+                               $_SESSION['dataform']['OutScripts'] .="
+                                jQuery(document).ready(function($) {
+                                    AudioPlayer.setup(\"".WP_PLUGIN_URL."/db-toolkit/data_form/fieldtypes/file/player.swf\", {
+                                        width: '100%',
+                                        initialvolume: 100,
+                                        transparentpagebg: \"yes\",
+                                        left: \"000000\",
+                                        lefticon: \"FFFFFF\"
+                                    });
+                                 });";
+				return $ReturnData;
+				break;
+			case 'file';
+			case 'multi';
+				if($Data = unserialize($Value)){
+					$Values = $Data;
+					$Output = '';
+					foreach($Values as $Value){
+						$File = explode('?', $Value);
+						$Dets = pathinfo($File[1]);
+						$ext = strtolower($Dets['extension']);
+						if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
+							$Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
+						}else{
+							$Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
+						}
+						$Output .= '<a href="'.$File[0].'" target="_blank">'.$Icon.'</a>&nbsp;';
+					}
+					return $Output;
+				}else{
+                                    
+                                    if(empty($Value)){
+                                        return 'no file uploaded';
+                                    }
+					$File = explode('?', $Value);
+					$Dets = pathinfo($File[1]);
+					$ext = strtolower($Dets['extension']);
+					if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
+						$Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" align="absmiddle" />&nbsp;';
+					}else{
+						$Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" align="absmiddle" />&nbsp;';
+					}
+				}
+				
+				return $Icon.$File[1];
+				break;
+		 
+		 
+		}
+	
+	return;
+	}
+}
+
+
+
+
+
+/// Uploader Processessor
+if(!empty($_GET['uploadify'])){
+
+        $string = base64_decode(urldecode($_GET['uploadify']));
+        $fieldData = explode('_', $string);
+        //vardump($fieldData);
+        //vardump($string);
+        //vardump($_FILES);
+
+	if(!empty($_FILES['Filedata']['size'])){
+
+        $path = wp_upload_dir();
+		// set filename and paths
+		$Ext = pathinfo($_FILES['Filedata']['name']);
+		$newFileName = uniqid().'.'.$Ext['extension'];
+		$newLoc = $path['path'].'/'.$newFileName;
+
+        $upload = wp_upload_bits($newFileName, null, file_get_contents($_FILES['Filedata']['tmp_name']));
+		//move_uploaded_file($_FILES['dataForm']['tmp_name'][$Config['ID']][$Field], $newLoc);
+
+	//return $newLoc;
+        //vardump($upload);
+	//return $upload['url'].'?'.$_FILES['dataForm']['name'][$Config['ID']][$Field];
+
+        echo '<input type="hidden" value="'.$upload['url'].'?'.$_FILES['Filedata']['name'].'" id="entry'.$string.'" name="dataForm['.$fieldData[1].'_'.$fieldData[2].']['.$fieldData[3].']">';
+	}
+
+	exit;
+
+}
+
+
+function file_playerSetup($Field, $Table, $Config = false){
+	//$Return = '<div class="list_row1" style="padding:3px;">Icon Size (px): <input type="text" name="Data[Content][_ImageSizeI]['.$Field.']" value="'.$icon.'" class="textfield" size="3" maxlength="3" /> Square Crop: <input type="checkbox" name="Data[Content][_ImageSquareI]['.$Field.']" value="1" '.$Sel1.' /></div>';
+
+	$Return = 'Player Preview<div style="padding:5px; width: 200px;" id="'.$Field.'_preview"></div>';
+        $Sel = '';
+        if(!empty($Config['Content']['_PlayerCFG']['Autoplay'][$Field])){
+            $Sel = 'checked="checked"';
+        }
+	$Return .= '<div style="padding:3px;">Auto Play: <input type="checkbox" name="Data[Content][_PlayerCFG][Autoplay]['.$Field.']" id="'.$Field.'_autoPlay" '.$Sel.' value="yes" /> In a list, the last item will auto play</div>';
+	//$Return .= '<div style="padding:3px;">Animation: <input type="checkbox" name="Data[Content][_PlayerCFG][Animation]['.$Field.']" id="'.$Field.'_autoPlay" value="no" /> Unchecked, the player will be open, checked minimized.</div>';
+		$_SESSION['dataform']['OutScripts'] .= "
+			AudioPlayer.embed(\"".$Field."_preview\", {
+			";
+				if(!empty($Config['Content']['_PlayerCFG']['Autoplay'][$Field])){
+					$_SESSION['dataform']['OutScripts'] .= " autoplay: 'yes', "; 	
+				}
+				if(!empty($Config['Content']['_PlayerCFG']['Animation'][$Field])){
+					$_SESSION['dataform']['OutScripts'] .= " animation: 'yes', "; 	
+				}
+		$_SESSION['dataform']['OutScripts'] .= "
+				demomode: \"yes\"
+			});
+		";
+
+return $Return;
+}
+
+
+
+function file_return_bytes($FileSize) {
+   $val = trim($FileSize);
+   $last = strtolower($FileSize{strlen($FileSize)-1});
+   switch($last) {
+       // The 'G' modifier is available since PHP 5.1.0
+       case 'g':
+           $FileSize *= 1024;
+       case 'm':
+           $FileSize *= 1024;
+       case 'k':
+           $FileSize *= 1024;
+   }
+
+if($FileSize < 0 || $FileSize == ''){
+	$Pre = '0&nbsp;Bytes';
+}elseif($FileSize < 1024 AND $FileSize > 0){
+	$Pre = $FileSize.'&nbsp;Bytes';
+}elseif($FileSize >= 1024 AND $FileSize < 1048576 ){
+	$Pre = round(($FileSize/1024)).'&nbsp;KB';
+}elseif($FileSize >= 1048576 AND $FileSize < 1073741824){
+	$Pre = round(($FileSize/1048576),1).'&nbsp;MB';
+}elseif($FileSize >= 1073741824){
+	$Pre = round(($FileSize/1073741824),3).'&nbsp;GB';
+}elseif($FileSize >= 1073741824){
+	$Pre = round(($FileSize/1099511627776),3).'&nbsp;TB';
+}
+
+   return $Pre;
+}
+
+
+
+
+
+
+
+
 ?>

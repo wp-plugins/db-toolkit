@@ -364,7 +364,7 @@ if (is_admin ()) {
     }
 
     function df_tableReportSetup($Table, $EID, $Config = false, $Column = 'M') {
-
+        
         if (empty($Table)) {
             return;
         }
@@ -389,7 +389,7 @@ if (is_admin ()) {
 
 
             $name = df_parseCamelCase($Field);
-            //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';
+            //echo '<div id="Field_'.$Field.'" class="'.$Row.' table_sorter" style="padding:3px;"><input type="checkbox" name="null" id="use_'.$Field.'" checked="checked" onclick="dr_enableDisableField(this);" />&nbsp;'.ucwords($name).' : '.df_FilterTypes($Field, $Table, $row).'<span id="ExtraSetting_'.$Field.'"></span></div>';            
             $PreReturn[$Field] .= '<div id="Field_' . $Field . '" class="admin_list_row3 table_sorter postbox cloned" style="width:550px;"><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cancel.png" align="absmiddle" onclick="jQuery(\'#Field_' . $Field . '\').remove();" style="float:right; padding:5px;" /><img src="' . WP_PLUGIN_URL . '/db-toolkit/images/cog.png" align="absmiddle" onclick="jQuery(\'#overide_' . $Field . '\').toggle();" style="float:right; padding:5px;" /><h3 class="fieldTypeHandle">' . df_parseCamelCase($Field) . '</h3>';
             // Linking Master
             $PreReturn[$Field] .= '<div style="padding:5px;">';
@@ -1369,6 +1369,15 @@ function dr_processQuery($Config, $querySelects) {
 function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = false, $Format = false, $limitOveride = false, $wherePush = false, $getOverride = false) {
 
     // get element
+    global $InstanceID;
+    
+    
+    if(strpos($EID, "__") !== false){
+        $InstanceID = $EID;
+        $EID = explode("__", $EID);
+        $EID = $EID[0];
+    }
+
     $Element = getelement($EID);
     $Config = $Element['Content'];
     if (!empty($Config['_customFooterJavaScript']) && empty($Format)) {
@@ -1503,7 +1512,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
 //SetupHeaders
     // Start Table
     // Check for template
-
+    
         $customClass = '';
         if (!empty($Config['_ListTableClass'])) {
             $customClass = $Config['_ListTableClass'];
@@ -1513,7 +1522,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         if (is_admin ()) {
             $tableClass = 'class="widefat data_report_Table_admin ' . $customClass . '"';
         }
-        $ReportReturn .= '<table width="100%" border="0" cellspacing="0" cellpadding="4" ' . $tableClass . ' id="data_report_' . $EID . '" style="cursor:default;">';
+        $ReportReturn .= '<table width="100%" border="0" cellspacing="0" cellpadding="4" ' . $tableClass . ' id="data_report_' . $InstanceID . '" style="cursor:default;">';
         //Start Headers Row
         //$ReportReturn .= '<caption>'.$Config['_ReportTitle'].'</caption>';
         $ReportReturn .= '<thead>';
@@ -1560,7 +1569,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                 }
 
                 $ReportReturn .= '</th>';
-
+            
             // Preset the selects from query
             $querySelects[$Field] = $Field; // 'prim.`' . $Field . '`';
             // Set average width and min width
@@ -1587,11 +1596,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
 
         if (!empty($ShowActionPanel)) {
-
+            
                 $ReportReturn .= '<th scope="col">';
                 $ReportReturn .= 'Action';
                 $ReportReturn .= '</th>';
-
+            
         }
     }
 
@@ -1685,9 +1694,9 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
     // create sort fields
     if (!empty($Config['_SortField'])) {
         if (!empty($querySelects[$_SESSION['report_' . $EID]['SortField']])) {
-            $orderStr = 'ORDER BY `' . $_SESSION['report_' . $EID]['SortField'] . '` ' . $_SESSION['report_' . $EID]['SortDir'];
+            $orderStr = 'ORDER BY 0+`' . $_SESSION['report_' . $EID]['SortField'] . '` ' . $_SESSION['report_' . $EID]['SortDir'];
         } else {
-            $orderStr = 'ORDER BY prim.`' . $Config['_SortField'] . '` ' . $Config['_SortDirection'] . '';
+            $orderStr = 'ORDER BY 0+prim.`' . $Config['_SortField'] . '` ' . $Config['_SortDirection'] . '';
         }
     }
 
@@ -1766,8 +1775,8 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
         }
         $queryWhere .= $preWhere;
     }
-
-
+   
+    
 
 
 
@@ -1862,7 +1871,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             $Wrapperclasses = $Config['_TemplateClass'];
         }
         if (!empty($Config['_TemplateWrapper'])) {
-            echo '<' . $WrapperEl . ' id="reportPanel_' . $Media['ID'] . '" class="interfaceWrapper ' . $Wrapperclasses . '">';
+            echo '<' . $WrapperEl . ' id="reportPanel_' . $InstanceID . '" class="interfaceWrapper ' . $Wrapperclasses . '">';
         }
         include('templatemode.php');
         if (!empty($Config['_TemplateWrapper'])) {
@@ -2073,7 +2082,12 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     if ($ViewLink != '') {
                         $ViewLink .= " ";
                     }
-                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
+                    $isAjax = '';
+                    if(!empty($Config['_ajaxForms'])){
+                        $isAjax = ", true,'".build_query($_GET)."'";
+                    }
+
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_BuildUpDateForm(\'' . $InstanceID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\' '.$isAjax.');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/edit.png" width="16" height="16" alt="Edit" title="Edit" border="0" align="absmiddle" /></span>';
                 }
                 if (!empty($Config['_Show_Delete_action'])) {
                     $ActionWidth = $ActionWidth + 16;
@@ -2085,7 +2099,7 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
                     } else {
                         $hasQuery = false;
                     }
-                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $EID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\',\'' . $hasQuery . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
+                    $ViewLink .= '<span style="cursor:pointer;" onclick="dr_deleteItem(\'' . $InstanceID . '\', \'' . $row['_return_' . $Config['_ReturnFields'][0]] . '\',\'' . $hasQuery . '\');"><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/delete.png" width="16" height="16" alt="Delete" title="Delete" border="0" align="absmiddle" /></span>';
                 }
                 //vardump($Config);
 
@@ -2485,20 +2499,20 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             }
             //$ReportReturn .= '<div class="reportFooter_totals">';
             if ($TotalPages > 1) {
-                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
+                //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';                
 
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Prev . '" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Â«</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Prev . '" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">â€¹</a>';
                 $ReportReturn .= '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Next . '" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $TotalPages . '" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Next . '" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">â€º</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $TotalPages . '" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">Â»</a>';
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
             }
 
 
             $ReportReturn .= '<br class="clear"></div>';
             $ReportReturn .= '</div>';
-
+        
     }
     //query
     if (is_admin ()) {

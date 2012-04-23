@@ -9,9 +9,14 @@ if(!empty($_GET['sub'])){
     $_GET['renderinterface'] = $_GET['sub'];
 }
 $Interface = get_option($_GET['renderinterface']);
+if(empty($Interface)){
+    echo '<h2>This is not the interface you are looking for.</h2>';
+    return;
+}
 if(empty($app) && !empty($_GET['renderinterface'])){
     $app= get_option('_'.sanitize_title($Interface['_Application']).'_app');
 }
+
 if(is_array($app)){
     foreach($app['interfaces'] as $interface=>$access){
         $cfg = get_option($interface);

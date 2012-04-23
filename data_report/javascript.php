@@ -23,12 +23,12 @@
         }
         return;
     }
-
+    
     function dr_applyFilters(eid, clear){
 
         filterstr = jQuery('#setFilters_'+eid).serialize();
         jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute; z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;"></span>Loading Data</div></div>');
-
+        
         if(clear == true){
             filterstr = 'clear';
             jQuery('#setFilters_'+eid+' input').val('');
@@ -39,7 +39,7 @@
         ajaxCall('dr_setFilters', eid, filterstr, function(p){
            jQuery('#reportpanel_block_'+eid).remove();
            dr_goToPage(eid, false, false);
-
+           
            jQuery('#report_tools_'+eid).remove();
            jQuery('#filterPanel_'+eid).replaceWith(p);
         });
@@ -55,13 +55,16 @@
             df_loadOutScripts();
 	});
     }
-    function dr_goToPage(eid, page, global, addQuery){
+    function dr_goToPage(instanceid, page, global, addQuery){
+        
+        parts = instanceid.split('__');
+        eid = parts[0];        
 
 	if(page == false){
-            if(global== false){
-                jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute;z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
-                ajaxCall('dr_BuildReportGrid',eid, 0,0,0,0,0,0,addQuery, function(dta){
-                    jQuery('#reportPanel_'+eid).html(dta);
+            if(global== false){                
+                jQuery('#reportPanel_'+instanceid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+instanceid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute;z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
+                ajaxCall('dr_BuildReportGrid',instanceid, 0,0,0,0,0,0,addQuery, function(dta){
+                    jQuery('#reportPanel_'+instanceid).html(dta);
                     df_loadOutScripts();
                 });
             }else{
@@ -72,10 +75,10 @@
                 });
             }
 	}else{
-
-            jQuery('#reportPanel_'+eid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+eid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute;z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
-            ajaxCall('dr_BuildReportGrid',eid, page,0,0,0,0,0,addQuery, function(dta){
-                jQuery('#reportPanel_'+eid).html(dta);
+            
+            jQuery('#reportPanel_'+instanceid).css('position', 'relative').prepend('<div class="ui-overlay" id="reportpanel_block_'+instanceid+'"><div class="ui-widget-overlay ui-corner-all"></div><div style="position:absolute;z-index:999999; padding:6px; left:0; top:0;"><span class="ui-icon ui-icon-arrowrefresh-1-w" unselectable="on" style=" float:left;">close</span>Loading Data</div></div>');
+            ajaxCall('dr_BuildReportGrid',instanceid, page,0,0,0,0,0,addQuery, function(dta){
+                jQuery('#reportPanel_'+instanceid).html(dta);
                 df_loadOutScripts();
             });
 	}
@@ -251,17 +254,19 @@
         });
     }
 
-    function dr_BuildUpDateForm(eid, rid, ajaxSubmit, addquery){
-
-		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+    function dr_BuildUpDateForm(instanceid, rid, ajaxSubmit, addquery){
+    
+	
+        parts = instanceid.split('__');
+        eid = parts[0];
 
         id = rid;//Math.floor(Math.random()*9999999);
 
-	if(jQuery("#ui-jsDialog-"+id+"-"+eid+"").length == 1){
-            jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
+	if(jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").length == 1){
+            jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").remove();
 	}
-	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'-'+eid+'" title="Loading"><p>Loading Entry</p></div>');
-	jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog({
+	jQuery('body').prepend('<div id="ui-jsDialog-'+id+'-'+instanceid+'" title="Loading"><p>Loading Entry</p></div>');
+	jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").dialog({
             autoResize: true,
             modal: true,
             buttons: {
@@ -272,26 +277,26 @@
             },
             open: function(event, ui) {
                 ajaxCall('dr_BuildUpDateForm',eid, rid,addquery, function(c){
-                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'title', c.title);
-                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'buttons', {
+                    jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").dialog('option', 'title', c.title);
+                    jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").dialog('option', 'buttons', {
                         'Close': function() {
                             jQuery(this).dialog("close");
                         },
                         'Save': function() {
                             //dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
-                                if(ajaxSubmit == true){
+                                if(ajaxSubmit == true){                                
                                 jQuery("#data_form_"+eid+"").bind('submit', function(){
                                 formData = jQuery("#data_form_"+eid+"").serialize();
-                                jQuery("#ui-jsDialog-"+eid+"").html('Sending...');
-                                jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
+                                jQuery("#ui-jsDialog-"+instanceid+"").html('Sending...');
+                                jQuery("#ui-jsDialog-"+instanceid+"").dialog('option', 'buttons', {});
                                 ajaxCall('df_processAjaxForm',formData, addquery, function(p){
-                                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
+                                    jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").remove();
 
                                     //load callback
                                     if (typeof callback == 'function') { // make sure the callback is a function
                                         callback.call(this, eid, ajaxSubmit, addquery, p); // brings the scope to the callback
-                                    }
-                                    dr_goToPage(eid, false, false, addquery);
+                                    }                                    
+                                    dr_goToPage(instanceid, false, false, addquery);
                                     df_loadOutScripts();
                                 });
 
@@ -301,19 +306,19 @@
                             }else{
                                 jQuery("#data_form_"+eid+"").submit();
                             }
-
+                            
                         }
                     });
-                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").html(c.html);
-
-                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'width', parseFloat(c.width));
-                    jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'position', 'center');
+                    jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").html(c.html);
+                    
+                    jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").dialog('option', 'width', parseFloat(c.width));
+                    jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").dialog('option', 'position', 'center');
                     df_loadOutScripts();
                 });
             },
             close: function(event, ui) {
                 jQuery(".formError").remove();
-                jQuery("#ui-jsDialog-"+id+"-"+eid+"").remove();
+                jQuery("#ui-jsDialog-"+id+"-"+instanceid+"").remove();
             }
         });
     }
@@ -363,10 +368,14 @@
 	}
     }
 
-    function dr_deleteItem(EID, ID, addQuery){
+    function dr_deleteItem(instanceid, ID, addQuery){
+
+        parts = instanceid.split('__');
+        eid = parts[0];
+
         if(confirm("Are you sure you want to delete this entry?")){
-            ajaxCall('df_deleteEntries',EID, ID, function(x){
-                jQuery('#reportpanel_block_message_'+EID).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');
+            ajaxCall('df_deleteEntries',eid, ID, function(x){
+                jQuery('#reportpanel_block_message_'+instanceid).html('<span class="ui-icon ui-icon-check" unselectable="on" style=" float:left;">close</span>'+x+'</div></div>');
                 dr_goToPage(EID, false, false, addQuery);
                 //df_dialog(x);
             });

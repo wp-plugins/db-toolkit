@@ -7,7 +7,7 @@
 //EndInfoBox();
 ?>
 </div>
-<div id="col-container" >
+<div id="col-container" style="overflow:visible;">
     <?php
     echo '<h2>Define Fieldtypes</h2>';
 //dump($Element);
@@ -29,9 +29,9 @@
 
 
     </div>
-        <div style="">
+        
             <div id="referenceSetup"></div>
-            <div style="overflow:auto;">
+            <div >
                 <table width="" border="0" cellspacing="2" cellpadding="2">
                     <tr>
                         <td valign="top" class="columnSorter" id="FieldList_Main"><?php
@@ -40,7 +40,7 @@
                 </tr>
             </table>
         </div>
-    </div>
+    
 
 </div>
 <?php

@@ -64,7 +64,7 @@ if (file_exists('fieldtypes')) {
             jQuery('#'+id).removeClass('button-highlighted');
         }
     }
-
+    
 
 
     function df_dialog(message, id){
@@ -91,7 +91,7 @@ if (file_exists('fieldtypes')) {
                 }
             },
             close: function(event, ui) {
-		jQuery("#ui-dialog-notice").remove();
+		jQuery("#ui-dialog-notice").remove();	
             },
             open: function(event, ui) {
 		jQuery("#ui-dialog-notice").dialog('option', 'position', 'center');
@@ -103,20 +103,22 @@ if (file_exists('fieldtypes')) {
 	var Dialog = new Boxy('<div>'+message+'</div>', {title: 'Notice', modal: true, unloadOnHide: true});
 	return false;
 
-
-
+	
+	
     }
+    
 
-
-    function df_buildQuickCaptureForm(eid, ajaxSubmit, addquery, callback){
-
-
-	if(jQuery("#ui-jsDialog-"+eid+"").length == 1){
-            jQuery("#ui-jsDialog-"+eid+"").remove();
+    function df_buildQuickCaptureForm(instanceid, ajaxSubmit, addquery, callback){
+        
+        parts = instanceid.split('__');
+        eid = parts[0];
+        
+	if(jQuery("#ui-jsDialog-"+instanceid+"").length == 1){
+            jQuery("#ui-jsDialog-"+instanceid+"").remove();
 	}
 
-	jQuery('body').append('<div id="ui-jsDialog-'+eid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
-	jQuery("#ui-jsDialog-"+eid+"").dialog({
+	jQuery('body').append('<div id="ui-jsDialog-'+instanceid+'" title="Loading"><p><img src="../wp-content/plugins/db-toolkit/images/indicator.gif" width="16" height="16" alt="loading" align="absmiddle" /> Loading Form</p></div>');
+	jQuery("#ui-jsDialog-"+instanceid+"").dialog({
             position: 'center',
             autoResize: true,
             modal: true,
@@ -128,33 +130,33 @@ if (file_exists('fieldtypes')) {
             },
             open: function(event, ui) {
                 ajaxCall('df_buildQuickCaptureForm',eid, addquery, function(c){
-                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'title', c.title);
-                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {
+                    jQuery("#ui-jsDialog-"+instanceid+"").dialog('option', 'title', c.title);
+                    jQuery("#ui-jsDialog-"+instanceid+"").dialog('option', 'buttons', {
                         'Close': function() {
                             jQuery(this).dialog("close");
                         },
                         'Save': function() {
                             //dr_BuildUpDateForm(eid, id); jQuery(this).dialog('close');
                             //if(ajaxSubmit == false){
-                            //alert(ajaxSubmit);
+                            //alert(ajaxSubmit);                            
                             if(ajaxSubmit == true){
                                 //alert('p');
                                 jQuery("#data_form_"+eid+"").bind('submit', function(){
                                 formData = jQuery("#data_form_"+eid+"").serialize();
-                                jQuery("#ui-jsDialog-"+eid+"").html('Sending...');
-                                jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'buttons', {});
+                                jQuery("#ui-jsDialog-"+instanceid+"").html('Sending...');
+                                jQuery("#ui-jsDialog-"+instanceid+"").dialog('option', 'buttons', {});
                                 ajaxCall('df_processAjaxForm',formData, addquery, function(p){
-                                    jQuery("#ui-jsDialog-"+eid+"").remove();
-
+                                    jQuery("#ui-jsDialog-"+instanceid+"").remove();
+                                    
                                     //load callback
                                     if (typeof callback == 'function') { // make sure the callback is a function
                                         callback.call(this, eid, ajaxSubmit, addquery, p); // brings the scope to the callback
                                     }
 
-                                    df_loadOutScripts();
-                                    dr_goToPage(eid, false, false, addquery);
+                                    df_loadOutScripts();                                    
+                                    dr_goToPage(instanceid, false, false, addquery);
                                 });
-
+                                
                                 return false;
                                 });
                                 jQuery("#data_form_"+eid+"").submit();
@@ -165,19 +167,21 @@ if (file_exists('fieldtypes')) {
                             //alert(eid);
                         }
                     });
-                    jQuery("#ui-jsDialog-"+eid+"").html(c.html);
-
+                    jQuery("#ui-jsDialog-"+instanceid+"").html(c.html);
+                    
                     if(c.script){
                         eval(c.script);
                     }
                     //alert(parseFloat(c.width));
-                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
-                    jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
+                    jQuery("#ui-jsDialog-"+instanceid+"").dialog('option', 'width', parseFloat(c.width));
+                    jQuery("#ui-jsDialog-"+instanceid+"").dialog('option', 'position', 'center');
+                    df_loadOutScripts();
                 });
+                
             },
             close: function(event, ui) {
                 jQuery(".formError").remove();
-                jQuery("#ui-jsDialog-"+eid+"").remove();
+                jQuery("#ui-jsDialog-"+instanceid+"").remove();
             }
         });
     }
@@ -292,7 +296,7 @@ if (file_exists('fieldtypes')) {
                     //alert(parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'width', parseFloat(c.width));
                     jQuery("#ui-jsDialog-"+eid+"").dialog('option', 'position', 'center');
-
+                                        
                     jQuery( "#"+eid+"_importProgress").progressbar({
                         value: 0
                     });
@@ -327,7 +331,7 @@ if (file_exists('fieldtypes')) {
 
     function dr_reloadImport(eid, delim){
 
-
+        
         ajaxCall('dr_buildImportManager',eid, delim, function(c){
             jQuery("#ui-jsDialog-"+eid+"").html(c.html);
             jQuery('#importDelimeter').focus();

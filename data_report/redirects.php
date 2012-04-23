@@ -81,7 +81,7 @@
                         $Clusters = array();
                         if(empty($PrimInterfaces['Plugin']))
                             $PrimInterfaces['Plugin'] = '';
-
+                        
                         if(is_array($PrimInterfaces['Plugin'])){
                             foreach($PrimInterfaces['Plugin'] as $PrimInterface) {
                                 if(empty($PrimInterface['_ItemGroup'])){
@@ -166,7 +166,7 @@
                                 $Sel = '';
                                 if(empty($_GET['interface']))
                                     $_GET['interface'] = false;
-
+                                
                                 if($Interface['ID'] == $_GET['interface']){
                                     $Dis = 'disabled="disabled"';
                                     $Cls = 'highlight';

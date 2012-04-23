@@ -216,6 +216,10 @@ function GetDocument($page) {
 
 function getelement($optionTitle) {
 
+    if(strpos($EID, '-') !== false){
+        $EID = strtok($EID, '-');
+    }
+
     $Media = get_option($optionTitle);
     $Media['Content'] = unserialize(base64_decode($Media['Content']));
     return $Media;
