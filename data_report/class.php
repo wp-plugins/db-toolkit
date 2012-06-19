@@ -2487,11 +2487,11 @@ function dr_BuildReportGrid($EID, $Page = false, $SortField = false, $SortDir = 
             if ($TotalPages > 1) {
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$First.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_first.png" width="16" height="16" alt="First" align="absmiddle" /></div></div>';
 
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Prev . '" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">&laquo;</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Prev . '" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">&lsaquo;</a>';
                 $ReportReturn .= '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Next . '" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
-                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $TotalPages . '" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $Next . '" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">&rsaquo;</a>';
+                $ReportReturn .= '<a href="?' . $pageLink . 'npage=' . $TotalPages . '" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">&raquo;</a>';
                 //$ReportReturn .= '<div class="fbutton" onclick="dr_goToPage('.$EID.', '.$Last.');"><div><img src="'.WP_PLUGIN_DIR.'/db-toolkit/data_report/images/resultset_last.png" width="16" height="16" alt="Last" align="absmiddle" /></div></div>';
             }
 

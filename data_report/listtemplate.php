@@ -25,7 +25,7 @@
             }
             echo dais_customfield('checkbox', 'Enable', '_useListTemplate', '_useListTemplate', 'list_row1', 1, $Sel, 'Set this interface to use custom list templates.');
 
-            $wapperEl = '';
+            $wapperEl = 'div';
             if(!empty($Element['Content']['_TemplateWrapper'])){
                 $wapperEl = $Element['Content']['_TemplateWrapper'];
             }

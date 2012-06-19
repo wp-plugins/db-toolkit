@@ -3,8 +3,8 @@ Contributors: Desertsnowman
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
-Tested up to: 3.3.1
-Stable tag: 0.3.2.022
+Tested up to: 3.4
+Stable tag: 0.3.2.023
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,11 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.023 =
+* fixed a bug in the filtered join that killed it.
+* Added div wrapper default in the template tab.
+* Fixed the prev and next arrows in template mode.
 
 = 0.3.2.022 =
 * fixed a bug that prevented filters and sorting from working on occasion.

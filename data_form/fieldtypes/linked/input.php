@@ -10,7 +10,7 @@ if($FieldSet[1] == 'linked'){
                         $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['_Sort']."` ".$Config['_Linkedfields'][$Field]['_SortDir']."";
 
                     }
-
+                    
 				$concatvalues = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$concatvalues[] = $outValue;
@@ -37,7 +37,7 @@ if($FieldSet[1] == 'linked'){
 				$checkindex++;
 			}
 			//$Return .= '</select>';
-
+		
 		break;
 		case "radio":
                     $Ordering = " ORDER BY `".$Config['_Linkedfields'][$Field]['Value'][0]."` ASC";
@@ -100,13 +100,13 @@ if($FieldSet[1] == 'linked'){
 				//$Return .= '<option value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" '.$Sel.' >'.$lrow['outValue'].'</option>';
 				$Return .= '<label class="checkbox" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.'" '.$Sel.' />'.$lrow['outValue'].'</label>';
 				$checkindex++;
-
+				
 			}
 			//$Return .= '</select> <input type="button" name="button" id="button" value="Add" onclick="linked_addOption(\''.$Element['ID'].'_'.$Field.'\')" />';
 			//$Return .= 'Selected: <select name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'" class="'.$Req.'">';
 			//$Return .= '</select>';
-
-
+			
+			
 		break;
 		case "dropdown":
 
@@ -160,12 +160,12 @@ if($FieldSet[1] == 'linked'){
 
                         // get the linked interfaces add entry button title
                         if(!empty($Config['_Linkedfields'][$Field]['_addInterface'])){
-                        $linkInterface = getelement($Config['_Linkedfields'][$Field]['_addInterface']);
+                        $linkInterface = getelement($Config['_Linkedfields'][$Field]['_addInterface']);                        
                             $Return .= ' <button class="btn" onclick="df_buildQuickCaptureForm(\''.$Config['_Linkedfields'][$Field]['_addInterface'].'\', true, \''.$Element['ID'].'|'.$Field.'\', linked_reloadField);return false;">'.$linkInterface['Content']['_New_Item_Title'].'</button>';
                         }
                         $_SESSION['dataform']['OutScripts'] .="
 
-
+                            
 
                         ";
 
@@ -231,7 +231,7 @@ if($FieldSet[1] == 'linked'){
 
                         /*
                         $_SESSION['dataform']['OutScripts'] .="
-
+			
 			var options = {
 				script:'".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".urlencode(base64_encode($Field))."&',
 				varname:'input',
@@ -243,8 +243,8 @@ if($FieldSet[1] == 'linked'){
 			};
 			var as_json = new bsn.AutoSuggest('entry_".$Element['ID']."_".$Field."_view', options);
 			*/
-
-
+			
+			
 				//jQuery('#autocomplete_".$FieldID."').autocomplete(\"".getdocument($_GET['page'])."?q_eid=".$Element['ID']."&f_i=".encodestring($Field)."\",{width: 250, selectFirst: false});
 				//jQuery('#autocomplete_".$FieldID."').result(function(event, data, formatted) {
 				//	jQuery('#autocomplete_".$FieldID."_value').val(data[1]);
@@ -257,12 +257,21 @@ echo $Return;
 }
 
 if($FieldSet[1] == 'linkedfiltered'){
-	//linked_makeFilterdLinkedField('".$Config['_Linkedfilterfields'][$Field]['Ref']."', '".$Config['_Linkedfilterfields'][$Field]['Value']."','".$Config['_Linkedfilterfields'][$Field]['Filter']."', this.value, '".$Config['_Linkedfilterfields'][$Field]['Table']."'
+
 		$Ent = '<option>Select '.$Config['_FieldTitle'][$Config['_Linkedfilterfields'][$Field]['Filter']].' First</option>';
 		$Dis = 'disabled="disabled"';
-		if(!empty($Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']])){
-				$Ent = linked_makeFilterdLinkedField($Config['_Linkedfilterfields'][$Field]['Ref'], "CONCAT(".implode(",' ',",$Config['_Linkedfilterfields'][$Field]['Value']).") AS _Value_Field",$Config['_Linkedfilterfields'][$Field]['ID'], $Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']], $Config['_Linkedfilterfields'][$Field]['Table'], $Defaults[$Field]);
-				$Dis = '';
+		if(!empty($Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']]) || $Config['_Field'][$Config['_Linkedfilterfields'][$Field]['Filter']] == 'auto_userbase'){
+                    $sendval = '';
+                    if($Config['_Field'][$Config['_Linkedfilterfields'][$Field]['Filter']] == 'auto_userbase'){
+                        
+                        $sendval = get_current_user_id();
+                        if(!empty($Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']])){
+                            $sendval = $Defaults[$Config['_Linkedfilterfields'][$Field]['Filter']];
+                        }
+                    }
+
+                    $Ent = linked_makeFilterdLinkedField($Config['_Linkedfilterfields'][$Field]['Ref'], "CONCAT(".implode(",' ',",$Config['_Linkedfilterfields'][$Field]['Value']).") AS _Value_Field",$Config['_Linkedfilterfields'][$Field]['ID'], $sendval, $Config['_Linkedfilterfields'][$Field]['Table'], $Defaults[$Field]);
+                    $Dis = '';
 		}
 	$Return = '<select id="entry_'.$Element['ID'].'_'.$Field.'" name="dataForm['.$Element['ID'].']['.$Field.']" id="" class="'.$Req.' '.$Config['_FormFieldWidth'][$Field].'" '.$Dis.'>';
 		$Return .= $Ent;
@@ -280,6 +289,7 @@ if($FieldSet[1] == 'linkedfiltered'){
 			jQuery('#entry_".$Element['ID']."_".$Field."').removeAttr('disabled');
 		});
 	});\n";
+
 echo $Return;
 }
 

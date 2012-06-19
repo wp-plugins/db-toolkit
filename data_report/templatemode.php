@@ -71,11 +71,11 @@ if ($Count['Total'] == 0) {
 }
 
 //$prevbutton = '<div class="fbutton" onclick="dr_goToPage(\'' . $Media['ID'] . '\', ' . $Prev . ');"><div><img src="' . WP_PLUGIN_URL . '/db-toolkit/data_report/prev.gif" width="27" height="17" alt="Previous" align="absmiddle" /></div></div>';
-$firstpagebutton = '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">Ç</a>';
-$prevbutton = '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">Ü</a>';
+$firstpagebutton = '<a href="?'.$pageLink.'npage=1" title="Go to the first page" class="first-page" onclick="dr_goToPage(\'' . $EID . '\', 1); return false;">&laquo;</a>';
+$prevbutton = '<a href="?'.$pageLink.'npage='.$Prev.'" title="Go to the previous page" class="prev-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Prev . '); return false;">&lsaquo;</a>';
 $pagejump = '<div class="fpanel">Page <input type="text" name="pageJump" id="pageJump_' . $Media['ID'] . '" style="width:30px; font-size:11px;" value="' . $Page . '" onkeypress="dr_pageInput(\'' . $Media['ID'] . '\', this.value);" /> of ' . $TotalPages . '</div>';
-$nextbutton = '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">Ý</a>';
-$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">È</a>';
+$nextbutton = '<a href="?'.$pageLink.'npage='.$Next.'" title="Go to the next page" class="next-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $Next . '); return false;">&rsaquo;</a>';
+$lastpagebutton = '<a href="?'.$pageLink.'npage='.$TotalPages.'" title="Go to the last page" class="last-page" onclick="dr_goToPage(\'' . $EID . '\', ' . $TotalPages . '); return false;">&raquo;</a>';
 
 $pagecount = '<span class="paging-input"> ' . $Page . ' of <span class="total-pages">' . $TotalPages . ' </span></span>';
 

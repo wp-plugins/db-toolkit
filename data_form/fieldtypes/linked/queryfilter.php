@@ -52,7 +52,7 @@
 
 			// left Join linked table
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
-
+				
                                 $LinkingTable = $wpdb->prefix.'__'.str_replace($wpdb->prefix.'dbt_', '', $Config['_main_table']).str_replace($wpdb->prefix.'dbt_', '', $Config['_Linkedfields'][$Field]['Table']);
 
 				//$queryJoin .= " LEFT JOIN `".$LinkingTable."` AS `".$joinIndex."_linking` on (prim.".$Config['_ReturnFields'][0]." = ".$joinIndex."_linking.from) \n";
@@ -60,8 +60,8 @@
 
 
                                 $Primary = '`prim`.`'.$Config['_ReturnFields'][0].'`';
-                                if(empty($queryJoins[$joinIndex])){
-                                    $queryJoins[$joinIndex."_linking"] = " LEFT JOIN `".$LinkingTable."` AS `".$joinIndex."_linking` on (".$Primary." = `".$joinIndex."_linking`.`from`) \n";;
+                                if(empty($queryJoins[$joinIndex])){                                    
+                                    $queryJoins[$joinIndex."_linking"] = " LEFT JOIN `".$LinkingTable."` AS `".$joinIndex."_linking` on (".$Primary." = `".$joinIndex."_linking`.`from`) \n";;                                    
                                     $queryJoin .= $queryJoins[$joinIndex."_linking"];
                                     $queryJoins[$joinIndex] = " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS `".$joinIndexSet."` on (`".$joinIndex."_linking`.`to` = `".$joinIndexSet."`.`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     $queryJoin .= $queryJoins[$joinIndex];
@@ -108,7 +108,7 @@
                                     $Primary = 'prim.`'.$Config['_CloneField'][$Field]['Master'].'`';
 
                                 }
-                                if(empty($queryJoins[$joinIndex])){
+                                if(empty($queryJoins[$joinIndex])){                                    
                                     $queryJoin .= " ".$Config['_Linkedfields'][$Field]['JoinType']." `".$Config['_Linkedfields'][$Field]['Table']."` AS ".$joinIndexSet." on (".$Primary." = `".$joinIndexSet."`.`".$Config['_Linkedfields'][$Field]['ID']."`) \n";
                                     //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
                                     $queryJoins[$joinIndex] = $joinIndex;
@@ -117,8 +117,8 @@
                         //New Join Methods
                             //$queryJoins[$Config['_Linkedfields'][$Field]['Table']] = $joinIndex;
 
-
-
+			
+                        
                         if(!empty($Config['_Linkedfields'][$Field]['_Filter'])){// && !empty($Config['_Linkedfields'][$Field]['_FilterBy'])){
                             if($WhereTag == ''){
                                     $WhereTag = " WHERE ";
@@ -141,22 +141,26 @@
 			$outList = array();
 			if($Config['_Linkedfilterfields'][$Field]['Type'] != 'checkbox'){
 
+				if(count($Config['_Linkedfilterfields'][$Field]['Value']) > 1){
 				foreach($Config['_Linkedfilterfields'][$Field]['Value'] as $Key=>$outValue){
 
                                     if(!empty($Config['_Linkedfilterfields'][$Field]['Prefix'][$Key])){
                                         $outList[] = "'".$Config['_Linkedfilterfields'][$Field]['Prefix'][$Key]."'";
                                     }else{
-                                        $outList[] = "' '";
+                                        //$outList[] = "' '";
                                     }
-					$outList[] = $joinIndex.'.'.$outValue;
+					$outList[] = '`'.$joinIndexSet.'`.`'.$outValue.'`';
                                     if(!empty($Config['_Linkedfilterfields'][$Field]['Suffix'][$Key])){
                                         $outList[] = "'".$Config['_Linkedfilterfields'][$Field]['Suffix'][$Key]."'";
                                     }else{
-                                        $outList[] = "' '";
+                                        //$outList[] = "' '";
                                     }
                                 }
 
-				$outString = 'CONCAT('.implode('`,\' \',`',$outList).')';
+                                    $outString = 'CONCAT_WS(\' \', '.implode(',',$outList).')';
+                                }else{
+                                    $outString = '`'.$joinIndexSet.'`.`'.$Config['_Linkedfilterfields'][$Field]['Value'][0].'`';
+                                }
 
 
 
@@ -195,13 +199,23 @@
 		}
 
 
-
+                @session_start();
 		// Setup Where Clause in Query
                 //clear out empty arrays
                 for($o=0; $o<= count($_SESSION['reportFilters'][$EID][$Field])-1; $o++){
                     if(empty($_SESSION['reportFilters'][$EID][$Field][$o])){
                         unset($_SESSION['reportFilters'][$EID][$Field][$o]);
                     }
+                }
+
+                if(!empty($_SESSION['reportFilters'][$EID]['_keywords'])){
+                    if(!empty($Config['_Linkedfields'][$Field]['Value'])){
+                        $preWhereSearch = array();
+                        foreach($Config['_Linkedfields'][$Field]['Value'] as $searchField){
+                            $preWhereSearch[] = "`".$joinIndexSet."`.`".$searchField."` LIKE '%".$_SESSION['reportFilters'][$EID]['_keywords']."%' ";
+                        }
+                    }
+                    $preWhere[] = implode(' OR ', $preWhereSearch);
                 }
                 if(!empty($_SESSION['reportFilters'][$EID][$Field])){
 
@@ -210,9 +224,9 @@
 			}
 			if($Config['_Linkedfields'][$Field]['Type'] == 'checkbox'){
                             if(empty($Config['_Linkedfields'][$Field]['TextSearch'])){
-
+                                
                                     $queryWhere[] = "`".$joinIndexSet."`.`".$Config['_Linkedfields'][$Field]['ID']."` in ('".implode('\',\'', $_SESSION['reportFilters'][$EID][$Field])."')";
-
+                                
                             }else{
                                 //echo $_SESSION['reportFilters'][$EID][$Field];
                                 $queryWhere[] = $outString." LIKE '%".$_SESSION['reportFilters'][$EID][$Field]."%' ";
