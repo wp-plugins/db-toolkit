@@ -3,8 +3,8 @@ Contributors: Desertsnowman
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
-Tested up to: 3.4
-Stable tag: 0.3.2.023
+Tested up to: 3.4.1
+Stable tag: 0.3.2.024
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,12 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.024 =
+* Fixed a bug that prevented a form from capturing a new entry if the return value is set as a get. Ye I know- strange right?
+* Fixed the loading icon on the form load dialog. Finally.
+* Made the overlay for dialogs black. looks way better.
+* moved the Close button away from the save and changed it to Cancel.
 
 = 0.3.2.023 =
 * fixed a bug in the filtered join that killed it.

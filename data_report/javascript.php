@@ -198,7 +198,7 @@
             minWidth: 200,
             modal: ismodal,
             buttons: {
-                'Close': function() {jQuery(this).dialog("close"); }
+                'Cancel': function() {jQuery(this).dialog("close"); }
             },
 
             open: function(event, ui) {
@@ -274,7 +274,7 @@
                 ajaxCall('dr_BuildUpDateForm',eid, rid,addquery, function(c){
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'title', c.title);
                     jQuery("#ui-jsDialog-"+id+"-"+eid+"").dialog('option', 'buttons', {
-                        'Close': function() {
+                        'Cancel': function() {
                             jQuery(this).dialog("close");
                         },
                         'Save': function() {

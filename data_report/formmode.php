@@ -2,13 +2,13 @@
 echo '<div style="width: '.$Config['_popupWidth'].'px;">';
     //_useToolbarTemplate _layoutTemplate
     if(!empty($_SESSION['DF_Notification'])){
-        
+
         ob_start();
         foreach($_SESSION['DF_Notification'] as $Key=>$Notice){
         $uid = uniqid();
         ?>
             <div class="alert alert-<?php echo $_SESSION['DF_NotificationTypes'][$Key]; ?>" id="<?php echo $uid; ?>">
-            <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">×</a>
+            <a class="close" onClick="jQuery('#<?php echo $uid; ?>').fadeOut('slow');">?</a>
             <?php echo $Notice; ?>
             </div>
         <?php
@@ -24,7 +24,7 @@ echo '<div style="width: '.$Config['_popupWidth'].'px;">';
             $Func($Field, $typeSet[1], $Media, $Config);
         }
     }
-    if(!empty($_GET[$Config['_ReturnFields'][0]])) {
+    if(!empty($_GET[$Config['_ReturnFields'][0]]) && !empty($Config['_Show_Edit'])) {
         $Form = dr_BuildUpDateForm($Media['ID'], $_GET[$Config['_ReturnFields'][0]]);
     }else {
         $Form = df_buildQuickCaptureForm($Media['ID']);

@@ -4,7 +4,7 @@ Plugin Name: DB-Toolkit
 Plugin URI: http://dbtoolkit.co.za
 Description: Plugin for building databases, managers and viewers for custom Content Management.
 Author: David Cramer
-Version: 0.3.2.023
+Version: 0.3.2.024
 Author URI: http://dbtoolkit.co.za
 */
 
@@ -13,6 +13,7 @@ if(empty($_SESSION['dataform']['OutScripts'])) {
     $_SESSION['dataform']['OutScripts'] = '';
 }
 define('DB_TOOLKIT', plugin_dir_path(__FILE__));
+define('DBT_URL', plugin_dir_url(__FILE__));
 
 //hide notices while I work through the cleanup.
 //error_reporting(E_ALL ^ E_NOTICE);
