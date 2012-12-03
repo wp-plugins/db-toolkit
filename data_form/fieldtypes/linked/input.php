@@ -11,6 +11,18 @@ if($FieldSet[1] == 'linked'){
 
                     }
                     
+                    global $wpdb;
+                    $LinkingTable = $wpdb->prefix.'__'.str_replace($wpdb->prefix.'dbt_', '', $Config['_main_table']).str_replace($wpdb->prefix.'dbt_', '', $Config['_Linkedfields'][$Field]['Table']);
+                    
+                    //dump();
+                    $checked = $wpdb->get_results("SELECT * FROM `".$LinkingTable."` WHERE `from` = '".$Defaults[$Config['_ReturnFields'][0]]."'", ARRAY_A);
+                    $checkDefault = array();
+                    foreach($checked as $check){
+                        $checkDefault[$check['to']] = true;
+                    }
+                    
+                    
+                    
 				$concatvalues = array();
 				foreach($Config['_Linkedfields'][$Field]['Value'] as $outValue){
 					$concatvalues[] = $outValue;
@@ -25,18 +37,16 @@ if($FieldSet[1] == 'linked'){
                         //$DefaultChecks = explode(',' $Defaults[$Field]);
 			$checkindex = 0;
 			$Return = '';
+                        $Return .= '<div style="max-height: 300px; overflow: auto;" >';
 			while($lrow = mysql_fetch_assoc($Res)){
 				$Sel = '';
-				if(!empty($Defaults[$Field])){
-					$DefaultArray = core_cleanArray(explode(',',$Defaults[$Field]));
-					if(in_array($lrow[$Config['_Linkedfields'][$Field]['ID']], $DefaultArray)){
-						$Sel = 'checked="checked"';
-					}
-				}
+                                if(!empty($checkDefault[$lrow[$Config['_Linkedfields'][$Field]['ID']]])){
+                                    $Sel = 'checked="checked"';
+                                }
 				$Return .= '<label class="entrylabel checkbox" style="background-color:inherit;" for="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'"><input type="checkbox" value="'.$lrow[$Config['_Linkedfields'][$Field]['ID']].'" name="dataForm['.$Element['ID'].']['.$Field.'][]" id="entry_'.$Element['ID'].'_'.$Field.'_'.$checkindex.'" class="'.$Req.' " '.$Sel.' />'.$lrow['outValue'].'</label>';
 				$checkindex++;
 			}
-			//$Return .= '</select>';
+			$Return .= '</div>';
 		
 		break;
 		case "radio":

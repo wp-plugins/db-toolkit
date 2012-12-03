@@ -2764,10 +2764,12 @@ function df_processupdate($Data, $EID) {
                     }
                     $Element['_ActiveProcess'] = 'update';
                     $newValue = $Func($Field, $Data[$EID][$Field], $typeSet[1], $Element, $PreData, $Data);
-                    if (is_array($newValue[$Field])) {
-                        if (!empty($newValue[$Field]['_fail_'])) {
-                            $return['_error_'][] = $newValue[$Field]['_error_'];
-                            $return['_fail_'][$Field] = true;
+                    if(is_array($newValue)){
+                        if (is_array($newValue[$Field])) {
+                            if (!empty($newValue[$Field]['_fail_'])) {
+                                $return['_error_'][] = $newValue[$Field]['_error_'];
+                                $return['_fail_'][$Field] = true;
+                            }
                         }
                     }
                     //}

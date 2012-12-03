@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U6
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
 Tested up to: 3.4.1
-Stable tag: 0.3.2.024
+Stable tag: 0.3.2.025
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -57,6 +57,14 @@ A: Well you can technically use it now, however some things are still a little i
 6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.2.025 =
+* Fixed a bug in the linked tables. multi select should now work. If you get an error, add a new entry to force reload.
+* Front end pagination fixed.
+* File fieldtype now has multiple output types.
+* File fieldtype now allows for Amazon S3 uploading (beta).
+* Image fieldtype no displays correctly. (may still have problems but we'll see how it goes.)
+
 
 = 0.3.2.024 =
 * Fixed a bug that prevented a form from capturing a new entry if the return value is set as a get. Ye I know- strange right?

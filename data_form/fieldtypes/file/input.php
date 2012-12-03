@@ -49,12 +49,13 @@ if($FieldSet[1] == 'image'){
 
 if($FieldSet[1] == 'file'){
 	$Return = '';
+        
 	if(!empty($Defaults[$Field])){
-			$File = explode('?', $Defaults[$Field]);
+			$File = $Defaults[$Field];
 			$ext = strtolower($Dets['extension']);
 			$UniID = uniqid();
-			
-		$Return .= $Icon.'<a href="'.$File[0].'" target="_blank" >'.$File[1].'</a></div>';
+			$Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/file.gif" border="0" align="absmiddle" title="'.$File[1].'" />&nbsp;';
+		$Return .= $Icon.' <a href="'.$File.'" target="_blank" >'.basename($File).'</a></div>';
 		$Return .= '<div style="padding:3px;" class="list_row1"><input type="checkbox" name="deleteImage['.$Field.']" id="image_'.$Element['ID'].'_'.$Field.'" value="1" /> Remove File</div>';
 		
 	}

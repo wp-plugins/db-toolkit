@@ -30,13 +30,18 @@ switch($Types[1]) {
                 $Out .= 'Image not available';
                 return;
             }
-
+            if(!empty($newDim)){
             $Sourcepath = pathinfo($SourceFile);
             $URLpath = pathinfo($Value);
             $imageURL = $URLpath['dirname'].'/'.$URLpath['filename'].'-'.$newDim[4].'x'.$newDim[5].'.'.$URLpath['extension'];
             if(!file_exists($Sourcepath['dirname'].'/'.$Sourcepath['filename'].'-'.$newDim[4].'x'.$newDim[5].'.'.$Sourcepath['extension'])){
                 $image = image_resize($SourceFile, $imageWidth, $imageHeight, true);
                 $icon = image_resize($SourceFile, $iconWidth, $iconHeight, true);
+            }
+            }else{
+                $imageURL = $Value;
+                $imageWidth = $dim[0];
+                $imageHeight = $dim[1];
             }
             $ClassName = '';
             if(!empty($Config['_ImageClassName'][$Field])){
@@ -52,10 +57,10 @@ switch($Types[1]) {
         break;
     case 'file':
         if(!empty($Data[$Field])) {
-            
+
             $File = explode('?', $Data[$Field]);
-            
-            $Dets = pathinfo($File[1]);            
+
+            $Dets = pathinfo($File[1]);
             $ext = strtolower($Dets['extension']);
             if(file_exists(WP_PLUGIN_DIR.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif')){
                     $Icon = '<img src="'.WP_PLUGIN_URL.'/db-toolkit/data_form/fieldtypes/file/icons/'.$ext.'.gif" align="absmiddle" />&nbsp;';
@@ -66,7 +71,7 @@ switch($Types[1]) {
             $FileSrc = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $File[0]);
             //echo filesize($File[0]);
             $Size = file_return_bytes(filesize($FileSrc));
-            
+
             //$Out .= $Data[$Field];
             //$Out .= '<div class="captions">'.df_parsecamelcase($Image[1]).'</div>';
             $Out .= $Icon.'<a href="'.$File[0].'" target="_blank" >'.$File[1].'</a> ('.$Size.')';
