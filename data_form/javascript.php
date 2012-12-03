@@ -1,6 +1,7 @@
 <?php
-require_once('../../../../wp-admin/admin.php');
-define('DBT_URL', plugin_dir_url(__FILE__));
+//require_once('../../../../wp-admin/admin.php');
+//define('DBT_URL', plugin_dir_url(__FILE__));
+define('DBT_URL', dirname(dirname(__FILE__)));
 
 function fieldtypes_script_loadFolderContents($Folder) {
     $Index = 0;
