@@ -488,12 +488,15 @@ function dt_scripts($preIs = false) {
 
         wp_register_script('data_report', WP_PLUGIN_URL . '/db-toolkit/data_form/javascript.php', false, false, true);
         wp_register_script('data_form', WP_PLUGIN_URL . '/db-toolkit/data_report/javascript.php', false, false, true);
-        wp_register_script('jquery-ui-custom' , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.min.js');
+        //wp_register_script('jquery-ui');// , WP_PLUGIN_URL . '/db-toolkit/jqueryui/jquery-ui.min.js');
         wp_register_script('jquery-multiselect', WP_PLUGIN_URL . '/db-toolkit/libs/ui.dropdownchecklist-min.js', false, false, true);
         wp_register_script('jquery-validate', WP_PLUGIN_URL . '/db-toolkit/libs/jquery.validationEngine.js');
 
         wp_enqueue_script("jquery");
-        wp_enqueue_script("jquery-ui-custom");
+        wp_enqueue_script("jquery-ui-core");
+        wp_enqueue_script("jquery-ui-dialog");
+        wp_enqueue_script("jquery-ui-sortable");
+        wp_enqueue_script("jquery-ui-tabs");
         wp_enqueue_script('jquery-multiselect');
         wp_enqueue_script('data_report');
         wp_enqueue_script('data_form');

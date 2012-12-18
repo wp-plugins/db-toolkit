@@ -366,7 +366,7 @@ function file_processValue($Value, $Type, $Field, $Config, $EID) {
                                 $File = 'http://'.$Config['_AWSBucket'][$prime].'.s3.amazonaws.com/'.$Value;                                
                             }else{
                                 $File = $Value;
-                                echo $prime;
+                                
                             }
                             $Dets = pathinfo($File);
                             $ext = strtolower($Dets['extension']);
