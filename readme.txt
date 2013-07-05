@@ -3,8 +3,8 @@ Contributors: Desertsnowman
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PA8U68HRBXTEU&lc=ZA&item_name=dbtoolkit%20development&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted
 Tags: interface, database, tables, database tables, application development, app engine, database interface toolkit, DBT0309821
 Requires at least: 3.1
-Tested up to: 3.4.1
-Stable tag: 0.3.2.026
+Tested up to: 3.5.2
+Stable tag: 0.3.3
 
 Build additional Content Management Structures and Database Applications right into your WordPress Site.
 
@@ -18,9 +18,9 @@ By defining the kinds of data you are wanting to work with, you can create an al
 
 DB-Toolkit is not a simple plugin and has a steep learning curve, but the results are very rewarding.
 
-There is a tutorial series on http://dbtoolkit.co.za to explain the fundamentals on using the system its a few versions old so the interfaces do look a little different.
-Please join the support forum on http://dbtoolkit.co.za/forum/ and I'll do my best to answer any questions and help troubleshoot problems.
+There will be a support area coming soon. I'll update with a URL soon.
 
+I have a new Dev blog here: http://dbtoolkit.wordpress.com/
 
 Some Features
 
@@ -41,7 +41,7 @@ Some Features
 == Frequently Asked Questions ==
 
 Q: Is there any Documentation?
-A: Nope. I intended on DB-Toolkit to be a personal project to help my own development, so I didnt write any as i was building it. I have however started writing up some tutorials and am working on new documentation which will be available eventually.
+A: Nope. I am working on it.
 
 Q: When will you have an RC release?
 A: Well you can technically use it now, however some things are still a little iffy (like cloned linking links) But it should mostly work on up to 3rd level interfaces.
@@ -53,10 +53,13 @@ A: Well you can technically use it now, however some things are still a little i
 2. Interface and Application Management Screen.
 3. An Interface built in DB-Toolkit to manage data.
 4. Interface Config Screen (Lots of Options!).
-5. Database Table data represented in Chart Mode.
-6. Data Importer Dialog.
 
 == Changelog ==
+
+= 0.3.3 =
+* Mostly a maintenance update.
+* Fixed many bugs that made it break in 3.5.1
+* Made some improvements to have version 0.4 (Some uge changes in that one)
 
 = 0.3.2.026 =
 * Fixed a bug in the file fieldtype that echoed out the file field title.
